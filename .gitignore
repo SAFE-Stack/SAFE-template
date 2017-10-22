@@ -1,0 +1,4 @@
+.fake/
+packages/
+paket-files/
+.paket/Paket.Restore.targets
