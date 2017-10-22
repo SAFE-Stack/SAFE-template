@@ -5,7 +5,7 @@ set -eu
 cd "$(dirname "$0")"
 
 PAKET_EXE=.paket/paket.exe
-FAKE_EXE=packages/build/FAKE/tools/FAKE.exe
+FAKE_EXE=packages/FAKE/tools/FAKE.exe
 
 FSIARGS=""
 FSIARGS2=""

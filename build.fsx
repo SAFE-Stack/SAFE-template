@@ -2,6 +2,17 @@
 
 open Fake
 
-Target "Generate" DoNothing
+let nupkgDir = "./nupkg"
 
-RunTargetOrDefault "Generate"
+Target "Clean" DoNothing
+
+Target "Pack" (fun () ->
+  DotNetCli.Pack ( fun args ->
+    args
+  )
+)
+
+"Clean"
+  ==> "Pack"
+
+RunTargetOrDefault "Pack"
