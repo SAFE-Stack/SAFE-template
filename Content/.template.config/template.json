@@ -1,0 +1,12 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Tomasz Heimowski",
+  "classifications": [ "F#", "Web", "Suave", "Fable", "Elmish" ],
+  "name": "Basic SAFE-Stack web application",
+  "tags": {
+    "language": "F#",
+    "type": "project"
+  },
+  "identity": "SAFE.Template",
+  "shortName": "SAFE"
+}
