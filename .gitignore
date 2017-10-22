@@ -1,4 +1,6 @@
 .fake/
 packages/
 paket-files/
+nupkg/
+obj/
 .paket/Paket.Restore.targets
