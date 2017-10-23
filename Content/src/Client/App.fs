@@ -26,7 +26,7 @@ let update msg model =
   | Decrement, _ ->
     { model with X = model.X - 1 }, Cmd.ofMsg Decrement
 
-let view model dispath =
+let view model dispatch =
   div []
    [ h1 [] [ str (sprintf "Counter: %d" model.X) ] ]
 
