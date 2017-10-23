@@ -8,7 +8,7 @@ This is a basic template to get started with 3 core components of the stack:
 * [Fable](http://fable.io/)
 * [Elmish](https://fable-elmish.github.io/elmish/)
 
-The template does not include any Azure / other Cloud integration. Refer to [SAFE-Bookstore](https://github.com/SAFE-Stack/SAFE-BookStore) to see an example of deploying to Azure.
+The template does not include any Azure / other Cloud integration. Refer to [SAFE-Bookstore](https://github.com/SAFE-Stack/SAFE-BookStore) to see an example of deploying to Azure and for more details about this stack.
 
 ## Prerequisites
 
