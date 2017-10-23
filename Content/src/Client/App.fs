@@ -3,33 +3,26 @@ module App
 open Elmish
 open Elmish.React
 
-open Fable.Helpers.React
+open Fable.Helpers.React.Props
+module R = Fable.Helpers.React
 
-type Model =
-  { X : int }
+type Model = int
 
-type Msg =
-| Increment
-| Decrement
+type Msg = Increment | Decrement
 
-let init () =
-  { X = 0 }, Cmd.ofMsg Increment
+let init () = 0
 
-let update msg model =
-  match msg,model with
-  | Increment, { X = x } when x >= 100 ->
-    { model with X = x - 1 }, Cmd.ofMsg Decrement
-  | Increment, _ ->
-    { model with X = model.X + 1 }, Cmd.ofMsg Increment
-  | Decrement, { X = x } when x <= 0 ->
-    { model with X = x + 1 }, Cmd.ofMsg Increment
-  | Decrement, _ ->
-    { model with X = model.X - 1 }, Cmd.ofMsg Decrement
+let update msg (model : Model) =
+  match msg with
+  | Increment -> model + 1
+  | Decrement -> model - 1
 
 let view model dispatch =
-  div []
-   [ h1 [] [ str (sprintf "Counter: %d" model.X) ] ]
+  R.div []
+      [ R.button [ OnClick (fun _ -> dispatch Decrement) ] [ R.str "-" ]
+        R.div [] [ R.str (sprintf "%A" model) ]
+        R.button [ OnClick (fun _ -> dispatch Increment) ] [ R.str "+" ] ]
 
-Program.mkProgram init update view
+Program.mkSimple init update view
 |> Program.withReact "elmish-app"
 |> Program.run
