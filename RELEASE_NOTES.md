@@ -1,3 +1,7 @@
+#### 0.0.4 - 24.10.2017
+
+* Exclude paket-files from nupkg
+
 #### 0.0.3 - 23.10.2017
 
 * Remove unwanted CSS classes

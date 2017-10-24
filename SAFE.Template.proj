@@ -16,6 +16,7 @@
     <ExcludeFromPackage>
         Content/node_modules/**/*;
         Content/packages/**/*;
+        Content/paket-files/**/*;
     </ExcludeFromPackage>
 </PropertyGroup>
   <ItemGroup>
