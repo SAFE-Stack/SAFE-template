@@ -18,8 +18,8 @@ The template does not include any Azure / other Cloud integration. Refer to [SAF
 
 ## Using the template
 
-* Install the template: `dotnet new -i SAFE.Template::*`
-* Create new project from the template: `dotnet new SAFE`
+* Install or update the template: `dotnet new -i SAFE.Template`
+* Create a new project from the template: `dotnet new SAFE`
 * Build the project: `build.cmd` / `build.sh`
 * Run (working dir root of project): `dotnet run --project src\Server\Server.fsproj`
 * Preview in browser: `http://localhost:8080/index.html`
