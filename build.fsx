@@ -57,6 +57,6 @@ Target "Push" (fun () ->
 
 "Clean"
   ==> "Pack"
-  //==> "Push"
+  ==> "Push"
 
 RunTargetOrDefault "Pack"
