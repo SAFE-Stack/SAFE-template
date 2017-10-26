@@ -38,6 +38,21 @@ Target "Push" (fun () ->
         WorkingDir = nupkgDir 
     }
   )
+
+  let remoteGit = "upstream"
+  let commitMsg = sprintf "Bumping version to %O" release.NugetVersion
+  let tagName = string release.NugetVersion
+
+  Git.Branches.checkout "" false "master"
+  Git.CommandHelper.directRunGitCommand "" "fetch origin" |> ignore
+  Git.CommandHelper.directRunGitCommand "" "fetch origin --tags" |> ignore
+
+  Git.Staging.StageAll ""
+  Git.Commit.Commit "" commitMsg
+  Git.Branches.pushBranch "" remoteGit "master"
+
+  Git.Branches.tag "" tagName
+  Git.Branches.pushTag "" remoteGit tagName
 )
 
 "Clean"
