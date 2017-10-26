@@ -19,7 +19,9 @@ let update msg (model : Model) =
 
 let view model dispatch =
   R.div []
-      [ R.button [ OnClick (fun _ -> dispatch Decrement) ] [ R.str "-" ]
+      [ R.h1 [] [ R.str "SAFE Template" ]
+        R.p  [] [ R.str "Press buttons to manipulate counter:" ]
+        R.button [ OnClick (fun _ -> dispatch Decrement) ] [ R.str "-" ]
         R.div [] [ R.str (sprintf "%A" model) ]
         R.button [ OnClick (fun _ -> dispatch Increment) ] [ R.str "+" ] ]
 

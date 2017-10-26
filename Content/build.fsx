@@ -4,7 +4,8 @@ open System
 
 open Fake
 
-let serverPath = "./src/Server/" |> FullName
+let serverPath = "./src/Server" |> FullName
+let serverProj = serverPath </> "Server.fsproj"
 let clientPath = "./src/Client" |> FullName
 
 let platformTool tool winTool =
@@ -46,9 +47,28 @@ Target "Build" (fun () ->
   run dotnetCli "fable webpack -- -p" clientPath
 )
 
+Target "Run" (fun () -> 
+  let server = async { 
+    run dotnetCli ("run --project " + serverProj) "." 
+  }
+  let client = async { 
+    run dotnetCli "fable webpack-dev-server" clientPath 
+  }
+  let browser = async { 
+    Threading.Thread.Sleep 5000
+    Diagnostics.Process.Start "http://localhost:8080" |> ignore 
+  }
+  
+  [ server; client; browser]
+  |> Async.Parallel
+  |> Async.RunSynchronously
+  |> ignore
+)
+
 "Clean"
   ==> "InstallDotNetCore"
   ==> "InstallClient"
   ==> "Build"
+  ==> "Run"
 
 RunTargetOrDefault "Build"

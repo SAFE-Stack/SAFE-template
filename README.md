@@ -20,9 +20,12 @@ The template does not include any Azure / other Cloud integration. Refer to [SAF
 
 * Install or update the template: `dotnet new -i SAFE.Template`
 * Create a new project from the template: `dotnet new SAFE`
-* Build the project: `build.cmd` / `build.sh`
-* Run (working dir root of project): `dotnet run --project src\Server\Server.fsproj`
-* Preview in browser: `http://localhost:8080/index.html`
+* Build and run the project: `build.cmd run` / `./build.sh run`. This command:
+  * Fetches all necessary dependencies
+  * Builds Server and Client code
+  * Runs `dotnet fable webpack-dev-server` in [src/Client](src/Client) (note: the Webpack development server will serve files on http://localhost:8080)
+  * Runs `dotnet run --project src/Server/Server.fsproj` in root directory (note: Suave is launched on port **8085**)
+  * Opens browser with url to Webpack development server (5 second delay after running client)
 
 ## Contributing
 
