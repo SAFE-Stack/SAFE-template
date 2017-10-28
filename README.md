@@ -27,6 +27,10 @@ The template does not include any Azure / other Cloud integration. Refer to [SAF
   * Runs `dotnet run --project src/Server/Server.fsproj` in root directory (note: Suave is launched on port **8085**)
   * Opens browser with url to Webpack development server (5 second delay after running client)
 
+* In case that dotnet -i fails with an 'Reference not set' error on Linux, try
+  * Uninstall a previous version: `dotnet new -u SAFE.template`
+  * Install the new template with its path: `dotnet new -i ./nupkg/SAFE.Template.<<version>>.nupkg
+
 ## Contributing
 
 Refer to [Contribution guideline](CONTRIBUTING.md)
