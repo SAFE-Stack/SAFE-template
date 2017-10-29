@@ -1,3 +1,7 @@
+#### 0.0.6 - 29.10.2017
+
+* File permissions for build script - https://github.com/SAFE-Stack/SAFE-template/pull/8/files
+
 #### 0.0.5 - 26.10.2017
 
 * Port the Run build target from the Bookstore - https://github.com/SAFE-Stack/SAFE-template/issues/6
