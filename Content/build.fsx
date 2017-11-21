@@ -30,7 +30,7 @@ let run cmd args workingDir =
 Target "Clean" DoNothing
 
 Target "InstallDotNetCore" (fun _ ->
-  dotnetCli <- DotNetCli.InstallDotNetSDK "2.0.0"
+  dotnetCli <- DotNetCli.InstallDotNetSDK "2.0.3"
 )
 
 Target "InstallClient" (fun _ ->
@@ -41,24 +41,24 @@ Target "InstallClient" (fun _ ->
   run yarnTool "install --frozen-lockfile" __SOURCE_DIRECTORY__
 )
 
-Target "Build" (fun () -> 
+Target "Build" (fun () ->
   run dotnetCli "build" serverPath
   run dotnetCli "restore" clientPath
   run dotnetCli "fable webpack -- -p" clientPath
 )
 
-Target "Run" (fun () -> 
-  let server = async { 
-    run dotnetCli ("run --project " + serverProj) "." 
+Target "Run" (fun () ->
+  let server = async {
+    run dotnetCli ("run --project " + serverProj) "."
   }
-  let client = async { 
-    run dotnetCli "fable webpack-dev-server" clientPath 
+  let client = async {
+    run dotnetCli "fable webpack-dev-server" clientPath
   }
-  let browser = async { 
+  let browser = async {
     Threading.Thread.Sleep 5000
-    Diagnostics.Process.Start "http://localhost:8080" |> ignore 
+    Diagnostics.Process.Start "http://localhost:8080" |> ignore
   }
-  
+
   [ server; client; browser]
   |> Async.Parallel
   |> Async.RunSynchronously
@@ -69,6 +69,8 @@ Target "Run" (fun () ->
   ==> "InstallDotNetCore"
   ==> "InstallClient"
   ==> "Build"
+
+"InstallClient"
   ==> "Run"
 
 RunTargetOrDefault "Build"
