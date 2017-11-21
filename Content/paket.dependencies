@@ -1,10 +1,11 @@
 source https://api.nuget.org/v3/index.json
 
-nuget Fable.Elmish
+nuget Fable.Core
+nuget Fable.Elmish.Debugger
 nuget Fable.Elmish.React
+nuget Fable.Elmish.HMR
 nuget FSharp.Core
 nuget Suave
-nuget Fable.Core
 
 clitool dotnet-fable
 
