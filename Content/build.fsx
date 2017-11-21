@@ -39,11 +39,11 @@ Target "InstallClient" (fun _ ->
   printfn "Yarn version:"
   run yarnTool "--version" __SOURCE_DIRECTORY__
   run yarnTool "install --frozen-lockfile" __SOURCE_DIRECTORY__
+  run dotnetCli "restore" clientPath
 )
 
 Target "Build" (fun () ->
   run dotnetCli "build" serverPath
-  run dotnetCli "restore" clientPath
   run dotnetCli "fable webpack -- -p" clientPath
 )
 
