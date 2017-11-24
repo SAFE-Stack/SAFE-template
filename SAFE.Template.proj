@@ -18,6 +18,7 @@
         Content/packages/**/*;
         Content/paket-files/**/*;
         **/obj/**/*;
+        **/bin/**/*;
     </ExcludeFromPackage>
 </PropertyGroup>
   <ItemGroup>

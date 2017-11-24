@@ -1,3 +1,8 @@
+#### 0.0.7 - 24.11.2017
+
+* Add Hot Module Replacement 
+* Create separate "run" target to make it faster - https://github.com/SAFE-Stack/SAFE-template/pull/9
+
 #### 0.0.6 - 29.10.2017
 
 * File permissions for build script - https://github.com/SAFE-Stack/SAFE-template/pull/8/files
