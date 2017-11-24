@@ -28,7 +28,7 @@ The template does not include any Azure / other Cloud integration. Refer to [SAF
   * Opens browser with url to Webpack development server (5 second delay after running client)
 
 * In case that dotnet -i fails with an 'Reference not set' error on Linux, try
-  * Uninstall a previous version: `dotnet new -u SAFE.template`
+  * Uninstall a previous version: `dotnet new -u SAFE.Template`
   * Install the new template with its path: `dotnet new -i ./nupkg/SAFE.Template.<<version>>.nupkg
 
 ## Contributing
