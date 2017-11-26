@@ -25,6 +25,7 @@ let view model dispatch =
         R.div [] [ R.str (sprintf "%A" model) ]
         R.button [ OnClick (fun _ -> dispatch Increment) ] [ R.str "+" ] ]
 
+//-:cnd:noEmit
 #if DEBUG
 open Elmish.Debug
 open Elmish.HMR
@@ -39,4 +40,5 @@ Program.mkSimple init update view
 #if DEBUG
 |> Program.withDebugger
 #endif
+//+:cnd:noEmit
 |> Program.run
