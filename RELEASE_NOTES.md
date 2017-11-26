@@ -1,3 +1,7 @@
+#### 0.0.8 - 26.11.2017
+
+* Fix preprocessor directives - https://github.com/SAFE-Stack/SAFE-template/pull/10
+
 #### 0.0.7 - 24.11.2017
 
 * Add Hot Module Replacement 
