@@ -16,3 +16,9 @@
 1. Build template from root directory
 1. Uninstall currently installed template with `dotnet new -u SAFE.Template`
 1. Install new version with `dotnet new -i <<repo-path>>/nupkg/SAFE.Template.<<version>>.nupkg`
+
+## Known issues
+
+* In case that dotnet -i fails with an 'Reference not set' error on Linux, try
+  * Uninstall a previous version: `dotnet new -u SAFE.Template`
+  * Install the new template with its path: `dotnet new -i ./nupkg/SAFE.Template.<<version>>.nupkg
