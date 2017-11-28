@@ -1,4 +1,4 @@
-#### 0.1.1 - 28.11.2017
+#### 0.1.2 - 28.11.2017
 
 * Update all paket dependencies
 
