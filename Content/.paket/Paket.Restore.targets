@@ -172,8 +172,8 @@
 
     <ConvertToAbsolutePath Condition="@(_NuspecFiles) != ''" Paths="@(_NuspecFiles)">
       <Output TaskParameter="AbsolutePaths" PropertyName="NuspecFileAbsolutePath" />
-    </ConvertToAbsolutePath>
-
+    </ConvertToAbsolutePath>      
+        
 
     <!-- Call Pack -->
     <PackTask Condition="$(UseNewPack)"

@@ -1,3 +1,8 @@
+#### 0.1.0 - 28.11.2017
+
+* Add Client <-> Server communication
+* Run `dotnet watch` for Server code
+
 #### 0.0.8 - 26.11.2017
 
 * Fix preprocessor directives - https://github.com/SAFE-Stack/SAFE-template/pull/10

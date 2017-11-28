@@ -3,8 +3,9 @@
 open System.Net
 
 open Suave
+open Suave.Operators
 
-let path = Path.Combine("src","Client") |> Path.GetFullPath
+let path = Path.Combine("..","Client") |> Path.GetFullPath
 let port = 8085us
 
 let config =
@@ -12,4 +13,15 @@ let config =
       homeFolder = Some path
       bindings = [ HttpBinding.create HTTP (IPAddress.Parse "0.0.0.0") port ] }
 
-startWebServer config Files.browseHome
+let init =
+  42
+  |> string
+  |> Successful.OK
+
+let webPart =
+  choose [
+    Filters.path "/api/init" >=> init
+    Files.browseHome
+  ]
+
+startWebServer config webPart

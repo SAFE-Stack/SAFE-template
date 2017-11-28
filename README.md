@@ -24,7 +24,7 @@ The template does not include any Azure / other Cloud integration. Refer to [SAF
   * Fetches all necessary dependencies
   * Builds Server and Client code
   * Runs `dotnet fable webpack-dev-server` in [src/Client](src/Client) (note: the Webpack development server will serve files on http://localhost:8080)
-  * Runs `dotnet run --project src/Server/Server.fsproj` in root directory (note: Suave is launched on port **8085**)
+  * Runs `dotnet watch run` in [src/Server] (note: Suave is launched on port **8085**)
   * Opens browser with url to Webpack development server (5 second delay after running client)
 
 * In case that dotnet -i fails with an 'Reference not set' error on Linux, try

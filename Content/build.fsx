@@ -49,7 +49,7 @@ Target "Build" (fun () ->
 
 Target "Run" (fun () ->
   let server = async {
-    run dotnetCli ("run --project " + serverProj) "."
+    run dotnetCli "watch run" serverPath
   }
   let client = async {
     run dotnetCli "fable webpack-dev-server" clientPath

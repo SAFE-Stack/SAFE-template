@@ -8,6 +8,7 @@ nuget FSharp.Core
 nuget Suave
 
 clitool dotnet-fable
+clitool Microsoft.DotNet.Watcher.Tools
 
 group Build
   source https://api.nuget.org/v3/index.json
