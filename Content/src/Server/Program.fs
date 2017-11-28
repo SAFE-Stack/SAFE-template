@@ -5,7 +5,7 @@ open System.Net
 open Suave
 open Suave.Operators
 
-let path = Path.Combine("..","Client") |> Path.GetFullPath
+let path = Path.Combine("..","Client") |> Path.GetFullPath 
 let port = 8085us
 
 let config =

@@ -1,3 +1,7 @@
+#### 0.1.1 - 28.11.2017
+
+* Update all paket dependencies
+
 #### 0.1.0 - 28.11.2017
 
 * Add Client <-> Server communication
