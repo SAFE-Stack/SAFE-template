@@ -42,6 +42,10 @@ Target "InstallClient" (fun _ ->
   run dotnetCli "restore" clientPath
 )
 
+Target "RestoreServer" (fun () -> 
+  run dotnetCli "restore" serverPath
+)
+
 Target "Build" (fun () ->
   run dotnetCli "build" serverPath
   run dotnetCli "fable webpack -- -p" clientPath
@@ -71,6 +75,7 @@ Target "Run" (fun () ->
   ==> "Build"
 
 "InstallClient"
+  ==> "RestoreServer"
   ==> "Run"
 
 RunTargetOrDefault "Build"

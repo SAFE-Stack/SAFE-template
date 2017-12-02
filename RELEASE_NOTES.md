@@ -1,3 +1,7 @@
+#### 0.1.3 - 02.12.2017
+
+* Add `--Fulma` template option
+
 #### 0.1.2 - 28.11.2017
 
 * Update all paket dependencies

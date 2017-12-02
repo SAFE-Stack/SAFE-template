@@ -8,5 +8,13 @@
     "type": "project"
   },
   "identity": "SAFE.Template",
-  "shortName": "SAFE"
+  "shortName": "SAFE",
+  "symbols": {
+    "Fulma": {
+      "type": "parameter",
+      "dataType": "bool",
+      "defaultValue": "false",
+      "description": "adds Fulma (Fable bindings for Bulma.io) to client"
+    }
+  }
 }

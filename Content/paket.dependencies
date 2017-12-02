@@ -7,6 +7,8 @@ nuget Fable.Elmish.HMR
 nuget FSharp.Core
 nuget Suave
 
+nuget Fulma
+
 clitool dotnet-fable
 clitool Microsoft.DotNet.Watcher.Tools
 

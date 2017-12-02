@@ -29,7 +29,17 @@ The template does not include any Azure / other Cloud integration. Refer to [SAF
 
 Now you can edit:
 * `src\Client\App.fs` - changes will be automatically refreshed in browser
-* `src\Server\Program.fs` - it will be recompiled and re-run
+* `src\Server\Program.fs` - server code will be recompiled and re-run in the background
+
+## Template options
+
+Show available template options with : `dotnet new SAFE --help`
+
+### Fulma
+
+You can add [Fulma](https://mangelmaxime.github.io/Fulma) to the template by specifying `--Fulma` (or `-F`) parameter:
+
+`dotnet new SAFE --Fulma`
 
 ## Contributing
 

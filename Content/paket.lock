@@ -85,6 +85,9 @@ NUGET
       System.Threading.Thread (>= 4.0) - restriction: && (< net45) (>= netstandard1.6)
       System.Threading.ThreadPool (>= 4.0.10) - restriction: && (< net45) (>= netstandard1.6)
       System.Threading.Timer (>= 4.0.1) - restriction: && (< net45) (>= netstandard1.6)
+    Fulma (1.0.0-beta-005)
+      Fable.Core (>= 1.2.4) - restriction: >= netstandard1.6
+      Fable.React (>= 1.2.1) - restriction: >= netstandard1.6
     Microsoft.CSharp (4.4) - restriction: >= netcoreapp2.0
     Microsoft.DotNet.Watcher.Tools (2.0) - clitool: true
       Microsoft.NETCore.App (>= 2.0) - restriction: >= netcoreapp2.0
