@@ -15,6 +15,12 @@
       "dataType": "bool",
       "defaultValue": "false",
       "description": "adds Fulma (Fable bindings for Bulma.io) to client"
+    },
+    "Remoting": {
+      "type": "parameter",
+      "dataType": "bool",
+      "defaultValue": "false",
+      "description": "adds Fable.Remoting to server and client"
     }
   }
 }

@@ -3,9 +3,11 @@ module App
 open Elmish
 open Elmish.React
 
+open Fable.Helpers.React
 open Fable.Helpers.React.Props
-module R = Fable.Helpers.React
 open Fable.PowerPack.Fetch
+
+open Shared
 
 #if (Fulma)
 open Fulma
@@ -15,18 +17,32 @@ open Fulma.Components
 open Fulma.BulmaClasses
 #endif
 
-type Model = int option
+type Model = Counter option
 
-type Msg = Increment | Decrement | Init of Result<int, exn>
+type Msg =
+| Increment
+| Decrement
+| Init of Result<Counter, exn>
 
 let init () = 
   let model = None
-  let cmd = 
+  let cmd =
+#if Remoting
+    let routeBuilder typeName methodName = 
+      sprintf "/api/%s/%s" typeName methodName
+    let api = Fable.Remoting.Client.Proxy.createWithBuilder<Init> routeBuilder
+    Cmd.ofAsync 
+      api.getCounter
+      () 
+      (Ok >> Init)
+      (Error >> Init)
+#else
     Cmd.ofPromise 
       (fetchAs<int> "/api/init") 
       [] 
       (Ok >> Init) 
       (Error >> Init)
+#endif
   model, cmd
 
 let update msg (model : Model) =
@@ -52,14 +68,17 @@ let safeComponents =
 #if (Fulma)
       "Fulma"   , "https://mangelmaxime.github.io/Fulma" 
 #endif
+#if (Remoting)
+      "Fable.Remoting", "https://github.com/Zaid-Ajaj/Fable.Remoting"
+#endif
     ]
-    |> List.map (fun (desc,link) -> R.a [ Href link ] [ R.str desc ] )
-    |> intersperse (R.str ", ")
-    |> R.span [ ]
+    |> List.map (fun (desc,link) -> a [ Href link ] [ str desc ] )
+    |> intersperse (str ", ")
+    |> span [ ]
 
-  R.p [ ]
-    [ R.strong [] [ R.str "SAFE Template" ]
-      R.str " powered by: "
+  p [ ]
+    [ strong [] [ str "SAFE Template" ]
+      str " powered by: "
       components ]
 
 let show = function
@@ -72,20 +91,20 @@ let button txt onClick =
     [ Button.isFullWidth
       Button.isPrimary
       Button.onClick onClick ] 
-    [ R.str txt ]
+    [ str txt ]
 #endif
 
 let view model dispatch =
 #if (Fulma)
-  R.div []
+  div []
     [ Navbar.navbar [ Navbar.customClass "is-primary" ]
         [ Navbar.item_div [ ]
             [ Heading.h2 [ ]
-                [ R.str "SAFE Template" ] ] ]
+                [ str "SAFE Template" ] ] ]
 
       Container.container []
         [ Content.content [ Content.customClass Bulma.Level.Item.HasTextCentered ] 
-            [ Heading.h3 [] [ R.str ("Press buttons to manipulate counter: " + show model) ] ]
+            [ Heading.h3 [] [ str ("Press buttons to manipulate counter: " + show model) ] ]
           Columns.columns [] 
             [ Column.column [] [ button "-" (fun _ -> dispatch Decrement) ]
               Column.column [] [ button "+" (fun _ -> dispatch Increment) ] ] ]
@@ -94,13 +113,13 @@ let view model dispatch =
         [ Content.content [ Content.customClass Bulma.Level.Item.HasTextCentered ]
             [ safeComponents ] ] ]
 #else
-  R.div []
-    [ R.h1 [] [ R.str "SAFE Template" ]
-      R.p  [] [ R.str "The initial counter is fetched from server" ]
-      R.p  [] [ R.str "Press buttons to manipulate counter:" ]
-      R.button [ OnClick (fun _ -> dispatch Decrement) ] [ R.str "-" ]
-      R.div [] [ R.str (show model) ]
-      R.button [ OnClick (fun _ -> dispatch Increment) ] [ R.str "+" ]
+  div []
+    [ h1 [] [ str "SAFE Template" ]
+      p  [] [ str "The initial counter is fetched from server" ]
+      p  [] [ str "Press buttons to manipulate counter:" ]
+      button [ OnClick (fun _ -> dispatch Decrement) ] [ str "-" ]
+      div [] [ str (show model) ]
+      button [ OnClick (fun _ -> dispatch Increment) ] [ str "+" ]
       safeComponents ]
 #endif
   

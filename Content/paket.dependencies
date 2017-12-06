@@ -1,16 +1,25 @@
-source https://api.nuget.org/v3/index.json
+group Server
+  source https://api.nuget.org/v3/index.json
 
-nuget Fable.Core
-nuget Fable.Elmish.Debugger
-nuget Fable.Elmish.React
-nuget Fable.Elmish.HMR
-nuget FSharp.Core
-nuget Suave
+  nuget FSharp.Core
+  nuget Suave
 
-nuget Fulma
+  nuget Fable.Remoting.Suave
 
-clitool dotnet-fable
-clitool Microsoft.DotNet.Watcher.Tools
+  clitool Microsoft.DotNet.Watcher.Tools
+
+group Client
+  source https://api.nuget.org/v3/index.json
+
+  nuget Fable.Core
+  nuget Fable.Elmish.Debugger
+  nuget Fable.Elmish.React
+  nuget Fable.Elmish.HMR
+
+  nuget Fable.Remoting.Client
+  nuget Fulma
+
+  clitool dotnet-fable
 
 group Build
   source https://api.nuget.org/v3/index.json

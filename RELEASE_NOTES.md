@@ -1,3 +1,7 @@
+#### 0.2.0 - 06.12.2017
+
+* Add `--Remoting` template option
+
 #### 0.1.3 - 02.12.2017
 
 * Add `--Fulma` template option

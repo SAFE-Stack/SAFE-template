@@ -37,9 +37,15 @@ Show available template options with : `dotnet new SAFE --help`
 
 ### Fulma
 
-You can add [Fulma](https://mangelmaxime.github.io/Fulma) to the template by specifying `--Fulma` (or `-F`) parameter:
+Add [Fulma](https://mangelmaxime.github.io/Fulma) to the template by specifying `--Fulma` (or `-F`) parameter:
 
 `dotnet new SAFE --Fulma`
+
+### Fable.Remoting
+
+Add [Fable.Remoting](https://github.com/Zaid-Ajaj/Fable.Remoting) to the template by specifying `--Remoting` (or `-R`) parameter:
+
+`dotnet new SAFE --Remoting`
 
 ## Contributing
 
