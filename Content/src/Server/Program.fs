@@ -7,12 +7,12 @@ open Suave.Operators
 
 open Shared
 
-let path = Path.Combine("..","Client") |> Path.GetFullPath 
+let clientPath = Path.Combine("..","Client") |> Path.GetFullPath 
 let port = 8085us
 
 let config =
   { defaultConfig with 
-      homeFolder = Some path
+      homeFolder = Some clientPath
       bindings = [ HttpBinding.create HTTP (IPAddress.Parse "0.0.0.0") port ] }
 
 let getCounter () : Async<Counter> = async { return 42 }
