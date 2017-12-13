@@ -3,7 +3,7 @@
 GROUP Build
 NUGET
   remote: https://api.nuget.org/v3/index.json
-    FAKE (4.63.2)
+    FAKE (4.64.2)
 
 GROUP Client
 NUGET
