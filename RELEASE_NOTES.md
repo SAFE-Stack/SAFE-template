@@ -1,3 +1,7 @@
+#### 0.2.1 - 13.12.2017
+
+* Prevent reinstalling dotnet - https://github.com/SAFE-Stack/SAFE-template/issues/17
+
 #### 0.2.0 - 06.12.2017
 
 * Add `--Remoting` template option
