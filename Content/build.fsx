@@ -5,7 +5,6 @@ open System
 open Fake
 
 let serverPath = "./src/Server" |> FullName
-let serverProj = serverPath </> "Server.fsproj"
 let clientPath = "./src/Client" |> FullName
 
 let platformTool tool winTool =
@@ -17,6 +16,7 @@ let platformTool tool winTool =
 let nodeTool = platformTool "node" "node.exe"
 let yarnTool = platformTool "yarn" "yarn.cmd"
 
+let dotnetcliVersion = DotNetCli.GetDotNetSDKVersionFromGlobalJson()
 let mutable dotnetCli = "dotnet"
 
 let run cmd args workingDir =
@@ -30,7 +30,7 @@ let run cmd args workingDir =
 Target "Clean" DoNothing
 
 Target "InstallDotNetCore" (fun _ ->
-  dotnetCli <- DotNetCli.InstallDotNetSDK "2.0.3"
+  dotnetCli <- DotNetCli.InstallDotNetSDK dotnetcliVersion
 )
 
 Target "InstallClient" (fun _ ->
