@@ -33,7 +33,7 @@ Now you can edit:
 
 ## Template options
 
-Show available template options with : `dotnet new SAFE --help`
+Show template version and available options with : `dotnet new SAFE --help`
 
 ### Fulma
 

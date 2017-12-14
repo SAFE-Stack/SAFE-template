@@ -3,6 +3,8 @@
 open Fake
 open Fake.ReleaseNotesHelper
 
+let templatePath = "./Content/.template.config/template.json"
+let templateName = "SAFE-Stack Web App"
 let nupkgDir = FullName "./nupkg"
 
 let release = LoadReleaseNotes "RELEASE_NOTES.md"
@@ -19,6 +21,11 @@ Target "Clean" (fun () ->
 )
 
 Target "Pack" (fun () ->
+  RegexReplaceInFileWithEncoding
+    "  \"name\": .+,"
+   ("  \"name\": \"" + templateName + " v" + release.NugetVersion + "\",")
+    System.Text.Encoding.UTF8
+    templatePath 
   DotNetCli.Pack ( fun args ->
     { args with
         OutputPath = nupkgDir
