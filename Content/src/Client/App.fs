@@ -28,14 +28,14 @@ type Msg =
 #if (Remoting)
 module Server = 
 
-  open Shard
+  open Shared
   open Fable.Remoting.Client
   
   /// A proxy you can use to talk to server directly
   let api : ICounterProtocol = 
-    Proxy.createWithBuilder<ICounterProtocol> routeBuilder
+    Proxy.createWithBuilder<ICounterProtocol> Route.builder
     
-#endif 
+#endif
 
 let init () = 
   let model = None

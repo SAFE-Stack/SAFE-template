@@ -26,7 +26,7 @@ let init : WebPart =
   let counterProcotol = 
     { getInitCounter = getInitCounter }
   // creates a WebPart for the given implementation
-  FableSuaveAdapter.webPartWithBuilderFor counterProcotol routeBuilder
+  FableSuaveAdapter.webPartWithBuilderFor counterProcotol Route.builder
 #else
   Filters.path "/api/init" >=>
   fun ctx ->

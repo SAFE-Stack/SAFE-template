@@ -1,3 +1,7 @@
+#### 0.2.2 - 14.12.2017
+
+* Fable.Remoting usage improvements - https://github.com/SAFE-Stack/SAFE-template/pull/22
+
 #### 0.2.1 - 13.12.2017
 
 * Prevent reinstalling dotnet - https://github.com/SAFE-Stack/SAFE-template/issues/17
