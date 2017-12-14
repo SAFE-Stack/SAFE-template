@@ -24,15 +24,25 @@ type Msg =
 | Decrement
 | Init of Result<Counter, exn>
 
+
+#if (Remoting)
+module Server = 
+
+  open Shard
+  open Fable.Remoting.Client
+  
+  /// Creates a proxy object you can use to talk to server directly
+  let api : ICounterProtocol = 
+    Proxy.createWithBuilder<ICounterProtocol> routeBuilder
+    
+#endif 
+
 let init () = 
   let model = None
   let cmd =
 #if Remoting
-    let routeBuilder typeName methodName = 
-      sprintf "/api/%s/%s" typeName methodName
-    let api = Fable.Remoting.Client.Proxy.createWithBuilder<Init> routeBuilder
     Cmd.ofAsync 
-      api.getCounter
+      Server.api.getInitCounter
       () 
       (Ok >> Init)
       (Error >> Init)
