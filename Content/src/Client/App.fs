@@ -31,7 +31,7 @@ module Server =
   open Shard
   open Fable.Remoting.Client
   
-  /// Creates a proxy object you can use to talk to server directly
+  /// A proxy you can use to talk to server directly
   let api : ICounterProtocol = 
     Proxy.createWithBuilder<ICounterProtocol> routeBuilder
     
