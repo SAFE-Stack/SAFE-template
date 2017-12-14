@@ -7,6 +7,10 @@ open Suave.Operators
 
 open Shared
 
+#if (Remoting)
+open Fable.Remoting.Suave
+#endif
+
 let clientPath = Path.Combine("..","Client") |> Path.GetFullPath 
 let port = 8085us
 
@@ -15,20 +19,19 @@ let config =
       homeFolder = Some clientPath
       bindings = [ HttpBinding.create HTTP (IPAddress.Parse "0.0.0.0") port ] }
 
-let getCounter () : Async<Counter> = async { return 42 }
+let getInitCounter () : Async<Counter> = async { return 42 }
 
 let init : WebPart = 
 #if (Remoting)
-  let api = 
-    { getCounter = getCounter }
-  let routeBuilder typeName methodName = 
-    sprintf "/api/%s/%s" typeName methodName
-  Fable.Remoting.Suave.FableSuaveAdapter.webPartWithBuilderFor api routeBuilder
+  let counterProcotol = 
+    { getInitCounter = getInitCounter }
+  // creates a WebPart for the given implementation
+  FableSuaveAdapter.webPartWithBuilderFor counterProcotol routeBuilder
 #else
   Filters.path "/api/init" >=>
   fun ctx ->
     async {
-      let! counter = getCounter()
+      let! counter = getInitCounter()
       return! Successful.OK (string counter) ctx
     }
 #endif
