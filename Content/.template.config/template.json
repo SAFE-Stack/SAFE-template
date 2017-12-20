@@ -22,5 +22,22 @@
       "defaultValue": "false",
       "description": "adds Fable.Remoting to server and client"
     }
+  },
+  "SpecialCustomOperations": {
+    "**/paket.*": {
+      "operations": [
+        {
+          "type": "conditional",
+          "configuration": {
+            "actionableIf": [ "#if", "//if" ],
+            "actionableElse": [ "#else", "//else" ],
+            "actionableElseif": [ "#elseif", "//elseif" ],
+            "endif": [ "#endif" ],
+            "trim": "true",
+            "wholeLine": "true"
+          }
+        }
+      ]
+    }
   }
 }

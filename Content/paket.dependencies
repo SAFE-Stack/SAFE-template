@@ -17,7 +17,9 @@ group Client
   nuget Fable.Elmish.HMR
 
   nuget Fable.Remoting.Client
-  nuget Fulma
+////#if (Fulma)
+//  nuget Fulma
+////#endif
 
   clitool dotnet-fable
 
