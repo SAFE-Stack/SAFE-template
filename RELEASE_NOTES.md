@@ -1,3 +1,7 @@
+#### 0.4.0 - 22.12.2017
+
+* Add `Giraffe` as an option next to `Suave` for back-end (`--Server` template option)
+
 #### 0.3.0 - 22.12.2017
 
 * Do not include `Fulma` / `Fable.Remoting` in paket when not specified - https://github.com/SAFE-Stack/SAFE-template/issues/16
