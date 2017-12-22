@@ -42,6 +42,22 @@
       "description": "adds Fable.Remoting to server and client"
     }
   },
+  "sources": [
+    {
+      "exclude": "**/ProgramGiraffe.fs",
+      "rename": {
+        "ProgramSuave.fs" : "Program.fs"
+      },
+      "condition": "(Server == \"suave\")"
+    },
+    {
+      "exclude": "**/ProgramSuave.fs",
+      "rename": {
+        "ProgramGiraffe.fs" : "Program.fs"
+      },
+      "condition": "(Server == \"giraffe\")"
+    }
+  ],
   "SpecialCustomOperations": {
     "**/paket.*": {
       "operations": [
