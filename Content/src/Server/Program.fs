@@ -7,7 +7,8 @@ open Microsoft.AspNetCore.Builder
 open Microsoft.AspNetCore.Hosting
 
 open Giraffe
-open Giraffe.HttpStatusCodeHandlers.Successful
+
+open Fable.Remoting.Giraffe
 
 open Shared
 
@@ -16,13 +17,20 @@ let port = 8085us
 
 let getInitCounter () : Task<Counter> = task { return 42 }
 
-let webApp =
+let webApp : HttpHandler =
+#if (Remoting)
   route "/api/init" >=>
     fun next ctx ->
       task {
         let! counter = getInitCounter()
-        return! OK counter next ctx
+        return! Successful.OK counter next ctx
       }
+#else
+  let counterProcotol = 
+    { getInitCounter = getInitCounter >> Async.AwaitTask }
+  // creates a WebPart for the given implementation
+  FableGiraffeAdapter.httpHandlerWithBuilderFor counterProcotol Route.builder
+#endif
 
 let configureApp  (app : IApplicationBuilder) =
   app.UseStaticFiles()

@@ -13,6 +13,7 @@ group Server
   nuget Giraffe
   nuget Microsoft.AspNetCore
   nuget Microsoft.AspNetCore.StaticFiles
+  nuget Fable.Remoting.Giraffe
 
 group Client
   source https://api.nuget.org/v3/index.json
