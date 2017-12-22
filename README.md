@@ -20,6 +20,8 @@ The template does not include any Azure / other Cloud integration. Refer to [SAF
 
 * Install or update the template: `dotnet new -i SAFE.Template`
 * Create a new project from the template: `dotnet new SAFE`
+* Run `paket install` to resolve dependency graph and create `paket.lock`
+  * `paket.lock` is not included in template anymore, because of different options allow to reference different packages, and for each permutation the dependency graph would differ
 * Build and run the project: `build.cmd run` / `./build.sh run`. This command:
   * Fetches all necessary dependencies
   * Builds Server and Client code
