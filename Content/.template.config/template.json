@@ -25,10 +25,6 @@
         }
       ]
     },
-    "IsSuave":{
-      "type": "computed",
-      "value": "(Server == \"suave\")"
-    },
     "Fulma": {
       "type": "parameter",
       "dataType": "bool",
