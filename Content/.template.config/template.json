@@ -17,11 +17,11 @@
       "choices": [
         {
           "choice": "suave",
-          "description": "Suave.IO - lightweight, non-blocking web server (standalone)"
+          "description": "lightweight, non-blocking web server (standalone)"
         },
         {
           "choice": "giraffe",
-          "description": "Giraffe - a functional micro web framework based on ASP.NET Core"
+          "description": "a functional micro web framework based on ASP.NET Core"
         }
       ]
     },
@@ -42,18 +42,6 @@
       "description": "adds Fable.Remoting to server and client"
     }
   },
-  "sources": [
-    {
-      "source": "./src/Server/ProgramSuave.fs",
-      "target": "./src/Server/Program.fs",
-      "condition": "(Server == \"suave\")"
-    },
-    {
-      "source": "./src/Server/ProgramGiraffe.fs",
-      "target": "./src/Server/Program.fs",
-      "condition": "(Server == \"giraffe\")"
-    }
-  ],
   "SpecialCustomOperations": {
     "**/paket.*": {
       "operations": [
