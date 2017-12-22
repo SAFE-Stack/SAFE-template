@@ -29,9 +29,9 @@
         {
           "type": "conditional",
           "configuration": {
-            "actionableIf": [ "#if", "//if" ],
-            "actionableElse": [ "#else", "//else" ],
-            "actionableElseif": [ "#elseif", "//elseif" ],
+            "if": [ "#if", "//if" ],
+            "else": [ "#else", "//else" ],
+            "elseif": [ "#elseif", "//elseif" ],
             "endif": [ "#endif" ],
             "trim": "true",
             "wholeLine": "true"
