@@ -1,3 +1,8 @@
+#### 0.3.0 - 22.12.2017
+
+* Do not include `Fulma` / `Fable.Remoting` in paket when not specified - https://github.com/SAFE-Stack/SAFE-template/issues/16
+* Do not include `paket.lock` - require running manually
+
 #### 0.2.2 - 14.12.2017
 
 * Fable.Remoting usage improvements - https://github.com/SAFE-Stack/SAFE-template/pull/22

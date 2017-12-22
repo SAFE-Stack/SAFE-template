@@ -3,7 +3,6 @@ group Server
 
   nuget FSharp.Core
   nuget Suave
-
 //#if (Remoting)
   nuget Fable.Remoting.Suave
 //#endif
@@ -17,7 +16,6 @@ group Client
   nuget Fable.Elmish.Debugger
   nuget Fable.Elmish.React
   nuget Fable.Elmish.HMR
-
 //#if (Remoting)
   nuget Fable.Remoting.Client
 //#endif
