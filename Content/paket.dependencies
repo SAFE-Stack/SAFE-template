@@ -2,9 +2,17 @@ group Server
   source https://api.nuget.org/v3/index.json
 
   nuget FSharp.Core
+//#if (Server == "suave")
   nuget Suave
-//#if (Remoting)
+//#else
+  nuget Giraffe
+  nuget Microsoft.AspNetCore
+  nuget Microsoft.AspNetCore.StaticFiles
+//#endif
+//#if     (Remoting && Server == "suave")
   nuget Fable.Remoting.Suave
+//#elseif (Remoting && Server == "giraffe")
+  nuget Fable.Remoting.Giraffe
 //#endif
 
   clitool Microsoft.DotNet.Watcher.Tools

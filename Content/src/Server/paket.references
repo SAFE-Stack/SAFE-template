@@ -1,7 +1,15 @@
 group Server
   FSharp.Core
+//#if (Server == "suave")
   Suave
-  Microsoft.DotNet.Watcher.Tools
-//#if (Remoting)
-  Fable.Remoting.Suave
+//#else
+  Giraffe
+  Microsoft.AspNetCore
+  Microsoft.AspNetCore.StaticFiles
 //#endif
+//#if     (Remoting && Server == "suave")
+  Fable.Remoting.Suave
+//#elseif (Remoting && Server == "giraffe")
+  Fable.Remoting.Giraffe
+//#endif
+  Microsoft.DotNet.Watcher.Tools

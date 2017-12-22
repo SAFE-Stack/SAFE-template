@@ -71,8 +71,12 @@ let safeComponents =
       | xs -> x::sep::xs) ls []
 
   let components =
-    [ 
-      "Suave.IO", "http://suave.io" 
+    [
+#if (Server == "suave")
+      "Suave.IO", "http://suave.io"
+#else
+      "Giraffe" , "https://github.com/giraffe-fsharp/Giraffe"
+#endif
       "Fable"   , "http://fable.io"
       "Elmish"  , "https://fable-elmish.github.io/"
 #if (Fulma)

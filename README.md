@@ -37,6 +37,13 @@ Now you can edit:
 
 Show template version and available options with : `dotnet new SAFE --help`
 
+### Server
+
+Choose between available Server back-ends:
+
+* [Suave.io](http://suave.io) (default)
+* [Giraffe](https://github.com/giraffe-fsharp/Giraffe) `dotnet new SAFE --Server giraffe`
+
 ### Fulma
 
 Add [Fulma](https://mangelmaxime.github.io/Fulma) to the template by specifying `--Fulma` (or `-F`) parameter:

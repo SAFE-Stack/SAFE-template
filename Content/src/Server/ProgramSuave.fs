@@ -1,15 +1,14 @@
 ﻿open System.IO
-
 open System.Net
 
 open Suave
 open Suave.Operators
 
-open Shared
-
 #if (Remoting)
 open Fable.Remoting.Suave
 #endif
+
+open Shared
 
 let clientPath = Path.Combine("..","Client") |> Path.GetFullPath 
 let port = 8085us
