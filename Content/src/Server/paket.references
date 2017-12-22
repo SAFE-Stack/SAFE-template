@@ -2,4 +2,6 @@ group Server
   FSharp.Core
   Suave
   Microsoft.DotNet.Watcher.Tools
+//#if (Remoting)
   Fable.Remoting.Suave
+//#endif

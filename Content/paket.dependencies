@@ -4,7 +4,9 @@ group Server
   nuget FSharp.Core
   nuget Suave
 
+//#if (Remoting)
   nuget Fable.Remoting.Suave
+//#endif
 
   clitool Microsoft.DotNet.Watcher.Tools
 
@@ -16,7 +18,9 @@ group Client
   nuget Fable.Elmish.React
   nuget Fable.Elmish.HMR
 
+//#if (Remoting)
   nuget Fable.Remoting.Client
+//#endif
 //#if (Fulma)
   nuget Fulma
 //#endif
