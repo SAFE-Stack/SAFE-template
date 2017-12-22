@@ -1,16 +1,28 @@
 ﻿open System
 open System.IO
+open System.Threading.Tasks
 
 open Microsoft.AspNetCore
 open Microsoft.AspNetCore.Builder
 open Microsoft.AspNetCore.Hosting
 
 open Giraffe
+open Giraffe.HttpStatusCodeHandlers.Successful
+
+open Shared
 
 let clientPath = Path.Combine("..","Client") |> Path.GetFullPath
 let port = 8085us
 
-let webApp = text "hello world"
+let getInitCounter () : Task<Counter> = task { return 42 }
+
+let webApp =
+  route "/api/init" >=>
+    fun next ctx ->
+      task {
+        let! counter = getInitCounter()
+        return! OK counter next ctx
+      }
 
 let configureApp  (app : IApplicationBuilder) =
   app.UseStaticFiles()
