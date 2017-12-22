@@ -9,6 +9,11 @@ group Server
 
   clitool Microsoft.DotNet.Watcher.Tools
 
+
+  nuget Giraffe
+  nuget Microsoft.AspNetCore
+  nuget Microsoft.AspNetCore.StaticFiles
+
 group Client
   source https://api.nuget.org/v3/index.json
 

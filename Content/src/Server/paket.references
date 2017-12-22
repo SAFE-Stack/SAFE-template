@@ -5,3 +5,7 @@ group Server
 //#if (Remoting)
   Fable.Remoting.Suave
 //#endif
+
+  Giraffe
+  Microsoft.AspNetCore
+  Microsoft.AspNetCore.StaticFiles
