@@ -27,6 +27,6 @@ run() {
   fi
 }
 
-run $PAKET_EXE restore
+run $PAKET_EXE install
 run $FAKE_EXE "$@" $FSIARGS $FSIARGS2 build.fsx
 
