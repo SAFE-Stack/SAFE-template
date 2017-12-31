@@ -1,3 +1,7 @@
+#### 0.4.1 - 31.12.2017
+
+* Replace CRLF with LF in `build.sh` - https://github.com/SAFE-Stack/SAFE-template/issues/25
+
 #### 0.4.0 - 22.12.2017
 
 * Add `Giraffe` as an option next to `Suave` for back-end (`--Server` template option)
