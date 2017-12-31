@@ -1,3 +1,7 @@
+#### 0.4.2 - 31.12.2017
+
+* Run `paket install` when `paket.lock` is missing (just after creating from template) - https://github.com/SAFE-Stack/SAFE-template/pull/26
+
 #### 0.4.1 - 31.12.2017
 
 * Replace CRLF with LF in `build.sh` - https://github.com/SAFE-Stack/SAFE-template/issues/25
