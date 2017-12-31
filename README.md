@@ -4,7 +4,7 @@ A dotnet CLI template for [SAFE-Stack](https://safe-stack.github.io/) projects.
 
 This is a basic template to get started with 3 core components of the stack:
 
-* [Suave](https://suave.io/)
+* [Suave](https://suave.io/) or [Giraffe](https://github.com/giraffe-fsharp/Giraffe) (see `Server` option below)
 * [Fable](http://fable.io/)
 * [Elmish](https://fable-elmish.github.io/elmish/)
 
