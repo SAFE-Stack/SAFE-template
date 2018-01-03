@@ -9,7 +9,7 @@ open Fable.PowerPack.Fetch
 
 open Shared
 
-#if (Fulma)
+#if (Fulma != "none")
 open Fulma
 open Fulma.Layouts
 open Fulma.Elements
@@ -79,7 +79,7 @@ let safeComponents =
 #endif
       "Fable", "http://fable.io"
       "Elmish", "https://fable-elmish.github.io/"
-#if (Fulma)
+#if (Fulma != "none")
       "Fulma", "https://mangelmaxime.github.io/Fulma" 
 #endif
 #if (Remoting)
@@ -99,17 +99,25 @@ let show = function
 | Some x -> string x
 | None -> "Loading..."
 
-#if (Fulma)
+#if (Fulma == "none")
+let view model dispatch =
+  div []
+    [ h1 [] [ str "SAFE Template" ]
+      p  [] [ str "The initial counter is fetched from server" ]
+      p  [] [ str "Press buttons to manipulate counter:" ]
+      button [ OnClick (fun _ -> dispatch Decrement) ] [ str "-" ]
+      div [] [ str (show model) ]
+      button [ OnClick (fun _ -> dispatch Increment) ] [ str "+" ]
+      safeComponents ]
+#elseif (Fulma == "basic")
 let button txt onClick = 
   Button.button_btn
     [ Button.isFullWidth
       Button.isPrimary
       Button.onClick onClick ] 
     [ str txt ]
-#endif
 
 let view model dispatch =
-#if (Fulma)
   div []
     [ Navbar.navbar [ Navbar.customClass "is-primary" ]
         [ Navbar.item_div [ ]
@@ -127,15 +135,11 @@ let view model dispatch =
         [ Content.content [ Content.customClass Bulma.Level.Item.HasTextCentered ]
             [ safeComponents ] ] ]
 #else
+let view model dispatch =
   div []
-    [ h1 [] [ str "SAFE Template" ]
-      p  [] [ str "The initial counter is fetched from server" ]
-      p  [] [ str "Press buttons to manipulate counter:" ]
-      button [ OnClick (fun _ -> dispatch Decrement) ] [ str "-" ]
-      div [] [ str (show model) ]
-      button [ OnClick (fun _ -> dispatch Increment) ] [ str "+" ]
-      safeComponents ]
+    [ str "LANDING" ]
 #endif
+
   
 //-:cnd:noEmit
 #if DEBUG

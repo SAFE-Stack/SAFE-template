@@ -27,9 +27,22 @@
     },
     "Fulma": {
       "type": "parameter",
-      "dataType": "bool",
-      "defaultValue": "false",
-      "description": "adds Fulma (Fable bindings for Bulma.io) to client"
+      "dataType": "choice",
+      "defaultValue": "none",
+      "choices": [
+        {
+          "choice": "none",
+          "description": "don't add Fulma (Fable bindings for Bulma.io) at all"
+        },
+        {
+          "choice": "basic",
+          "description": "adds Fulma basic template"
+        },
+        {
+          "choice": "landing",
+          "description": "adds Fulma with 'Landing' Bulma template from https://dansup.github.io/bulma-templates/"
+        }
+      ]
     },
     "Remoting": {
       "type": "parameter",
