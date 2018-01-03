@@ -3,3 +3,4 @@ packages/
 paket-files/
 nupkg/
 obj/
+Content/paket.lock

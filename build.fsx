@@ -18,6 +18,10 @@ Target "Clean" (fun () ->
   CleanDirs [
     nupkgDir
   ]
+
+  Fake.Git.CommandHelper.directRunGitCommandAndFail
+    "./Content"
+    "clean -fxd"
 )
 
 Target "Pack" (fun () ->

@@ -75,12 +75,12 @@ let safeComponents =
 #if (Server == "suave")
       "Suave.IO", "http://suave.io"
 #else
-      "Giraffe" , "https://github.com/giraffe-fsharp/Giraffe"
+      "Giraffe", "https://github.com/giraffe-fsharp/Giraffe"
 #endif
-      "Fable"   , "http://fable.io"
-      "Elmish"  , "https://fable-elmish.github.io/"
+      "Fable", "http://fable.io"
+      "Elmish", "https://fable-elmish.github.io/"
 #if (Fulma)
-      "Fulma"   , "https://mangelmaxime.github.io/Fulma" 
+      "Fulma", "https://mangelmaxime.github.io/Fulma" 
 #endif
 #if (Remoting)
       "Fable.Remoting", "https://github.com/Zaid-Ajaj/Fable.Remoting"

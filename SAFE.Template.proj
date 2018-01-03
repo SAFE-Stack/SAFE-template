@@ -14,12 +14,13 @@
   </PropertyGroup>
   <PropertyGroup>
     <ExcludeFromPackage>
-        Content/node_modules/**/*;
-        Content/packages/**/*;
-        Content/paket-files/**/*;
-        **/obj/**/*;
-        **/bin/**/*;
-        **/.fake/**/*;
+**/.fake/**/*;
+**/obj/**/*;
+**/bin/**/*;
+**/packages/**/*;
+**/paket-files/**/*;
+**/node_modules/**/*;
+**/src/Client/public/**/*;
     </ExcludeFromPackage>
 </PropertyGroup>
   <ItemGroup>

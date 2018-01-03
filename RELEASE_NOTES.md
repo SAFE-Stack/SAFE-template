@@ -1,3 +1,7 @@
+#### 0.4.3 - 03.01.2018
+
+* exclude .template.config from sources - https://github.com/SAFE-Stack/SAFE-template/issues/24
+
 #### 0.4.2 - 31.12.2017
 
 * Run `paket install` when `paket.lock` is missing (just after creating from template) - https://github.com/SAFE-Stack/SAFE-template/pull/26
