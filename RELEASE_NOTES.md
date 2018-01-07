@@ -1,3 +1,7 @@
+#### 0.5.0 - 07.01.2018
+
+* Add `hero` and `landing` bulma templates - https://github.com/SAFE-Stack/SAFE-template/issues/27
+
 #### 0.4.3 - 03.01.2018
 
 * exclude .template.config from sources - https://github.com/SAFE-Stack/SAFE-template/issues/24
