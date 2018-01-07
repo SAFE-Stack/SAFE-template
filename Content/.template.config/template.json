@@ -2,7 +2,7 @@
   "$schema": "http://json.schemastore.org/template",
   "author": "Tomasz Heimowski",
   "classifications": [ "F#", "Web", "Suave", "Fable", "Elmish", "Giraffe", "Bulma" ],
-  "name": "SAFE-Stack Web App v0.4.3",
+  "name": "SAFE-Stack Web App v0.5.1",
   "tags": {
     "language": "F#",
     "type": "project"
