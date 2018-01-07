@@ -44,9 +44,12 @@ Choose between available Server back-ends:
 
 ### Fulma
 
-Add [Fulma](https://mangelmaxime.github.io/Fulma) to the template by specifying `--Fulma` (or `-F`) parameter:
+Add [Fulma](https://mangelmaxime.github.io/Fulma) to the template:
 
-`dotnet new SAFE --Fulma`
+* none - don't add Fulma (Fable bindings for Bulma.io) at all
+* basic - adds Fulma basic template `dotnet new SAFE --Fulma basic`
+* hero - adds Fulma with ['Hero' Bulma template](https://dansup.github.io/bulma-templates/) `dotnet new SAFE --Fulma hero`
+* landing - adds Fulma with ['Landing' Bulma template](https://dansup.github.io/bulma-templates/) `dotnet new SAFE --Fulma landing`
 
 ### Fable.Remoting
 

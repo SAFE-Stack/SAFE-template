@@ -27,8 +27,8 @@ group Client
 //#if (Remoting)
   nuget Fable.Remoting.Client
 //#endif
-//#if (Fulma)
-  nuget Fulma
+//#if (Fulma != "none")
+  nuget Fulma 1.0.0-beta-005
 //#endif
 
   clitool dotnet-fable
