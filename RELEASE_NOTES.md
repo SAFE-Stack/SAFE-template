@@ -1,3 +1,9 @@
+#### 0.5.2 - 22.01.2018
+
+* [Suave] Route `/` (root) requests to `index.html`
+* [Suave] Fallback to 404 for unmatched requests
+* Rename `App.fs` to `Client.fs` and `Program.fs` to `Server.fs` to better distinguish between the two
+
 #### 0.5.1 - 07.01.2018
 
 * Add `hero` and `landing` bulma templates - https://github.com/SAFE-Stack/SAFE-template/issues/27
