@@ -19,8 +19,8 @@ The template does not include any Azure / other Cloud integration. Refer to [SAF
 ## Using the template
 
 * Install or update the template: `dotnet new -i SAFE.Template`
-* Create a new project from the template: `dotnet new SAFE --lang F#`
-  * Note: `--lang F#` is currently required, due to [CLI issue](https://github.com/SAFE-Stack/SAFE-template/issues/28)
+* Create a new project from the template: `dotnet new SAFE -lang F#`
+  * Note: `-lang F#` or `--language F#` is currently required, due to [CLI issue](https://github.com/SAFE-Stack/SAFE-template/issues/28)
 * Build and run the project: `build.cmd run` / `./build.sh run`. This command:
   * Fetches all necessary dependencies
   * Builds Server and Client code
