@@ -38,7 +38,9 @@ let init : WebPart =
 let webPart =
   choose [
     init
+    Filters.path "/" >=> Files.browseFileHome "index.html"
     Files.browseHome
+    RequestErrors.NOT_FOUND "Not found!"
   ]
 
 startWebServer config webPart
