@@ -61,16 +61,16 @@
       "modifiers": [
         {
           "condition": "(Server == \"suave\")",
-          "exclude": [ "**/ProgramGiraffe.fs" ],
+          "exclude": [ "**/ServerGiraffe.fs" ],
           "rename": {
-            "ProgramSuave.fs": "Program.fs"
+            "ServerSuave.fs": "Server.fs"
           }
         },
         {
           "condition": "(Server == \"giraffe\")",
-          "exclude": [ "**/ProgramSuave.fs" ],
+          "exclude": [ "**/ServerSuave.fs" ],
           "rename": {
-            "ProgramGiraffe.fs": "Program.fs"
+            "ServerGiraffe.fs": "Server.fs"
           }
         },
         {
