@@ -1,3 +1,7 @@
+#### 0.5.3 - 22.01.2018
+
+* Add `module Client` back to `Client.fs` - https://github.com/SAFE-Stack/SAFE-template/pull/30
+
 #### 0.5.2 - 22.01.2018
 
 * [Suave] Route `/` (root) requests to `index.html`
