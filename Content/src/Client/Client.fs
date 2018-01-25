@@ -1,3 +1,5 @@
+module Client
+
 open Elmish
 open Elmish.React
 
