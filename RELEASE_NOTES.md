@@ -1,3 +1,7 @@
+#### 0.7.0 - 28.01.2018
+
+* `NPM` option to use NPM instead of default Yarn
+
 #### 0.6.0 - 28.01.2018
 
 * `Docker` option for additional FAKE targets to build Docker image

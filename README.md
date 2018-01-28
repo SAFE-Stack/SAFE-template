@@ -64,6 +64,12 @@ Additional FAKE targets to bundle and build Docker image:
 
 `dotnet new SAFE --Docker`
 
+### NPM
+
+Use NPM instead of default Yarn for JS package management:
+
+`dotnet new SAFE --NPM`
+
 ## Contributing
 
 Refer to [Contribution guideline](CONTRIBUTING.md)

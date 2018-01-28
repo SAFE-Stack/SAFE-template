@@ -15,7 +15,11 @@ let platformTool tool winTool =
   |> function Some t -> t | _ -> failwithf "%s not found" tool
 
 let nodeTool = platformTool "node" "node.exe"
+#if (NPM)
+let npmTool = platformTool "npm" "npm.cmd"  
+#else
 let yarnTool = platformTool "yarn" "yarn.cmd"
+#endif
 
 let dotnetcliVersion = DotNetCli.GetDotNetSDKVersionFromGlobalJson()
 let mutable dotnetCli = "dotnet"
@@ -39,9 +43,15 @@ Target "InstallDotNetCore" (fun _ ->
 Target "InstallClient" (fun _ ->
   printfn "Node version:"
   run nodeTool "--version" __SOURCE_DIRECTORY__
+#if (NPM)
+  printfn "Npm version:"
+  run npmTool "--version"  __SOURCE_DIRECTORY__
+  run npmTool "install" __SOURCE_DIRECTORY__
+#else
   printfn "Yarn version:"
   run yarnTool "--version" __SOURCE_DIRECTORY__
   run yarnTool "install --frozen-lockfile" __SOURCE_DIRECTORY__
+#endif
   run dotnetCli "restore" clientPath
 )
 
