@@ -58,6 +58,12 @@ Add [Fable.Remoting](https://github.com/Zaid-Ajaj/Fable.Remoting) to the templat
 
 `dotnet new SAFE --Remoting`
 
+### Docker
+
+Additional FAKE targets to bundle and build Docker image:
+
+`dotnet new SAFE --Docker`
+
 ## Contributing
 
 Refer to [Contribution guideline](CONTRIBUTING.md)

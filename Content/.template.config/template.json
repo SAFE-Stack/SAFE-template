@@ -53,6 +53,12 @@
       "dataType": "bool",
       "defaultValue": "false",
       "description": "adds Fable.Remoting to server and client"
+    },
+    "Docker": {
+      "type": "parameter",
+      "dataType": "bool",
+      "defaultValue": "false",
+      "description": "additional FAKE targets to bundle and build Docker image"
     }
   },
   "sources": [
@@ -80,12 +86,30 @@
         {
           "exclude": "**/landing.css",
           "condition": "(Fulma != \"landing\")"
+        },
+        {
+          "exclude": "**/Dockerfile",
+          "condition": "(!Docker)"
         }
       ]
     }
   ],
   "SpecialCustomOperations": {
     "**/paket.*": {
+      "operations": [
+        {
+          "type": "conditional",
+          "configuration": {
+            "if": [ "#if" ],
+            "else": [ "#else" ],
+            "elseif": [ "#elseif" ],
+            "endif": [ "#endif" ],
+            "trim": "true",
+            "wholeLine": "true"
+          }
+        }
+      ]
+    },"**/*.fsx": {
       "operations": [
         {
           "type": "conditional",

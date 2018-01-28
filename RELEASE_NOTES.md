@@ -1,3 +1,7 @@
+#### 0.6.0 - 28.01.2018
+
+* `Docker` option for additional FAKE targets to build Docker image
+
 #### 0.5.3 - 22.01.2018
 
 * Add `module Client` back to `Client.fs` - https://github.com/SAFE-Stack/SAFE-template/pull/30
