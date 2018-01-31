@@ -145,9 +145,9 @@ let view model dispatch =
             [ safeComponents ] ] ]
 #elseif (Fulma == "hero")
 let navBrand =
-  Navbar.brand_div [ ] 
-    [ Navbar.item_a 
-        [ Navbar.Item.props [ Href "https://safe-stack.github.io/" ] ] 
+  Navbar.Brand.div [ ] 
+    [ Navbar.Item.a 
+        [ Navbar.Item.Props [ Href "https://safe-stack.github.io/" ] ] 
         [ img [ Src "https://safe-stack.github.io/images/safe_top.png"
                 Alt "Logo" ] ] 
       Navbar.burger [ ] 
@@ -157,46 +157,46 @@ let navBrand =
 
 let navMenu =
   Navbar.menu [ ]
-    [ Navbar.end_div [ ] 
-        [ Navbar.item_a [ ] 
+    [ Navbar.End.div [ ] 
+        [ Navbar.Item.a [ ] 
             [ str "Home" ] 
-          Navbar.item_a [ ]
+          Navbar.Item.a [ ]
             [ str "Examples" ]
-          Navbar.item_a [ ]
+          Navbar.Item.a [ ]
             [ str "Documentation" ]
-          Navbar.item_div [ ]
-            [ Button.button_a 
-                [ Button.isWhite
-                  Button.isOutlined
-                  Button.isSmall
-                  Button.props [ Href "https://github.com/SAFE-Stack/SAFE-template" ] ] 
+          Navbar.Item.div [ ]
+            [ Button.a 
+                [ Button.Color IsWhite
+                  Button.IsOutlined
+                  Button.Size IsSmall
+                  Button.Props [ Href "https://github.com/SAFE-Stack/SAFE-template" ] ] 
                 [ Icon.faIcon [ ] 
                     [ Fa.icon Fa.I.Github; Fa.fw ]
                   span [ ] [ str "View Source" ] ] ] ] ]
 
 let buttonBox model dispatch =
-  Box.box' [ Box.customClass "cta" ]
+  Box.box' [ CustomClass "cta" ]
     [ Level.level [ ]
         [ Level.item [ ]
-            [ Button.button_a 
-                [ Button.isPrimary
-                  Button.onClick (fun _ -> dispatch Increment) ]
+            [ Button.a 
+                [ Button.Color IsPrimary
+                  Button.OnClick (fun _ -> dispatch Increment) ]
                 [ str "+" ] ]
 
           Level.item [ ]
             [ p [ ] [ str (show model) ] ]
 
           Level.item [ ]
-            [ Button.button_a 
-                [ Button.isPrimary
-                  Button.onClick (fun _ -> dispatch Decrement) ]
+            [ Button.a 
+                [ Button.Color IsPrimary
+                  Button.OnClick (fun _ -> dispatch Decrement) ]
                 [ str "-" ] ] ] ]
 
 let card icon heading body =
-  Column.column [ Column.Width.is4 ]
+  Column.column [ Column.Width (Column.All, Column.Is4) ]
     [ Card.card [ ]
         [ div
-            [ ClassName (Card.Image + " " + Alignment.HasTextCentered) ]
+            [ ClassName (Card.Classes.Image + " " + Alignment.HasTextCentered) ]
             [ i [ ClassName ("fa fa-" + icon) ] [ ] ]
           Card.content [ ]
             [ Content.content [ ]
@@ -207,16 +207,16 @@ let card icon heading body =
                         [ str "Learn more" ] ] ] ] ] ]
 
 let features = 
-  Columns.columns [ Columns.customClass "features" ]
+  Columns.columns [ Columns.CustomClass "features" ]
     [ card "paw" "Tristique senectus et netus et." "Purus semper eget duis at tellus at urna condimentum mattis. Non blandit massa enim nec. Integer enim neque volutpat ac tincidunt vitae semper quis. Accumsan tortor posuere ac ut consequat semper viverra nam."
       card "id-card-o" "Tempor orci dapibus ultrices in." "Ut venenatis tellus in metus vulputate. Amet consectetur adipiscing elit pellentesque. Sed arcu non odio euismod lacinia at quis risus. Faucibus turpis in eu mi bibendum neque egestas cmonsu songue. Phasellus vestibulum lorem sed risus."
       card "rocket" "Leo integer malesuada nunc vel risus." "Imperdiet dui accumsan sit amet nulla facilisi morbi. Fusce ut placerat orci nulla pellentesque dignissim enim. Libero id faucibus nisl tincidunt eget nullam. Commodo viverra maecenas accumsan lacus vel facilisis." ]
 
 let intro =
   Column.column 
-    [ Column.customClass "intro"
-      Column.Width.is8
-      Column.Offset.is2 ]
+    [ Column.CustomClass "intro"
+      Column.Width (Column.All, Column.Is8)
+      Column.Offset (Column.All, Column.Is2) ]
     [ h2 [ ClassName "title" ] [ str "Perfect for developers or designers!" ]
       br [ ]
       p [ ClassName "subtitle"] [ str "Vel fringilla est ullamcorper eget nulla facilisi. Nulla facilisi nullam vehicula ipsum a. Neque egestas congue quisque egestas diam in arcu cursus." ] ]
@@ -292,9 +292,9 @@ let sandbox =
           Tile.parent [  ] 
             [ Tiles.third ] ]
       Tile.ancestor [ ]
-        [ Tile.tile [ Tile.isVertical; Tile.is8 ]
+        [ Tile.tile [ Tile.IsVertical; Tile.Size Tile.Is8 ]
             [ Tile.tile [ ] 
-                [ Tile.parent [ Tile.isVertical ] 
+                [ Tile.parent [ Tile.IsVertical ] 
                     [ Tiles.verticalTop
                       Tiles.verticalBottom ]
                   Tile.parent [ ] 
@@ -306,12 +306,12 @@ let sandbox =
       Tile.ancestor [ ]
         [ Tile.parent [ ]
             [ Tiles.side ]
-          Tile.parent [ Tile.is8 ]
+          Tile.parent [ Tile.Size Tile.Is8 ]
             [ Tiles.main ] ] ]
 
 let footerContainer =
   Container.container [ ]
-    [ Content.content [ Content.customClass Alignment.HasTextCentered ] 
+    [ Content.content [ Content.CustomClass Alignment.HasTextCentered ] 
         [ p [ ] 
             [ safeComponents ]
           p [ ]
@@ -322,16 +322,16 @@ let footerContainer =
 let view model dispatch =
   div [ ]
     [ Hero.hero 
-        [ Hero.isPrimary
-          Hero.isMedium
-          Hero.isBold ]
+        [ Hero.Color IsPrimary
+          Hero.IsMedium
+          Hero.IsBold ]
         [ Hero.head [ ]
             [ Navbar.navbar [ ]
                 [ Container.container [ ] 
                     [ navBrand
                       navMenu ] ] ]
           Hero.body [ ]
-            [ Container.container [ Container.customClass Alignment.HasTextCentered ]
+            [ Container.container [ Container.CustomClass Alignment.HasTextCentered ]
                 [ h1 [ ClassName "title" ] 
                     [ str "SAFE Template" ]
                   div [ ClassName "subtitle" ]
