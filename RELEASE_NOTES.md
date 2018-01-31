@@ -1,3 +1,7 @@
+#### 0.8.0 - 31.01.2018
+
+* Update Fulma to 1.0.0-beta-007
+
 #### 0.7.0 - 28.01.2018
 
 * `NPM` option to use NPM instead of default Yarn
