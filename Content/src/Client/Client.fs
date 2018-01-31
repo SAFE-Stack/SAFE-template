@@ -120,28 +120,28 @@ let view model dispatch =
       safeComponents ]
 #elseif (Fulma == "basic")
 let button txt onClick = 
-  Button.button_btn
-    [ Button.isFullWidth
-      Button.isPrimary
-      Button.onClick onClick ] 
+  Button.button
+    [ Button.IsFullwidth
+      Button.Color IsPrimary
+      Button.OnClick onClick ] 
     [ str txt ]
 
 let view model dispatch =
   div []
-    [ Navbar.navbar [ Navbar.customClass "is-primary" ]
-        [ Navbar.item_div [ ]
+    [ Navbar.navbar [ Navbar.Color IsPrimary ]
+        [ Navbar.Item.div [ ]
             [ Heading.h2 [ ]
                 [ str "SAFE Template" ] ] ]
 
       Container.container []
-        [ Content.content [ Content.customClass Bulma.Level.Item.HasTextCentered ] 
+        [ Content.content [ Content.CustomClass Bulma.Properties.Alignment.HasTextCentered ] 
             [ Heading.h3 [] [ str ("Press buttons to manipulate counter: " + show model) ] ]
           Columns.columns [] 
             [ Column.column [] [ button "-" (fun _ -> dispatch Decrement) ]
               Column.column [] [ button "+" (fun _ -> dispatch Increment) ] ] ]
     
       Footer.footer [ ]
-        [ Content.content [ Content.customClass Bulma.Level.Item.HasTextCentered ]
+        [ Content.content [ Content.CustomClass Bulma.Properties.Alignment.HasTextCentered ]
             [ safeComponents ] ] ]
 #elseif (Fulma == "hero")
 let navBrand =
