@@ -348,10 +348,10 @@ let view model dispatch =
         [ footerContainer ] ]
 #else
 let navBrand =
-  Navbar.brand_div [ ] 
-    [ Navbar.item_a 
-        [ Navbar.Item.props [ Href "https://safe-stack.github.io/" ]
-          Navbar.Item.isActive ] 
+  Navbar.Brand.div [ ] 
+    [ Navbar.Item.a 
+        [ Navbar.Item.Props [ Href "https://safe-stack.github.io/" ]
+          Navbar.Item.IsActive true ] 
         [ img [ Src "https://safe-stack.github.io/images/safe_top.png"
                 Alt "Logo" ] ] 
       Navbar.burger [ ] 
@@ -361,44 +361,43 @@ let navBrand =
 
 let navMenu =
   Navbar.menu [ ]
-    [ Navbar.end_div [ ] 
-        [ Navbar.item_a [ ] 
+    [ Navbar.End.div [ ] 
+        [ Navbar.Item.a [ ] 
             [ str "Home" ] 
-          Navbar.item_a [ ]
+          Navbar.Item.a [ ]
             [ str "Examples" ]
-          Navbar.item_a [ ]
+          Navbar.Item.a [ ]
             [ str "Documentation" ]
-          Navbar.item_div [ ]
-            [ Button.button_a 
-                [ Button.isWhite
-                  Button.isOutlined
-                  Button.isSmall
-                  Button.props [ Href "https://github.com/SAFE-Stack/SAFE-template" ] ] 
+          Navbar.Item.div [ ]
+            [ Button.a 
+                [ Button.Color IsWhite
+                  Button.IsOutlined
+                  Button.Size IsSmall
+                  Button.Props [ Href "https://github.com/SAFE-Stack/SAFE-template" ] ] 
                 [ Icon.faIcon [ ] 
                     [ Fa.icon Fa.I.Github; Fa.fw ]
                   span [ ] [ str "View Source" ] ] ] ] ]
 
 let containerBox model dispatch =
   Box.box' [ ]
-    [ Form.Field.field_div [ Form.Field.isGrouped ] 
-        [ Form.Control.control_p [ Form.Control.customClass "is-expanded"] 
-            [ Form.Input.input
-                [ Form.Input.typeIsNumber
-                  Form.Input.disabled true
-                  Form.Input.value (show model) ] ]
-          Form.Control.control_p [ ]
-            [ Button.button_a 
-                [ Button.isPrimary
-                  Button.onClick (fun _ -> dispatch Increment) ]
+    [ Form.Field.div [ Form.Field.IsGrouped ] 
+        [ Form.Control.p [ Form.Control.CustomClass "is-expanded"] 
+            [ Form.Input.text
+                [ Form.Input.Disabled true
+                  Form.Input.Value (show model) ] ]
+          Form.Control.p [ ]
+            [ Button.a 
+                [ Button.Color IsPrimary
+                  Button.OnClick (fun _ -> dispatch Increment) ]
                 [ str "+" ] ]
-          Form.Control.control_p [ ]
-            [ Button.button_a 
-                [ Button.isPrimary
-                  Button.onClick (fun _ -> dispatch Decrement) ]
+          Form.Control.p [ ]
+            [ Button.a 
+                [ Button.Color IsPrimary
+                  Button.OnClick (fun _ -> dispatch Decrement) ]
                 [ str "-" ] ] ] ]
 
 let view model dispatch =
-  Hero.hero [ Hero.isPrimary; Hero.isFullHeight ] 
+  Hero.hero [ Hero.Color IsPrimary; Hero.IsFullHeight ] 
     [ Hero.head [ ] 
         [ Navbar.navbar [ ]
             [ Container.container [ ]
@@ -406,10 +405,10 @@ let view model dispatch =
                   navMenu ] ] ]
       
       Hero.body [ ] 
-        [ Container.container [ Container.customClass Alignment.HasTextCentered ]
+        [ Container.container [ Container.CustomClass Alignment.HasTextCentered ]
             [ Column.column 
-                [ Column.Width.is6
-                  Column.Offset.is3 ]
+                [ Column.Width (Column.All, Column.Is6)
+                  Column.Offset (Column.All, Column.Is3) ]
                 [ h1 [ ClassName "title" ] 
                     [ str "SAFE Template" ]
                   div [ ClassName "subtitle" ]
