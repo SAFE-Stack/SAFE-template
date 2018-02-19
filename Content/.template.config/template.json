@@ -130,5 +130,15 @@
         }
       ]
     }
-  }
+  },
+  "postActions": [{
+    "condition": "(OS != \"windows\")",
+    "description": "Make scripts executable",
+    "manualInstructions": [ { "text": "Run 'chmod +x *.sh'" } ],
+    "actionId": "cb9a6cf3-4f5c-4860-b9d2-03a574959774",
+    "args": {
+        "+x": "*.sh"
+      },
+    "continueOnError": true
+  }]
 }
