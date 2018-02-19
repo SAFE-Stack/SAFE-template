@@ -1,3 +1,7 @@
+#### 0.8.1 - 19.02.2018
+
+* Make build.sh executable via post-action - https://github.com/SAFE-Stack/SAFE-template/pull/34
+
 #### 0.8.0 - 31.01.2018
 
 * Update Fulma to 1.0.0-beta-007
