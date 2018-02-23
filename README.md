@@ -29,7 +29,7 @@ The template does not include any Azure / other Cloud integration. Refer to [SAF
   * Opens browser with url to Webpack development server (5 second delay after running client)
 
 Now you can edit:
-* `src\Client\App.fs` - changes will be automatically refreshed in browser
+* `src\Client\Client.fs` - changes will be automatically refreshed in browser
 * `src\Server\Program.fs` - server code will be recompiled and re-run in the background
 
 ## Template options
