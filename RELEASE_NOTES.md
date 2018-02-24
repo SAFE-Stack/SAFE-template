@@ -1,3 +1,7 @@
+#### 0.8.4 - 24.02.2018
+
+* Reinstate postActions to make scripts executable on non-windows OSs - https://github.com/SAFE-Stack/SAFE-template/pull/37
+
 #### 0.8.3 - 24.02.2018
 
 * Update paket bootstrapper to version 5.142.0 - https://github.com/SAFE-Stack/SAFE-template/pull/38 
