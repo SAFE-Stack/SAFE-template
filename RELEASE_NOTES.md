@@ -1,3 +1,7 @@
+#### 0.8.3 - 24.02.2018
+
+* Update paket bootstrapper to version 5.142.0 - https://github.com/SAFE-Stack/SAFE-template/pull/38 
+
 #### 0.8.2 - 20.02.2018
 
 * Revert Make build.sh executable via post-action - https://github.com/SAFE-Stack/SAFE-template/issues/36
