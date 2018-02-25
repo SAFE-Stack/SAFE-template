@@ -39,6 +39,10 @@
           "description": "adds Fulma basic template"
         },
         {
+          "choice": "admin",
+          "description": "adds Fulma with 'Admin' Bulma template from https://dansup.github.io/bulma-templates/"
+        },
+        {
           "choice": "hero",
           "description": "adds Fulma with 'Hero' Bulma template from https://dansup.github.io/bulma-templates/"
         },
@@ -84,6 +88,10 @@
           "rename": {
             "ServerGiraffe.fs": "Server.fs"
           }
+        },
+        {
+          "exclude": "**/admin.css",
+          "condition": "(Fulma != \"admin\")"
         },
         {
           "exclude": "**/hero.css",
