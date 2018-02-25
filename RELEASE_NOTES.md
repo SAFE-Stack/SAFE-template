@@ -1,3 +1,8 @@
+#### 0.8.5 - 25.02.2018
+
+* [Giraffe] add to services to prevent NRE - https://github.com/SAFE-Stack/SAFE-template/pull/43
+* Add floating dependency on Giraffe - `~> 1`
+
 #### 0.8.4 - 24.02.2018
 
 * Reinstate postActions to make scripts executable on non-windows OSs - https://github.com/SAFE-Stack/SAFE-template/pull/37
