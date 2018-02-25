@@ -95,7 +95,7 @@ Target "Bundle" (fun _ ->
   !! "src/Client/public/**/*.*" |> CopyFiles publicDir
 
   !! "src/Client/index.html"
-  ++ "src/Client/landing.css"
+  ++ "src/Client/*.css"
   |> CopyFiles clientDir 
 )
 
