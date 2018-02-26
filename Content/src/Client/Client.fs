@@ -18,7 +18,7 @@ open Fulma.Components
 open Fulma.BulmaClasses
 #endif
 
-#if (Fulma == "admin" || Fulma == "hero" || Fulma == "landing")
+#if (Fulma == "admin" || Fulma == "cover" || Fulma == "hero" || Fulma == "landing")
 open Fulma.BulmaClasses.Bulma
 open Fulma.BulmaClasses.Bulma.Properties
 open Fulma.Extra.FontAwesome
@@ -89,7 +89,7 @@ let safeComponents =
 #if (Fulma != "none")
       "Fulma", "https://mangelmaxime.github.io/Fulma" 
 #endif
-#if (Fulma == "admin" || Fulma == "hero" || Fulma == "landing")
+#if (Fulma == "admin" || Fulma == "cover" || Fulma == "hero" || Fulma == "landing")
       "Bulma\u00A0Templates", "https://dansup.github.io/bulma-templates/"
 #endif
 #if (Remoting)
@@ -341,6 +341,89 @@ let view model dispatch =
                   hero
                   info
                   columns model dispatch ] ] ] ]
+#elseif (Fulma == "cover")
+let navBrand =
+  Navbar.Brand.div [ ] 
+    [ Navbar.Item.a 
+        [ Navbar.Item.Props 
+            [ Href "https://safe-stack.github.io/"
+              Style [ BackgroundColor "#00d1b2" ] ] ] 
+        [ img [ Src "https://safe-stack.github.io/images/safe_top.png"
+                Alt "Logo" ] ] 
+      Navbar.burger [ ] 
+        [ span [ ] [ ]
+          span [ ] [ ]
+          span [ ] [ ] ] ]
+
+let navMenu =
+  Navbar.menu [ ]
+    [ Navbar.End.div [ ] 
+        [ Navbar.Item.a [ ] 
+            [ str "Home" ] 
+          Navbar.Item.a [ ]
+            [ str "Examples" ]
+          Navbar.Item.a [ ]
+            [ str "Documentation" ]
+          Navbar.Item.div [ ]
+            [ Button.a 
+                [ Button.Size IsSmall
+                  Button.Props [ Href "https://github.com/SAFE-Stack/SAFE-template" ] ] 
+                [ Icon.faIcon [ ] 
+                    [ Fa.icon Fa.I.Github; Fa.fw ]
+                  span [ ] [ str "View Source" ] ] ] ] ]
+
+let containerBox model dispatch =
+  Box.box' [ ]
+    [ Form.Field.div [ Form.Field.IsGrouped ] 
+        [ Form.Control.p [ Form.Control.CustomClass "is-expanded"] 
+            [ Form.Input.text
+                [ Form.Input.Disabled true
+                  Form.Input.Value (show model) ] ]
+          Form.Control.p [ ]
+            [ Button.a 
+                [ Button.Color IsPrimary
+                  Button.OnClick (fun _ -> dispatch Increment) ]
+                [ str "+" ] ]
+          Form.Control.p [ ]
+            [ Button.a 
+                [ Button.Color IsPrimary
+                  Button.OnClick (fun _ -> dispatch Decrement) ]
+                [ str "-" ] ] ] ]
+
+let view model dispatch =
+  Hero.hero 
+    [ Hero.IsFullHeight
+      Hero.IsBold ]
+    [ Hero.head [ ]
+        [ Navbar.navbar [  ]
+            [ Container.container [ ]
+                [ navBrand
+                  navMenu ] ] ]
+      Hero.body [ ]
+        [ Container.container 
+            [ Container.CustomClass Alignment.HasTextCentered ]
+            [ Columns.columns [ Columns.IsVCentered ]
+                [ Column.column 
+                    [ Column.Width (Column.Desktop, Column.Is5) ]
+                    [ Image.image [ Image.Is4by3 ]
+                        [ img [ Src "http://placehold.it/800x600" ] ] ]
+                  Column.column 
+                   [ Column.Width (Column.Desktop, Column.Is5)
+                     Column.Offset (Column.Desktop, Column.Is1) ]
+                   [ Heading.h1 [ Heading.Is2 ] 
+                       [ str "Superhero Scaffolding" ]
+                     Heading.h2 
+                       [ Heading.IsSubtitle
+                         Heading.Is4 ] 
+                       [ safeComponents ]
+                     containerBox model dispatch ] ] ] ]
+      Hero.foot [ ]
+        [ Container.container [ ]
+            [ Tabs.tabs [ Tabs.IsCentered ]
+                [ ul [ ]
+                    [ li [ ]
+                        [ a [ ]
+                            [ str "And this at the bottom" ] ] ] ] ] ] ]
 #elseif (Fulma == "hero")
 let navBrand =
   Navbar.Brand.div [ ] 

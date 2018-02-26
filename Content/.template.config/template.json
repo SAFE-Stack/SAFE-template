@@ -43,6 +43,10 @@
           "description": "adds Fulma with 'Admin' Bulma template from https://dansup.github.io/bulma-templates/"
         },
         {
+          "choice": "cover",
+          "description": "adds Fulma with 'Cover' Bulma template from https://dansup.github.io/bulma-templates/"
+        },
+        {
           "choice": "hero",
           "description": "adds Fulma with 'Hero' Bulma template from https://dansup.github.io/bulma-templates/"
         },
