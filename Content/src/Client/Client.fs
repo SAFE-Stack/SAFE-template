@@ -13,11 +13,12 @@ open Shared
 open Fulma
 open Fulma.Layouts
 open Fulma.Elements
+open Fulma.Elements.Form
 open Fulma.Components
 open Fulma.BulmaClasses
 #endif
 
-#if (Fulma == "hero" || Fulma == "landing")
+#if (Fulma == "admin" || Fulma == "cover" || Fulma == "hero" || Fulma == "landing" || Fulma == "login")
 open Fulma.BulmaClasses.Bulma
 open Fulma.BulmaClasses.Bulma.Properties
 open Fulma.Extra.FontAwesome
@@ -88,7 +89,7 @@ let safeComponents =
 #if (Fulma != "none")
       "Fulma", "https://mangelmaxime.github.io/Fulma" 
 #endif
-#if (Fulma == "hero" || Fulma == "landing")
+#if (Fulma == "admin" || Fulma == "cover" || Fulma == "hero" || Fulma == "landing" || Fulma == "login")
       "Bulma\u00A0Templates", "https://dansup.github.io/bulma-templates/"
 #endif
 #if (Remoting)
@@ -143,6 +144,286 @@ let view model dispatch =
       Footer.footer [ ]
         [ Content.content [ Content.CustomClass Bulma.Properties.Alignment.HasTextCentered ]
             [ safeComponents ] ] ]
+#elseif (Fulma == "admin")
+let navBrand =
+  Navbar.navbar [ Navbar.Color IsWhite ]
+    [ Container.container [ ]
+        [ Navbar.Brand.div [ ]
+            [ Navbar.Item.a [ Navbar.Item.CustomClass "brand-text" ]
+                [ str "SAFE Admin" ]
+              Navbar.burger [ ] 
+                [ span [ ] [ ]
+                  span [ ] [ ]
+                  span [ ] [ ] ] ]
+          Navbar.menu [ ]
+            [ Navbar.Start.div [ ]
+                [ Navbar.Item.a [ ]
+                    [ str "Home" ]
+                  Navbar.Item.a [ ]
+                    [ str "Orders" ]
+                  Navbar.Item.a [ ]
+                    [ str "Payments" ]
+                  Navbar.Item.a [ ]
+                    [ str "Exceptions" ] ] ] ] ]
+
+let menu =
+  Menu.menu [ ]
+    [ Menu.label [ ]
+        [ str "General" ]
+      Menu.list [ ]
+        [ Menu.item [ ]
+            [ str "Dashboard" ]
+          Menu.item [ ]
+            [ str "Customers" ] ]
+      Menu.label [ ]
+        [ str "Administration" ]
+      Menu.list [ ]
+        [ Menu.item [ ]
+            [ str "Team Settings" ]
+          li [ ]
+            [ a [ ]
+                [ str "Manage Your Team" ]
+              Menu.list [ ]
+                [ Menu.item [ ]
+                    [ str "Members" ]
+                  Menu.item [ ]
+                    [ str "Plugins" ]
+                  Menu.item [ ]
+                    [ str "Add a member" ] ] ]
+          Menu.item [ ]
+            [ str "Invitations" ]
+          Menu.item [ ]
+            [ str "Cloud Storage Environment Settings" ]
+          Menu.item [ ]
+            [ str "Authentication" ] ]
+      Menu.label [ ]
+        [ str "Transactions" ]
+      Menu.list [ ]
+        [ Menu.item [ ]
+            [ str "Payments" ]
+          Menu.item [ ]
+            [ str "Transfers" ]
+          Menu.item [ ]
+            [ str "Balance" ] ] ]
+
+let breadcrump =
+  Breadcrumb.breadcrumb [ ]
+    [ Breadcrumb.item [ ]
+        [ a [ ] [ str "Bulma" ] ]
+      Breadcrumb.item [ ]
+        [ a [ ] [ str "Templates" ] ]
+      Breadcrumb.item [ ]
+        [ a [ ] [ str "Examples" ] ]
+      Breadcrumb.item [ Breadcrumb.Item.IsActive true ]
+        [ a [ ] [ str "Admin" ] ] ]
+
+let hero =
+  Hero.hero [ Hero.CustomClass "is-info welcome is-small" ]
+    [ Hero.body [ ]
+        [ Container.container [ ]
+            [ h1 [ Class "title" ]
+                [ str "Hello, Admin." ]
+              h2 [ Class "subtitle" ]
+                [ safeComponents ] ] ] ] 
+
+let info =
+  section [ Class "info-tiles" ]
+    [ Tile.ancestor [ Tile.CustomClass Alignment.HasTextCentered ]
+        [ Tile.parent [ ]
+            [ article [ Class "tile is-child box" ]
+                [ p [ Class "title" ] [ str "439k" ]
+                  p [ Class "subtitle" ] [ str "Users" ] ] ]
+          Tile.parent [ ]
+            [ article [ Class "tile is-child box" ]
+                [ p [ Class "title" ] [ str "59k" ]
+                  p [ Class "subtitle" ] [ str "Products" ] ] ]
+          Tile.parent [ ]
+            [ article [ Class "tile is-child box" ]
+                [ p [ Class "title" ] [ str "3.4k" ]
+                  p [ Class "subtitle" ] [ str "Open Orders" ] ] ]
+          Tile.parent [ ]
+            [ article [ Class "tile is-child box" ]
+                [ p [ Class "title" ] [ str "19" ]
+                  p [ Class "subtitle" ] [ str "Exceptions" ] ] ] ] ]
+
+let counter model dispatch =
+  Form.Field.div [ Form.Field.IsGrouped ] 
+    [ Form.Control.p [ Form.Control.CustomClass "is-expanded"] 
+        [ Form.Input.text
+            [ Form.Input.Disabled true
+              Form.Input.Value (show model) ] ]
+      Form.Control.p [ ]
+        [ Button.a 
+            [ Button.Color IsInfo
+              Button.OnClick (fun _ -> dispatch Increment) ]
+            [ str "+" ] ]
+      Form.Control.p [ ]
+        [ Button.a 
+            [ Button.Color IsInfo
+              Button.OnClick (fun _ -> dispatch Decrement) ]
+            [ str "-" ] ] ]
+
+let columns model dispatch =
+  Columns.columns [ ]
+    [ Column.column [ Column.Width (Column.Desktop, Column.Is6) ]
+        [ Card.card [ CustomClass "events-card" ]
+            [ Card.header [ ]
+                [ Card.Header.title [ ]
+                    [ str "Events" ]
+                  Card.Header.icon [ ]
+                    [ Icon.faIcon [ ]
+                        [ Fa.icon Fa.I.AngleDown ] ] ]
+              div [ Class "card-table" ]
+                [ Content.content [ ]
+                    [ Table.table 
+                        [ Table.IsFullwidth
+                          Table.IsStripped ]
+                        [ tbody [ ]
+                            [ for _ in 1..10 ->
+                                tr [ ]
+                                  [ td [ Style [ Width "5%" ] ]
+                                      [ Icon.faIcon
+                                          [ ]
+                                          [ Fa.icon Fa.I.BellO ] ]
+                                    td [ ]
+                                      [ str "Lorem ipsum dolor aire" ]
+                                    td [ ]
+                                      [ Button.a 
+                                          [ Button.Size IsSmall
+                                            Button.Color IsPrimary ]
+                                          [ str "Action" ] ] ] ] ] ] ]
+              Card.footer [ ]
+                [ Card.Footer.item [ ]
+                    [ str "View All" ] ] ] ]
+      Column.column [ Column.Width (Column.Desktop, Column.Is6) ]
+        [ Card.card [ ]
+            [ Card.header [ ]
+                [ Card.Header.title [ ]
+                    [ str "Inventory Search" ]
+                  Card.Header.icon [ ]
+                    [ Icon.faIcon [ ]
+                        [ Fa.icon Fa.I.AngleDown ] ] ]
+              Card.content [ ]
+                [ Content.content [ ]
+                    [ Control.div 
+                        [ Control.HasIconLeft
+                          Control.HasIconRight ]
+                        [ Input.text 
+                            [ Input.Size IsLarge ]
+                          Icon.faIcon 
+                            [ Icon.Size IsMedium
+                              Icon.IsLeft ]
+                            [ Fa.icon Fa.I.Search ]
+                          Icon.faIcon 
+                            [ Icon.Size IsMedium
+                              Icon.IsRight ]
+                            [ Fa.icon Fa.I.Check ] ] ] ] ]
+          Card.card [ ]
+            [ Card.header [ ]
+                [ Card.Header.title [ ]
+                    [ str "Counter" ]
+                  Card.Header.icon [ ]
+                    [ Icon.faIcon [ ]
+                        [ Fa.icon Fa.I.AngleDown ] ] ]
+              Card.content [ ]
+                [ Content.content [ ]
+                    [ counter model dispatch ] ] ] ] ]
+
+let view model dispatch =
+  div [ ]
+    [ navBrand
+      Container.container [ ]
+        [ Columns.columns [ ]
+            [ Column.column [ Column.Width (Column.Desktop, Column.Is3) ]
+                [ menu ]
+              Column.column [ Column.Width (Column.Desktop, Column.Is9) ]
+                [ breadcrump
+                  hero
+                  info
+                  columns model dispatch ] ] ] ]
+#elseif (Fulma == "cover")
+let navBrand =
+  Navbar.Brand.div [ ] 
+    [ Navbar.Item.a 
+        [ Navbar.Item.Props 
+            [ Href "https://safe-stack.github.io/"
+              Style [ BackgroundColor "#00d1b2" ] ] ] 
+        [ img [ Src "https://safe-stack.github.io/images/safe_top.png"
+                Alt "Logo" ] ] 
+      Navbar.burger [ ] 
+        [ span [ ] [ ]
+          span [ ] [ ]
+          span [ ] [ ] ] ]
+
+let navMenu =
+  Navbar.menu [ ]
+    [ Navbar.End.div [ ] 
+        [ Navbar.Item.a [ ] 
+            [ str "Home" ] 
+          Navbar.Item.a [ ]
+            [ str "Examples" ]
+          Navbar.Item.a [ ]
+            [ str "Documentation" ]
+          Navbar.Item.div [ ]
+            [ Button.a 
+                [ Button.Size IsSmall
+                  Button.Props [ Href "https://github.com/SAFE-Stack/SAFE-template" ] ] 
+                [ Icon.faIcon [ ] 
+                    [ Fa.icon Fa.I.Github; Fa.fw ]
+                  span [ ] [ str "View Source" ] ] ] ] ]
+
+let containerBox model dispatch =
+  Box.box' [ ]
+    [ Form.Field.div [ Form.Field.IsGrouped ] 
+        [ Form.Control.p [ Form.Control.CustomClass "is-expanded"] 
+            [ Form.Input.text
+                [ Form.Input.Disabled true
+                  Form.Input.Value (show model) ] ]
+          Form.Control.p [ ]
+            [ Button.a 
+                [ Button.Color IsPrimary
+                  Button.OnClick (fun _ -> dispatch Increment) ]
+                [ str "+" ] ]
+          Form.Control.p [ ]
+            [ Button.a 
+                [ Button.Color IsPrimary
+                  Button.OnClick (fun _ -> dispatch Decrement) ]
+                [ str "-" ] ] ] ]
+
+let view model dispatch =
+  Hero.hero 
+    [ Hero.IsFullHeight
+      Hero.IsBold ]
+    [ Hero.head [ ]
+        [ Navbar.navbar [  ]
+            [ Container.container [ ]
+                [ navBrand
+                  navMenu ] ] ]
+      Hero.body [ ]
+        [ Container.container 
+            [ Container.CustomClass Alignment.HasTextCentered ]
+            [ Columns.columns [ Columns.IsVCentered ]
+                [ Column.column 
+                    [ Column.Width (Column.Desktop, Column.Is5) ]
+                    [ Image.image [ Image.Is4by3 ]
+                        [ img [ Src "http://placehold.it/800x600" ] ] ]
+                  Column.column 
+                   [ Column.Width (Column.Desktop, Column.Is5)
+                     Column.Offset (Column.Desktop, Column.Is1) ]
+                   [ Heading.h1 [ Heading.Is2 ] 
+                       [ str "Superhero Scaffolding" ]
+                     Heading.h2 
+                       [ Heading.IsSubtitle
+                         Heading.Is4 ] 
+                       [ safeComponents ]
+                     containerBox model dispatch ] ] ] ]
+      Hero.foot [ ]
+        [ Container.container [ ]
+            [ Tabs.tabs [ Tabs.IsCentered ]
+                [ ul [ ]
+                    [ li [ ]
+                        [ a [ ]
+                            [ str "And this at the bottom" ] ] ] ] ] ] ]
 #elseif (Fulma == "hero")
 let navBrand =
   Navbar.Brand.div [ ] 
@@ -346,7 +627,7 @@ let view model dispatch =
 
       footer [ ClassName "footer" ]
         [ footerContainer ] ]
-#else
+#elseif (Fulma == "landing")
 let navBrand =
   Navbar.Brand.div [ ] 
     [ Navbar.Item.a 
@@ -414,6 +695,78 @@ let view model dispatch =
                   div [ ClassName "subtitle" ]
                     [ safeComponents ]
                   containerBox model dispatch ] ] ] ]
+#else
+
+let counter model dispatch =
+  Form.Field.div [ Form.Field.IsGrouped ] 
+    [ Form.Control.p [ Form.Control.CustomClass "is-expanded"] 
+        [ Form.Input.text
+            [ Form.Input.Disabled true
+              Form.Input.Value (show model) ] ]
+      Form.Control.p [ ]
+        [ Button.a 
+            [ Button.Color IsInfo
+              Button.OnClick (fun _ -> dispatch Increment) ]
+            [ str "+" ] ]
+      Form.Control.p [ ]
+        [ Button.a 
+            [ Button.Color IsInfo
+              Button.OnClick (fun _ -> dispatch Decrement) ]
+            [ str "-" ] ] ]
+
+let column model dispatch =
+  Column.column 
+    [ Column.Width (Column.Desktop, Column.Is4)
+      Column.Offset (Column.Desktop, Column.Is4) ]
+    [ Heading.h3
+        [ Heading.CustomClass "title has-text-grey" ]
+        [ str "Login" ]
+      p [ Class "subtitle has-text-grey" ]
+        [ str "Please login to proceed." ]
+      Box.box' [ ]
+        [ figure [ Class "avatar" ]
+            [ img [ Src "https://placehold.it/128x128" ] ]
+          form [ ]
+            [ Field.div [ ]
+                [ Control.div [ ]
+                    [ Input.email 
+                        [ Input.Size IsLarge
+                          Input.Placeholder "Your Email"
+                          Input.Props [ AutoFocus true ] ] ] ]
+              Field.div [ ]
+                [ Control.div [ ]
+                    [ Input.password 
+                        [ Input.Size IsLarge
+                          Input.Placeholder "Your Password" ] ] ]
+              counter model dispatch
+              Field.div [ ]
+                [ Checkbox.checkbox [ ]
+                    [ input [ Type "checkbox" ]
+                      str "Remember me" ] ]
+              Button.button 
+                [ Button.Color IsInfo
+                  Button.IsFullwidth
+                  Button.CustomClass "is-large is-block" ]
+                [ str "Login" ] ] ]
+      p [ Class "has-text-grey" ]
+        [ a [ ] [ str "Sign Up" ]
+          str "\u00A0·\u00A0"
+          a [ ] [ str "Forgot Password" ]
+          str "\u00A0·\u00A0"
+          a [ ] [ str "Need Help?" ] ]
+      br [ ]
+      p [ Class "has-text-grey" ] 
+        [ safeComponents ] ]
+
+let view model dispatch =
+  Hero.hero 
+    [ Hero.Color IsSuccess 
+      Hero.IsFullHeight ]
+    [ Hero.body [ ]
+        [ Container.container 
+            [ Container.CustomClass Alignment.HasTextCentered ]
+            [ column model dispatch ] ] ]
+
 #endif
 
   
