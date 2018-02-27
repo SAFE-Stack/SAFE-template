@@ -18,7 +18,7 @@ open Fulma.Components
 open Fulma.BulmaClasses
 #endif
 
-#if (Fulma == "admin" || Fulma == "cover" || Fulma == "hero" || Fulma == "landing")
+#if (Fulma == "admin" || Fulma == "cover" || Fulma == "hero" || Fulma == "landing" || Fulma == "login")
 open Fulma.BulmaClasses.Bulma
 open Fulma.BulmaClasses.Bulma.Properties
 open Fulma.Extra.FontAwesome
@@ -89,7 +89,7 @@ let safeComponents =
 #if (Fulma != "none")
       "Fulma", "https://mangelmaxime.github.io/Fulma" 
 #endif
-#if (Fulma == "admin" || Fulma == "cover" || Fulma == "hero" || Fulma == "landing")
+#if (Fulma == "admin" || Fulma == "cover" || Fulma == "hero" || Fulma == "landing" || Fulma == "login")
       "Bulma\u00A0Templates", "https://dansup.github.io/bulma-templates/"
 #endif
 #if (Remoting)
@@ -627,7 +627,7 @@ let view model dispatch =
 
       footer [ ClassName "footer" ]
         [ footerContainer ] ]
-#else
+#elseif (Fulma == "landing")
 let navBrand =
   Navbar.Brand.div [ ] 
     [ Navbar.Item.a 
@@ -695,6 +695,78 @@ let view model dispatch =
                   div [ ClassName "subtitle" ]
                     [ safeComponents ]
                   containerBox model dispatch ] ] ] ]
+#else
+
+let counter model dispatch =
+  Form.Field.div [ Form.Field.IsGrouped ] 
+    [ Form.Control.p [ Form.Control.CustomClass "is-expanded"] 
+        [ Form.Input.text
+            [ Form.Input.Disabled true
+              Form.Input.Value (show model) ] ]
+      Form.Control.p [ ]
+        [ Button.a 
+            [ Button.Color IsInfo
+              Button.OnClick (fun _ -> dispatch Increment) ]
+            [ str "+" ] ]
+      Form.Control.p [ ]
+        [ Button.a 
+            [ Button.Color IsInfo
+              Button.OnClick (fun _ -> dispatch Decrement) ]
+            [ str "-" ] ] ]
+
+let column model dispatch =
+  Column.column 
+    [ Column.Width (Column.Desktop, Column.Is4)
+      Column.Offset (Column.Desktop, Column.Is4) ]
+    [ Heading.h3
+        [ Heading.CustomClass "title has-text-grey" ]
+        [ str "Login" ]
+      p [ Class "subtitle has-text-grey" ]
+        [ str "Please login to proceed." ]
+      Box.box' [ ]
+        [ figure [ Class "avatar" ]
+            [ img [ Src "https://placehold.it/128x128" ] ]
+          form [ ]
+            [ Field.div [ ]
+                [ Control.div [ ]
+                    [ Input.email 
+                        [ Input.Size IsLarge
+                          Input.Placeholder "Your Email"
+                          Input.Props [ AutoFocus true ] ] ] ]
+              Field.div [ ]
+                [ Control.div [ ]
+                    [ Input.password 
+                        [ Input.Size IsLarge
+                          Input.Placeholder "Your Password" ] ] ]
+              counter model dispatch
+              Field.div [ ]
+                [ Checkbox.checkbox [ ]
+                    [ input [ Type "checkbox" ]
+                      str "Remember me" ] ]
+              Button.button 
+                [ Button.Color IsInfo
+                  Button.IsFullwidth
+                  Button.CustomClass "is-large is-block" ]
+                [ str "Login" ] ] ]
+      p [ Class "has-text-grey" ]
+        [ a [ ] [ str "Sign Up" ]
+          str "\u00A0·\u00A0"
+          a [ ] [ str "Forgot Password" ]
+          str "\u00A0·\u00A0"
+          a [ ] [ str "Need Help?" ] ]
+      br [ ]
+      p [ Class "has-text-grey" ] 
+        [ safeComponents ] ]
+
+let view model dispatch =
+  Hero.hero 
+    [ Hero.Color IsSuccess 
+      Hero.IsFullHeight ]
+    [ Hero.body [ ]
+        [ Container.container 
+            [ Container.CustomClass Alignment.HasTextCentered ]
+            [ column model dispatch ] ] ]
+
 #endif
 
   
