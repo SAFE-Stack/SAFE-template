@@ -1,3 +1,7 @@
+#### 0.9.1 - 03.03.2018
+
+* Correct Bulma Column classes from `Column.Desktop` to `Column.All`
+
 #### 0.9.0 - 27.02.2018
 
 * Add 3 bulma templates `admin` `cover` and `login`  - https://github.com/SAFE-Stack/SAFE-template/issues/27

@@ -265,7 +265,7 @@ let counter model dispatch =
 
 let columns model dispatch =
   Columns.columns [ ]
-    [ Column.column [ Column.Width (Column.Desktop, Column.Is6) ]
+    [ Column.column [ Column.Width (Column.All, Column.Is6) ]
         [ Card.card [ CustomClass "events-card" ]
             [ Card.header [ ]
                 [ Card.Header.title [ ]
@@ -295,7 +295,7 @@ let columns model dispatch =
               Card.footer [ ]
                 [ Card.Footer.item [ ]
                     [ str "View All" ] ] ] ]
-      Column.column [ Column.Width (Column.Desktop, Column.Is6) ]
+      Column.column [ Column.Width (Column.All, Column.Is6) ]
         [ Card.card [ ]
             [ Card.header [ ]
                 [ Card.Header.title [ ]
@@ -334,9 +334,9 @@ let view model dispatch =
     [ navBrand
       Container.container [ ]
         [ Columns.columns [ ]
-            [ Column.column [ Column.Width (Column.Desktop, Column.Is3) ]
+            [ Column.column [ Column.Width (Column.All, Column.Is3) ]
                 [ menu ]
-              Column.column [ Column.Width (Column.Desktop, Column.Is9) ]
+              Column.column [ Column.Width (Column.All, Column.Is9) ]
                 [ breadcrump
                   hero
                   info
@@ -404,12 +404,12 @@ let view model dispatch =
             [ Container.CustomClass Alignment.HasTextCentered ]
             [ Columns.columns [ Columns.IsVCentered ]
                 [ Column.column 
-                    [ Column.Width (Column.Desktop, Column.Is5) ]
+                    [ Column.Width (Column.All, Column.Is5) ]
                     [ Image.image [ Image.Is4by3 ]
                         [ img [ Src "http://placehold.it/800x600" ] ] ]
                   Column.column 
-                   [ Column.Width (Column.Desktop, Column.Is5)
-                     Column.Offset (Column.Desktop, Column.Is1) ]
+                   [ Column.Width (Column.All, Column.Is5)
+                     Column.Offset (Column.All, Column.Is1) ]
                    [ Heading.h1 [ Heading.Is2 ] 
                        [ str "Superhero Scaffolding" ]
                      Heading.h2 
@@ -716,8 +716,8 @@ let counter model dispatch =
 
 let column model dispatch =
   Column.column 
-    [ Column.Width (Column.Desktop, Column.Is4)
-      Column.Offset (Column.Desktop, Column.Is4) ]
+    [ Column.Width (Column.All, Column.Is4)
+      Column.Offset (Column.All, Column.Is4) ]
     [ Heading.h3
         [ Heading.CustomClass "title has-text-grey" ]
         [ str "Login" ]
