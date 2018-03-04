@@ -79,10 +79,12 @@ let safeComponents =
 
   let components =
     [
-#if (Server == "suave")
+#if     (Server == "suave")
       "Suave", "http://suave.io"
-#else
+#elseif (Server == "giraffe")
       "Giraffe", "https://github.com/giraffe-fsharp/Giraffe"
+#elseif (Server == "saturn")
+      "Saturn", "https://saturnframework.github.io/docs/"
 #endif
       "Fable", "http://fable.io"
       "Elmish", "https://fable-elmish.github.io/"
