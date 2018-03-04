@@ -84,18 +84,18 @@
       "exclude": "**/.template.config/**/*",
       "modifiers": [
         {
-          "condition": "(Server == \"suave\")",
-          "exclude": [ "**/ServerGiraffe.fs" ],
-          "rename": {
-            "ServerSuave.fs": "Server.fs"
-          }
+          "exclude": "**/ServerGiraffe.fs",
+          "condition": "(Server != \"giraffe\")"
         },
         {
-          "condition": "(Server == \"giraffe\")",
-          "exclude": [ "**/ServerSuave.fs" ],
-          "rename": {
-            "ServerGiraffe.fs": "Server.fs"
-          }
+          "rename": { "ServerGiraffe.fs": "Server.fs" }
+        },
+        {
+          "exclude": "**/ServerSuave.fs",
+          "condition": "(Server != \"suave\")"
+        },
+        {
+          "rename": { "ServerSuave.fs": "Server.fs" }
         },
         {
           "exclude": "**/admin.css",
