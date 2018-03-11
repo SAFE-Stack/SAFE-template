@@ -1,7 +1,8 @@
 open System.IO
 open System.Net
+open System.Threading.Tasks
 
-open Saturn
+open Giraffe
 open Giraffe.Core
 open Giraffe.ResponseWriters
 
@@ -9,37 +10,34 @@ open Giraffe.ResponseWriters
 open Fable.Remoting.Saturn
 #endif
 
-open Shared
+open Saturn
 
+open Shared
 
 let clientPath = Path.Combine("..","Client") |> Path.GetFullPath
 let port = 8085us
 
-module Router =
+let getInitCounter () : Task<Counter> = task { return 42 }
 
-  let browser = pipeline {
-      plug acceptHtml
-      plug putSecureBrowserHeaders
-      plug fetchSession
-      set_header "x-pipeline-type" "Browser"
-  }
+let browserRouter = scope {
+  get "/" (htmlFile (Path.Combine(clientPath, "/index.html")))
+}
 
-  let defaultView = scope {
-      get "/" (htmlFile (Path.Combine(clientPath, "/index.html")))
-  }
+let apiRouter = scope {
+  get "/init" (fun next ctx -> 
+    task {
+      let! counter = getInitCounter()
+      return! Successful.OK counter next ctx
+    })
+}
 
-  let browserRouter = scope {
-      pipe_through browser
-
-      forward "" defaultView
-  }
-
-  let router = scope {
-      forward "" browserRouter
-  }
+let mainRouter = scope {
+  forward "" browserRouter
+  forward "/api" apiRouter
+}
 
 let app = application {
-    router Router.router
+    router mainRouter
     url ("http://0.0.0.0:" + port.ToString() + "/")
     memory_cache 
     use_static clientPath
