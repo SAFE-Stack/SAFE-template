@@ -1,3 +1,7 @@
+#### 0.10.0 - 13.03.2018
+
+* Initial support for `Saturn` backend option
+
 #### 0.9.1 - 03.03.2018
 
 * Correct Bulma Column classes from `Column.Desktop` to `Column.All`
