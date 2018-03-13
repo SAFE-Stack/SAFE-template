@@ -22,6 +22,10 @@
         {
           "choice": "giraffe",
           "description": "a functional micro web framework based on ASP.NET Core"
+        },
+        {
+          "choice": "saturn",
+          "description": "web development framework which implements the server-side MVC pattern"
         }
       ]
     },
@@ -84,18 +88,25 @@
       "exclude": "**/.template.config/**/*",
       "modifiers": [
         {
-          "condition": "(Server == \"suave\")",
-          "exclude": [ "**/ServerGiraffe.fs" ],
-          "rename": {
-            "ServerSuave.fs": "Server.fs"
-          }
+          "exclude": "**/ServerSuave.fs",
+          "condition": "(Server != \"suave\")"
         },
         {
-          "condition": "(Server == \"giraffe\")",
-          "exclude": [ "**/ServerSuave.fs" ],
-          "rename": {
-            "ServerGiraffe.fs": "Server.fs"
-          }
+          "rename": { "ServerSuave.fs": "Server.fs" }
+        },
+        {
+          "exclude": "**/ServerGiraffe.fs",
+          "condition": "(Server != \"giraffe\")"
+        },
+        {
+          "rename": { "ServerGiraffe.fs": "Server.fs" }
+        },
+        {
+          "exclude": "**/ServerSaturn.fs",
+          "condition": "(Server != \"saturn\")"
+        },
+        {
+          "rename": { "ServerSaturn.fs": "Server.fs" }
         },
         {
           "exclude": "**/admin.css",

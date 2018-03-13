@@ -79,10 +79,12 @@ let safeComponents =
 
   let components =
     [
-#if (Server == "suave")
+#if     (Server == "suave")
       "Suave", "http://suave.io"
-#else
+#elseif (Server == "giraffe")
       "Giraffe", "https://github.com/giraffe-fsharp/Giraffe"
+#elseif (Server == "saturn")
+      "Saturn", "https://saturnframework.github.io/docs/"
 #endif
       "Fable", "http://fable.io"
       "Elmish", "https://fable-elmish.github.io/"
@@ -93,7 +95,7 @@ let safeComponents =
       "Bulma\u00A0Templates", "https://dansup.github.io/bulma-templates/"
 #endif
 #if (Remoting)
-      "Fable.Remoting", "https://github.com/Zaid-Ajaj/Fable.Remoting"
+      "Fable.Remoting", "https://zaid-ajaj.github.io/Fable.Remoting/"
 #endif
     ]
     |> List.map (fun (desc,link) -> a [ Href link ] [ str desc ] )

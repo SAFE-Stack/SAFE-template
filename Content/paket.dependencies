@@ -2,17 +2,21 @@ group Server
   source https://api.nuget.org/v3/index.json
 
   nuget FSharp.Core
-//#if (Server == "suave")
+//#if     (Server == "suave")
   nuget Suave
-//#else
+//#elseif (Server == "giraffe")
   nuget Giraffe ~> 1
   nuget Microsoft.AspNetCore
   nuget Microsoft.AspNetCore.StaticFiles
+//#elseif (Server == "saturn")
+  nuget Saturn
 //#endif
 //#if     (Remoting && Server == "suave")
-  nuget Fable.Remoting.Suave
+  nuget Fable.Remoting.Suave ~> 2.0
 //#elseif (Remoting && Server == "giraffe")
-  nuget Fable.Remoting.Giraffe
+  nuget Fable.Remoting.Giraffe ~> 2.0
+//#elseif (Remoting && Server == "saturn")
+  nuget Fable.Remoting.Giraffe ~> 2.0
 //#endif
 
   clitool Microsoft.DotNet.Watcher.Tools
@@ -25,7 +29,7 @@ group Client
   nuget Fable.Elmish.React
   nuget Fable.Elmish.HMR
 //#if (Remoting)
-  nuget Fable.Remoting.Client
+  nuget Fable.Remoting.Client ~> 2.0
 //#endif
 //#if (Fulma != "none")
   nuget Fulma 1.0.0-beta-007
