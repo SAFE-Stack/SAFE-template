@@ -95,7 +95,7 @@ let safeComponents =
       "Bulma\u00A0Templates", "https://dansup.github.io/bulma-templates/"
 #endif
 #if (Remoting)
-      "Fable.Remoting", "https://github.com/Zaid-Ajaj/Fable.Remoting"
+      "Fable.Remoting", "https://zaid-ajaj.github.io/Fable.Remoting/"
 #endif
     ]
     |> List.map (fun (desc,link) -> a [ Href link ] [ str desc ] )
