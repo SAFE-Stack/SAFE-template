@@ -1,16 +1,13 @@
 open System.IO
-open System.Net
 open System.Threading.Tasks
 
 open Giraffe
-open Giraffe.Core
-open Giraffe.ResponseWriters
+open Saturn
 
 #if (Remoting)
-open Fable.Remoting.Saturn
+open Fable.Remoting.Server
+open Fable.Remoting.Giraffe
 #endif
-
-open Saturn
 
 open Shared
 
@@ -23,6 +20,20 @@ let browserRouter = scope {
   get "/" (htmlFile (Path.Combine(clientPath, "/index.html")))
 }
 
+#if (Remoting)
+let server =
+  { getInitCounter = getInitCounter >> Async.AwaitTask }
+
+let webApp = 
+  remoting server {
+    with_builder Route.builder
+  }
+  
+let mainRouter = scope {
+  forward "" browserRouter
+  forward "" webApp
+}
+#else
 let apiRouter = scope {
   get "/init" (fun next ctx -> 
     task {
@@ -35,6 +46,7 @@ let mainRouter = scope {
   forward "" browserRouter
   forward "/api" apiRouter
 }
+#endif
 
 let app = application {
     router mainRouter
