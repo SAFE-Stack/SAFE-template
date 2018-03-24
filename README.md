@@ -15,6 +15,7 @@ The template does not include any Azure / other Cloud integration. Refer to [SAF
 * [dotnet SDK 2.0.0](https://www.microsoft.com/net/core) together with dotnet CLI
 * [node.js](https://nodejs.org/)
 * [yarn](https://yarnpkg.com/)
+* [.NET Framework](https://www.microsoft.com/net/download/dotnet-framework-runtime) (Windows) / [mono](http://www.mono-project.com/) (MacOS / Linux) additionally for build tools (Paket, FAKE) - migration to dotnet SDK is WIP
 
 ## Using the template
 
