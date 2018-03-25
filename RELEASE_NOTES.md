@@ -1,3 +1,7 @@
+#### 0.10.1 - 25.03.2018
+
+* [Disable packages folder](https://fsprojects.github.io/Paket/dependencies-file.html#Disable-packages-folder) for Server and Client dependencies
+
 #### 0.10.0 - 13.03.2018
 
 * Initial support for `Saturn` backend option
