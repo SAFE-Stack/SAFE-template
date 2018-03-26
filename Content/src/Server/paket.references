@@ -3,10 +3,12 @@ group Server
 //#if     (Server == "suave")
   Suave
 //#elseif (Server == "giraffe")
+  Fable.JsonConverter
   Giraffe
   Microsoft.AspNetCore
   Microsoft.AspNetCore.StaticFiles
 //#elseif (Server == "saturn")
+  Fable.JsonConverter
   Saturn
 //#endif
 //#if     (Remoting && Server == "suave")

@@ -6,10 +6,12 @@ group Server
 //#if     (Server == "suave")
   nuget Suave
 //#elseif (Server == "giraffe")
+  nuget Fable.JsonConverter
   nuget Giraffe ~> 1
   nuget Microsoft.AspNetCore
   nuget Microsoft.AspNetCore.StaticFiles
 //#elseif (Server == "saturn")
+  nuget Fable.JsonConverter
   nuget Saturn
 //#endif
 //#if     (Remoting && Server == "suave")
