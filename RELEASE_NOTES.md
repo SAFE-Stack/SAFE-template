@@ -1,3 +1,7 @@
+#### 0.10.2 - 27.03.2018
+
+* Add SAFE favicon
+
 #### 0.10.1 - 25.03.2018
 
 * [Disable packages folder](https://fsprojects.github.io/Paket/dependencies-file.html#Disable-packages-folder) for Server and Client dependencies
