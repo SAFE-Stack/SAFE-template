@@ -88,11 +88,13 @@ Target "Bundle" (fun _ ->
   let clientDir = deployDir </> "Client"
   
   let publicDir = clientDir </> "public"
+  let imageDir  = clientDir </> "Images"
 
   let publishArgs = sprintf "publish -c Release -o \"%s\"" serverDir
   run dotnetCli publishArgs serverPath
 
   !! "src/Client/public/**/*.*" |> CopyFiles publicDir
+  !! "src/Client/Images/**/*.*" |> CopyFiles imageDir
 
   !! "src/Client/index.html"
   ++ "src/Client/*.css"
