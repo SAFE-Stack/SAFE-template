@@ -14,9 +14,7 @@ group Server
 //#endif  
 //#if     (Remoting && Server == "suave")
   Fable.Remoting.Suave
-//#elseif (Remoting && Server == "giraffe")
-  Fable.Remoting.Giraffe
-//#elseif (Remoting && Server == "saturn")
+//#elseif (Remoting)
   Fable.Remoting.Giraffe
 //#endif
   Microsoft.DotNet.Watcher.Tools
