@@ -44,7 +44,7 @@ module Server =
     
 #endif
 
-let init () = 
+let init () : Model * Cmd<Msg> =
   let model = None
   let cmd =
 #if Remoting
@@ -62,7 +62,7 @@ let init () =
 #endif
   model, cmd
 
-let update msg (model : Model) =
+let update (msg : Msg) (model : Model) : Model * Cmd<Msg> =
   let model' =
     match model,  msg with
     | Some x, Increment -> Some (x + 1)
@@ -112,7 +112,7 @@ let show = function
 | None -> "Loading..."
 
 #if (Fulma == "none")
-let view model dispatch =
+let view (model : Model) (dispatch : Msg -> unit) =
   div []
     [ h1 [] [ str "SAFE Template" ]
       p  [] [ str "The initial counter is fetched from server" ]
@@ -129,7 +129,7 @@ let button txt onClick =
       Button.OnClick onClick ] 
     [ str txt ]
 
-let view model dispatch =
+let view (model : Model) (dispatch : Msg -> unit) =
   div []
     [ Navbar.navbar [ Navbar.Color IsPrimary ]
         [ Navbar.Item.div [ ]
@@ -248,7 +248,7 @@ let info =
                 [ p [ Class "title" ] [ str "19" ]
                   p [ Class "subtitle" ] [ str "Exceptions" ] ] ] ] ]
 
-let counter model dispatch =
+let counter (model : Model) (dispatch : Msg -> unit) =
   Form.Field.div [ Form.Field.IsGrouped ] 
     [ Form.Control.p [ Form.Control.CustomClass "is-expanded"] 
         [ Form.Input.text
@@ -265,7 +265,7 @@ let counter model dispatch =
               Button.OnClick (fun _ -> dispatch Decrement) ]
             [ str "-" ] ] ]
 
-let columns model dispatch =
+let columns (model : Model) (dispatch : Msg -> unit) =
   Columns.columns [ ]
     [ Column.column [ Column.Width (Column.All, Column.Is6) ]
         [ Card.card [ CustomClass "events-card" ]
@@ -331,7 +331,7 @@ let columns model dispatch =
                 [ Content.content [ ]
                     [ counter model dispatch ] ] ] ] ]
 
-let view model dispatch =
+let view (model : Model) (dispatch : Msg -> unit) =
   div [ ]
     [ navBrand
       Container.container [ ]
@@ -374,7 +374,7 @@ let navMenu =
                     [ Fa.icon Fa.I.Github; Fa.fw ]
                   span [ ] [ str "View Source" ] ] ] ] ]
 
-let containerBox model dispatch =
+let containerBox (model : Model) (dispatch : Msg -> unit) =
   Box.box' [ ]
     [ Form.Field.div [ Form.Field.IsGrouped ] 
         [ Form.Control.p [ Form.Control.CustomClass "is-expanded"] 
@@ -392,7 +392,7 @@ let containerBox model dispatch =
                   Button.OnClick (fun _ -> dispatch Decrement) ]
                 [ str "-" ] ] ] ]
 
-let view model dispatch =
+let view (model : Model) (dispatch : Msg -> unit) =
   Hero.hero 
     [ Hero.IsFullHeight
       Hero.IsBold ]
@@ -457,7 +457,7 @@ let navMenu =
                     [ Fa.icon Fa.I.Github; Fa.fw ]
                   span [ ] [ str "View Source" ] ] ] ] ]
 
-let buttonBox model dispatch =
+let buttonBox (model : Model) (dispatch : Msg -> unit) =
   Box.box' [ CustomClass "cta" ]
     [ Level.level [ ]
         [ Level.item [ ]
@@ -602,7 +602,7 @@ let footerContainer =
                 [ Icon.faIcon [ ] 
                     [ Fa.icon Fa.I.Github; Fa.fw ] ] ] ] ]
 
-let view model dispatch =
+let view (model : Model) (dispatch : Msg -> unit) =
   div [ ]
     [ Hero.hero 
         [ Hero.Color IsPrimary
@@ -661,7 +661,7 @@ let navMenu =
                     [ Fa.icon Fa.I.Github; Fa.fw ]
                   span [ ] [ str "View Source" ] ] ] ] ]
 
-let containerBox model dispatch =
+let containerBox (model : Model) (dispatch : Msg -> unit) =
   Box.box' [ ]
     [ Form.Field.div [ Form.Field.IsGrouped ] 
         [ Form.Control.p [ Form.Control.CustomClass "is-expanded"] 
@@ -679,7 +679,7 @@ let containerBox model dispatch =
                   Button.OnClick (fun _ -> dispatch Decrement) ]
                 [ str "-" ] ] ] ]
 
-let view model dispatch =
+let view (model : Model) (dispatch : Msg -> unit) =
   Hero.hero [ Hero.Color IsPrimary; Hero.IsFullHeight ] 
     [ Hero.head [ ] 
         [ Navbar.navbar [ ]
@@ -699,7 +699,7 @@ let view model dispatch =
                   containerBox model dispatch ] ] ] ]
 #else
 
-let counter model dispatch =
+let counter (model : Model) (dispatch : Msg -> unit) =
   Form.Field.div [ Form.Field.IsGrouped ] 
     [ Form.Control.p [ Form.Control.CustomClass "is-expanded"] 
         [ Form.Input.text
@@ -716,7 +716,7 @@ let counter model dispatch =
               Button.OnClick (fun _ -> dispatch Decrement) ]
             [ str "-" ] ] ]
 
-let column model dispatch =
+let column (model : Model) (dispatch : Msg -> unit) =
   Column.column 
     [ Column.Width (Column.All, Column.Is4)
       Column.Offset (Column.All, Column.Is4) ]
@@ -760,7 +760,7 @@ let column model dispatch =
       p [ Class "has-text-grey" ] 
         [ safeComponents ] ]
 
-let view model dispatch =
+let view (model : Model) (dispatch : Msg -> unit) =
   Hero.hero 
     [ Hero.Color IsSuccess 
       Hero.IsFullHeight ]
