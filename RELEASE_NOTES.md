@@ -1,3 +1,7 @@
+#### 0.10.3 - 30.03.2018
+
+* Add type signatures for functions in Client
+
 #### 0.10.2 - 27.03.2018
 
 * Add SAFE favicon
