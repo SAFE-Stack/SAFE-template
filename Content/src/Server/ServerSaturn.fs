@@ -17,25 +17,25 @@ let port = 8085us
 let getInitCounter () : Task<Counter> = task { return 42 }
 
 let browserRouter = scope {
-  get "/" (htmlFile (Path.Combine(clientPath, "/index.html")))
+  get "/" (htmlFile (Path.Combine(clientPath, "index.html")))
 }
 
 #if (Remoting)
 let server =
   { getInitCounter = getInitCounter >> Async.AwaitTask }
 
-let webApp = 
+let webApp =
   remoting server {
     with_builder Route.builder
   }
-  
+
 let mainRouter = scope {
   forward "" browserRouter
   forward "" webApp
 }
 #else
 let apiRouter = scope {
-  get "/init" (fun next ctx -> 
+  get "/init" (fun next ctx ->
     task {
       let! counter = getInitCounter()
       return! Successful.OK counter next ctx
@@ -51,7 +51,7 @@ let mainRouter = scope {
 let app = application {
     router mainRouter
     url ("http://0.0.0.0:" + port.ToString() + "/")
-    memory_cache 
+    memory_cache
     use_static clientPath
     use_gzip
 }
