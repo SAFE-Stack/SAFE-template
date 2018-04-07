@@ -1,3 +1,7 @@
+#### 0.12.0 - 07.04.2018
+
+* Update Fable.Remoting and use latest API - https://github.com/SAFE-Stack/SAFE-template/pull/53
+
 #### 0.11.0 - 07.04.2018
 
 * Add Fable Json serialization to Saturn and Giraffe - https://github.com/SAFE-Stack/SAFE-template/pull/50
