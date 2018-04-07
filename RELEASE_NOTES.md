@@ -1,3 +1,7 @@
+#### 0.10.4 - 07.04.2018
+
+* Fix path to index.html in Saturn template - https://github.com/SAFE-Stack/SAFE-template/pull/52
+
 #### 0.10.3 - 30.03.2018
 
 * Add type signatures for functions in Client
