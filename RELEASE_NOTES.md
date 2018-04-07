@@ -1,3 +1,7 @@
+#### 0.11.0 - 07.04.2018
+
+* Add Fable Json serialization to Saturn and Giraffe - https://github.com/SAFE-Stack/SAFE-template/pull/50
+
 #### 0.10.4 - 07.04.2018
 
 * Fix path to index.html in Saturn template - https://github.com/SAFE-Stack/SAFE-template/pull/52

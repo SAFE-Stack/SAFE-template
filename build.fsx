@@ -66,8 +66,11 @@ Target "Push" (fun () ->
   Git.Branches.pushTag "" remoteGit tagName
 )
 
+Target "Release" DoNothing
+
 "Clean"
   ==> "Pack"
   ==> "Push"
+  ==> "Release"
 
 RunTargetOrDefault "Pack"
