@@ -5,6 +5,7 @@ open Suave
 open Suave.Operators
 
 #if (Remoting)
+open Fable.Remoting.Server
 open Fable.Remoting.Suave
 #endif
 
@@ -24,8 +25,11 @@ let init : WebPart =
 #if (Remoting)
   let counterProcotol = 
     { getInitCounter = getInitCounter }
-  // creates a WebPart for the given implementation
-  FableSuaveAdapter.webPartWithBuilderFor counterProcotol Route.builder
+  // Create a WebPart for the given implementation of the protocol
+  remoting counterProcotol {
+    // define how routes are mapped
+    use_route_builder Route.builder 
+  }
 #else
   Filters.path "/api/init" >=>
   fun ctx ->

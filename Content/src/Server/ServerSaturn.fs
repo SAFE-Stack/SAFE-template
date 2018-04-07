@@ -29,7 +29,7 @@ let server =
 
 let webApp =
   remoting server {
-    with_builder Route.builder
+    use_route_builder Route.builder
   }
 
 let mainRouter = scope {

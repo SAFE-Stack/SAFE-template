@@ -16,11 +16,11 @@ group Server
   nuget Fable.JsonConverter
 //#endif  
 //#if     (Remoting && Server == "suave")
-  nuget Fable.Remoting.Suave ~> 2.0
+  nuget Fable.Remoting.Suave ~> 2.6
 //#elseif (Remoting && Server == "giraffe")
-  nuget Fable.Remoting.Giraffe ~> 2.0
+  nuget Fable.Remoting.Giraffe ~> 2.6
 //#elseif (Remoting && Server == "saturn")
-  nuget Fable.Remoting.Giraffe ~> 2.0
+  nuget Fable.Remoting.Giraffe ~> 2.6
 //#endif
 
   clitool Microsoft.DotNet.Watcher.Tools
@@ -34,7 +34,7 @@ group Client
   nuget Fable.Elmish.React
   nuget Fable.Elmish.HMR
 //#if (Remoting)
-  nuget Fable.Remoting.Client ~> 2.0
+  nuget Fable.Remoting.Client ~> 2.4
 //#endif
 //#if (Fulma != "none")
   nuget Fulma 1.0.0-beta-007

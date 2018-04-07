@@ -10,6 +10,7 @@ open Microsoft.Extensions.DependencyInjection
 open Giraffe
 
 #if (Remoting)
+open Fable.Remoting.Server
 open Fable.Remoting.Giraffe
 #else
 open Giraffe.Serialization
@@ -28,7 +29,9 @@ let webApp : HttpHandler =
   let counterProcotol = 
     { getInitCounter = getInitCounter >> Async.AwaitTask }
   // creates a HttpHandler for the given implementation
-  FableGiraffeAdapter.httpHandlerWithBuilderFor counterProcotol Route.builder
+  remoting counterProcotol {
+    use_route_builder Route.builder
+  }
 #else
   route "/api/init" >=>
     fun next ctx ->
