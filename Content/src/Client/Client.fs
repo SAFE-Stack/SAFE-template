@@ -40,7 +40,9 @@ module Server =
   
   /// A proxy you can use to talk to server directly
   let api : ICounterProtocol = 
-    Proxy.createWithBuilder<ICounterProtocol> Route.builder
+    Proxy.remoting<ICounterProtocol> {
+      use_route_builder Route.builder
+    }
     
 #endif
 
