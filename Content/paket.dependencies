@@ -12,6 +12,9 @@ group Server
 //#elseif (Server == "saturn")
   nuget Saturn
 //#endif
+//#if (Server != "suave" && !Remoting)
+  nuget Fable.JsonConverter
+//#endif  
 //#if     (Remoting && Server == "suave")
   nuget Fable.Remoting.Suave ~> 2.0
 //#elseif (Remoting && Server == "giraffe")

@@ -7,6 +7,9 @@ open Saturn
 #if (Remoting)
 open Fable.Remoting.Server
 open Fable.Remoting.Giraffe
+#else
+open Giraffe.Serialization
+open Microsoft.Extensions.DependencyInjection
 #endif
 
 open Shared
@@ -34,6 +37,11 @@ let mainRouter = scope {
   forward "" webApp
 }
 #else
+let config (services:IServiceCollection) =
+  let fableJsonSettings = Newtonsoft.Json.JsonSerializerSettings()
+  fableJsonSettings.Converters.Add(Fable.JsonConverter())
+  services.AddSingleton<IJsonSerializer>(NewtonsoftJsonSerializer fableJsonSettings) |> ignore
+  services
 let apiRouter = scope {
   get "/init" (fun next ctx ->
     task {
@@ -53,6 +61,9 @@ let app = application {
     url ("http://0.0.0.0:" + port.ToString() + "/")
     memory_cache
     use_static clientPath
+    #if (!Remoting)
+    service_config config
+    #endif
     use_gzip
 }
 

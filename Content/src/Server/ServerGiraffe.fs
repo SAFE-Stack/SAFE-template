@@ -11,6 +11,9 @@ open Giraffe
 
 #if (Remoting)
 open Fable.Remoting.Giraffe
+#else
+open Giraffe.Serialization
+open Microsoft.Extensions.DependencyInjection
 #endif
 
 open Shared
@@ -41,6 +44,11 @@ let configureApp  (app : IApplicationBuilder) =
 
 let configureServices (services : IServiceCollection) =
     services.AddGiraffe() |> ignore
+    #if (!Remoting)
+    let fableJsonSettings = Newtonsoft.Json.JsonSerializerSettings()
+    fableJsonSettings.Converters.Add(Fable.JsonConverter())
+    services.AddSingleton<IJsonSerializer>(NewtonsoftJsonSerializer fableJsonSettings) |> ignore
+    #endif
 
 WebHost
   .CreateDefaultBuilder()
