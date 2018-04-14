@@ -41,9 +41,9 @@ Show template version and available options with : `dotnet new SAFE --help`
 
 Choose between available Server back-ends:
 
-* [Suave.io](http://suave.io) (default)
-* [Giraffe](https://github.com/giraffe-fsharp/Giraffe) `dotnet new SAFE --Server giraffe`
-* [Saturn](https://saturnframework.github.io/docs/) `dotnet new SAFE --Server saturn`
+* [Saturn](https://saturnframework.github.io/docs/) (default)
+* [Giraffe](https://github.com/giraffe-fsharp/Giraffe)
+* [Suave.io](http://suave.io)
 
 ### Fulma
 
