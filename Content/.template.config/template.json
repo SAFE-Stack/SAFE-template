@@ -13,7 +13,7 @@
     "Server": {
       "type": "parameter",
       "dataType": "choice",
-      "defaultValue": "suave",
+      "defaultValue": "saturn",
       "choices": [
         {
           "choice": "suave",
