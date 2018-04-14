@@ -1,3 +1,7 @@
+#### 0.13.0 - 14.04.2018
+
+* Make Saturn the default option for Server - https://github.com/SAFE-Stack/SAFE-template/issues/54
+
 #### 0.12.0 - 07.04.2018
 
 * Update Fable.Remoting and use latest API - https://github.com/SAFE-Stack/SAFE-template/pull/53

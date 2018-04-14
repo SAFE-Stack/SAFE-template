@@ -4,11 +4,11 @@ A dotnet CLI template for [SAFE-Stack](https://safe-stack.github.io/) projects.
 
 This is a basic template to get started with 3 core components of the stack:
 
-* [Suave](https://suave.io/) or [Giraffe](https://github.com/giraffe-fsharp/Giraffe) or [Saturn](https://saturnframework.github.io/docs/) (see `Server` option below)
+* [Saturn](https://saturnframework.github.io/docs/), [Giraffe](https://github.com/giraffe-fsharp/Giraffe) or [Suave](https://suave.io/) (see `Server` option below)
 * [Fable](http://fable.io/)
 * [Elmish](https://fable-elmish.github.io/elmish/)
 
-The template does not include any Azure / other Cloud integration. Refer to [SAFE-Bookstore](https://github.com/SAFE-Stack/SAFE-BookStore) to see an example of deploying to Azure and for more details about this stack.
+The template does not **yet** include any Azure / other Cloud integration. Refer to [SAFE-Bookstore](https://github.com/SAFE-Stack/SAFE-BookStore) to see an example of deploying to Azure and for more details about this stack.
 
 ## Prerequisites
 
