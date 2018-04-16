@@ -22,3 +22,6 @@ group Server
 //#endif
 
   Microsoft.DotNet.Watcher.Tools
+//#if (Server == "saturn")
+  dotnet-saturn
+//#endif
