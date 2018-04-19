@@ -1,3 +1,7 @@
+#### 0.13.1 - 19.04.2018
+
+* Add UTF-8 charset to index.html - https://github.com/SAFE-Stack/SAFE-template/pull/59
+
 #### 0.13.0 - 14.04.2018
 
 * Make Saturn the default option for Server - https://github.com/SAFE-Stack/SAFE-template/issues/54
