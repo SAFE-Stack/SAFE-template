@@ -1,3 +1,7 @@
+#### 0.14.0 - 23.04.2018
+
+* Add YARN lock file - https://github.com/SAFE-Stack/SAFE-template/pull/61
+
 #### 0.13.1 - 19.04.2018
 
 * Add UTF-8 charset to index.html - https://github.com/SAFE-Stack/SAFE-template/pull/59
