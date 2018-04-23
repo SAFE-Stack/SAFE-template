@@ -19,7 +19,7 @@ The template does not **yet** include any Azure / other Cloud integration. Refer
 
 ## Using the template
 
-The template comes with different options. Please see [SAFE docs](https://safe-stack.github.io/docs/safe-template/) for details.
+The template comes with different options. Please see [SAFE docs](https://safe-stack.github.io/docs/template-overview/) for details.
 
 ## Contributing
 
