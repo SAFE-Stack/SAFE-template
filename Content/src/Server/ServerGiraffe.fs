@@ -19,7 +19,7 @@ open Microsoft.Extensions.DependencyInjection
 
 open Shared
 
-let clientPath = Path.Combine("..","Client") |> Path.GetFullPath
+let publicPath = "../Client/public" |> Path.GetFullPath
 let port = 8085us
 
 let getInitCounter () : Task<Counter> = task { return 42 }
@@ -55,8 +55,8 @@ let configureServices (services : IServiceCollection) =
 
 WebHost
   .CreateDefaultBuilder()
-  .UseWebRoot(clientPath)
-  .UseContentRoot(clientPath)
+  .UseWebRoot(publicPath)
+  .UseContentRoot(publicPath)
   .Configure(Action<IApplicationBuilder> configureApp)
   .ConfigureServices(configureServices)
   .UseUrls("http://0.0.0.0:" + port.ToString() + "/")

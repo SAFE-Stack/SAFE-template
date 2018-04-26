@@ -11,12 +11,12 @@ open Fable.Remoting.Suave
 
 open Shared
 
-let clientPath = Path.Combine("..","Client") |> Path.GetFullPath 
+let publicPath = "../Client/public" |> Path.GetFullPath
 let port = 8085us
 
 let config =
   { defaultConfig with 
-      homeFolder = Some clientPath
+      homeFolder = Some publicPath
       bindings = [ HttpBinding.create HTTP (IPAddress.Parse "0.0.0.0") port ] }
 
 let getInitCounter () : Async<Counter> = async { return 42 }
