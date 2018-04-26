@@ -117,9 +117,9 @@ Target "Docker" (fun _ ->
 #if (Azure)
 Target "Publish" (fun () ->
   run yarnTool "install --frozen-lockfile" __SOURCE_DIRECTORY__
-  run "dotnet" (sprintf "publish %s -c release -o %s" serverPath deployDir) __SOURCE_DIRECTORY__
-  run "dotnet" "restore" clientPath
-  run "dotnet" "fable webpack -- -p" clientPath
+  run dotnetCli (sprintf "publish %s -c release -o %s" serverPath deployDir) __SOURCE_DIRECTORY__
+  run dotnetCli "restore" clientPath
+  run dotnetCli "fable webpack -- -p" clientPath
   CopyDir (deployDir </> "public") (clientPath </> "public") allFiles
 )
 
