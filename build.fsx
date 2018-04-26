@@ -15,13 +15,8 @@ let formattedRN =
   |> String.concat "\n"
 
 Target "Clean" (fun () ->
-  CleanDirs [
-    nupkgDir
-  ]
-
-  Fake.Git.CommandHelper.directRunGitCommandAndFail
-    "./Content"
-    "clean -fxd"
+  CleanDirs [ nupkgDir ]
+  Git.CommandHelper.directRunGitCommandAndFail "./Content" "clean -fxd"
 )
 
 Target "Pack" (fun () ->
@@ -29,7 +24,7 @@ Target "Pack" (fun () ->
     "  \"name\": .+,"
    ("  \"name\": \"" + templateName + " v" + release.NugetVersion + "\",")
     System.Text.Encoding.UTF8
-    templatePath 
+    templatePath
   DotNetCli.Pack ( fun args ->
     { args with
         OutputPath = nupkgDir
@@ -46,7 +41,7 @@ Target "Push" (fun () ->
   Paket.Push ( fun args ->
     { args with
         PublishUrl = "https://www.nuget.org"
-        WorkingDir = nupkgDir 
+        WorkingDir = nupkgDir
     }
   )
 

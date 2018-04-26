@@ -81,6 +81,12 @@
       "dataType": "bool",
       "defaultValue": "false",
       "description": "use NPM instead of default Yarn for JS package management"
+    },
+    "Azure": {
+      "type": "parameter",
+      "dataType": "bool",
+      "defaultValue": "false",
+      "description": "adds Azure deployment to the build script"
     }
   },
   "sources": [
@@ -125,11 +131,15 @@
           "condition": "(Fulma != \"login\")"
         },
         {
-          "exclude": "**/Dockerfile",
+          "exclude": "Dockerfile",
           "condition": "(!Docker)"
         },
         {
-          "exclude": "**/yarn.lock",
+          "exclude": "arm-template.json",
+          "condition": "(!Azure)"
+        },
+        {
+          "exclude": "yarn.lock",
           "condition": "(NPM)"
         }
       ]

@@ -3,7 +3,7 @@ group Server
   source https://api.nuget.org/v3/index.json
 
   nuget FSharp.Core
-//#if     (Server == "suave")
+//#if (Server == "suave")
   nuget Suave
 //#elseif (Server == "giraffe")
   nuget Giraffe ~> 1
@@ -15,7 +15,7 @@ group Server
 //#if (Server != "suave" && !Remoting)
   nuget Fable.JsonConverter
 //#endif  
-//#if     (Remoting && Server == "suave")
+//#if (Remoting && Server == "suave")
   nuget Fable.Remoting.Suave ~> 2.6
 //#elseif (Remoting && Server == "giraffe")
   nuget Fable.Remoting.Giraffe ~> 2.6
@@ -44,5 +44,10 @@ group Client
 
 group Build
   source https://api.nuget.org/v3/index.json
+  generate_load_scripts: true
 
   nuget FAKE
+//#if (Azure)
+  nuget Microsoft.Azure.Management.ResourceManager.Fluent 1.4.1
+  github CompositionalIT/fshelpers src/FsHelpers/ArmHelper/ArmHelper.fs
+//#endif
