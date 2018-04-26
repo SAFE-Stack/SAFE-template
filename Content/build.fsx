@@ -86,19 +86,12 @@ Target "Run" (fun () ->
 Target "Bundle" (fun _ ->
   let serverDir = deployDir </> "Server"
   let clientDir = deployDir </> "Client"
-  
   let publicDir = clientDir </> "public"
-  let imageDir  = clientDir </> "Images"
-
+  
   let publishArgs = sprintf "publish -c Release -o \"%s\"" serverDir
   run dotnetCli publishArgs serverPath
 
-  !! "src/Client/public/**/*.*" |> CopyFiles publicDir
-  !! "src/Client/Images/**/*.*" |> CopyFiles imageDir
-
-  !! "src/Client/index.html"
-  ++ "src/Client/*.css"
-  |> CopyFiles clientDir 
+  CopyDir publicDir "src/Client/public" allFiles
 )
 
 let dockerUser = "safe-template"

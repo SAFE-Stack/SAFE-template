@@ -27,8 +27,8 @@ module.exports = {
   devtool: "source-map",
   entry: resolve('./Client.fsproj'),
   output: {
-    path: resolve('./public'),
-    publicPath: "/public",
+    path: resolve('./public/js'),
+    publicPath: "/js",
     filename: "bundle.js"
   },
   resolve: {
@@ -41,6 +41,7 @@ module.exports = {
         changeOrigin: true
       }
     },
+    contentBase: "./public",
     hot: true,
     inline: true
   },

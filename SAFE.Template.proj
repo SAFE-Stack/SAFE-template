@@ -22,7 +22,7 @@ Content/paket.lock;
 **/packages/**/*;
 **/paket-files/**/*;
 **/node_modules/**/*;
-**/src/Client/public/**/*;
+**/src/Client/public/js/**/*;
     </ExcludeFromPackage>
 </PropertyGroup>
   <ItemGroup>
