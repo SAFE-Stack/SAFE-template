@@ -19,11 +19,15 @@ open Microsoft.Extensions.DependencyInjection
 
 open Shared
 
+//#if (Deploy == "azure")
 let publicPath =
     match System.Environment.GetEnvironmentVariable "public_path" with
     | null | "" -> "../Client/public"
     | path -> path
     |> Path.GetFullPath
+//#else
+let publicPath = Path.GetFullPath "../Client/public"
+//#endif
 let port = 8085us
 
 let getInitCounter () : Task<Counter> = task { return 42 }
