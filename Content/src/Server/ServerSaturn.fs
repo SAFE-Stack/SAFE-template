@@ -29,7 +29,6 @@ let webApp =
   }
 
 let mainRouter = scope {
-  forward "" browserRouter
   forward "" webApp
 }
 #else
