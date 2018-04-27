@@ -167,7 +167,8 @@
           }
         }
       ]
-    },"**/*.fsx": {
+    },
+    "**/*.fs*": {
       "operations": [
         {
           "type": "conditional",
