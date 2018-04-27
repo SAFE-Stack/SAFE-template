@@ -23,7 +23,7 @@ let platformTool tool winTool =
 let nodeTool = platformTool "node" "node.exe"
 //#if (NPM)
 let npmTool = platformTool "npm" "npm.cmd"
-#else
+//#else
 let yarnTool = platformTool "yarn" "yarn.cmd"
 //#endif
 
@@ -53,7 +53,7 @@ Target "InstallClient" (fun _ ->
   printfn "Npm version:"
   run npmTool "--version"  __SOURCE_DIRECTORY__
   run npmTool "install" __SOURCE_DIRECTORY__
-#else
+//#else
   printfn "Yarn version:"
   run yarnTool "--version" __SOURCE_DIRECTORY__
   run yarnTool "install --frozen-lockfile" __SOURCE_DIRECTORY__
