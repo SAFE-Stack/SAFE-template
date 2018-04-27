@@ -127,16 +127,15 @@ type ArmOutput =
   { WebAppName : ParameterValue<string>
     WebAppPassword : ParameterValue<string> }
 let environment = getBuildParamOrDefault "environment" (Guid.NewGuid().ToString().ToLower().Split '-' |> Array.head)
-let subscriptionId = getBuildParam "subscriptionId"
-let clientId = getBuildParam "clientId"
+let location = getBuildParamOrDefault "location" Region.EuropeWest.Name
 
 let mutable deploymentOutputs : ArmOutput option = None
 
-Target "DeployArmTemplate" (fun _ ->
+Target "ArmTemplate" (fun _ ->
   let armTemplate = @"arm-template.json"
   let resourceGroupName = "safe-" + environment
-  let subscriptionId = Guid.Parse subscriptionId
-  let clientId = Guid.Parse clientId
+  let subscriptionId = try getBuildParam "subscriptionId" |> Guid.Parse with _ -> failwith "Invalid Subscription ID. This should be your Azure Subscription ID."
+  let clientId = try getBuildParam "clientId" |> Guid.Parse with _ -> failwith "Invalid Client ID. This should be the Client ID of a Native application registered in Azure with permission to create resources in your subscription."
 
   tracefn "Deploying template '%s' to resource group '%s' in subscription '%O'..." armTemplate resourceGroupName subscriptionId
 
@@ -146,10 +145,10 @@ Target "DeployArmTemplate" (fun _ ->
     |> Async.RunSynchronously
 
   let deployment =
-     { DeploymentName = "fake-deploy"
-       ResourceGroup = New(resourceGroupName, Region.EuropeWest)
+     { DeploymentName = "SAFE-template-deploy"
+       ResourceGroup = New(resourceGroupName, Region.Create location)
        ArmTemplate = IO.File.ReadAllText armTemplate
-       Parameters = Simple [ "environment", ArmString environment ]
+       Parameters = Simple [ "environment", ArmString environment; "location", ArmString location ]
        DeploymentMode = Incremental }
 
   deployment
@@ -160,21 +159,23 @@ Target "DeployArmTemplate" (fun _ ->
     | DeploymentCompleted d -> deploymentOutputs <- d)
 )
 
-Target "DeployWebApp" (fun _ ->
+Target "Deploy" (fun _ ->
   let zipFile = "deploy.zip"
   IO.File.Delete zipFile
   Zip deployDir zipFile !!(deployDir + @"\**\**")
   
   let appName = deploymentOutputs.Value.WebAppName.value
   let appPassword = deploymentOutputs.Value.WebAppPassword.value
+  
   let destinationUri = sprintf "https://%s.scm.azurewebsites.net/api/zipdeploy" appName
   tracefn "Uploading %s to %s" zipFile destinationUri
   let client = new Net.WebClient(Credentials = Net.NetworkCredential("$" + appName, appPassword))
-  client.UploadData(destinationUri, IO.File.ReadAllBytes zipFile) |> ignore
-)
+  client.UploadData(destinationUri, IO.File.ReadAllBytes zipFile) |> ignore)
 
-"Publish" ==> "DeployWebApp"
-"DeployArmTemplate" ==> "DeployWebApp"
+"Clean"
+  ==> "Publish"
+  ==> "ArmTemplate"
+  ==> "Deploy"
 
 #endif
 "Clean"
@@ -186,11 +187,6 @@ Target "DeployWebApp" (fun _ ->
   ==> "Docker"
 #endif
 
-#if (Azure)
-"Clean" ==> "Publish" ==> "DeployWebApp"
-"DeployArmTemplate" ==> "DeployWebApp"
-
-#endif
 "InstallClient"
   ==> "RestoreServer"
   ==> "Run"

@@ -2,7 +2,8 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "environment": { "type": "string" }
+        "environment": { "type": "string" },
+        "location": { "type": "string" }
     },
     "variables": {
         "appServicePlan": "[concat('safe-', parameters('environment'), '-web-host')]",
@@ -14,13 +15,13 @@
             "sku": { "name": "F1" },
             "name": "[variables('appServicePlan')]",
             "apiVersion": "2016-09-01",
-            "location": "West Europe"
+            "location": "[parameters('location')]"
         },
         {
             "type": "Microsoft.Web/sites",
             "name": "[variables('web')]",
             "apiVersion": "2016-08-01",
-            "location": "West Europe",
+            "location": "[parameters('location')]",
             "properties": {
                 "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlan'))]"
             },
