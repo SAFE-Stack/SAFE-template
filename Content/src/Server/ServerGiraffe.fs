@@ -62,7 +62,7 @@ let configureServices (services : IServiceCollection) =
     services.AddSingleton<IJsonSerializer>(NewtonsoftJsonSerializer fableJsonSettings) |> ignore
     #endif
     #if (Deploy == "azure")
-    services.AddApplicationInsightsTelemetry(System.Environment.GetEnvironmentVariable "APPINSIGHTS_INSTRUMENTATIONKEY")
+    services.AddApplicationInsightsTelemetry(System.Environment.GetEnvironmentVariable "APPINSIGHTS_INSTRUMENTATIONKEY") |> ignore
     #endif
 
 WebHost
