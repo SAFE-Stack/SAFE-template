@@ -13,6 +13,7 @@ open Microsoft.Extensions.DependencyInjection
 #endif
 
 open Shared
+open Microsoft.AspNetCore.Builder
 
 let publicPath =
     match System.Environment.GetEnvironmentVariable "public_path" with
@@ -22,10 +23,6 @@ let publicPath =
 let port = 8085us
 
 let getInitCounter () : Task<Counter> = task { return 42 }
-
-let browserRouter = scope {
-  get "/" (htmlFile (Path.Combine(publicPath, "index.html")))
-}
 
 #if (Remoting)
 let server =
@@ -37,7 +34,6 @@ let webApp =
   }
 
 let mainRouter = scope {
-  forward "" browserRouter
   forward "" webApp
 }
 #else
@@ -55,14 +51,17 @@ let apiRouter = scope {
 }
 
 let mainRouter = scope {
-  forward "" browserRouter
   forward "/api" apiRouter
 }
 #endif
 
+let configureApp (app:IApplicationBuilder) =
+  app.UseDefaultFiles()
+
 let app = application {
-    router mainRouter
     url ("http://0.0.0.0:" + port.ToString() + "/")
+    router mainRouter
+    app_config configureApp
     memory_cache
     use_static publicPath
     #if (!Remoting)
