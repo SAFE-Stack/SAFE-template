@@ -23,7 +23,7 @@ group Server
   nuget Fable.Remoting.Giraffe ~> 2.6
 //#endif
 //#if (Azure)
-  nuget Microsoft.ApplicationInsights.AspNetCore ~> 2.5
+  nuget Microsoft.ApplicationInsights.AspNetCore ~> 2.2
 //#endif
 
   clitool Microsoft.DotNet.Watcher.Tools

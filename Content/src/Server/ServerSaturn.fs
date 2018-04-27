@@ -35,16 +35,7 @@ let webApp =
   remoting server {
     use_route_builder Route.builder
   }
-
-let mainRouter = scope {
-  forward "" browserRouter
-  forward "" webApp
-}
 #else
-let configureSerialization (services:IServiceCollection) =
-  let fableJsonSettings = Newtonsoft.Json.JsonSerializerSettings()
-  fableJsonSettings.Converters.Add(Fable.JsonConverter())
-  services.AddSingleton<IJsonSerializer>(NewtonsoftJsonSerializer fableJsonSettings)
 let apiRouter = scope {
   get "/init" (fun next ctx ->
     task {
@@ -52,11 +43,18 @@ let apiRouter = scope {
       return! Successful.OK counter next ctx
     })
 }
+#endif
 
 let mainRouter = scope {
   forward "" browserRouter
   forward "/api" apiRouter
 }
+
+#if (!Remoting)
+let configureSerialization (services:IServiceCollection) =
+  let fableJsonSettings = Newtonsoft.Json.JsonSerializerSettings()
+  fableJsonSettings.Converters.Add(Fable.JsonConverter())
+  services.AddSingleton<IJsonSerializer>(NewtonsoftJsonSerializer fableJsonSettings)
 #endif
 
 #if (Azure)
@@ -70,7 +68,7 @@ let app = application {
     memory_cache
     use_static publicPath
     #if (!Remoting)
-    service_config configureSerizaliation
+    service_config configureSerialization
     #endif
     #if (Azure)
     service_config configureAzure
