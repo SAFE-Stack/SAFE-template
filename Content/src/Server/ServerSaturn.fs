@@ -13,6 +13,7 @@ open Microsoft.Extensions.DependencyInjection
 #endif
 
 open Shared
+open Microsoft.AspNetCore.Builder
 
 let publicPath = "../Client/public" |> Path.GetFullPath
 let port = 8085us
@@ -50,9 +51,13 @@ let mainRouter = scope {
 }
 #endif
 
+let configureApp (app:IApplicationBuilder) =
+  app.UseDefaultFiles()
+
 let app = application {
-    router mainRouter
     url ("http://0.0.0.0:" + port.ToString() + "/")
+    router mainRouter
+    app_config configureApp
     memory_cache
     use_static publicPath
     #if (!Remoting)
