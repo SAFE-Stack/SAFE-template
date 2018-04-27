@@ -128,6 +128,7 @@ type ArmOutput =
     WebAppPassword : ParameterValue<string> }
 let environment = getBuildParamOrDefault "environment" (Guid.NewGuid().ToString().ToLower().Split '-' |> Array.head)
 let location = getBuildParamOrDefault "location" Region.EuropeWest.Name
+let pricingTier = getBuildParamOrDefault "pricingTier" "F1"
 
 let mutable deploymentOutputs : ArmOutput option = None
 
@@ -148,7 +149,11 @@ Target "ArmTemplate" (fun _ ->
      { DeploymentName = "SAFE-template-deploy"
        ResourceGroup = New(resourceGroupName, Region.Create location)
        ArmTemplate = IO.File.ReadAllText armTemplate
-       Parameters = Simple [ "environment", ArmString environment; "location", ArmString location ]
+       Parameters =
+        Simple
+          [ "environment", ArmString environment
+            "location", ArmString location
+            "pricingTier", ArmString pricingTier ]
        DeploymentMode = Incremental }
 
   deployment

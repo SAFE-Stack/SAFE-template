@@ -3,7 +3,8 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "environment": { "type": "string" },
-        "location": { "type": "string" }
+        "location": { "type": "string" },
+        "pricingTier": { "type": "string" }
     },
     "variables": {
         "appServicePlan": "[concat('safe-', parameters('environment'), '-web-host')]",
@@ -12,7 +13,7 @@
     "resources": [
         {
             "type": "Microsoft.Web/serverfarms",
-            "sku": { "name": "F1" },
+            "sku": { "name": "[parameters('pricingTier')]" },
             "name": "[variables('appServicePlan')]",
             "apiVersion": "2016-09-01",
             "location": "[parameters('location')]"
