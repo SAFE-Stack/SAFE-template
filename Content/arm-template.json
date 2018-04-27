@@ -48,7 +48,7 @@
             "resources": [
                 {
                     "name": "appsettings",
-                    "apiVersion": "2015-08-01",
+                    "apiVersion": "2016-08-01",
                     "type": "config",
                     "properties": {
                         "public_path": "./public",
@@ -59,6 +59,13 @@
                         "[concat('Microsoft.Web/sites/', variables('web'))]",
                         "[concat('Microsoft.Insights/components/', variables('insights'))]"
                     ]
+                },
+                {
+                    "apiVersion": "2016-08-01",
+                    "name": "Microsoft.ApplicationInsights.AzureWebSites",
+                    "type": "siteextensions",
+                    "dependsOn": [ "[concat('Microsoft.Web/sites/', variables('web'))]" ],
+                    "properties": { }
                 }
             ]
         }
