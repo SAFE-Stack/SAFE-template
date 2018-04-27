@@ -139,11 +139,11 @@
         },
         {
           "exclude": "Dockerfile",
-          "condition": "(!Docker)"
+          "condition": "(Deploy != \"docker\")"
         },
         {
           "exclude": "arm-template.json",
-          "condition": "(!Azure)"
+          "condition": "(Deploy != \"azure\")"
         },
         {
           "exclude": "yarn.lock",
