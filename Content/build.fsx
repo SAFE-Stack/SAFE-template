@@ -93,7 +93,7 @@ Target "Bundle" (fun _ ->
   let serverDir = deployDir </> "Server"
   let clientDir = deployDir </> "Client"
   let publicDir = clientDir </> "public"
-
+  
   let publishArgs = sprintf "publish -c Release -o \"%s\"" serverDir
   run dotnetCli publishArgs serverPath
 
