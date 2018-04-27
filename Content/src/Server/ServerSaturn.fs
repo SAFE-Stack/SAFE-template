@@ -52,7 +52,7 @@ let configureSerialization (services:IServiceCollection) =
   services.AddSingleton<IJsonSerializer>(NewtonsoftJsonSerializer fableJsonSettings)
 #endif
 
-#if (Azure)
+#if (Deploy == "azure")
 let configureAzure (services:IServiceCollection) =
   services.AddApplicationInsightsTelemetry(System.Environment.GetEnvironmentVariable "APPINSIGHTS_INSTRUMENTATIONKEY")
 #endif
@@ -69,7 +69,7 @@ let app = application {
     #if (!Remoting)
     service_config configureSerialization
     #endif
-    #if (Azure)
+    #if (Deploy == "azure")
     service_config configureAzure
     #endif
     use_gzip

@@ -10,7 +10,7 @@ group Server
 //#elseif (Server == "saturn")
   Saturn
 //#endif
-//#if (Azure)
+//#if (Deploy == "azure")
   Microsoft.ApplicationInsights.AspNetCore
 //#endif
 //#if     (!Remoting && Server != "suave")

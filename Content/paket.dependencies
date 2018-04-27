@@ -22,7 +22,7 @@ group Server
 //#elseif (Remoting && Server == "saturn")
   nuget Fable.Remoting.Giraffe ~> 2.6
 //#endif
-//#if (Azure)
+//#if (Deploy == "azure")
   nuget Microsoft.ApplicationInsights.AspNetCore ~> 2.2
 //#endif
 
