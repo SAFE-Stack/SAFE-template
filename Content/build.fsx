@@ -1,5 +1,5 @@
 #r @"packages/build/FAKE/tools/FakeLib.dll"
-#if (Azure)
+//#if (Deploy == "azure")
 #r "netstandard"
 #I "packages/build/Microsoft.Rest.ClientRuntime.Azure/lib/net452"
 #load ".paket/load/netcoreapp2.1/Build/build.group.fsx"
@@ -8,7 +8,7 @@
 open Cit.Helpers.Arm
 open Cit.Helpers.Arm.Parameters
 open Microsoft.Azure.Management.ResourceManager.Fluent.Core
-#endif
+//#endif
 open System
 open Fake
 
@@ -21,11 +21,11 @@ let platformTool tool winTool =
   match tryFindFileOnPath tool with Some t -> t | _ -> failwithf "%s not found" tool
 
 let nodeTool = platformTool "node" "node.exe"
-#if (NPM)
+//#if (NPM)
 let npmTool = platformTool "npm" "npm.cmd"
 #else
 let yarnTool = platformTool "yarn" "yarn.cmd"
-#endif
+//#endif
 
 let dotnetcliVersion = DotNetCli.GetDotNetSDKVersionFromGlobalJson()
 let mutable dotnetCli = "dotnet"
@@ -49,7 +49,7 @@ Target "InstallDotNetCore" (fun _ ->
 Target "InstallClient" (fun _ ->
   printfn "Node version:"
   run nodeTool "--version" __SOURCE_DIRECTORY__
-#if (NPM)
+//#if (NPM)
   printfn "Npm version:"
   run npmTool "--version"  __SOURCE_DIRECTORY__
   run npmTool "install" __SOURCE_DIRECTORY__
@@ -57,7 +57,7 @@ Target "InstallClient" (fun _ ->
   printfn "Yarn version:"
   run yarnTool "--version" __SOURCE_DIRECTORY__
   run yarnTool "install --frozen-lockfile" __SOURCE_DIRECTORY__
-#endif
+//#endif
   run dotnetCli "restore" clientPath
 )
 
@@ -88,7 +88,7 @@ Target "Run" (fun () ->
   |> ignore
 )
 
-#if (Docker)
+//#if (Deploy == "docker")
 Target "Bundle" (fun _ ->
   let serverDir = deployDir </> "Server"
   let clientDir = deployDir </> "Client"
@@ -113,8 +113,8 @@ Target "Docker" (fun _ ->
   run "docker" tagArgs "."
 )
 
-#endif
-#if (Azure)
+//#endif
+//#if (Deploy == "azure")
 Target "Publish" (fun () ->
   run yarnTool "install --frozen-lockfile" __SOURCE_DIRECTORY__
   run dotnetCli (sprintf "publish %s -c release -o %s" serverPath deployDir) __SOURCE_DIRECTORY__
@@ -128,6 +128,7 @@ type ArmOutput =
     WebAppPassword : ParameterValue<string> }
 let environment = getBuildParamOrDefault "environment" (Guid.NewGuid().ToString().ToLower().Split '-' |> Array.head)
 let location = getBuildParamOrDefault "location" Region.EuropeWest.Name
+let pricingTier = getBuildParamOrDefault "pricingTier" "F1"
 
 let mutable deploymentOutputs : ArmOutput option = None
 
@@ -148,7 +149,11 @@ Target "ArmTemplate" (fun _ ->
      { DeploymentName = "SAFE-template-deploy"
        ResourceGroup = New(resourceGroupName, Region.Create location)
        ArmTemplate = IO.File.ReadAllText armTemplate
-       Parameters = Simple [ "environment", ArmString environment; "location", ArmString location ]
+       Parameters =
+        Simple
+          [ "environment", ArmString environment
+            "location", ArmString location
+            "pricingTier", ArmString pricingTier ]
        DeploymentMode = Incremental }
 
   deployment
@@ -177,15 +182,15 @@ Target "Deploy" (fun _ ->
   ==> "ArmTemplate"
   ==> "Deploy"
 
-#endif
+//#endif
 "Clean"
   ==> "InstallDotNetCore"
   ==> "InstallClient"
   ==> "Build"
-#if (Docker)
+//#if (Deploy == "docker")
   ==> "Bundle"
   ==> "Docker"
-#endif
+//#endif
 
 "InstallClient"
   ==> "RestoreServer"

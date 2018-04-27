@@ -70,23 +70,30 @@
       "defaultValue": "false",
       "description": "adds Fable.Remoting to server and client"
     },
-    "Docker": {
-      "type": "parameter",
-      "dataType": "bool",
-      "defaultValue": "false",
-      "description": "additional FAKE targets to bundle and build Docker image"
-    },
     "NPM": {
       "type": "parameter",
       "dataType": "bool",
       "defaultValue": "false",
       "description": "use NPM instead of default Yarn for JS package management"
     },
-    "Azure": {
+    "Deploy": {
       "type": "parameter",
-      "dataType": "bool",
-      "defaultValue": "false",
-      "description": "adds Azure deployment to the build script"
+      "dataType": "choice",
+      "defaultValue": "none",
+      "choices": [
+        {
+          "choice": "none",
+          "description": "don't add FAKE targets to deploy"
+        },
+        {
+          "choice": "azure",
+          "description": "additional FAKE targets to deploy to Azure"
+        },
+        {
+          "choice": "docker",
+          "description": "additional FAKE targets to bundle and build Docker image"
+        }
+      ]
     }
   },
   "sources": [
