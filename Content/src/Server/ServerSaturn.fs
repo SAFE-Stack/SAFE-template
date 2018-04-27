@@ -29,33 +29,24 @@ let port = 8085us
 let getInitCounter () : Task<Counter> = task { return 42 }
 
 #if (Remoting)
-let server =
-  { getInitCounter = getInitCounter >> Async.AwaitTask }
-
 let webApp =
+  let server =
+    { getInitCounter = getInitCounter >> Async.AwaitTask }
   remoting server {
     use_route_builder Route.builder
   }
-
-let mainRouter = scope {
-  forward "" webApp
-}
 #else
 let config (services:IServiceCollection) =
   let fableJsonSettings = Newtonsoft.Json.JsonSerializerSettings()
   fableJsonSettings.Converters.Add(Fable.JsonConverter())
   services.AddSingleton<IJsonSerializer>(NewtonsoftJsonSerializer fableJsonSettings) |> ignore
   services
-let apiRouter = scope {
-  get "/init" (fun next ctx ->
+let webApp = scope {
+  get "/api/init" (fun next ctx ->
     task {
       let! counter = getInitCounter()
       return! Successful.OK counter next ctx
     })
-}
-
-let mainRouter = scope {
-  forward "/api" apiRouter
 }
 #endif
 
@@ -64,7 +55,7 @@ let configureApp (app:IApplicationBuilder) =
 
 let app = application {
     url ("http://0.0.0.0:" + port.ToString() + "/")
-    router mainRouter
+    router webApp
     app_config configureApp
     memory_cache
     use_static publicPath
