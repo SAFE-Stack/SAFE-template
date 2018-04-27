@@ -13,6 +13,7 @@ open Microsoft.Extensions.DependencyInjection
 #endif
 
 open Shared
+open Microsoft.AspNetCore.Builder
 
 let publicPath =
     match System.Environment.GetEnvironmentVariable "public_path" with
@@ -56,9 +57,13 @@ let configureAzure (services:IServiceCollection) =
   services.AddApplicationInsightsTelemetry(System.Environment.GetEnvironmentVariable "APPINSIGHTS_INSTRUMENTATIONKEY")
 #endif
 
+let configureApp (app:IApplicationBuilder) =
+  app.UseDefaultFiles()
+
 let app = application {
-    router mainRouter
     url ("http://0.0.0.0:" + port.ToString() + "/")
+    router mainRouter
+    app_config configureApp
     memory_cache
     use_static publicPath
     #if (!Remoting)

@@ -46,7 +46,8 @@ let webApp : HttpHandler =
 #endif
 
 let configureApp  (app : IApplicationBuilder) =
-  app.UseStaticFiles()
+  app.UseDefaultFiles()
+     .UseStaticFiles()
      .UseGiraffe webApp
 
 let configureServices (services : IServiceCollection) =
