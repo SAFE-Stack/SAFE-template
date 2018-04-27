@@ -41,11 +41,10 @@ let mainRouter = scope {
   forward "" webApp
 }
 #else
-let config (services:IServiceCollection) =
+let configureSerialization (services:IServiceCollection) =
   let fableJsonSettings = Newtonsoft.Json.JsonSerializerSettings()
   fableJsonSettings.Converters.Add(Fable.JsonConverter())
-  services.AddSingleton<IJsonSerializer>(NewtonsoftJsonSerializer fableJsonSettings) |> ignore
-  services
+  services.AddSingleton<IJsonSerializer>(NewtonsoftJsonSerializer fableJsonSettings)
 let apiRouter = scope {
   get "/init" (fun next ctx ->
     task {
@@ -60,13 +59,21 @@ let mainRouter = scope {
 }
 #endif
 
+#if (Azure)
+let configureAzure (services:IServiceCollection) =
+  services.AddApplicationInsightsTelemetry(System.Environment.GetEnvironmentVariable "APPINSIGHTS_INSTRUMENTATIONKEY")
+#endif
+
 let app = application {
     router mainRouter
     url ("http://0.0.0.0:" + port.ToString() + "/")
     memory_cache
     use_static publicPath
     #if (!Remoting)
-    service_config config
+    service_config configureSerizaliation
+    #endif
+    #if (Azure)
+    service_config configureAzure
     #endif
     use_gzip
 }

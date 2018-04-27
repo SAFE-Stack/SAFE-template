@@ -10,15 +10,15 @@ group Server
 //#elseif (Server == "saturn")
   Saturn
 //#endif
-
+//#if (Azure)
+  Microsoft.ApplicationInsights.AspNetCore
+//#endif
 //#if     (!Remoting && Server != "suave")
   Fable.JsonConverter
 //#endif  
-
 //#if     (Remoting && Server == "suave")
   Fable.Remoting.Suave
 //#elseif (Remoting)
   Fable.Remoting.Giraffe
 //#endif
-
   Microsoft.DotNet.Watcher.Tools

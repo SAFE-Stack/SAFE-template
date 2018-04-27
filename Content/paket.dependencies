@@ -22,6 +22,9 @@ group Server
 //#elseif (Remoting && Server == "saturn")
   nuget Fable.Remoting.Giraffe ~> 2.6
 //#endif
+//#if (Azure)
+  nuget Microsoft.ApplicationInsights.AspNetCore ~> 2.5
+//#endif
 
   clitool Microsoft.DotNet.Watcher.Tools
 
