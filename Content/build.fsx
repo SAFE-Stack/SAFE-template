@@ -1,5 +1,5 @@
 #r @"packages/build/FAKE/tools/FakeLib.dll"
-#if (Azure)
+#if (Deploy == "azure")
 #r "netstandard"
 #I "packages/build/Microsoft.Rest.ClientRuntime.Azure/lib/net452"
 #load ".paket/load/netcoreapp2.1/Build/build.group.fsx"
@@ -88,7 +88,7 @@ Target "Run" (fun () ->
   |> ignore
 )
 
-#if (Docker)
+#if (Deploy == "docker")
 Target "Bundle" (fun _ ->
   let serverDir = deployDir </> "Server"
   let clientDir = deployDir </> "Client"
@@ -114,7 +114,7 @@ Target "Docker" (fun _ ->
 )
 
 #endif
-#if (Azure)
+#if (Deploy == "azure")
 Target "Publish" (fun () ->
   run yarnTool "install --frozen-lockfile" __SOURCE_DIRECTORY__
   run dotnetCli (sprintf "publish %s -c release -o %s" serverPath deployDir) __SOURCE_DIRECTORY__
@@ -182,7 +182,7 @@ Target "Deploy" (fun _ ->
   ==> "InstallDotNetCore"
   ==> "InstallClient"
   ==> "Build"
-#if (Docker)
+#if (Deploy == "docker")
   ==> "Bundle"
   ==> "Docker"
 #endif

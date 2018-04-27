@@ -47,7 +47,7 @@ group Build
   generate_load_scripts: true
 
   nuget FAKE
-//#if (Azure)
+//#if (Deploy == "azure")
   nuget Microsoft.Azure.Management.ResourceManager.Fluent 1.4.1
   github CompositionalIT/fshelpers src/FsHelpers/ArmHelper/ArmHelper.fs
 //#endif
