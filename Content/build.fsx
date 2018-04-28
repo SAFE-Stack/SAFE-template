@@ -102,7 +102,6 @@ Target "Bundle" (fun _ ->
 
 let dockerUser = "safe-template"
 let dockerImageName = "safe-template"
-
 let dockerFullName = sprintf "%s/%s" dockerUser dockerImageName
 
 Target "Docker" (fun _ ->
@@ -168,8 +167,8 @@ Target "AppService" (fun _ ->
   let appPassword = deploymentOutputs.Value.WebAppPassword.value
   
   let destinationUri = sprintf "https://%s.scm.azurewebsites.net/api/zipdeploy" appName
-  tracefn "Uploading %s to %s" zipFile destinationUri
   let client = new Net.WebClient(Credentials = Net.NetworkCredential("$" + appName, appPassword))
+  tracefn "Uploading %s to %s" zipFile destinationUri
   client.UploadData(destinationUri, IO.File.ReadAllBytes zipFile) |> ignore)
 
 //#endif
