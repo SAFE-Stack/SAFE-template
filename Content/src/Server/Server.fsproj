@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-#if (Deploy == "azure")
+#if (Deploy == "azure" && Server != "suave")
 <Project Sdk="Microsoft.NET.Sdk.Web">
 #else
 <Project Sdk="Microsoft.NET.Sdk">
@@ -11,6 +11,11 @@
   <ItemGroup>
     <Compile Include="..\Shared\Shared.fs" />
     <Compile Include="Server.fs" />
+    #if (Deploy == "azure" && Server == "suave")
+    <None Include="web.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    #endif
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

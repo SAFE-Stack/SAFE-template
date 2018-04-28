@@ -12,15 +12,13 @@ open Fable.Remoting.Suave
 open Shared
 
 //#if (Deploy == "azure")
-let publicPath =
-    match System.Environment.GetEnvironmentVariable "public_path" with
-    | null | "" -> "../Client/public"
-    | path -> path
-    |> Path.GetFullPath
+let tryGetEnv = System.Environment.GetEnvironmentVariable >> function | null | "" -> None | v -> Some v
+let publicPath = tryGetEnv "public_path" |> Option.defaultValue "../Client/public" |> Path.GetFullPath
+let port = tryGetEnv "HTTP_PLATFORM_PORT" |> Option.map System.UInt16.Parse |> Option.defaultValue 8085us
 //#else
 let publicPath = Path.GetFullPath "../Client/public"
-//#endif
 let port = 8085us
+//#endif
 
 let config =
   { defaultConfig with 

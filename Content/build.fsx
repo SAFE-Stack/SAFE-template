@@ -102,7 +102,6 @@ Target "Bundle" (fun _ ->
 
 let dockerUser = "safe-template"
 let dockerImageName = "safe-template"
-
 let dockerFullName = sprintf "%s/%s" dockerUser dockerImageName
 
 Target "Docker" (fun _ ->

@@ -108,6 +108,13 @@
           "rename": { "ServerSuave.fs": "Server.fs" }
         },
         {
+          "exclude": "**/Suaveweb.config",
+          "condition": "(Server != \"suave\") && (Deploy != \"azure\")"
+        },
+        {
+          "rename": { "Suaveweb.config": "web.config" }
+        },
+        {
           "exclude": "**/ServerGiraffe.fs",
           "condition": "(Server != \"giraffe\")"
         },
