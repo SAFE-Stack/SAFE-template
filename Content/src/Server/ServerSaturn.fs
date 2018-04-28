@@ -37,17 +37,13 @@ let webApp =
   }
 #else
 let webApp = scope {
-  get "/init" (fun next ctx ->
+  get "/api/init" (fun next ctx ->
     task {
       let! counter = getInitCounter()
       return! Successful.OK counter next ctx
     })
 }
 #endif
-
-let mainRouter = scope {
-  forward "/api" webApp
-}
 
 #if (!Remoting)
 let configureSerialization (services:IServiceCollection) =
@@ -66,7 +62,7 @@ let configureApp (app:IApplicationBuilder) =
 
 let app = application {
     url ("http://0.0.0.0:" + port.ToString() + "/")
-    router mainRouter
+    router webApp
     app_config configureApp
     memory_cache
     use_static publicPath

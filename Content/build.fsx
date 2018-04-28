@@ -115,46 +115,41 @@ Target "Docker" (fun _ ->
 
 //#endif
 //#if (Deploy == "azure")
-Target "Publish" (fun () ->
-  run yarnTool "install --frozen-lockfile" __SOURCE_DIRECTORY__
+Target "Bundle" (fun () ->
   run dotnetCli (sprintf "publish %s -c release -o %s" serverPath deployDir) __SOURCE_DIRECTORY__
-  run dotnetCli "restore" clientPath
-  run dotnetCli "fable webpack -- -p" clientPath
   CopyDir (deployDir </> "public") (clientPath </> "public") allFiles
 )
 
 type ArmOutput =
   { WebAppName : ParameterValue<string>
     WebAppPassword : ParameterValue<string> }
-let environment = getBuildParamOrDefault "environment" (Guid.NewGuid().ToString().ToLower().Split '-' |> Array.head)
-let location = getBuildParamOrDefault "location" Region.EuropeWest.Name
-let pricingTier = getBuildParamOrDefault "pricingTier" "F1"
-
 let mutable deploymentOutputs : ArmOutput option = None
 
 Target "ArmTemplate" (fun _ ->
+  let environment = getBuildParamOrDefault "environment" (Guid.NewGuid().ToString().ToLower().Split '-' |> Array.head)
   let armTemplate = @"arm-template.json"
   let resourceGroupName = "safe-" + environment
-  let subscriptionId = try getBuildParam "subscriptionId" |> Guid.Parse with _ -> failwith "Invalid Subscription ID. This should be your Azure Subscription ID."
-  let clientId = try getBuildParam "clientId" |> Guid.Parse with _ -> failwith "Invalid Client ID. This should be the Client ID of a Native application registered in Azure with permission to create resources in your subscription."
-
-  tracefn "Deploying template '%s' to resource group '%s' in subscription '%O'..." armTemplate resourceGroupName subscriptionId
 
   let authCtx =
+    let subscriptionId = try getBuildParam "subscriptionId" |> Guid.Parse with _ -> failwith "Invalid Subscription ID. This should be your Azure Subscription ID."
+    tracefn "Deploying template '%s' to resource group '%s' in subscription '%O'..." armTemplate resourceGroupName subscriptionId
+    let clientId = try getBuildParam "clientId" |> Guid.Parse with _ -> failwith "Invalid Client ID. This should be the Client ID of a Native application registered in Azure with permission to create resources in your subscription."
     subscriptionId
     |> authenticateDevice trace { ClientId = clientId; TenantId = None }
     |> Async.RunSynchronously
 
   let deployment =
-     { DeploymentName = "SAFE-template-deploy"
-       ResourceGroup = New(resourceGroupName, Region.Create location)
-       ArmTemplate = IO.File.ReadAllText armTemplate
-       Parameters =
+    let location = getBuildParamOrDefault "location" Region.EuropeWest.Name
+    let pricingTier = getBuildParamOrDefault "pricingTier" "F1"
+    { DeploymentName = "SAFE-template-deploy"
+      ResourceGroup = New(resourceGroupName, Region.Create location)
+      ArmTemplate = IO.File.ReadAllText armTemplate
+      Parameters =
         Simple
           [ "environment", ArmString environment
             "location", ArmString location
             "pricingTier", ArmString pricingTier ]
-       DeploymentMode = Incremental }
+      DeploymentMode = Incremental }
 
   deployment
   |> deployWithProgress authCtx
@@ -164,7 +159,7 @@ Target "ArmTemplate" (fun _ ->
     | DeploymentCompleted d -> deploymentOutputs <- d)
 )
 
-Target "Deploy" (fun _ ->
+Target "AppService" (fun _ ->
   let zipFile = "deploy.zip"
   IO.File.Delete zipFile
   Zip deployDir zipFile !!(deployDir + @"\**\**")
@@ -177,11 +172,6 @@ Target "Deploy" (fun _ ->
   let client = new Net.WebClient(Credentials = Net.NetworkCredential("$" + appName, appPassword))
   client.UploadData(destinationUri, IO.File.ReadAllBytes zipFile) |> ignore)
 
-"Clean"
-  ==> "Publish"
-  ==> "ArmTemplate"
-  ==> "Deploy"
-
 //#endif
 "Clean"
   ==> "InstallDotNetCore"
@@ -190,6 +180,10 @@ Target "Deploy" (fun _ ->
 //#if (Deploy == "docker")
   ==> "Bundle"
   ==> "Docker"
+//#elseif (Deploy == "azure")
+  ==> "Bundle"
+  ==> "ArmTemplate"
+  ==> "AppService"
 //#endif
 
 "InstallClient"
