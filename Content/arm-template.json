@@ -56,15 +56,15 @@
                     },
                     "tags": { "displayName": "WebAppSettings" },
                     "dependsOn": [
-                        "[concat('Microsoft.Web/sites/', variables('web'))]",
-                        "[concat('Microsoft.Insights/components/', variables('insights'))]"
+                        "[resourceId('Microsoft.Web/sites/', variables('web'))]",
+                        "[resourceId('Microsoft.Insights/components/', variables('insights'))]"
                     ]
                 },
                 {
                     "apiVersion": "2016-08-01",
                     "name": "Microsoft.ApplicationInsights.AzureWebSites",
                     "type": "siteextensions",
-                    "dependsOn": [ "[concat('Microsoft.Web/sites/', variables('web'))]" ],
+                    "dependsOn": [ "[resourceId('Microsoft.Web/sites/', variables('web'))]" ],
                     "properties": { }
                 }
             ]
