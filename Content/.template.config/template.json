@@ -109,7 +109,7 @@
         },
         {
           "exclude": "**/Suaveweb.config",
-          "condition": "(Server != \"suave\") && (Deploy != \"azure\")"
+          "condition": "(Server != \"suave\") || (Deploy != \"azure\")"
         },
         {
           "rename": { "Suaveweb.config": "web.config" }
