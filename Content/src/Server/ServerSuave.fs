@@ -7,8 +7,8 @@ open Suave.Operators
 #if (Remoting)
 open Fable.Remoting.Server
 open Fable.Remoting.Suave
-#endif
 
+#endif
 open Shared
 
 //#if (Deploy == "azure")

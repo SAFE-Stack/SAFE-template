@@ -10,6 +10,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\Shared\Shared.fs" />
+    #if (Deploy == "azure" && Server == "suave")
+    <Compile Include="Azure.fs" />
+    #endif
     <Compile Include="Server.fs" />
     #if (Deploy == "azure" && Server == "suave")
     <None Include="web.config">
