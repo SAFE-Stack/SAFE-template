@@ -1,20 +1,16 @@
 ﻿open System.IO
 open System.Net
-
 open Suave
 open Suave.Operators
-
 #if (Remoting)
 open Fable.Remoting.Server
 open Fable.Remoting.Suave
-
 #endif
 open Shared
 
 //#if (Deploy == "azure")
-let tryGetEnv = System.Environment.GetEnvironmentVariable >> function | null | "" -> None | v -> Some v
-let publicPath = tryGetEnv "public_path" |> Option.defaultValue "../Client/public" |> Path.GetFullPath
-let port = tryGetEnv "HTTP_PLATFORM_PORT" |> Option.map System.UInt16.Parse |> Option.defaultValue 8085us
+let publicPath = Azure.tryGetEnv "public_path" |> Option.defaultValue "../Client/public" |> Path.GetFullPath
+let port = Azure.tryGetEnv "HTTP_PLATFORM_PORT" |> Option.map System.UInt16.Parse |> Option.defaultValue 8085us
 //#else
 let publicPath = Path.GetFullPath "../Client/public"
 let port = 8085us
@@ -53,4 +49,5 @@ let webPart =
     RequestErrors.NOT_FOUND "Not found!"
   ]
 
+Azure.addAzureAppServicesTraceListeners()
 startWebServer config webPart
