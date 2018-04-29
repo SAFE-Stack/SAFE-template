@@ -1,6 +1,5 @@
 group Server
   FSharp.Core
-
 //#if     (Server == "suave")
   Suave
 //#elseif (Server == "giraffe")
@@ -15,8 +14,7 @@ group Server
 //#endif
 //#if     (!Remoting && Server != "suave")
   Fable.JsonConverter
-//#endif  
-//#if     (Remoting && Server == "suave")
+//#elseif (Remoting && Server == "suave")
   Fable.Remoting.Suave
 //#elseif (Remoting)
   Fable.Remoting.Giraffe
