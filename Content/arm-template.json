@@ -17,9 +17,13 @@
             "type": "Microsoft.Insights/components",
             "kind": "web",
             "name": "[variables('insights')]",
+            "location": "[parameters('location')]",
             "apiVersion": "2014-04-01",
-            "location": "westeurope",
             "scale": null,
+            "tags": {
+                "[concat('hidden-link:', resourceGroup().id, '/providers/Microsoft.Web/sites/', variables('web'))]": "Resource",
+                "displayName": "AppInsightsComponent"
+            },
             "properties": {
                 "name": "[variables('insights')]"
             }
@@ -59,18 +63,14 @@
                         "[resourceId('Microsoft.Web/sites/', variables('web'))]",
                         "[resourceId('Microsoft.Insights/components/', variables('insights'))]"
                     ]                
-//#if (Server != "suave")
                 },
                 {
-                    "apiVersion": "2016-08-01",
+                    "apiVersion": "2015-08-01",
                     "name": "Microsoft.ApplicationInsights.AzureWebSites",
                     "type": "siteextensions",
                     "dependsOn": [ "[resourceId('Microsoft.Web/sites/', variables('web'))]" ],
                     "properties": { }
                 }
-//#else
-                }
-//#endif
             ]
         }
     ],
