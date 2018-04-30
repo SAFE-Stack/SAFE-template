@@ -130,9 +130,11 @@ Target "ArmTemplate" (fun _ ->
   let resourceGroupName = "safe-" + environment
 
   let authCtx =
+    // You can safely replace these with your own subscription and client IDs hard-coded into this script.
     let subscriptionId = try getBuildParam "subscriptionId" |> Guid.Parse with _ -> failwith "Invalid Subscription ID. This should be your Azure Subscription ID."
-    tracefn "Deploying template '%s' to resource group '%s' in subscription '%O'..." armTemplate resourceGroupName subscriptionId
     let clientId = try getBuildParam "clientId" |> Guid.Parse with _ -> failwith "Invalid Client ID. This should be the Client ID of a Native application registered in Azure with permission to create resources in your subscription."
+    
+    tracefn "Deploying template '%s' to resource group '%s' in subscription '%O'..." armTemplate resourceGroupName subscriptionId
     subscriptionId
     |> authenticateDevice trace { ClientId = clientId; TenantId = None }
     |> Async.RunSynchronously

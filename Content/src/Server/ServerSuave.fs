@@ -11,6 +11,8 @@ open Shared
 //#if (Deploy == "azure")
 let publicPath = Azure.tryGetEnv "public_path" |> Option.defaultValue "../Client/public" |> Path.GetFullPath
 let port = Azure.tryGetEnv "HTTP_PLATFORM_PORT" |> Option.map System.UInt16.Parse |> Option.defaultValue 8085us
+let appInsightsKey = Azure.tryGetEnv "APPINSIGHTS_INSTRUMENTATIONKEY" |> Option.defaultValue ""
+
 //#else
 let publicPath = Path.GetFullPath "../Client/public"
 let port = 8085us
@@ -47,7 +49,9 @@ let webPart =
     Filters.path "/" >=> Files.browseFileHome "index.html"
     Files.browseHome
     RequestErrors.NOT_FOUND "Not found!"
-  ]
+  ] |> Azure.AI.withAppInsights Azure.AI.buildApiOperationName
 
-Azure.addAzureAppServicesTraceListeners()
+Azure.AppServices.addTraceListeners()
+Azure.AI.configure { AppInsightsKey = appInsightsKey; DeveloperMode = false; TrackDependencies = true }
+
 startWebServer config webPart
