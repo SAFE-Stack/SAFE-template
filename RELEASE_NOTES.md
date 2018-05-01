@@ -1,3 +1,9 @@
+#### 0.15.0 - 01.05.2018
+
+* Add Azure App Service PAAS deployment - https://github.com/SAFE-Stack/SAFE-template/pull/65
+* Update dotnet sdk to 2.1.105
+* Simplify Saturn routers
+
 #### 0.14.0 - 23.04.2018
 
 * Add YARN lock file - https://github.com/SAFE-Stack/SAFE-template/pull/61
