@@ -19,7 +19,15 @@ open Microsoft.Extensions.DependencyInjection
 
 open Shared
 
-let publicPath = "../Client/public" |> Path.GetFullPath
+//#if (Deploy == "azure")
+let publicPath =
+    match System.Environment.GetEnvironmentVariable "public_path" with
+    | null | "" -> "../Client/public"
+    | path -> path
+    |> Path.GetFullPath
+//#else
+let publicPath = Path.GetFullPath "../Client/public"
+//#endif
 let port = 8085us
 
 let getInitCounter () : Task<Counter> = task { return 42 }
@@ -42,7 +50,8 @@ let webApp : HttpHandler =
 #endif
 
 let configureApp  (app : IApplicationBuilder) =
-  app.UseStaticFiles()
+  app.UseDefaultFiles()
+     .UseStaticFiles()
      .UseGiraffe webApp
 
 let configureServices (services : IServiceCollection) =

@@ -5,7 +5,7 @@
     <PackageProjectUrl>https://github.com/SAFE-Stack/SAFE-template</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/SAFE-Stack/SAFE-template/blob/master/LICENSE</PackageLicenseUrl>
     <RepositoryUrl>https://github.com/SAFE-Stack/SAFE-template.git</RepositoryUrl>
-    <PackageTags>template;fsharp;fable;suave;elmish</PackageTags>
+    <PackageTags>template;fsharp;fable;suave;elmish;azure</PackageTags>
     <NeutralLanguage>en-US</NeutralLanguage>
     <PackageType>Template</PackageType>
     <NoBuild>true</NoBuild>

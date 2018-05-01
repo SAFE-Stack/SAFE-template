@@ -1,7 +1,15 @@
 #r @"packages/build/FAKE/tools/FakeLib.dll"
+//#if (Deploy == "azure")
+#r "netstandard"
+#I "packages/build/Microsoft.Rest.ClientRuntime.Azure/lib/net452"
+#load ".paket/load/netcoreapp2.1/Build/build.group.fsx"
+#load @"paket-files\build\CompositionalIT\fshelpers\src\FsHelpers\ArmHelper\ArmHelper.fs"
 
+open Cit.Helpers.Arm
+open Cit.Helpers.Arm.Parameters
+open Microsoft.Azure.Management.ResourceManager.Fluent.Core
+//#endif
 open System
-
 open Fake
 
 let serverPath = "./src/Server" |> FullName
@@ -10,16 +18,14 @@ let deployDir = "./deploy" |> FullName
 
 let platformTool tool winTool =
   let tool = if isUnix then tool else winTool
-  tool
-  |> ProcessHelper.tryFindFileOnPath
-  |> function Some t -> t | _ -> failwithf "%s not found" tool
+  match tryFindFileOnPath tool with Some t -> t | _ -> failwithf "%s not found" tool
 
 let nodeTool = platformTool "node" "node.exe"
-#if (NPM)
-let npmTool = platformTool "npm" "npm.cmd"  
-#else
+//#if (NPM)
+let npmTool = platformTool "npm" "npm.cmd"
+//#else
 let yarnTool = platformTool "yarn" "yarn.cmd"
-#endif
+//#endif
 
 let dotnetcliVersion = DotNetCli.GetDotNetSDKVersionFromGlobalJson()
 let mutable dotnetCli = "dotnet"
@@ -32,7 +38,7 @@ let run cmd args workingDir =
       info.Arguments <- args) TimeSpan.MaxValue
   if result <> 0 then failwithf "'%s %s' failed" cmd args
 
-Target "Clean" (fun _ -> 
+Target "Clean" (fun _ ->
   CleanDirs [deployDir]
 )
 
@@ -43,19 +49,19 @@ Target "InstallDotNetCore" (fun _ ->
 Target "InstallClient" (fun _ ->
   printfn "Node version:"
   run nodeTool "--version" __SOURCE_DIRECTORY__
-#if (NPM)
+//#if (NPM)
   printfn "Npm version:"
   run npmTool "--version"  __SOURCE_DIRECTORY__
   run npmTool "install" __SOURCE_DIRECTORY__
-#else
+//#else
   printfn "Yarn version:"
   run yarnTool "--version" __SOURCE_DIRECTORY__
   run yarnTool "install --frozen-lockfile" __SOURCE_DIRECTORY__
-#endif
+//#endif
   run dotnetCli "restore" clientPath
 )
 
-Target "RestoreServer" (fun () -> 
+Target "RestoreServer" (fun () ->
   run dotnetCli "restore" serverPath
 )
 
@@ -76,13 +82,13 @@ Target "Run" (fun () ->
     Diagnostics.Process.Start "http://localhost:8080" |> ignore
   }
 
-  [ server; client; browser]
+  [ server; client; browser ]
   |> Async.Parallel
   |> Async.RunSynchronously
   |> ignore
 )
 
-#if (Docker)
+//#if (Deploy == "docker")
 Target "Bundle" (fun _ ->
   let serverDir = deployDir </> "Server"
   let clientDir = deployDir </> "Client"
@@ -96,7 +102,6 @@ Target "Bundle" (fun _ ->
 
 let dockerUser = "safe-template"
 let dockerImageName = "safe-template"
-
 let dockerFullName = sprintf "%s/%s" dockerUser dockerImageName
 
 Target "Docker" (fun _ ->
@@ -106,16 +111,79 @@ Target "Docker" (fun _ ->
   let tagArgs = sprintf "tag %s %s" dockerFullName dockerFullName
   run "docker" tagArgs "."
 )
-#endif
 
+//#endif
+//#if (Deploy == "azure")
+Target "Bundle" (fun () ->
+  run dotnetCli (sprintf "publish %s -c release -o %s" serverPath deployDir) __SOURCE_DIRECTORY__
+  CopyDir (deployDir </> "public") (clientPath </> "public") allFiles
+)
+
+type ArmOutput =
+  { WebAppName : ParameterValue<string>
+    WebAppPassword : ParameterValue<string> }
+let mutable deploymentOutputs : ArmOutput option = None
+
+Target "ArmTemplate" (fun _ ->
+  let environment = getBuildParamOrDefault "environment" (Guid.NewGuid().ToString().ToLower().Split '-' |> Array.head)
+  let armTemplate = @"arm-template.json"
+  let resourceGroupName = "safe-" + environment
+
+  let authCtx =
+    let subscriptionId = try getBuildParam "subscriptionId" |> Guid.Parse with _ -> failwith "Invalid Subscription ID. This should be your Azure Subscription ID."
+    tracefn "Deploying template '%s' to resource group '%s' in subscription '%O'..." armTemplate resourceGroupName subscriptionId
+    let clientId = try getBuildParam "clientId" |> Guid.Parse with _ -> failwith "Invalid Client ID. This should be the Client ID of a Native application registered in Azure with permission to create resources in your subscription."
+    subscriptionId
+    |> authenticateDevice trace { ClientId = clientId; TenantId = None }
+    |> Async.RunSynchronously
+
+  let deployment =
+    let location = getBuildParamOrDefault "location" Region.EuropeWest.Name
+    let pricingTier = getBuildParamOrDefault "pricingTier" "F1"
+    { DeploymentName = "SAFE-template-deploy"
+      ResourceGroup = New(resourceGroupName, Region.Create location)
+      ArmTemplate = IO.File.ReadAllText armTemplate
+      Parameters =
+        Simple
+          [ "environment", ArmString environment
+            "location", ArmString location
+            "pricingTier", ArmString pricingTier ]
+      DeploymentMode = Incremental }
+
+  deployment
+  |> deployWithProgress authCtx
+  |> Seq.iter(function
+    | DeploymentInProgress (state, operations) -> tracefn "State is %s, completed %d operations." state operations
+    | DeploymentError (statusCode, message) -> traceError <| sprintf "DEPLOYMENT ERROR: %s - '%s'" statusCode message
+    | DeploymentCompleted d -> deploymentOutputs <- d)
+)
+
+Target "AppService" (fun _ ->
+  let zipFile = "deploy.zip"
+  IO.File.Delete zipFile
+  Zip deployDir zipFile !!(deployDir + @"\**\**")
+  
+  let appName = deploymentOutputs.Value.WebAppName.value
+  let appPassword = deploymentOutputs.Value.WebAppPassword.value
+  
+  let destinationUri = sprintf "https://%s.scm.azurewebsites.net/api/zipdeploy" appName
+  let client = new Net.WebClient(Credentials = Net.NetworkCredential("$" + appName, appPassword))
+  tracefn "Uploading %s to %s" zipFile destinationUri
+  client.UploadData(destinationUri, IO.File.ReadAllBytes zipFile) |> ignore)
+
+//#endif
 "Clean"
   ==> "InstallDotNetCore"
   ==> "InstallClient"
   ==> "Build"
-#if (Docker)
+//#if (Deploy == "docker")
   ==> "Bundle"
   ==> "Docker"
-#endif
+//#elseif (Deploy == "azure")
+  ==> "Bundle"
+  ==> "ArmTemplate"
+  ==> "AppService"
+//#endif
 
 "InstallClient"
   ==> "RestoreServer"

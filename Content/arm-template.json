@@ -1,0 +1,52 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "environment": { "type": "string" },
+        "location": { "type": "string" },
+        "pricingTier": { "type": "string" }
+    },
+    "variables": {
+        "appServicePlan": "[concat('safe-', parameters('environment'), '-web-host')]",
+        "web": "[concat('safe-', parameters('environment'), '-web')]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Web/serverfarms",
+            "sku": { "name": "[parameters('pricingTier')]" },
+            "name": "[variables('appServicePlan')]",
+            "apiVersion": "2016-09-01",
+            "location": "[parameters('location')]"
+        },
+        {
+            "type": "Microsoft.Web/sites",
+            "name": "[variables('web')]",
+            "apiVersion": "2016-08-01",
+            "location": "[parameters('location')]",
+            "properties": {
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlan'))]"
+            },
+            "dependsOn": [ "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlan'))]" ],
+            "resources": [
+                {
+                    "name": "appsettings",
+                    "apiVersion": "2015-08-01",
+                    "type": "config",
+                    "properties": { "public_path": "./public" },
+                    "tags": { "displayName": "WebAppSettings" },
+                    "dependsOn": [ "[concat('Microsoft.Web/sites/', variables('web'))]" ]
+                }
+            ]
+        }
+    ],
+    "outputs": {
+        "webAppName": {
+            "type": "string",
+            "value": "[variables('web')]"
+        },
+        "webAppPassword": {
+            "type": "string",
+            "value": "[list(resourceId('Microsoft.Web/sites/config', variables('web'), 'publishingcredentials'), '2014-06-01').properties.publishingPassword]"
+        }
+    }
+}
