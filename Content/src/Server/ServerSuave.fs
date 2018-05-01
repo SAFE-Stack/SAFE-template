@@ -1,18 +1,23 @@
 ﻿open System.IO
 open System.Net
+
 open Suave
 open Suave.Operators
+
+open Shared
+
 #if (Remoting)
 open Fable.Remoting.Server
 open Fable.Remoting.Suave
 #endif
-open Shared
+#if (Deploy == "azure")
+open Microsoft.WindowsAzure.Storage
+#endif
 
 //#if (Deploy == "azure")
 let publicPath = Azure.tryGetEnv "public_path" |> Option.defaultValue "../Client/public" |> Path.GetFullPath
 let port = Azure.tryGetEnv "HTTP_PLATFORM_PORT" |> Option.map System.UInt16.Parse |> Option.defaultValue 8085us
-let appInsightsKey = Azure.tryGetEnv "APPINSIGHTS_INSTRUMENTATIONKEY" |> Option.defaultValue ""
-
+let storageAccount = Azure.tryGetEnv "STORAGE_CONNECTIONSTRING" |> Option.defaultValue "UseDevelopmentStorage=true" |> CloudStorageAccount.Parse
 //#else
 let publicPath = Path.GetFullPath "../Client/public"
 let port = 8085us
@@ -52,6 +57,8 @@ let webPart =
   ] |> Azure.AI.withAppInsights Azure.AI.buildApiOperationName
 
 Azure.AppServices.addTraceListeners()
-Azure.AI.configure { AppInsightsKey = appInsightsKey; DeveloperMode = false; TrackDependencies = true }
+Azure.tryGetEnv "APPINSIGHTS_INSTRUMENTATIONKEY"
+|> Option.iter(fun appInsightsKey ->
+  Azure.AI.configure { AppInsightsKey = appInsightsKey; DeveloperMode = false; TrackDependencies = true })
 
 startWebServer config webPart

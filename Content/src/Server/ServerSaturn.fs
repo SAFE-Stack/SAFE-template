@@ -1,8 +1,11 @@
 open System.IO
 open System.Threading.Tasks
 
+open Microsoft.AspNetCore.Builder
 open Giraffe
 open Saturn
+
+open Shared
 
 #if (Remoting)
 open Fable.Remoting.Server
@@ -11,16 +14,14 @@ open Fable.Remoting.Giraffe
 open Giraffe.Serialization
 open Microsoft.Extensions.DependencyInjection
 #endif
-
-open Shared
-open Microsoft.AspNetCore.Builder
+#if (Deploy == "azure")
+open Microsoft.WindowsAzure.Storage
+#endif
 
 //#if (Deploy == "azure")
-let publicPath =
-    match System.Environment.GetEnvironmentVariable "public_path" with
-    | null | "" -> "../Client/public"
-    | path -> path
-    |> Path.GetFullPath
+let tryGetEnv = System.Environment.GetEnvironmentVariable >> function null | "" -> None | x -> Some x
+let publicPath = tryGetEnv "public_path" |> Option.defaultValue "../Client/public" |> Path.GetFullPath
+let storageAccount = tryGetEnv "STORAGE_CONNECTIONSTRING" |> Option.defaultValue "UseDevelopmentStorage=true" |> CloudStorageAccount.Parse
 //#else
 let publicPath = Path.GetFullPath "../Client/public"
 //#endif
@@ -54,7 +55,9 @@ let configureSerialization (services:IServiceCollection) =
 
 #if (Deploy == "azure")
 let configureAzure (services:IServiceCollection) =
-  services.AddApplicationInsightsTelemetry(System.Environment.GetEnvironmentVariable "APPINSIGHTS_INSTRUMENTATIONKEY")
+  tryGetEnv "APPINSIGHTS_INSTRUMENTATIONKEY"
+  |> Option.map services.AddApplicationInsightsTelemetry
+  |> Option.defaultValue services
 #endif
 
 let configureApp (app:IApplicationBuilder) =

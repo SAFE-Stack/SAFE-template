@@ -8,6 +8,7 @@ open Microsoft.AspNetCore.Hosting
 open Microsoft.Extensions.DependencyInjection
 
 open Giraffe
+open Shared
 
 #if (Remoting)
 open Fable.Remoting.Server
@@ -16,15 +17,14 @@ open Fable.Remoting.Giraffe
 open Giraffe.Serialization
 open Microsoft.Extensions.DependencyInjection
 #endif
-
-open Shared
+#if (Deploy == "azure")
+open Microsoft.WindowsAzure.Storage
+#endif
 
 //#if (Deploy == "azure")
-let publicPath =
-    match System.Environment.GetEnvironmentVariable "public_path" with
-    | null | "" -> "../Client/public"
-    | path -> path
-    |> Path.GetFullPath
+let tryGetEnv = System.Environment.GetEnvironmentVariable >> function null | "" -> None | x -> Some x
+let publicPath = tryGetEnv "public_path" |> Option.defaultValue "../Client/public" |> Path.GetFullPath
+let storageAccount = tryGetEnv "STORAGE_CONNECTIONSTRING" |> Option.defaultValue "UseDevelopmentStorage=true" |> CloudStorageAccount.Parse
 //#else
 let publicPath = Path.GetFullPath "../Client/public"
 //#endif
@@ -62,7 +62,7 @@ let configureServices (services : IServiceCollection) =
     services.AddSingleton<IJsonSerializer>(NewtonsoftJsonSerializer fableJsonSettings) |> ignore
     #endif
     #if (Deploy == "azure")
-    services.AddApplicationInsightsTelemetry(System.Environment.GetEnvironmentVariable "APPINSIGHTS_INSTRUMENTATIONKEY") |> ignore
+    tryGetEnv "APPINSIGHTS_INSTRUMENTATIONKEY" |> Option.iter (services.AddApplicationInsightsTelemetry >> ignore)
     #endif
 
 WebHost
