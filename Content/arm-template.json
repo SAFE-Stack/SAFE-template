@@ -60,7 +60,10 @@
                     ]
                 }
             },
-            "dependsOn": [ "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlan'))]" ],
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlan'))]",
+                "[resourceId('Microsoft.Insights/components/', variables('insights'))]"
+            ],
             "resources": [
                 {
                     "apiVersion": "2016-08-01",
