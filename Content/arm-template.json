@@ -46,25 +46,22 @@
             "apiVersion": "2016-08-01",
             "location": "[parameters('location')]",
             "properties": {
-                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlan'))]"
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlan'))]",
+                "siteConfig":{
+                    "appSettings":[
+                        {
+                            "name": "public_path",
+                            "value": "./public"
+                        },
+                        {
+                            "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                            "value": "[reference(concat('Microsoft.Insights/components/', variables('insights'))).InstrumentationKey]"
+                        }
+                    ]
+                }
             },
             "dependsOn": [ "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlan'))]" ],
             "resources": [
-                {
-                    "name": "appsettings",
-                    "apiVersion": "2016-08-01",
-                    "type": "config",
-                    "properties": {
-                        "public_path": "./public",
-                        "APPINSIGHTS_INSTRUMENTATIONKEY": "[reference(concat('Microsoft.Insights/components/', variables('insights'))).InstrumentationKey]"
-                    },
-                    "tags": { "displayName": "WebAppSettings" },
-                    "dependsOn": [
-                        "[resourceId('Microsoft.Web/sites/', variables('web'))]",
-                        "[resourceId('Microsoft.Insights/components/', variables('insights'))]",
-                        "Microsoft.ApplicationInsights.AzureWebSites"
-                    ]                
-                },
                 {
                     "apiVersion": "2016-08-01",
                     "name": "Microsoft.ApplicationInsights.AzureWebSites",
