@@ -24,19 +24,17 @@
             "apiVersion": "2016-08-01",
             "location": "[parameters('location')]",
             "properties": {
-                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlan'))]"
-            },
-            "dependsOn": [ "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlan'))]" ],
-            "resources": [
-                {
-                    "name": "appsettings",
-                    "apiVersion": "2015-08-01",
-                    "type": "config",
-                    "properties": { "public_path": "./public" },
-                    "tags": { "displayName": "WebAppSettings" },
-                    "dependsOn": [ "[concat('Microsoft.Web/sites/', variables('web'))]" ]
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlan'))]",
+                "siteConfig": {
+                    "appSettings": [
+                        {
+                            "name": "public_path",
+                            "value": "./public"
+                        }
+                    ]
                 }
-            ]
+            },
+            "dependsOn": [ "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlan'))]" ]
         }
     ],
     "outputs": {
