@@ -3,7 +3,7 @@
 #r "netstandard"
 #I "packages/build/Microsoft.Rest.ClientRuntime.Azure/lib/net452"
 #load ".paket/load/netcoreapp2.1/Build/build.group.fsx"
-#load @"paket-files\build\CompositionalIT\fshelpers\src\FsHelpers\ArmHelper\ArmHelper.fs"
+#load @"paket-files/build/CompositionalIT/fshelpers/src/FsHelpers/ArmHelper/ArmHelper.fs"
 
 open Cit.Helpers.Arm
 open Cit.Helpers.Arm.Parameters
@@ -93,7 +93,7 @@ Target "Bundle" (fun _ ->
   let serverDir = deployDir </> "Server"
   let clientDir = deployDir </> "Client"
   let publicDir = clientDir </> "public"
-  
+
   let publishArgs = sprintf "publish -c Release -o \"%s\"" serverDir
   run dotnetCli publishArgs serverPath
 
@@ -162,10 +162,10 @@ Target "AppService" (fun _ ->
   let zipFile = "deploy.zip"
   IO.File.Delete zipFile
   Zip deployDir zipFile !!(deployDir + @"\**\**")
-  
+
   let appName = deploymentOutputs.Value.WebAppName.value
   let appPassword = deploymentOutputs.Value.WebAppPassword.value
-  
+
   let destinationUri = sprintf "https://%s.scm.azurewebsites.net/api/zipdeploy" appName
   let client = new Net.WebClient(Credentials = Net.NetworkCredential("$" + appName, appPassword))
   tracefn "Uploading %s to %s" zipFile destinationUri
