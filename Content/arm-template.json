@@ -7,16 +7,38 @@
         "pricingTier": { "type": "string" }
     },
     "variables": {
-        "appServicePlan": "[concat('safe-', parameters('environment'), '-web-host')]",
-        "web": "[concat('safe-', parameters('environment'), '-web')]"
+        "prefix": "[concat('safe-', parameters('environment'))]",
+        "appServicePlan": "[concat(variables('prefix'), '-web-host')]",
+        "web": "[concat(variables('prefix'), '-web')]",
+        "insights": "[concat(variables('prefix'), '-insights')]"
     },
     "resources": [
+        {
+            "type": "Microsoft.Insights/components",
+            "kind": "web",
+            "name": "[variables('insights')]",
+            "location": "[parameters('location')]",
+            "apiVersion": "2014-04-01",
+            "scale": null,
+            "tags": {
+                "[concat('hidden-link:', resourceGroup().id, '/providers/Microsoft.Web/sites/', variables('web'))]": "Resource",
+                "displayName": "AppInsightsComponent"
+            },
+            "properties": {
+                "name": "[variables('insights')]"
+            }
+        },
         {
             "type": "Microsoft.Web/serverfarms",
             "sku": { "name": "[parameters('pricingTier')]" },
             "name": "[variables('appServicePlan')]",
             "apiVersion": "2016-09-01",
-            "location": "[parameters('location')]"
+            "location": "[parameters('location')]",
+            "properties": {
+                "name": "[variables('appserviceplan')]",
+                "perSiteScaling": false,
+                "reserved": false
+            }
         },
         {
             "type": "Microsoft.Web/sites",
@@ -25,16 +47,32 @@
             "location": "[parameters('location')]",
             "properties": {
                 "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlan'))]",
-                "siteConfig": {
-                    "appSettings": [
+                "siteConfig":{
+                    "appSettings":[
                         {
                             "name": "public_path",
                             "value": "./public"
+                        },
+                        {
+                            "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                            "value": "[reference(concat('Microsoft.Insights/components/', variables('insights'))).InstrumentationKey]"
                         }
                     ]
                 }
             },
-            "dependsOn": [ "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlan'))]" ]
+            "dependsOn": [
+                "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlan'))]",
+                "[resourceId('Microsoft.Insights/components/', variables('insights'))]"
+            ],
+            "resources": [
+                {
+                    "apiVersion": "2016-08-01",
+                    "name": "Microsoft.ApplicationInsights.AzureWebSites",
+                    "type": "siteextensions",
+                    "dependsOn": [ "[resourceId('Microsoft.Web/sites/', variables('web'))]" ],
+                    "properties": { }
+                }
+            ]
         }
     ],
     "outputs": {

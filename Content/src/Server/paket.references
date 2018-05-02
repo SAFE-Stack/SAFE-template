@@ -9,6 +9,9 @@ group Server
 //#elseif (Server == "saturn")
   Saturn
 //#endif
+//#if (Deploy == "azure")
+  Microsoft.ApplicationInsights.AspNetCore
+//#endif
 //#if     (!Remoting && Server != "suave")
   Fable.JsonConverter
 //#elseif (Remoting && Server == "suave")

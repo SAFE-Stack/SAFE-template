@@ -36,11 +36,6 @@ let webApp =
     use_route_builder Route.builder
   }
 #else
-let config (services:IServiceCollection) =
-  let fableJsonSettings = Newtonsoft.Json.JsonSerializerSettings()
-  fableJsonSettings.Converters.Add(Fable.JsonConverter())
-  services.AddSingleton<IJsonSerializer>(NewtonsoftJsonSerializer fableJsonSettings) |> ignore
-  services
 let webApp = scope {
   get "/api/init" (fun next ctx ->
     task {
@@ -48,6 +43,18 @@ let webApp = scope {
       return! Successful.OK counter next ctx
     })
 }
+#endif
+
+#if (!Remoting)
+let configureSerialization (services:IServiceCollection) =
+  let fableJsonSettings = Newtonsoft.Json.JsonSerializerSettings()
+  fableJsonSettings.Converters.Add(Fable.JsonConverter())
+  services.AddSingleton<IJsonSerializer>(NewtonsoftJsonSerializer fableJsonSettings)
+#endif
+
+#if (Deploy == "azure")
+let configureAzure (services:IServiceCollection) =
+  services.AddApplicationInsightsTelemetry(System.Environment.GetEnvironmentVariable "APPINSIGHTS_INSTRUMENTATIONKEY")
 #endif
 
 let configureApp (app:IApplicationBuilder) =
@@ -60,7 +67,10 @@ let app = application {
     memory_cache
     use_static publicPath
     #if (!Remoting)
-    service_config config
+    service_config configureSerialization
+    #endif
+    #if (Deploy == "azure")
+    service_config configureAzure
     #endif
     use_gzip
 }
