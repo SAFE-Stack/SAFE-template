@@ -1,3 +1,8 @@
+#### 0.16.0 - 02.05.2018
+
+* Support for Azure App Insights - https://github.com/SAFE-Stack/SAFE-template/issues/68
+* Fix file paths for Unix in additional Azure FAKE targets - https://github.com/SAFE-Stack/SAFE-template/pull/72
+
 #### 0.15.0 - 01.05.2018
 
 * Add Azure App Service PAAS deployment - https://github.com/SAFE-Stack/SAFE-template/pull/65
