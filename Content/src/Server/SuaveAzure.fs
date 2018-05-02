@@ -27,6 +27,7 @@ module AI =
     open Microsoft.ApplicationInsights.DataContracts
     open Microsoft.ApplicationInsights.DependencyCollector
     open Microsoft.ApplicationInsights.Extensibility
+    open Microsoft.ApplicationInsights.Extensibility.PerfCounterCollector.QuickPulse
 
     /// The global Telemetry Client that handles all AI requests.
     let telemetryClient = TelemetryClient()
@@ -85,9 +86,23 @@ module AI =
 
     /// Configures the App Insights client.
     let configure configuration =
-        TelemetryConfiguration.Active.TelemetryChannel.DeveloperMode <- Nullable configuration.DeveloperMode
-        TelemetryConfiguration.Active.InstrumentationKey <- configuration.AppInsightsKey
+        let config = TelemetryConfiguration.Active
+        config.TelemetryChannel.DeveloperMode <- Nullable configuration.DeveloperMode
+        config.InstrumentationKey <- configuration.AppInsightsKey
+
+        // Turn on Live Stream
+        let mutable processor:QuickPulseTelemetryProcessor = null
+        config
+            .TelemetryProcessorChainBuilder
+            .Use(fun next ->
+                processor <- QuickPulseTelemetryProcessor next
+                processor :> _)
+            .Build()
+        let quickPulse = new QuickPulseTelemetryModule()
+        quickPulse.Initialize config
+        quickPulse.RegisterTelemetryProcessor processor
         
+        // Turn on Dependency Tracking if requested
         if configuration.TrackDependencies then
             let dependencyTracking = new DependencyTrackingTelemetryModule()
             dependencyTracking.Initialize TelemetryConfiguration.Active
