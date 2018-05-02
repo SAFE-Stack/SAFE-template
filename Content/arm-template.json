@@ -7,10 +7,11 @@
         "pricingTier": { "type": "string" }
     },
     "variables": {
-        "prefix": "[concat('safe-', parameters('environment'))]",
+        "environment": "[toLower(parameters('environment'))]",
+        "prefix": "[concat('safe-', variables('environment'))]",
         "appServicePlan": "[concat(variables('prefix'), '-web-host')]",
         "web": "[concat(variables('prefix'), '-web')]",
-        "storage": "[concat('safe', parameters('environment'), 'storage')]",
+        "storage": "[concat('safe', variables('environment'), 'storage')]",
         "insights": "[concat(variables('prefix'), '-insights')]"
     },
     "resources": [
@@ -81,7 +82,9 @@
             },
             "dependsOn": [
                 "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlan'))]",
-                "[resourceId('Microsoft.Storage/storageAccounts/', variables('storage'))]" ],
+                "[resourceId('Microsoft.Storage/storageAccounts/', variables('storage'))]",
+                "[resourceId('Microsoft.Insights/components/', variables('insights'))]"
+            ],
             "resources": [
                 {
                     "apiVersion": "2016-08-01",
