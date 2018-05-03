@@ -1,3 +1,7 @@
+#### 0.17.0 - 03.05.2018
+
+* Add release scripts to .gitignore - https://github.com/SAFE-Stack/SAFE-template/pull/74
+
 #### 0.16.0 - 02.05.2018
 
 * Support for Azure App Insights - https://github.com/SAFE-Stack/SAFE-template/issues/68
