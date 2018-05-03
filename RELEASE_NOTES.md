@@ -1,3 +1,7 @@
+#### 0.18.0 - 03.05.2018
+
+* Update webpack to 4 - https://github.com/SAFE-Stack/SAFE-template/pull/80
+
 #### 0.17.0 - 03.05.2018
 
 * Add release scripts to .gitignore - https://github.com/SAFE-Stack/SAFE-template/pull/74
