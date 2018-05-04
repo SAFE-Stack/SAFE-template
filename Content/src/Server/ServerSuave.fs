@@ -25,7 +25,7 @@ let config =
 
 let getInitCounter () : Async<Counter> = async { return 42 }
 
-let init : WebPart = 
+let webApi : WebPart = 
 #if (Remoting)
   let counterProcotol = 
     { getInitCounter = getInitCounter }
@@ -43,9 +43,10 @@ let init : WebPart =
     }
 #endif
 
-let webPart =
+#if (Deploy == "azure")
+let webApp =
   choose [
-    init
+    webApi
     Filters.path "/" >=> Files.browseFileHome "index.html"
     Files.browseHome
     RequestErrors.NOT_FOUND "Not found!"
@@ -53,5 +54,14 @@ let webPart =
 
 Azure.AppServices.addTraceListeners()
 Azure.AI.configure { AppInsightsKey = appInsightsKey; DeveloperMode = false; TrackDependencies = true }
+#else 
+let webApp =
+  choose [
+    webApi
+    Filters.path "/" >=> Files.browseFileHome "index.html"
+    Files.browseHome
+    RequestErrors.NOT_FOUND "Not found!"
+  ] 
+#endif
 
-startWebServer config webPart
+startWebServer config webApp
