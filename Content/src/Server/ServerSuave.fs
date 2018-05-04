@@ -43,25 +43,19 @@ let webApi : WebPart =
     }
 #endif
 
-#if (Deploy == "azure")
 let webApp =
   choose [
     webApi
     Filters.path "/" >=> Files.browseFileHome "index.html"
     Files.browseHome
     RequestErrors.NOT_FOUND "Not found!"
+#if (Deploy == "azure")
   ] |> Azure.AI.withAppInsights Azure.AI.buildApiOperationName
 
 Azure.AppServices.addTraceListeners()
 Azure.AI.configure { AppInsightsKey = appInsightsKey; DeveloperMode = false; TrackDependencies = true }
-#else 
-let webApp =
-  choose [
-    webApi
-    Filters.path "/" >=> Files.browseFileHome "index.html"
-    Files.browseHome
-    RequestErrors.NOT_FOUND "Not found!"
-  ] 
+#else
+  ]
 #endif
 
 startWebServer config webApp
