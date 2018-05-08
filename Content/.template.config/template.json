@@ -32,7 +32,7 @@
     "Fulma": {
       "type": "parameter",
       "dataType": "choice",
-      "defaultValue": "none",
+      "defaultValue": "basic",
       "choices": [
         {
           "choice": "none",
