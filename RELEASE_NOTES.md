@@ -1,3 +1,9 @@
+#### 0.18.1 - 08.05.2018
+
+* Make 'basic' the default value for 'Fulma' parameter - https://github.com/SAFE-Stack/SAFE-template/issues/87
+* Added Rider stuff to gitignore - https://github.com/SAFE-Stack/SAFE-template/pull/88
+* Enable AppInsights only if Deploy option is azure for Suave - https://github.com/SAFE-Stack/SAFE-template/pull/81
+
 #### 0.18.0 - 03.05.2018
 
 * Update webpack to 4 - https://github.com/SAFE-Stack/SAFE-template/pull/80
