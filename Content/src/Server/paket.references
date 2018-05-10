@@ -11,6 +11,7 @@ group Server
 //#endif
 //#if (Deploy == "azure")
   Microsoft.ApplicationInsights.AspNetCore
+  WindowsAzure.Storage
 //#endif
 //#if     (!Remoting && Server != "suave")
   Fable.JsonConverter

@@ -21,6 +21,7 @@ group Server
 //#endif
 //#if (Deploy == "azure")
   nuget Microsoft.ApplicationInsights.AspNetCore ~> 2.2
+  nuget WindowsAzure.Storage
 //#endif
 
   clitool Microsoft.DotNet.Watcher.Tools
