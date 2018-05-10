@@ -1,3 +1,7 @@
+#### 0.19.1 - 10.05.2018
+
+* Add solution file - https://github.com/SAFE-Stack/SAFE-template/issues/86
+
 #### 0.19.0 - 10.05.2018
 
 * Add support for Azure storage - https://github.com/SAFE-Stack/SAFE-template/pull/77
