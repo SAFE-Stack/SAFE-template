@@ -1,3 +1,7 @@
+#### 0.19.0 - 10.05.2018
+
+* Add support for Azure storage - https://github.com/SAFE-Stack/SAFE-template/pull/77
+
 #### 0.18.1 - 08.05.2018
 
 * Make 'basic' the default value for 'Fulma' parameter - https://github.com/SAFE-Stack/SAFE-template/issues/87
