@@ -1,4 +1,5 @@
 .fake/
+.vs/
 obj/
 bin/
 packages/
