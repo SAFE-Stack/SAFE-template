@@ -11,11 +11,9 @@ open Shared
 
 #if (Fulma != "none")
 open Fulma
-open Fulma.BulmaClasses.Bulma.Properties
 #endif
 
 #if (Fulma == "admin" || Fulma == "cover" || Fulma == "hero" || Fulma == "landing" || Fulma == "login")
-open Fulma.BulmaClasses.Bulma.Properties
 open Fulma.FontAwesome
 #endif
 
@@ -134,14 +132,14 @@ let view (model : Model) (dispatch : Msg -> unit) =
                 [ str "SAFE Template" ] ] ]
 
       Container.container []
-        [ Content.content [ Content.CustomClass Alignment.HasTextCentered ]
+        [ Content.content [ Content.Modifiers [ Modifier.TextAlignment (Screen.All, TextAlignment.Centered) ] ]
             [ Heading.h3 [] [ str ("Press buttons to manipulate counter: " + show model) ] ]
           Columns.columns []
             [ Column.column [] [ button "-" (fun _ -> dispatch Decrement) ]
               Column.column [] [ button "+" (fun _ -> dispatch Increment) ] ] ]
 
       Footer.footer [ ]
-        [ Content.content [ Content.CustomClass Alignment.HasTextCentered ]
+        [ Content.content [ Content.Modifiers [ Modifier.TextAlignment (Screen.All, TextAlignment.Centered) ] ]
             [ safeComponents ] ] ]
 #elseif (Fulma == "admin")
 let navBrand =
@@ -217,37 +215,50 @@ let breadcrump =
         [ a [ ] [ str "Admin" ] ] ]
 
 let hero =
-  Hero.hero [ Hero.CustomClass "is-info welcome is-small" ]
+  Hero.hero [ Hero.Color IsInfo
+              Hero.CustomClass "welcome" ]
     [ Hero.body [ ]
         [ Container.container [ ]
-            [ h1 [ Class "title" ]
+            [ Heading.h1 [ ]
                 [ str "Hello, Admin." ]
-              h2 [ Class "subtitle" ]
+              Heading.h4 [ Heading.IsSubtitle ]
                 [ safeComponents ] ] ] ]
 
 let info =
   section [ Class "info-tiles" ]
-    [ Tile.ancestor [ Tile.CustomClass Alignment.HasTextCentered ]
+    [ Tile.ancestor [ Tile.Modifiers [ Modifier.TextAlignment (Screen.All, TextAlignment.Centered) ] ]
         [ Tile.parent [ ]
-            [ article [ Class "tile is-child box" ]
-                [ p [ Class "title" ] [ str "439k" ]
-                  p [ Class "subtitle" ] [ str "Users" ] ] ]
+            [ Tile.child [ ]
+                [ Box.box' [ ]
+                    Heading.p [ ]
+                        [ str "439k" ]
+                    Heading.p [ Heading.IsSubtitle ]
+                        [ str "Users" ] ] ]
           Tile.parent [ ]
-            [ article [ Class "tile is-child box" ]
-                [ p [ Class "title" ] [ str "59k" ]
-                  p [ Class "subtitle" ] [ str "Products" ] ] ]
+            [ Tile.child [ ]
+                [ Box.box' [ ]
+                    [ Heading.p [ ]
+                        [ str "59k" ]
+                      Heading.p [ Heading.IsSubtitle ]
+                        [ str "Products" ] ] ] ]
           Tile.parent [ ]
-            [ article [ Class "tile is-child box" ]
-                [ p [ Class "title" ] [ str "3.4k" ]
-                  p [ Class "subtitle" ] [ str "Open Orders" ] ] ]
+            [ Tile.child [ ]
+                [ Box.box' [ ]
+                    [ Heading.p [ ]
+                        [ str "3.4k" ]
+                      Heading.p [ Heading.IsSubtitle ]
+                        [ str "Open Orders" ] ] ] ]
           Tile.parent [ ]
-            [ article [ Class "tile is-child box" ]
-                [ p [ Class "title" ] [ str "19" ]
-                  p [ Class "subtitle" ] [ str "Exceptions" ] ] ] ] ]
+            [ Tile.child [ ]
+                [ Box.box' [ ]
+                    [ Heading.p [ ]
+                        [ str "19" ]
+                      Heading.p [ Heading.IsSubtitle ]
+                        [ str "Exceptions" ] ] ] ] ] ]
 
 let counter (model : Model) (dispatch : Msg -> unit) =
   Field.div [ Field.IsGrouped ]
-    [ Control.p [ Control.CustomClass "is-expanded"]
+    [ Control.p [ Control.IsExpanded ]
         [ Input.text
             [ Input.Disabled true
               Input.Value (show model) ] ]
@@ -264,7 +275,7 @@ let counter (model : Model) (dispatch : Msg -> unit) =
 
 let columns (model : Model) (dispatch : Msg -> unit) =
   Columns.columns [ ]
-    [ Column.column [ Column.Width (Column.All, Column.Is6) ]
+    [ Column.column [ Column.Width (Screen.All, Column.Is6) ]
         [ Card.card [ CustomClass "events-card" ]
             [ Card.header [ ]
                 [ Card.Header.title [ ]
@@ -294,7 +305,7 @@ let columns (model : Model) (dispatch : Msg -> unit) =
               Card.footer [ ]
                 [ Card.Footer.item [ ]
                     [ str "View All" ] ] ] ]
-      Column.column [ Column.Width (Column.All, Column.Is6) ]
+      Column.column [ Column.Width (Screen.All, Column.Is6) ]
         [ Card.card [ ]
             [ Card.header [ ]
                 [ Card.Header.title [ ]
@@ -333,9 +344,9 @@ let view (model : Model) (dispatch : Msg -> unit) =
     [ navBrand
       Container.container [ ]
         [ Columns.columns [ ]
-            [ Column.column [ Column.Width (Column.All, Column.Is3) ]
+            [ Column.column [ Column.Width (Screen.All, Column.Is3) ]
                 [ menu ]
-              Column.column [ Column.Width (Column.All, Column.Is9) ]
+              Column.column [ Column.Width (Screen.All, Column.Is9) ]
                 [ breadcrump
                   hero
                   info
@@ -374,7 +385,7 @@ let navMenu =
 let containerBox (model : Model) (dispatch : Msg -> unit) =
   Box.box' [ ]
     [ Field.div [ Field.IsGrouped ]
-        [ Control.p [ Control.CustomClass "is-expanded"]
+        [ Control.p [ Control.IsExpanded ]
             [ Input.text
                 [ Input.Disabled true
                   Input.Value (show model) ] ]
@@ -400,15 +411,15 @@ let view (model : Model) (dispatch : Msg -> unit) =
                   navMenu ] ] ]
       Hero.body [ ]
         [ Container.container
-            [ Container.CustomClass Alignment.HasTextCentered ]
+            [ Container.Modifiers [ Modifier.TextAlignment (Screen.All, TextAlignment.Centered) ] ]
             [ Columns.columns [ Columns.IsVCentered ]
                 [ Column.column
-                    [ Column.Width (Column.All, Column.Is5) ]
+                    [ Column.Width (Screen.All, Column.Is5) ]
                     [ Image.image [ Image.Is4by3 ]
                         [ img [ Src "http://placehold.it/800x600" ] ] ]
                   Column.column
-                   [ Column.Width (Column.All, Column.Is5)
-                     Column.Offset (Column.All, Column.Is1) ]
+                   [ Column.Width (Screen.All, Column.Is5)
+                     Column.Offset (Screen.All, Column.Is1) ]
                    [ Heading.h1 [ Heading.Is2 ]
                        [ str "Superhero Scaffolding" ]
                      Heading.h2
@@ -473,11 +484,14 @@ let buttonBox (model : Model) (dispatch : Msg -> unit) =
                 [ str "-" ] ] ] ]
 
 let card icon heading body =
-  Column.column [ Column.Width (Column.All, Column.Is4) ]
+  Column.column [ Column.Width (Screen.All, Column.Is4) ]
     [ Card.card [ ]
-        [ div
-            [ ClassName (Card.Classes.Image + " " + Alignment.HasTextCentered) ]
-            [ i [ ClassName ("fa fa-" + icon) ] [ ] ]
+        [ Card.image
+            [ Modifiers [ Modifier.TextAlignment (Screen.All, TextAlignment.Centered) ] ]
+            [ Icon.faIcon [ Icon.Size IsMedium
+                            Icon.Props [ Style [ MarginTop "15px" ] ] ]
+                [ Fa.icon icon
+                  Fa.fa2x ] ]
           Card.content [ ]
             [ Content.content [ ]
                 [ h4 [ ] [ str heading ]
@@ -488,26 +502,27 @@ let card icon heading body =
 
 let features =
   Columns.columns [ Columns.CustomClass "features" ]
-    [ card "paw" "Tristique senectus et netus et." "Purus semper eget duis at tellus at urna condimentum mattis. Non blandit massa enim nec. Integer enim neque volutpat ac tincidunt vitae semper quis. Accumsan tortor posuere ac ut consequat semper viverra nam."
-      card "id-card-o" "Tempor orci dapibus ultrices in." "Ut venenatis tellus in metus vulputate. Amet consectetur adipiscing elit pellentesque. Sed arcu non odio euismod lacinia at quis risus. Faucibus turpis in eu mi bibendum neque egestas cmonsu songue. Phasellus vestibulum lorem sed risus."
-      card "rocket" "Leo integer malesuada nunc vel risus." "Imperdiet dui accumsan sit amet nulla facilisi morbi. Fusce ut placerat orci nulla pellentesque dignissim enim. Libero id faucibus nisl tincidunt eget nullam. Commodo viverra maecenas accumsan lacus vel facilisis." ]
+    [ card Fa.I.Paw "Tristique senectus et netus et." "Purus semper eget duis at tellus at urna condimentum mattis. Non blandit massa enim nec. Integer enim neque volutpat ac tincidunt vitae semper quis. Accumsan tortor posuere ac ut consequat semper viverra nam."
+      card Fa.I.IdCardO "Tempor orci dapibus ultrices in." "Ut venenatis tellus in metus vulputate. Amet consectetur adipiscing elit pellentesque. Sed arcu non odio euismod lacinia at quis risus. Faucibus turpis in eu mi bibendum neque egestas cmonsu songue. Phasellus vestibulum lorem sed risus."
+      card Fa.I.Rocket "Leo integer malesuada nunc vel risus." "Imperdiet dui accumsan sit amet nulla facilisi morbi. Fusce ut placerat orci nulla pellentesque dignissim enim. Libero id faucibus nisl tincidunt eget nullam. Commodo viverra maecenas accumsan lacus vel facilisis." ]
 
 let intro =
   Column.column
     [ Column.CustomClass "intro"
-      Column.Width (Column.All, Column.Is8)
-      Column.Offset (Column.All, Column.Is2) ]
+      Column.Width (Screen.All, Column.Is8)
+      Column.Offset (Screen.All, Column.Is2) ]
     [ h2 [ ClassName "title" ] [ str "Perfect for developers or designers!" ]
       br [ ]
       p [ ClassName "subtitle"] [ str "Vel fringilla est ullamcorper eget nulla facilisi. Nulla facilisi nullam vehicula ipsum a. Neque egestas congue quisque egestas diam in arcu cursus." ] ]
 
 let tile title subtitle content =
-  article [ ClassName "tile is-child notification is-white" ]
-    [ yield p [ ClassName "title" ] [ str title ]
-      yield p [ ClassName "subtitle" ] [ str subtitle ]
-      match content with
-      | Some c -> yield c
-      | None -> () ]
+    Tile.child [ ]
+        [ Notification.notification [ Notification.Color IsWhite ]
+            [ yield Heading.p [ ] [ str title ]
+              yield Heading.p [ Heading.IsSubtitle ] [ str subtitle ]
+              match content with
+              | Some c -> yield c
+              | None -> () ] ]
 
 let content txts =
   Content.content [ ]
@@ -532,7 +547,7 @@ module Tiles =
     tile
       "Middle box"
       "With an image"
-      (Some (figure [ ClassName "image is-4by3" ] [ img [ Src "http://bulma.io/images/placeholders/640x480.png"] ]))
+      (Some (Image.image [ Image.Is4by3 ] [ img [ Src "http://bulma.io/images/placeholders/640x480.png"] ]))
 
   let wide =
     tile
@@ -591,7 +606,7 @@ let sandbox =
 
 let footerContainer =
   Container.container [ ]
-    [ Content.content [ Content.CustomClass Alignment.HasTextCentered ]
+    [ Content.content [ Content.Modifiers [ Modifier.TextAlignment (Screen.All, TextAlignment.Centered) ] ]
         [ p [ ]
             [ safeComponents ]
           p [ ]
@@ -611,10 +626,10 @@ let view (model : Model) (dispatch : Msg -> unit) =
                     [ navBrand
                       navMenu ] ] ]
           Hero.body [ ]
-            [ Container.container [ Container.CustomClass Alignment.HasTextCentered ]
-                [ h1 [ ClassName "title" ]
+            [ Container.container [ Container.Modifiers [ Modifier.TextAlignment (Screen.All, TextAlignment.Centered) ] ]
+                [ Heading.p [ ]
                     [ str "SAFE Template" ]
-                  div [ ClassName "subtitle" ]
+                  Heading.p [ Heading.IsSubtitle ]
                     [ safeComponents ] ] ] ]
 
       buttonBox model dispatch
@@ -661,7 +676,7 @@ let navMenu =
 let containerBox (model : Model) (dispatch : Msg -> unit) =
   Box.box' [ ]
     [ Field.div [ Field.IsGrouped ]
-        [ Control.p [ Control.CustomClass "is-expanded"]
+        [ Control.p [ Control.IsExpanded ]
             [ Input.text
                 [ Input.Disabled true
                   Input.Value (show model) ] ]
@@ -685,20 +700,20 @@ let view (model : Model) (dispatch : Msg -> unit) =
                   navMenu ] ] ]
 
       Hero.body [ ]
-        [ Container.container [ Container.CustomClass Alignment.HasTextCentered ]
+        [ Container.container [ Container.Modifiers [ Modifier.TextAlignment (Screen.All, TextAlignment.Centered) ] ]
             [ Column.column
-                [ Column.Width (Column.All, Column.Is6)
-                  Column.Offset (Column.All, Column.Is3) ]
-                [ h1 [ ClassName "title" ]
+                [ Column.Width (Screen.All, Column.Is6)
+                  Column.Offset (Screen.All, Column.Is3) ]
+                [ Heading.p [ ]
                     [ str "SAFE Template" ]
-                  div [ ClassName "subtitle" ]
+                  Heading.p [ Heading.IsSubtitle ]
                     [ safeComponents ]
                   containerBox model dispatch ] ] ] ]
 #else
 
 let counter (model : Model) (dispatch : Msg -> unit) =
   Field.div [ Field.IsGrouped ]
-    [ Control.p [ Control.CustomClass "is-expanded"]
+    [ Control.p [ Control.IsExpanded ]
         [ Input.text
             [ Input.Disabled true
               Input.Value (show model) ] ]
@@ -715,12 +730,13 @@ let counter (model : Model) (dispatch : Msg -> unit) =
 
 let column (model : Model) (dispatch : Msg -> unit) =
   Column.column
-    [ Column.Width (Column.All, Column.Is4)
-      Column.Offset (Column.All, Column.Is4) ]
+    [ Column.Width (Screen.All, Column.Is4)
+      Column.Offset (Screen.All, Column.Is4) ]
     [ Heading.h3
-        [ Heading.CustomClass "title has-text-grey" ]
+        [ Heading.Modifiers [ Modifier.TextColor IsGrey ] ]
         [ str "Login" ]
-      p [ Class "subtitle has-text-grey" ]
+      Heading.p
+        [ Heading.Modifiers [ Modifier.TextColor IsGrey ] ]
         [ str "Please login to proceed." ]
       Box.box' [ ]
         [ figure [ Class "avatar" ]
@@ -747,14 +763,14 @@ let column (model : Model) (dispatch : Msg -> unit) =
                   Button.IsFullWidth
                   Button.CustomClass "is-large is-block" ]
                 [ str "Login" ] ] ]
-      p [ Class "has-text-grey" ]
+      Text.p [ Modifiers [ Modifier.TextColor IsGrey ] ]
         [ a [ ] [ str "Sign Up" ]
           str "\u00A0·\u00A0"
           a [ ] [ str "Forgot Password" ]
           str "\u00A0·\u00A0"
           a [ ] [ str "Need Help?" ] ]
       br [ ]
-      p [ Class "has-text-grey" ]
+      Text.p [ Modifiers [ Modifier.TextColor IsGrey ] ]
         [ safeComponents ] ]
 
 let view (model : Model) (dispatch : Msg -> unit) =
@@ -763,7 +779,7 @@ let view (model : Model) (dispatch : Msg -> unit) =
       Hero.IsFullHeight ]
     [ Hero.body [ ]
         [ Container.container
-            [ Container.CustomClass Alignment.HasTextCentered ]
+            [ Container.Modifiers [ Modifier.TextAlignment (Screen.All, TextAlignment.Centered) ] ]
             [ column model dispatch ] ] ]
 
 #endif
