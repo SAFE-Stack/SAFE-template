@@ -1,3 +1,7 @@
+#### 0.20.0 - 11.05.2018
+
+* Use newest Fulma - https://github.com/SAFE-Stack/SAFE-template/pull/89
+
 #### 0.19.1 - 10.05.2018
 
 * Add solution file - https://github.com/SAFE-Stack/SAFE-template/issues/86
