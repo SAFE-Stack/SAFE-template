@@ -1,222 +1,260 @@
 ﻿{
-  "$schema": "http://json.schemastore.org/template",
-  "author": "Tomasz Heimowski",
-  "classifications": [ "F#", "Web", "Suave", "Fable", "Elmish", "Giraffe", "Bulma" ],
-  "name": "SAFE-Stack Web App v0.21.1",
-  "tags": {
-    "language": "F#",
-    "type": "project"
-  },
-  "identity": "SAFE.Template",
-  "shortName": "SAFE",
-  "symbols": {
-    "server": {
-      "type": "parameter",
-      "dataType": "choice",
-      "defaultValue": "saturn",
-      "choices": [
-        {
-          "choice": "suave",
-          "description": "lightweight, non-blocking web server (standalone)"
-        },
-        {
-          "choice": "giraffe",
-          "description": "a functional micro web framework based on ASP.NET Core"
-        },
-        {
-          "choice": "saturn",
-          "description": "web development framework which implements the server-side MVC pattern"
-        }
-      ]
+    "$schema": "http://json.schemastore.org/template",
+    "author": "Tomasz Heimowski",
+    "classifications": [
+        "F#",
+        "Web",
+        "Suave",
+        "Fable",
+        "Elmish",
+        "Giraffe",
+        "Bulma"
+    ],
+    "name": "SAFE-Stack Web App v0.21.1",
+    "tags": {
+        "language": "F#",
+        "type": "project"
     },
-    "layout": {
-      "type": "parameter",
-      "dataType": "choice",
-      "defaultValue": "fulma-basic",
-      "choices": [
-        {
-          "choice": "none",
-          "description": "don't add any CSS framework"
+    "identity": "SAFE.Template",
+    "shortName": "SAFE",
+    "symbols": {
+        "server": {
+            "type": "parameter",
+            "dataType": "choice",
+            "defaultValue": "saturn",
+            "choices": [
+                {
+                    "choice": "suave",
+                    "description": "lightweight, non-blocking web server (standalone)"
+                },
+                {
+                    "choice": "giraffe",
+                    "description": "a functional micro web framework based on ASP.NET Core"
+                },
+                {
+                    "choice": "saturn",
+                    "description": "web development framework which implements the server-side MVC pattern"
+                }
+            ]
         },
-        {
-          "choice": "fulma-basic",
-          "description": "adds Fulma basic template"
+        "layout": {
+            "type": "parameter",
+            "dataType": "choice",
+            "defaultValue": "fulma-basic",
+            "choices": [
+                {
+                    "choice": "none",
+                    "description": "don't add any CSS framework"
+                },
+                {
+                    "choice": "fulma-basic",
+                    "description": "adds Fulma basic template"
+                },
+                {
+                    "choice": "fulma-admin",
+                    "description": "adds Fulma with 'Admin' Bulma template from https://dansup.github.io/bulma-templates/"
+                },
+                {
+                    "choice": "fulma-cover",
+                    "description": "adds Fulma with 'Cover' Bulma template from https://dansup.github.io/bulma-templates/"
+                },
+                {
+                    "choice": "fulma-hero",
+                    "description": "adds Fulma with 'Hero' Bulma template from https://dansup.github.io/bulma-templates/"
+                },
+                {
+                    "choice": "fulma-landing",
+                    "description": "adds Fulma with 'Landing' Bulma template from https://dansup.github.io/bulma-templates/"
+                },
+                {
+                    "choice": "fulma-login",
+                    "description": "adds Fulma with 'Login' Bulma template from https://dansup.github.io/bulma-templates/"
+                }
+            ]
         },
-        {
-          "choice": "fulma-admin",
-          "description": "adds Fulma with 'Admin' Bulma template from https://dansup.github.io/bulma-templates/"
+        "remoting": {
+            "type": "parameter",
+            "dataType": "bool",
+            "defaultValue": "false",
+            "description": "adds Fable.Remoting to server and client"
         },
-        {
-          "choice": "fulma-cover",
-          "description": "adds Fulma with 'Cover' Bulma template from https://dansup.github.io/bulma-templates/"
+        "js-deps": {
+            "type": "parameter",
+            "dataType": "choice",
+            "defaultValue": "yarn",
+            "choices": [
+                {
+                    "choice": "npm",
+                    "description": "uses NPM for JS package management"
+                },
+                {
+                    "choice": "yarn",
+                    "description": "uses Yarn for JS package management"
+                }
+            ]
         },
-        {
-          "choice": "fulma-hero",
-          "description": "adds Fulma with 'Hero' Bulma template from https://dansup.github.io/bulma-templates/"
-        },
-        {
-          "choice": "fulma-landing",
-          "description": "adds Fulma with 'Landing' Bulma template from https://dansup.github.io/bulma-templates/"
-        },
-        {
-          "choice": "fulma-login",
-          "description": "adds Fulma with 'Login' Bulma template from https://dansup.github.io/bulma-templates/"
+        "deploy": {
+            "type": "parameter",
+            "dataType": "choice",
+            "defaultValue": "none",
+            "choices": [
+                {
+                    "choice": "none",
+                    "description": "don't add FAKE targets to deploy"
+                },
+                {
+                    "choice": "azure",
+                    "description": "additional FAKE targets to deploy to Azure"
+                },
+                {
+                    "choice": "docker",
+                    "description": "additional FAKE targets to bundle and build Docker image"
+                }
+            ]
         }
-      ]
     },
-    "remoting": {
-      "type": "parameter",
-      "dataType": "bool",
-      "defaultValue": "false",
-      "description": "adds Fable.Remoting to server and client"
+    "sources": [
+        {
+            "exclude": "**/.template.config/**/*",
+            "modifiers": [
+                {
+                    "exclude": "**/ServerSuave.fs",
+                    "condition": "(server != \"suave\")"
+                },
+                {
+                    "rename": {
+                        "ServerSuave.fs": "Server.fs"
+                    }
+                },
+                {
+                    "exclude": "**/Suaveweb.config",
+                    "condition": "(server != \"suave\") || (deploy != \"azure\")"
+                },
+                {
+                    "rename": {
+                        "Suaveweb.config": "web.config"
+                    }
+                },
+                {
+                    "exclude": "**/SuaveAzure.fs",
+                    "condition": "(server != \"suave\") || (deploy != \"azure\")"
+                },
+                {
+                    "rename": {
+                        "SuaveAzure.fs": "Azure.fs"
+                    }
+                },
+                {
+                    "exclude": "**/ServerGiraffe.fs",
+                    "condition": "(server != \"giraffe\")"
+                },
+                {
+                    "rename": {
+                        "ServerGiraffe.fs": "Server.fs"
+                    }
+                },
+                {
+                    "exclude": "**/ServerSaturn.fs",
+                    "condition": "(server != \"saturn\")"
+                },
+                {
+                    "rename": {
+                        "ServerSaturn.fs": "Server.fs"
+                    }
+                },
+                {
+                    "exclude": "**/admin.css",
+                    "condition": "(layout != \"fulma-admin\")"
+                },
+                {
+                    "exclude": "**/hero.css",
+                    "condition": "(layout != \"fulma-hero\")"
+                },
+                {
+                    "exclude": "**/landing.css",
+                    "condition": "(layout != \"fulma-landing\")"
+                },
+                {
+                    "exclude": "**/login.css",
+                    "condition": "(layout != \"fulma-login\")"
+                },
+                {
+                    "exclude": "Dockerfile",
+                    "condition": "(deploy != \"docker\")"
+                },
+                {
+                    "exclude": "arm-template.json",
+                    "condition": "(deploy != \"azure\")"
+                },
+                {
+                    "exclude": "yarn.lock",
+                    "condition": "(js-deps != \"yarn\")"
+                }
+            ]
+        }
+    ],
+    "SpecialCustomOperations": {
+        "**/paket.*": {
+            "operations": [
+                {
+                    "type": "conditional",
+                    "configuration": {
+                        "if": [
+                            "#if"
+                        ],
+                        "else": [
+                            "#else"
+                        ],
+                        "elseif": [
+                            "#elseif"
+                        ],
+                        "endif": [
+                            "#endif"
+                        ],
+                        "trim": "true",
+                        "wholeLine": "true"
+                    }
+                }
+            ]
+        },
+        "**/*.fs*": {
+            "operations": [
+                {
+                    "type": "conditional",
+                    "configuration": {
+                        "if": [
+                            "#if"
+                        ],
+                        "else": [
+                            "#else"
+                        ],
+                        "elseif": [
+                            "#elseif"
+                        ],
+                        "endif": [
+                            "#endif"
+                        ],
+                        "trim": "true",
+                        "wholeLine": "true"
+                    }
+                }
+            ]
+        }
     },
-    "js-deps": {
-      "type": "parameter",
-      "dataType": "choice",
-      "defaultValue": "yarn",
-      "choices": [
+    "postActions": [
         {
-          "choice": "npm",
-      "description": "uses NPM for JS package management"
-        },
-        {
-          "choice": "yarn",
-          "description": "uses Yarn for JS package management"
+            "condition": "(OS != \"Windows_NT\")",
+            "description": "Make scripts executable",
+            "manualInstructions": [
+                {
+                    "text": "Run 'chmod +x *.sh'"
+                }
+            ],
+            "actionId": "cb9a6cf3-4f5c-4860-b9d2-03a574959774",
+            "args": {
+                "+x": "*.sh"
+            },
+            "continueOnError": true
         }
-      ]
-    },
-    "deploy": {
-      "type": "parameter",
-      "dataType": "choice",
-      "defaultValue": "none",
-      "choices": [
-        {
-          "choice": "none",
-          "description": "don't add FAKE targets to deploy"
-        },
-        {
-          "choice": "azure",
-          "description": "additional FAKE targets to deploy to Azure"
-        },
-        {
-          "choice": "docker",
-          "description": "additional FAKE targets to bundle and build Docker image"
-        }
-      ]
-    }
-  },
-  "sources": [
-    {
-      "exclude": "**/.template.config/**/*",
-      "modifiers": [
-        {
-          "exclude": "**/ServerSuave.fs",
-          "condition": "(server != \"suave\")"
-        },
-        {
-          "rename": { "ServerSuave.fs": "Server.fs" }
-        },
-        {
-          "exclude": "**/Suaveweb.config",
-          "condition": "(server != \"suave\") || (deploy != \"azure\")"
-        },
-        {
-          "rename": { "Suaveweb.config": "web.config" }
-        },
-        {
-          "exclude": "**/SuaveAzure.fs",
-          "condition": "(server != \"suave\") || (deploy != \"azure\")"
-        },
-        {
-          "rename": { "SuaveAzure.fs": "Azure.fs" }
-        },
-        {
-          "exclude": "**/ServerGiraffe.fs",
-          "condition": "(server != \"giraffe\")"
-        },
-        {
-          "rename": { "ServerGiraffe.fs": "Server.fs" }
-        },
-        {
-          "exclude": "**/ServerSaturn.fs",
-          "condition": "(server != \"saturn\")"
-        },
-        {
-          "rename": { "ServerSaturn.fs": "Server.fs" }
-        },
-        {
-          "exclude": "**/admin.css",
-          "condition": "(layout != \"fulma-admin\")"
-        },
-        {
-          "exclude": "**/hero.css",
-          "condition": "(layout != \"fulma-hero\")"
-        },
-        {
-          "exclude": "**/landing.css",
-          "condition": "(layout != \"fulma-landing\")"
-        },
-        {
-          "exclude": "**/login.css",
-          "condition": "(layout != \"fulma-login\")"
-        },
-        {
-          "exclude": "Dockerfile",
-          "condition": "(deploy != \"docker\")"
-        },
-        {
-          "exclude": "arm-template.json",
-          "condition": "(deploy != \"azure\")"
-        },
-        {
-          "exclude": "yarn.lock",
-          "condition": "(js-deps != \"yarn\")"
-        }
-      ]
-    }
-  ],
-  "SpecialCustomOperations": {
-    "**/paket.*": {
-      "operations": [
-        {
-          "type": "conditional",
-          "configuration": {
-            "if": [ "#if" ],
-            "else": [ "#else" ],
-            "elseif": [ "#elseif" ],
-            "endif": [ "#endif" ],
-            "trim": "true",
-            "wholeLine": "true"
-          }
-        }
-      ]
-    },
-    "**/*.fs*": {
-      "operations": [
-        {
-          "type": "conditional",
-          "configuration": {
-            "if": [ "#if" ],
-            "else": [ "#else" ],
-            "elseif": [ "#elseif" ],
-            "endif": [ "#endif" ],
-            "trim": "true",
-            "wholeLine": "true"
-          }
-        }
-      ]
-    }
-  },
-  "postActions": [
-    {
-        "condition": "(OS != \"Windows_NT\")",
-        "description": "Make scripts executable",
-        "manualInstructions": [{ "text": "Run 'chmod +x *.sh'" }],
-        "actionId": "cb9a6cf3-4f5c-4860-b9d2-03a574959774",
-        "args": {
-            "+x": "*.sh"
-        },
-        "continueOnError": true
-    }
-  ]
+    ]
 }

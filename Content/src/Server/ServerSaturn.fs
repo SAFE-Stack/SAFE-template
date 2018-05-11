@@ -30,34 +30,34 @@ let getInitCounter () : Task<Counter> = task { return 42 }
 
 #if (remoting)
 let webApp =
-  let server =
-    { getInitCounter = getInitCounter >> Async.AwaitTask }
-  remoting server {
-    use_route_builder Route.builder
-  }
+    let server =
+        { getInitCounter = getInitCounter >> Async.AwaitTask }
+    remoting server {
+        use_route_builder Route.builder
+    }
 
 #else
 let webApp = scope {
-  get "/api/init" (fun next ctx ->
-    task {
-      let! counter = getInitCounter()
-      return! Successful.OK counter next ctx
-    })
+    get "/api/init" (fun next ctx ->
+        task {
+            let! counter = getInitCounter()
+            return! Successful.OK counter next ctx
+        })
 }
 
 #endif
 #if (!remoting)
 let configureSerialization (services:IServiceCollection) =
-  let fableJsonSettings = Newtonsoft.Json.JsonSerializerSettings()
-  fableJsonSettings.Converters.Add(Fable.JsonConverter())
-  services.AddSingleton<IJsonSerializer>(NewtonsoftJsonSerializer fableJsonSettings)
+    let fableJsonSettings = Newtonsoft.Json.JsonSerializerSettings()
+    fableJsonSettings.Converters.Add(Fable.JsonConverter())
+    services.AddSingleton<IJsonSerializer>(NewtonsoftJsonSerializer fableJsonSettings)
 
 #endif
 #if (deploy == "azure")
 let configureAzure (services:IServiceCollection) =
-  tryGetEnv "APPINSIGHTS_INSTRUMENTATIONKEY"
-  |> Option.map services.AddApplicationInsightsTelemetry
-  |> Option.defaultValue services
+    tryGetEnv "APPINSIGHTS_INSTRUMENTATIONKEY"
+    |> Option.map services.AddApplicationInsightsTelemetry
+    |> Option.defaultValue services
 
 #endif
 let app = application {

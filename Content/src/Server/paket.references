@@ -1,23 +1,23 @@
 group Server
-  FSharp.Core
+    FSharp.Core
 //#if     (server == "suave")
-  Suave
+    Suave
 //#elseif (server == "giraffe")
-  Giraffe
-  Microsoft.AspNetCore
-  Microsoft.AspNetCore.StaticFiles
+    Giraffe
+    Microsoft.AspNetCore
+    Microsoft.AspNetCore.StaticFiles
 //#elseif (server == "saturn")
-  Saturn
+    Saturn
 //#endif
 //#if (deploy == "azure")
-  Microsoft.ApplicationInsights.AspNetCore
-  WindowsAzure.Storage
+    Microsoft.ApplicationInsights.AspNetCore
+    WindowsAzure.Storage
 //#endif
 //#if     (!remoting && server != "suave")
-  Fable.JsonConverter
+    Fable.JsonConverter
 //#elseif (remoting && server == "suave")
-  Fable.Remoting.Suave
+    Fable.Remoting.Suave
 //#elseif (remoting)
-  Fable.Remoting.Giraffe
+    Fable.Remoting.Giraffe
 //#endif
-  Microsoft.DotNet.Watcher.Tools
+    Microsoft.DotNet.Watcher.Tools

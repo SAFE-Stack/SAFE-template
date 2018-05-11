@@ -1,54 +1,54 @@
 group Server
-  storage: none
-  source https://api.nuget.org/v3/index.json
+    storage: none
+    source https://api.nuget.org/v3/index.json
 
-  nuget FSharp.Core
+    nuget FSharp.Core
 //#if (server == "suave")
-  nuget Suave
+    nuget Suave
 //#elseif (server == "giraffe")
-  nuget Giraffe ~> 1
-  nuget Microsoft.AspNetCore
-  nuget Microsoft.AspNetCore.StaticFiles
+    nuget Giraffe ~> 1
+    nuget Microsoft.AspNetCore
+    nuget Microsoft.AspNetCore.StaticFiles
 //#elseif (server == "saturn")
-  nuget Saturn
+    nuget Saturn
 //#endif
 //#if (!remoting && server != "suave")
-  nuget Fable.JsonConverter
+    nuget Fable.JsonConverter
 //#elseif (remoting && server == "suave")
-  nuget Fable.Remoting.Suave ~> 2.6
+    nuget Fable.Remoting.Suave ~> 2.6
 //#elseif (remoting && server != "suave")
-  nuget Fable.Remoting.Giraffe ~> 2.6
+    nuget Fable.Remoting.Giraffe ~> 2.6
 //#endif
 //#if (deploy == "azure")
-  nuget Microsoft.ApplicationInsights.AspNetCore ~> 2.2
-  nuget WindowsAzure.Storage
+    nuget Microsoft.ApplicationInsights.AspNetCore ~> 2.2
+    nuget WindowsAzure.Storage
 //#endif
 
-  clitool Microsoft.DotNet.Watcher.Tools
+    clitool Microsoft.DotNet.Watcher.Tools
 
 group Client
-  storage: none
-  source https://api.nuget.org/v3/index.json
+    storage: none
+    source https://api.nuget.org/v3/index.json
 
-  nuget Fable.Core
-  nuget Fable.Elmish.Debugger
-  nuget Fable.Elmish.React
-  nuget Fable.Elmish.HMR
+    nuget Fable.Core
+    nuget Fable.Elmish.Debugger
+    nuget Fable.Elmish.React
+    nuget Fable.Elmish.HMR
 //#if (remoting)
-  nuget Fable.Remoting.Client ~> 2.4
+    nuget Fable.Remoting.Client ~> 2.4
 //#endif
 //#if (layout != "none")
-  nuget Fulma
+    nuget Fulma
 //#endif
 
-  clitool dotnet-fable
+    clitool dotnet-fable
 
 group Build
-  source https://api.nuget.org/v3/index.json
-  generate_load_scripts: true
+    source https://api.nuget.org/v3/index.json
+    generate_load_scripts: true
 
-  nuget FAKE
+    nuget FAKE
 //#if (deploy == "azure")
-  nuget Microsoft.Azure.Management.ResourceManager.Fluent 1.4.1
-  github CompositionalIT/fshelpers src/FsHelpers/ArmHelper/ArmHelper.fs
+    nuget Microsoft.Azure.Management.ResourceManager.Fluent 1.4.1
+    github CompositionalIT/fshelpers src/FsHelpers/ArmHelper/ArmHelper.fs
 //#endif
