@@ -1,3 +1,7 @@
+#### 0.20.1 - 14.05.2018
+
+* Open missing namespace for combination of Saturn and Fable.Remoting - https://github.com/SAFE-Stack/SAFE-template/pull/93
+
 #### 0.20.0 - 11.05.2018
 
 * Use newest Fulma - https://github.com/SAFE-Stack/SAFE-template/pull/89
