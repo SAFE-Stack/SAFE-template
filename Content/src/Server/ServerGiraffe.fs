@@ -15,7 +15,6 @@ open Fable.Remoting.Server
 open Fable.Remoting.Giraffe
 #else
 open Giraffe.Serialization
-open Microsoft.Extensions.DependencyInjection
 #endif
 #if (Deploy == "azure")
 open Microsoft.WindowsAzure.Storage

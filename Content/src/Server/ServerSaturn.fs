@@ -2,9 +2,9 @@ open System.IO
 open System.Threading.Tasks
 
 open Microsoft.AspNetCore.Builder
+open Microsoft.Extensions.DependencyInjection
 open Giraffe
 open Saturn
-
 open Shared
 
 #if (Remoting)
@@ -12,7 +12,6 @@ open Fable.Remoting.Server
 open Fable.Remoting.Giraffe
 #else
 open Giraffe.Serialization
-open Microsoft.Extensions.DependencyInjection
 #endif
 #if (Deploy == "azure")
 open Microsoft.WindowsAzure.Storage
