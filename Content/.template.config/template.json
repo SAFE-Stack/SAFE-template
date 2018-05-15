@@ -10,7 +10,7 @@
   "identity": "SAFE.Template",
   "shortName": "SAFE",
   "symbols": {
-    "Server": {
+    "server": {
       "type": "parameter",
       "dataType": "choice",
       "defaultValue": "saturn",
@@ -29,7 +29,7 @@
         }
       ]
     },
-    "Fulma": {
+    "fulma": {
       "type": "parameter",
       "dataType": "choice",
       "defaultValue": "basic",
@@ -64,19 +64,19 @@
         }
       ]
     },
-    "Remoting": {
+    "remoting": {
       "type": "parameter",
       "dataType": "bool",
       "defaultValue": "false",
       "description": "adds Fable.Remoting to server and client"
     },
-    "NPM": {
+    "npm": {
       "type": "parameter",
       "dataType": "bool",
       "defaultValue": "false",
       "description": "use NPM instead of default Yarn for JS package management"
     },
-    "Deploy": {
+    "deploy": {
       "type": "parameter",
       "dataType": "choice",
       "defaultValue": "none",
@@ -102,66 +102,66 @@
       "modifiers": [
         {
           "exclude": "**/ServerSuave.fs",
-          "condition": "(Server != \"suave\")"
+          "condition": "(server != \"suave\")"
         },
         {
           "rename": { "ServerSuave.fs": "Server.fs" }
         },
         {
           "exclude": "**/Suaveweb.config",
-          "condition": "(Server != \"suave\") || (Deploy != \"azure\")"
+          "condition": "(server != \"suave\") || (deploy != \"azure\")"
         },
         {
           "rename": { "Suaveweb.config": "web.config" }
         },
         {
           "exclude": "**/SuaveAzure.fs",
-          "condition": "(Server != \"suave\") || (Deploy != \"azure\")"
+          "condition": "(server != \"suave\") || (deploy != \"azure\")"
         },
         {
           "rename": { "SuaveAzure.fs": "Azure.fs" }
         },
         {
           "exclude": "**/ServerGiraffe.fs",
-          "condition": "(Server != \"giraffe\")"
+          "condition": "(server != \"giraffe\")"
         },
         {
           "rename": { "ServerGiraffe.fs": "Server.fs" }
         },
         {
           "exclude": "**/ServerSaturn.fs",
-          "condition": "(Server != \"saturn\")"
+          "condition": "(server != \"saturn\")"
         },
         {
           "rename": { "ServerSaturn.fs": "Server.fs" }
         },
         {
           "exclude": "**/admin.css",
-          "condition": "(Fulma != \"admin\")"
+          "condition": "(fulma != \"admin\")"
         },
         {
           "exclude": "**/hero.css",
-          "condition": "(Fulma != \"hero\")"
+          "condition": "(fulma != \"hero\")"
         },
         {
           "exclude": "**/landing.css",
-          "condition": "(Fulma != \"landing\")"
+          "condition": "(fulma != \"landing\")"
         },
         {
           "exclude": "**/login.css",
-          "condition": "(Fulma != \"login\")"
+          "condition": "(fulma != \"login\")"
         },
         {
           "exclude": "Dockerfile",
-          "condition": "(Deploy != \"docker\")"
+          "condition": "(deploy != \"docker\")"
         },
         {
           "exclude": "arm-template.json",
-          "condition": "(Deploy != \"azure\")"
+          "condition": "(deploy != \"azure\")"
         },
         {
           "exclude": "yarn.lock",
-          "condition": "(NPM)"
+          "condition": "(npm)"
         }
       ]
     }
