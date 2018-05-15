@@ -1,5 +1,5 @@
 #r @"packages/build/FAKE/tools/FakeLib.dll"
-//#if (Deploy == "azure")
+//#if (deploy == "azure")
 #r "netstandard"
 #I "packages/build/Microsoft.Rest.ClientRuntime.Azure/lib/net452"
 #load ".paket/load/netcoreapp2.1/Build/build.group.fsx"
@@ -21,7 +21,7 @@ let platformTool tool winTool =
   match tryFindFileOnPath tool with Some t -> t | _ -> failwithf "%s not found" tool
 
 let nodeTool = platformTool "node" "node.exe"
-//#if (NPM)
+//#if (npm)
 let npmTool = platformTool "npm" "npm.cmd"
 //#else
 let yarnTool = platformTool "yarn" "yarn.cmd"
@@ -49,7 +49,7 @@ Target "InstallDotNetCore" (fun _ ->
 Target "InstallClient" (fun _ ->
   printfn "Node version:"
   run nodeTool "--version" __SOURCE_DIRECTORY__
-//#if (NPM)
+//#if (npm)
   printfn "Npm version:"
   run npmTool "--version"  __SOURCE_DIRECTORY__
   run npmTool "install" __SOURCE_DIRECTORY__
@@ -88,7 +88,7 @@ Target "Run" (fun () ->
   |> ignore
 )
 
-//#if (Deploy == "docker")
+//#if (deploy == "docker")
 Target "Bundle" (fun _ ->
   let serverDir = deployDir </> "Server"
   let clientDir = deployDir </> "Client"
@@ -113,7 +113,7 @@ Target "Docker" (fun _ ->
 )
 
 //#endif
-//#if (Deploy == "azure")
+//#if (deploy == "azure")
 Target "Bundle" (fun () ->
   run dotnetCli (sprintf "publish %s -c release -o %s" serverPath deployDir) __SOURCE_DIRECTORY__
   CopyDir (deployDir </> "public") (clientPath </> "public") allFiles
@@ -178,10 +178,10 @@ Target "AppService" (fun _ ->
   ==> "InstallDotNetCore"
   ==> "InstallClient"
   ==> "Build"
-//#if (Deploy == "docker")
+//#if (deploy == "docker")
   ==> "Bundle"
   ==> "Docker"
-//#elseif (Deploy == "azure")
+//#elseif (deploy == "azure")
   ==> "Bundle"
   ==> "ArmTemplate"
   ==> "AppService"

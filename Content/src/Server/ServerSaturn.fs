@@ -7,17 +7,17 @@ open Giraffe
 open Saturn
 open Shared
 
-#if (Remoting)
+#if (remoting)
 open Fable.Remoting.Server
 open Fable.Remoting.Giraffe
 #else
 open Giraffe.Serialization
 #endif
-#if (Deploy == "azure")
+#if (deploy == "azure")
 open Microsoft.WindowsAzure.Storage
 #endif
 
-//#if (Deploy == "azure")
+//#if (deploy == "azure")
 let tryGetEnv = System.Environment.GetEnvironmentVariable >> function null | "" -> None | x -> Some x
 let publicPath = tryGetEnv "public_path" |> Option.defaultValue "../Client/public" |> Path.GetFullPath
 let storageAccount = tryGetEnv "STORAGE_CONNECTIONSTRING" |> Option.defaultValue "UseDevelopmentStorage=true" |> CloudStorageAccount.Parse
@@ -28,7 +28,7 @@ let port = 8085us
 
 let getInitCounter () : Task<Counter> = task { return 42 }
 
-#if (Remoting)
+#if (remoting)
 let webApp =
   let server =
     { getInitCounter = getInitCounter >> Async.AwaitTask }
@@ -45,14 +45,14 @@ let webApp = scope {
 }
 #endif
 
-#if (!Remoting)
+#if (!remoting)
 let configureSerialization (services:IServiceCollection) =
   let fableJsonSettings = Newtonsoft.Json.JsonSerializerSettings()
   fableJsonSettings.Converters.Add(Fable.JsonConverter())
   services.AddSingleton<IJsonSerializer>(NewtonsoftJsonSerializer fableJsonSettings)
 #endif
 
-#if (Deploy == "azure")
+#if (deploy == "azure")
 let configureAzure (services:IServiceCollection) =
   tryGetEnv "APPINSIGHTS_INSTRUMENTATIONKEY"
   |> Option.map services.AddApplicationInsightsTelemetry
@@ -68,10 +68,10 @@ let app = application {
     app_config configureApp
     memory_cache
     use_static publicPath
-    #if (!Remoting)
+    #if (!remoting)
     service_config configureSerialization
     #endif
-    #if (Deploy == "azure")
+    #if (deploy == "azure")
     service_config configureAzure
     #endif
     use_gzip
