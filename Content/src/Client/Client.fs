@@ -82,7 +82,7 @@ let safeComponents =
       "Saturn", "https://saturnframework.github.io/docs/"
 #endif
       "Fable", "http://fable.io"
-      "Elmish", "https://fable-elmish.github.io/"
+      "Elmish", "https://elmish.github.io/elmish/"
 #if (fulma != "none")
       "Fulma", "https://mangelmaxime.github.io/Fulma"
 #endif
