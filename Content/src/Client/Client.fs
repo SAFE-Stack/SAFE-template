@@ -9,11 +9,11 @@ open Fable.PowerPack.Fetch
 
 open Shared
 
-#if (fulma != "none")
+#if (layout != "none")
 open Fulma
 #endif
 
-#if (fulma == "admin" || fulma == "cover" || fulma == "hero" || fulma == "landing" || fulma == "login")
+#if (layout == "fulma-admin" || layout == "fulma-cover" || layout == "fulma-hero" || layout == "fulma-landing" || layout == "fulma-login")
 open Fulma.FontAwesome
 #endif
 
@@ -83,10 +83,10 @@ let safeComponents =
 #endif
       "Fable", "http://fable.io"
       "Elmish", "https://elmish.github.io/elmish/"
-#if (fulma != "none")
+#if (layout != "none")
       "Fulma", "https://mangelmaxime.github.io/Fulma"
 #endif
-#if (fulma == "admin" || fulma == "cover" || fulma == "hero" || fulma == "landing" || fulma == "login")
+#if (layout == "fulma-admin" || layout == "fulma-cover" || layout == "fulma-hero" || layout == "fulma-landing" || layout == "fulma-login")
       "Bulma\u00A0Templates", "https://dansup.github.io/bulma-templates/"
 #endif
 #if (remoting)
@@ -106,7 +106,7 @@ let show = function
 | Some x -> string x
 | None -> "Loading..."
 
-#if (fulma == "none")
+#if (layout == "none")
 let view (model : Model) (dispatch : Msg -> unit) =
   div []
     [ h1 [] [ str "SAFE Template" ]
@@ -116,7 +116,7 @@ let view (model : Model) (dispatch : Msg -> unit) =
       div [] [ str (show model) ]
       button [ OnClick (fun _ -> dispatch Increment) ] [ str "+" ]
       safeComponents ]
-#elseif (fulma == "basic")
+#elseif (layout == "fulma-basic")
 let button txt onClick =
   Button.button
     [ Button.IsFullWidth
@@ -141,7 +141,7 @@ let view (model : Model) (dispatch : Msg -> unit) =
       Footer.footer [ ]
         [ Content.content [ Content.Modifiers [ Modifier.TextAlignment (Screen.All, TextAlignment.Centered) ] ]
             [ safeComponents ] ] ]
-#elseif (fulma == "admin")
+#elseif (layout == "fulma-admin")
 let navBrand =
   Navbar.navbar [ Navbar.Color IsWhite ]
     [ Container.container [ ]
@@ -351,7 +351,7 @@ let view (model : Model) (dispatch : Msg -> unit) =
                   hero
                   info
                   columns model dispatch ] ] ] ]
-#elseif (fulma == "cover")
+#elseif (layout == "fulma-cover")
 let navBrand =
   Navbar.Brand.div [ ]
     [ Navbar.Item.a
@@ -434,7 +434,7 @@ let view (model : Model) (dispatch : Msg -> unit) =
                     [ li [ ]
                         [ a [ ]
                             [ str "And this at the bottom" ] ] ] ] ] ] ]
-#elseif (fulma == "hero")
+#elseif (layout == "fulma-hero")
 let navBrand =
   Navbar.Brand.div [ ]
     [ Navbar.Item.a
@@ -641,7 +641,7 @@ let view (model : Model) (dispatch : Msg -> unit) =
 
       footer [ ClassName "footer" ]
         [ footerContainer ] ]
-#elseif (fulma == "landing")
+#elseif (layout == "fulma-landing")
 let navBrand =
   Navbar.Brand.div [ ]
     [ Navbar.Item.a

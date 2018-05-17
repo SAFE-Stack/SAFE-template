@@ -5,7 +5,7 @@ group Client
   Fable.Elmish.HMR
   Fable.Core
   dotnet-fable
-//#if (fulma != "none")
+//#if (layout != "none")
   Fulma
 //#endif
 //#if (remoting)

@@ -29,37 +29,37 @@
         }
       ]
     },
-    "fulma": {
+    "layout": {
       "type": "parameter",
       "dataType": "choice",
-      "defaultValue": "basic",
+      "defaultValue": "fulma-basic",
       "choices": [
         {
           "choice": "none",
-          "description": "don't add Fulma (Fable bindings for Bulma.io) at all"
+          "description": "don't add any CSS framework"
         },
         {
-          "choice": "basic",
+          "choice": "fulma-basic",
           "description": "adds Fulma basic template"
         },
         {
-          "choice": "admin",
+          "choice": "fulma-admin",
           "description": "adds Fulma with 'Admin' Bulma template from https://dansup.github.io/bulma-templates/"
         },
         {
-          "choice": "cover",
+          "choice": "fulma-cover",
           "description": "adds Fulma with 'Cover' Bulma template from https://dansup.github.io/bulma-templates/"
         },
         {
-          "choice": "hero",
+          "choice": "fulma-hero",
           "description": "adds Fulma with 'Hero' Bulma template from https://dansup.github.io/bulma-templates/"
         },
         {
-          "choice": "landing",
+          "choice": "fulma-landing",
           "description": "adds Fulma with 'Landing' Bulma template from https://dansup.github.io/bulma-templates/"
         },
         {
-          "choice": "login",
+          "choice": "fulma-login",
           "description": "adds Fulma with 'Login' Bulma template from https://dansup.github.io/bulma-templates/"
         }
       ]
@@ -146,19 +146,19 @@
         },
         {
           "exclude": "**/admin.css",
-          "condition": "(fulma != \"admin\")"
+          "condition": "(layout != \"fulma-admin\")"
         },
         {
           "exclude": "**/hero.css",
-          "condition": "(fulma != \"hero\")"
+          "condition": "(layout != \"fulma-hero\")"
         },
         {
           "exclude": "**/landing.css",
-          "condition": "(fulma != \"landing\")"
+          "condition": "(layout != \"fulma-landing\")"
         },
         {
           "exclude": "**/login.css",
-          "condition": "(fulma != \"login\")"
+          "condition": "(layout != \"fulma-login\")"
         },
         {
           "exclude": "Dockerfile",

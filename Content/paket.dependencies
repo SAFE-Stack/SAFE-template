@@ -37,7 +37,7 @@ group Client
 //#if (remoting)
   nuget Fable.Remoting.Client ~> 2.4
 //#endif
-//#if (fulma != "none")
+//#if (layout != "none")
   nuget Fulma
 //#endif
 
