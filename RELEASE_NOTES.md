@@ -1,3 +1,9 @@
+#### 0.21.0 - 17.05.2018
+
+* Use lower-case parameter names - https://github.com/SAFE-Stack/SAFE-template/pull/94
+* Change 'npm' parameter to 'js-deps'
+* Change 'fulma' parameter to 'layout'
+
 #### 0.20.1 - 14.05.2018
 
 * Open missing namespace for combination of Saturn and Fable.Remoting - https://github.com/SAFE-Stack/SAFE-template/pull/93
