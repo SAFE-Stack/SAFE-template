@@ -2,10 +2,10 @@ namespace Shared
 
 type Counter = int
 
-#if (Remoting)
+#if (remoting)
 module Route =
   /// Defines how routes are generated on server and mapped from client
-  let builder typeName methodName = 
+  let builder typeName methodName =
     sprintf "/api/%s/%s" typeName methodName
 
 /// A type that specifies the communication protocol for client and server

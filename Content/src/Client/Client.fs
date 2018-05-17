@@ -9,11 +9,11 @@ open Fable.PowerPack.Fetch
 
 open Shared
 
-#if (Fulma != "none")
+#if (fulma != "none")
 open Fulma
 #endif
 
-#if (Fulma == "admin" || Fulma == "cover" || Fulma == "hero" || Fulma == "landing" || Fulma == "login")
+#if (fulma == "admin" || fulma == "cover" || fulma == "hero" || fulma == "landing" || fulma == "login")
 open Fulma.FontAwesome
 #endif
 
@@ -25,7 +25,7 @@ type Msg =
 | Init of Result<Counter, exn>
 
 
-#if (Remoting)
+#if (remoting)
 module Server =
 
   open Shared
@@ -42,7 +42,7 @@ module Server =
 let init () : Model * Cmd<Msg> =
   let model = None
   let cmd =
-#if Remoting
+#if remoting
     Cmd.ofAsync
       Server.api.getInitCounter
       ()
@@ -74,22 +74,22 @@ let safeComponents =
 
   let components =
     [
-#if     (Server == "suave")
+#if     (server == "suave")
       "Suave", "http://suave.io"
-#elseif (Server == "giraffe")
+#elseif (server == "giraffe")
       "Giraffe", "https://github.com/giraffe-fsharp/Giraffe"
-#elseif (Server == "saturn")
+#elseif (server == "saturn")
       "Saturn", "https://saturnframework.github.io/docs/"
 #endif
       "Fable", "http://fable.io"
       "Elmish", "https://fable-elmish.github.io/"
-#if (Fulma != "none")
+#if (fulma != "none")
       "Fulma", "https://mangelmaxime.github.io/Fulma"
 #endif
-#if (Fulma == "admin" || Fulma == "cover" || Fulma == "hero" || Fulma == "landing" || Fulma == "login")
+#if (fulma == "admin" || fulma == "cover" || fulma == "hero" || fulma == "landing" || fulma == "login")
       "Bulma\u00A0Templates", "https://dansup.github.io/bulma-templates/"
 #endif
-#if (Remoting)
+#if (remoting)
       "Fable.Remoting", "https://zaid-ajaj.github.io/Fable.Remoting/"
 #endif
     ]
@@ -106,7 +106,7 @@ let show = function
 | Some x -> string x
 | None -> "Loading..."
 
-#if (Fulma == "none")
+#if (fulma == "none")
 let view (model : Model) (dispatch : Msg -> unit) =
   div []
     [ h1 [] [ str "SAFE Template" ]
@@ -116,7 +116,7 @@ let view (model : Model) (dispatch : Msg -> unit) =
       div [] [ str (show model) ]
       button [ OnClick (fun _ -> dispatch Increment) ] [ str "+" ]
       safeComponents ]
-#elseif (Fulma == "basic")
+#elseif (fulma == "basic")
 let button txt onClick =
   Button.button
     [ Button.IsFullWidth
@@ -141,7 +141,7 @@ let view (model : Model) (dispatch : Msg -> unit) =
       Footer.footer [ ]
         [ Content.content [ Content.Modifiers [ Modifier.TextAlignment (Screen.All, TextAlignment.Centered) ] ]
             [ safeComponents ] ] ]
-#elseif (Fulma == "admin")
+#elseif (fulma == "admin")
 let navBrand =
   Navbar.navbar [ Navbar.Color IsWhite ]
     [ Container.container [ ]
@@ -351,7 +351,7 @@ let view (model : Model) (dispatch : Msg -> unit) =
                   hero
                   info
                   columns model dispatch ] ] ] ]
-#elseif (Fulma == "cover")
+#elseif (fulma == "cover")
 let navBrand =
   Navbar.Brand.div [ ]
     [ Navbar.Item.a
@@ -434,7 +434,7 @@ let view (model : Model) (dispatch : Msg -> unit) =
                     [ li [ ]
                         [ a [ ]
                             [ str "And this at the bottom" ] ] ] ] ] ] ]
-#elseif (Fulma == "hero")
+#elseif (fulma == "hero")
 let navBrand =
   Navbar.Brand.div [ ]
     [ Navbar.Item.a
@@ -641,7 +641,7 @@ let view (model : Model) (dispatch : Msg -> unit) =
 
       footer [ ClassName "footer" ]
         [ footerContainer ] ]
-#elseif (Fulma == "landing")
+#elseif (fulma == "landing")
 let navBrand =
   Navbar.Brand.div [ ]
     [ Navbar.Item.a

@@ -10,17 +10,17 @@ open Microsoft.Extensions.DependencyInjection
 open Giraffe
 open Shared
 
-#if (Remoting)
+#if (remoting)
 open Fable.Remoting.Server
 open Fable.Remoting.Giraffe
 #else
 open Giraffe.Serialization
 #endif
-#if (Deploy == "azure")
+#if (deploy == "azure")
 open Microsoft.WindowsAzure.Storage
 #endif
 
-//#if (Deploy == "azure")
+//#if (deploy == "azure")
 let tryGetEnv = System.Environment.GetEnvironmentVariable >> function null | "" -> None | x -> Some x
 let publicPath = tryGetEnv "public_path" |> Option.defaultValue "../Client/public" |> Path.GetFullPath
 let storageAccount = tryGetEnv "STORAGE_CONNECTIONSTRING" |> Option.defaultValue "UseDevelopmentStorage=true" |> CloudStorageAccount.Parse
@@ -32,8 +32,8 @@ let port = 8085us
 let getInitCounter () : Task<Counter> = task { return 42 }
 
 let webApp : HttpHandler =
-#if (Remoting)
-  let counterProcotol = 
+#if (remoting)
+  let counterProcotol =
     { getInitCounter = getInitCounter >> Async.AwaitTask }
   // creates a HttpHandler for the given implementation
   remoting counterProcotol {
@@ -55,12 +55,12 @@ let configureApp  (app : IApplicationBuilder) =
 
 let configureServices (services : IServiceCollection) =
     services.AddGiraffe() |> ignore
-    #if (!Remoting)
+    #if (!remoting)
     let fableJsonSettings = Newtonsoft.Json.JsonSerializerSettings()
     fableJsonSettings.Converters.Add(Fable.JsonConverter())
     services.AddSingleton<IJsonSerializer>(NewtonsoftJsonSerializer fableJsonSettings) |> ignore
     #endif
-    #if (Deploy == "azure")
+    #if (deploy == "azure")
     tryGetEnv "APPINSIGHTS_INSTRUMENTATIONKEY" |> Option.iter (services.AddApplicationInsightsTelemetry >> ignore)
     #endif
 
