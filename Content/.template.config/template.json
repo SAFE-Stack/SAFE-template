@@ -70,11 +70,20 @@
       "defaultValue": "false",
       "description": "adds Fable.Remoting to server and client"
     },
-    "npm": {
+    "js-deps": {
       "type": "parameter",
-      "dataType": "bool",
-      "defaultValue": "false",
-      "description": "use NPM instead of default Yarn for JS package management"
+      "dataType": "choice",
+      "defaultValue": "yarn",
+      "choices": [
+        {
+          "choice": "npm",
+      "description": "uses NPM for JS package management"
+        },
+        {
+          "choice": "yarn",
+          "description": "uses Yarn for JS package management"
+        }
+      ]
     },
     "deploy": {
       "type": "parameter",
@@ -161,7 +170,7 @@
         },
         {
           "exclude": "yarn.lock",
-          "condition": "(npm)"
+          "condition": "(js-deps != \"yarn\")"
         }
       ]
     }
