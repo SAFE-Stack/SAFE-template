@@ -35,6 +35,7 @@ let webApp =
   remoting server {
     use_route_builder Route.builder
   }
+
 #else
 let webApp = scope {
   get "/api/init" (fun next ctx ->
@@ -43,29 +44,25 @@ let webApp = scope {
       return! Successful.OK counter next ctx
     })
 }
-#endif
 
+#endif
 #if (!remoting)
 let configureSerialization (services:IServiceCollection) =
   let fableJsonSettings = Newtonsoft.Json.JsonSerializerSettings()
   fableJsonSettings.Converters.Add(Fable.JsonConverter())
   services.AddSingleton<IJsonSerializer>(NewtonsoftJsonSerializer fableJsonSettings)
-#endif
 
+#endif
 #if (deploy == "azure")
 let configureAzure (services:IServiceCollection) =
   tryGetEnv "APPINSIGHTS_INSTRUMENTATIONKEY"
   |> Option.map services.AddApplicationInsightsTelemetry
   |> Option.defaultValue services
+
 #endif
-
-let configureApp (app:IApplicationBuilder) =
-  app.UseDefaultFiles()
-
 let app = application {
     url ("http://0.0.0.0:" + port.ToString() + "/")
     router webApp
-    app_config configureApp
     memory_cache
     use_static publicPath
     #if (!remoting)
