@@ -1,3 +1,7 @@
+#### 0.21.1 - 24.05.2018
+
+* Remove redundant static files configuration for Saturn - https://github.com/SAFE-Stack/SAFE-template/pull/95
+
 #### 0.21.0 - 17.05.2018
 
 * Use lower-case parameter names - https://github.com/SAFE-Stack/SAFE-template/pull/94
