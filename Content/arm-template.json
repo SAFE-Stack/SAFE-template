@@ -2,9 +2,15 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "environment": { "type": "string" },
-        "location": { "type": "string" },
-        "pricingTier": { "type": "string" }
+        "environment": {
+            "type": "string"
+        },
+        "location": {
+            "type": "string"
+        },
+        "pricingTier": {
+            "type": "string"
+        }
     },
     "variables": {
         "environment": "[toLower(parameters('environment'))]",
@@ -30,7 +36,6 @@
                 "name": "[variables('insights')]"
             }
         },
-
         {
             "type": "Microsoft.Storage/storageAccounts",
             "sku": {
@@ -43,10 +48,11 @@
             "location": "[parameters('location')]",
             "tags": {}
         },
-        
         {
             "type": "Microsoft.Web/serverfarms",
-            "sku": { "name": "[parameters('pricingTier')]" },
+            "sku": {
+                "name": "[parameters('pricingTier')]"
+            },
             "name": "[variables('appServicePlan')]",
             "apiVersion": "2016-09-01",
             "location": "[parameters('location')]",
@@ -63,8 +69,8 @@
             "location": "[parameters('location')]",
             "properties": {
                 "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlan'))]",
-                "siteConfig":{
-                    "appSettings":[
+                "siteConfig": {
+                    "appSettings": [
                         {
                             "name": "public_path",
                             "value": "./public"
@@ -75,7 +81,7 @@
                         },
                         {
                             "name": "STORAGE_CONNECTIONSTRING",
-                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storage'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storage')), '2017-10-01').keys[0].value)]"                           
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storage'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storage')), '2017-10-01').keys[0].value)]"
                         }
                     ]
                 }
@@ -90,8 +96,10 @@
                     "apiVersion": "2016-08-01",
                     "name": "Microsoft.ApplicationInsights.AzureWebSites",
                     "type": "siteextensions",
-                    "dependsOn": [ "[resourceId('Microsoft.Web/sites/', variables('web'))]" ],
-                    "properties": { }
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Web/sites/', variables('web'))]"
+                    ],
+                    "properties": {}
                 }
             ]
         }

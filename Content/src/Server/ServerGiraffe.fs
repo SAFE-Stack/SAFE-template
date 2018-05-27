@@ -33,25 +33,25 @@ let getInitCounter () : Task<Counter> = task { return 42 }
 
 let webApp : HttpHandler =
 #if (remoting)
-  let counterProcotol =
-    { getInitCounter = getInitCounter >> Async.AwaitTask }
-  // creates a HttpHandler for the given implementation
-  remoting counterProcotol {
-    use_route_builder Route.builder
-  }
+    let counterProcotol =
+        { getInitCounter = getInitCounter >> Async.AwaitTask }
+    // creates a HttpHandler for the given implementation
+    remoting counterProcotol {
+        use_route_builder Route.builder
+    }
 #else
-  route "/api/init" >=>
-    fun next ctx ->
-      task {
-        let! counter = getInitCounter()
-        return! Successful.OK counter next ctx
-      }
+    route "/api/init" >=>
+        fun next ctx ->
+            task {
+                let! counter = getInitCounter()
+                return! Successful.OK counter next ctx
+            }
 #endif
 
-let configureApp  (app : IApplicationBuilder) =
-  app.UseDefaultFiles()
-     .UseStaticFiles()
-     .UseGiraffe webApp
+let configureApp    (app : IApplicationBuilder) =
+    app.UseDefaultFiles()
+       .UseStaticFiles()
+       .UseGiraffe webApp
 
 let configureServices (services : IServiceCollection) =
     services.AddGiraffe() |> ignore
@@ -65,11 +65,11 @@ let configureServices (services : IServiceCollection) =
     #endif
 
 WebHost
-  .CreateDefaultBuilder()
-  .UseWebRoot(publicPath)
-  .UseContentRoot(publicPath)
-  .Configure(Action<IApplicationBuilder> configureApp)
-  .ConfigureServices(configureServices)
-  .UseUrls("http://0.0.0.0:" + port.ToString() + "/")
-  .Build()
-  .Run()
+    .CreateDefaultBuilder()
+    .UseWebRoot(publicPath)
+    .UseContentRoot(publicPath)
+    .Configure(Action<IApplicationBuilder> configureApp)
+    .ConfigureServices(configureServices)
+    .UseUrls("http://0.0.0.0:" + port.ToString() + "/")
+    .Build()
+    .Run()

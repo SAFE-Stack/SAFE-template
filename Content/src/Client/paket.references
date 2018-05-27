@@ -1,13 +1,13 @@
 group Client
-  FSharp.Core
-  Fable.Elmish.Debugger
-  Fable.Elmish.React
-  Fable.Elmish.HMR
-  Fable.Core
-  dotnet-fable
+    FSharp.Core
+    Fable.Elmish.Debugger
+    Fable.Elmish.React
+    Fable.Elmish.HMR
+    Fable.Core
+    dotnet-fable
 //#if (layout != "none")
-  Fulma
+    Fulma
 //#endif
 //#if (remoting)
-  Fable.Remoting.Client
+    Fable.Remoting.Client
 //#endif
