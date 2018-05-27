@@ -12,19 +12,19 @@ FSIARGS2=""
 OS=${OS:-"unknown"}
 if [ "$OS" != "Windows_NT" ]
 then
-  # Can't use FSIARGS="--fsiargs -d:MONO" in zsh, so split it up
-  # (Can't use arrays since dash can't handle them)
-  FSIARGS="--fsiargs"
-  FSIARGS2="-d:MONO"
+    # Can't use FSIARGS="--fsiargs -d:MONO" in zsh, so split it up
+    # (Can't use arrays since dash can't handle them)
+    FSIARGS="--fsiargs"
+    FSIARGS2="-d:MONO"
 fi
 
 run() {
-  if [ "$OS" != "Windows_NT" ]
-  then
-    mono "$@"
-  else
-    "$@"
-  fi
+    if [ "$OS" != "Windows_NT" ]
+    then
+        mono "$@"
+    else
+        "$@"
+    fi
 }
 
 run $PAKET_EXE restore

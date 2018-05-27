@@ -1,19 +1,19 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <Description>SAFE Stack Template</Description>
-    <Authors>Tomasz Heimowski</Authors>
-    <PackageProjectUrl>https://github.com/SAFE-Stack/SAFE-template</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/SAFE-Stack/SAFE-template/blob/master/LICENSE</PackageLicenseUrl>
-    <RepositoryUrl>https://github.com/SAFE-Stack/SAFE-template.git</RepositoryUrl>
-    <PackageTags>template;fsharp;fable;suave;elmish;azure</PackageTags>
-    <NeutralLanguage>en-US</NeutralLanguage>
-    <PackageType>Template</PackageType>
-    <NoBuild>true</NoBuild>
-    <IncludeBuildOutput>false</IncludeBuildOutput>
-    <TargetFramework>netstandard2.0</TargetFramework>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ExcludeFromPackage>
+    <PropertyGroup>
+        <Description>SAFE Stack Template</Description>
+        <Authors>Tomasz Heimowski</Authors>
+        <PackageProjectUrl>https://github.com/SAFE-Stack/SAFE-template</PackageProjectUrl>
+        <PackageLicenseUrl>https://github.com/SAFE-Stack/SAFE-template/blob/master/LICENSE</PackageLicenseUrl>
+        <RepositoryUrl>https://github.com/SAFE-Stack/SAFE-template.git</RepositoryUrl>
+        <PackageTags>template;fsharp;fable;suave;elmish;azure</PackageTags>
+        <NeutralLanguage>en-US</NeutralLanguage>
+        <PackageType>Template</PackageType>
+        <NoBuild>true</NoBuild>
+        <IncludeBuildOutput>false</IncludeBuildOutput>
+        <TargetFramework>netstandard2.0</TargetFramework>
+    </PropertyGroup>
+    <PropertyGroup>
+        <ExcludeFromPackage>
 Content/paket.lock;
 
 **/.fake/**/*;
@@ -23,11 +23,11 @@ Content/paket.lock;
 **/paket-files/**/*;
 **/node_modules/**/*;
 **/src/Client/public/js/**/*;
-    </ExcludeFromPackage>
+        </ExcludeFromPackage>
 </PropertyGroup>
-  <ItemGroup>
-    <Content Include="Content/**/*" Exclude="$(ExcludeFromPackage)" >
-        <PackagePath>Content\</PackagePath>
-    </Content>
-  </ItemGroup>
+    <ItemGroup>
+        <Content Include="Content/**/*" Exclude="$(ExcludeFromPackage)" >
+                <PackagePath>Content\</PackagePath>
+        </Content>
+    </ItemGroup>
 </Project>
