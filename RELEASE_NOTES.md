@@ -1,3 +1,7 @@
+#### 0.21.2 - 27.05.2018
+
+* Normalize the indentations - https://github.com/SAFE-Stack/SAFE-template/issues/92
+
 #### 0.21.1 - 24.05.2018
 
 * Remove redundant static files configuration for Saturn - https://github.com/SAFE-Stack/SAFE-template/pull/95
