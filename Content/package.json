@@ -19,15 +19,5 @@
         "webpack": "4.11.1",
         "webpack-cli": "^3.0.2",
         "webpack-dev-server": "3.1.4"
-    },
-    "scripts": {
-        "prebuildServer": "dotnet restore src/Server/Server.fsproj",
-        "buildServer": "dotnet build src/Server/Server.fsproj",
-        "prebuildServerTest": "dotnet restore test/ServerTests/ServerTests.fsproj",
-        "buildServerTest": "dotnet build test/ServerTests/ServerTests.fsproj",
-        "restoreClient": "cd src/Client && yarn install",
-        "restoreNetClient": "dotnet restore src/Client/Client.fsproj",
-        "prestartClient": "concurrently \"npm run restoreClient\" \"npm run restoreNetClient\" ",
-        "startClient": "cd src/Client && dotnet fable webpack-dev-server"
     }
 }
