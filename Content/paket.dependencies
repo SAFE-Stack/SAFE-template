@@ -24,8 +24,6 @@ group Server
     nuget WindowsAzure.Storage
 //#endif
 
-    clitool Microsoft.DotNet.Watcher.Tools
-
 group Client
     storage: none
     source https://api.nuget.org/v3/index.json
