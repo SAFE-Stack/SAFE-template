@@ -10,15 +10,21 @@ open Cit.Helpers.Arm.Parameters
 open Microsoft.Azure.Management.ResourceManager.Fluent.Core
 //#endif
 open System
+
+// TODO: remove Fake
 open Fake
 
-let serverPath = "./src/Server" |> FullName
-let clientPath = "./src/Client" |> FullName
-let deployDir = "./deploy" |> FullName
+open Fake.Core
+open Fake.DotNet
+open Fake.IO
+
+let serverPath = Path.getFullName "./src/Server"
+let clientPath = Path.getFullName "./src/Client"
+let deployDir = Path.getFullName "./deploy"
 
 let platformTool tool winTool =
-    let tool = if isUnix then tool else winTool
-    match tryFindFileOnPath tool with Some t -> t | _ -> failwithf "%s not found" tool
+    let tool = if Environment.isUnix then tool else winTool
+    match Process.tryFindFileOnPath tool with Some t -> t | _ -> failwithf "%s not found" tool
 
 let nodeTool = platformTool "node" "node.exe"
 //#if (js-deps == "npm")
@@ -27,15 +33,17 @@ let npmTool = platformTool "npm" "npm.cmd"
 let yarnTool = platformTool "yarn" "yarn.cmd"
 //#endif
 
-let dotnetcliVersion = DotNetCli.GetDotNetSDKVersionFromGlobalJson()
+let dotnetcliVersion = DotNet.getSDKVersionFromGlobalJson()
 let mutable dotnetCli = "dotnet"
 
 let run cmd args workingDir =
     let result =
-        ExecProcess (fun info ->
-            info.FileName <- cmd
-            info.WorkingDirectory <- workingDir
-            info.Arguments <- args) TimeSpan.MaxValue
+        Process.execSimple (fun info ->
+            { info with
+                FileName = cmd
+                WorkingDirectory = workingDir
+                Arguments = args })
+            TimeSpan.MaxValue
     if result <> 0 then failwithf "'%s %s' failed" cmd args
 
 Target "Clean" (fun _ ->
