@@ -1,3 +1,7 @@
+#### 0.21.3 - 07.06.2018
+
+* correct indentations for Azure option in build.fsx - https://github.com/SAFE-Stack/SAFE-template/issues/102
+
 #### 0.21.2 - 27.05.2018
 
 * Normalize the indentations - https://github.com/SAFE-Stack/SAFE-template/issues/92
@@ -112,7 +116,7 @@
 
 #### 0.8.3 - 24.02.2018
 
-* Update paket bootstrapper to version 5.142.0 - https://github.com/SAFE-Stack/SAFE-template/pull/38 
+* Update paket bootstrapper to version 5.142.0 - https://github.com/SAFE-Stack/SAFE-template/pull/38
 
 #### 0.8.2 - 20.02.2018
 
@@ -200,7 +204,7 @@
 
 #### 0.0.7 - 24.11.2017
 
-* Add Hot Module Replacement 
+* Add Hot Module Replacement
 * Create separate "run" target to make it faster - https://github.com/SAFE-Stack/SAFE-template/pull/9
 
 #### 0.0.6 - 29.10.2017
