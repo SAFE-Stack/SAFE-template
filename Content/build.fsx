@@ -11,10 +11,8 @@ open Microsoft.Azure.Management.ResourceManager.Fluent.Core
 //#endif
 open System
 
-// TODO: remove Fake
-open Fake
-
 open Fake.Core
+open Fake.Core.TargetOperators
 open Fake.DotNet
 open Fake.IO
 
@@ -33,10 +31,13 @@ let npmTool = platformTool "npm" "npm.cmd"
 let yarnTool = platformTool "yarn" "yarn.cmd"
 //#endif
 
-let dotnetcliVersion = DotNet.getSDKVersionFromGlobalJson()
-let mutable dotnetCli = "dotnet"
+let install = lazy DotNet.install DotNet.Release_2_1_300
 
-let run cmd args workingDir =
+let inline withWorkDir wd =
+    DotNet.Options.lift install.Value
+    >> DotNet.Options.withWorkingDirectory wd
+
+let runTool cmd args workingDir =
     let result =
         Process.execSimple (fun info ->
             { info with
@@ -46,44 +47,45 @@ let run cmd args workingDir =
             TimeSpan.MaxValue
     if result <> 0 then failwithf "'%s %s' failed" cmd args
 
-Target "Clean" (fun _ ->
-    CleanDirs [deployDir]
+let runDotNet cmd workingDir =
+    let result =
+        DotNet.exec (withWorkDir workingDir) cmd ""
+    if result.ExitCode <> 0 then failwithf "'dotnet %s' failed in %s" cmd workingDir
+
+Target.create "Clean" (fun _ ->
+    Shell.cleanDirs [deployDir]
 )
 
-Target "InstallDotNetCore" (fun _ ->
-    dotnetCli <- DotNetCli.InstallDotNetSDK dotnetcliVersion
-)
-
-Target "InstallClient" (fun _ ->
+Target.create "InstallClient" (fun _ ->
     printfn "Node version:"
-    run nodeTool "--version" __SOURCE_DIRECTORY__
+    runTool nodeTool "--version" __SOURCE_DIRECTORY__
 //#if (js-deps == "npm")
     printfn "Npm version:"
-    run npmTool "--version"  __SOURCE_DIRECTORY__
-    run npmTool "install" __SOURCE_DIRECTORY__
+    runTool npmTool "--version"  __SOURCE_DIRECTORY__
+    runTool npmTool "install" __SOURCE_DIRECTORY__
 //#else
     printfn "Yarn version:"
-    run yarnTool "--version" __SOURCE_DIRECTORY__
-    run yarnTool "install --frozen-lockfile" __SOURCE_DIRECTORY__
+    runTool yarnTool "--version" __SOURCE_DIRECTORY__
+    runTool yarnTool "install --frozen-lockfile" __SOURCE_DIRECTORY__
 //#endif
-    run dotnetCli "restore" clientPath
+    runDotNet "restore" clientPath
 )
 
-Target "RestoreServer" (fun () ->
-    run dotnetCli "restore" serverPath
+Target.create "RestoreServer" (fun _ ->
+    runDotNet "restore" serverPath
 )
 
-Target "Build" (fun () ->
-    run dotnetCli "build" serverPath
-    run dotnetCli "fable webpack -- -p" clientPath
+Target.create "Build" (fun _ ->
+    runDotNet "build" serverPath
+    runDotNet "fable webpack -- -p" clientPath
 )
 
-Target "Run" (fun () ->
+Target.create "Run" (fun _ ->
     let server = async {
-        run dotnetCli "watch run" serverPath
+        runDotNet "watch run" serverPath
     }
     let client = async {
-        run dotnetCli "fable webpack-dev-server" clientPath
+        runDotNet "fable webpack-dev-server" clientPath
     }
     let browser = async {
         Threading.Thread.Sleep 5000
@@ -97,34 +99,34 @@ Target "Run" (fun () ->
 )
 
 //#if (deploy == "docker")
-Target "Bundle" (fun _ ->
-    let serverDir = deployDir </> "Server"
-    let clientDir = deployDir </> "Client"
-    let publicDir = clientDir </> "public"
+Target.create "Bundle" (fun _ ->
+    let serverDir = Path.combine deployDir "Server"
+    let clientDir = Path.combine deployDir "Client"
+    let publicDir = Path.combine clientDir "public"
 
     let publishArgs = sprintf "publish -c Release -o \"%s\"" serverDir
-    run dotnetCli publishArgs serverPath
+    runDotNet publishArgs serverPath
 
-    CopyDir publicDir "src/Client/public" allFiles
+    Shell.copyDir publicDir "src/Client/public" FileFilter.allFiles
 )
 
 let dockerUser = "safe-template"
 let dockerImageName = "safe-template"
 let dockerFullName = sprintf "%s/%s" dockerUser dockerImageName
 
-Target "Docker" (fun _ ->
+Target.create "Docker" (fun _ ->
     let buildArgs = sprintf "build -t %s ." dockerFullName
-    run "docker" buildArgs "."
+    runTool "docker" buildArgs "."
 
     let tagArgs = sprintf "tag %s %s" dockerFullName dockerFullName
-    run "docker" tagArgs "."
+    runTool "docker" tagArgs "."
 )
 
 //#endif
 //#if (deploy == "azure")
-Target "Bundle" (fun () ->
-    run dotnetCli (sprintf "publish %s -c release -o %s" serverPath deployDir) __SOURCE_DIRECTORY__
-    CopyDir (deployDir </> "public") (clientPath </> "public") allFiles
+Target.create "Bundle" (fun _ ->
+    runDotNet (sprintf "publish %s -c release -o %s" serverPath deployDir) __SOURCE_DIRECTORY__
+    Shell.copyDir (Path.combine deployDir "public") (Path.combine clientPath "public") FileFilter.allFiles
 )
 
 type ArmOutput =
@@ -132,7 +134,7 @@ type ArmOutput =
       WebAppPassword : ParameterValue<string> }
 let mutable deploymentOutputs : ArmOutput option = None
 
-Target "ArmTemplate" (fun _ ->
+Target.create "ArmTemplate" (fun _ ->
     let environment = getBuildParamOrDefault "environment" (Guid.NewGuid().ToString().ToLower().Split '-' |> Array.head)
     let armTemplate = @"arm-template.json"
     let resourceGroupName = "safe-" + environment
@@ -168,7 +170,7 @@ Target "ArmTemplate" (fun _ ->
         | DeploymentCompleted d -> deploymentOutputs <- d)
 )
 
-Target "AppService" (fun _ ->
+Target.create "AppService" (fun _ ->
     let zipFile = "deploy.zip"
     IO.File.Delete zipFile
     Zip deployDir zipFile !!(deployDir + @"\**\**")
@@ -183,7 +185,6 @@ Target "AppService" (fun _ ->
 
 //#endif
 "Clean"
-    ==> "InstallDotNetCore"
     ==> "InstallClient"
     ==> "Build"
 //#if (deploy == "docker")
@@ -199,4 +200,4 @@ Target "AppService" (fun _ ->
     ==> "RestoreServer"
     ==> "Run"
 
-RunTargetOrDefault "Build"
+Target.runOrDefault "Build"
