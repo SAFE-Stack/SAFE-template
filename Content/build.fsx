@@ -143,14 +143,14 @@ Target "ArmTemplate" (fun _ ->
         let location = getBuildParamOrDefault "location" Region.EuropeWest.Name
         let pricingTier = getBuildParamOrDefault "pricingTier" "F1"
         { DeploymentName = "SAFE-template-deploy"
-            ResourceGroup = New(resourceGroupName, Region.Create location)
-            ArmTemplate = IO.File.ReadAllText armTemplate
-            Parameters =
-                Simple
-                    [ "environment", ArmString environment
-                        "location", ArmString location
-                        "pricingTier", ArmString pricingTier ]
-            DeploymentMode = Incremental }
+          ResourceGroup = New(resourceGroupName, Region.Create location)
+          ArmTemplate = IO.File.ReadAllText armTemplate
+          Parameters =
+              Simple
+                  [ "environment", ArmString environment
+                    "location", ArmString location
+                    "pricingTier", ArmString pricingTier ]
+          DeploymentMode = Incremental }
 
     deployment
     |> deployWithProgress authCtx
