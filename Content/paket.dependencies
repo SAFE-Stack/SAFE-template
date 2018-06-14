@@ -42,11 +42,16 @@ group Client
     clitool dotnet-fable
 
 group Build
-    source https://api.nuget.org/v3/index.json
+    storage: none
     generate_load_scripts: true
+    source https://api.nuget.org/v3/index.json
 
-    nuget FAKE
+    nuget Fake.Core.Target
+    nuget Fake.DotNet.Cli
+    nuget Fake.IO.FileSystem
 //#if (deploy == "azure")
     nuget Microsoft.Azure.Management.ResourceManager.Fluent 1.4.1
     github CompositionalIT/fshelpers src/FsHelpers/ArmHelper/ArmHelper.fs
 //#endif
+
+    clitool dotnet-fake

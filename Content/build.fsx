@@ -1,4 +1,5 @@
-#r @"packages/build/FAKE/tools/FakeLib.dll"
+#r "paket: groupref build //"
+#load "./.fake/build.fsx/intellisense.fsx"
 //#if (deploy == "azure")
 #r "netstandard"
 #I "packages/build/Microsoft.Rest.ClientRuntime.Azure/lib/net452"
@@ -12,7 +13,6 @@ open Microsoft.Azure.Management.ResourceManager.Fluent.Core
 open System
 
 open Fake.Core
-open Fake.Core.TargetOperators
 open Fake.DotNet
 open Fake.IO
 
@@ -52,6 +52,16 @@ let runDotNet cmd workingDir =
         DotNet.exec (withWorkDir workingDir) cmd ""
     if result.ExitCode <> 0 then failwithf "'dotnet %s' failed in %s" cmd workingDir
 
+let openBrowser url =
+    let result =
+        //https://github.com/dotnet/corefx/issues/10361
+        Process.execSimple (fun info ->
+            { info with
+                FileName = url
+                UseShellExecute = true })
+            TimeSpan.MaxValue
+    if result <> 0 then failwithf "opening browser failed"
+
 Target.create "Clean" (fun _ ->
     Shell.cleanDirs [deployDir]
 )
@@ -89,7 +99,7 @@ Target.create "Run" (fun _ ->
     }
     let browser = async {
         Threading.Thread.Sleep 5000
-        Diagnostics.Process.Start "http://localhost:8080" |> ignore
+        openBrowser "http://localhost:8080"
     }
 
     [ server; client; browser ]
@@ -182,6 +192,8 @@ Target.create "AppService" (fun _ ->
     let client = new Net.WebClient(Credentials = Net.NetworkCredential("$" + appName, appPassword))
     tracefn "Uploading %s to %s" zipFile destinationUri
     client.UploadData(destinationUri, IO.File.ReadAllBytes zipFile) |> ignore)
+
+open Fake.Core.TargetOperators
 
 //#endif
 "Clean"
