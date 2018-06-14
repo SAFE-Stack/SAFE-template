@@ -5,6 +5,7 @@ IF EXIST "paket.lock" (
     .paket\paket.exe restore
 ) ELSE (
     .paket\paket.exe install
+    dotnet build build.proj
 )
 
 if errorlevel 1 (
