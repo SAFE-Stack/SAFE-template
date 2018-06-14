@@ -54,4 +54,3 @@ group Build
     github CompositionalIT/fshelpers src/FsHelpers/ArmHelper/ArmHelper.fs
 //#endif
 
-    clitool dotnet-fake
