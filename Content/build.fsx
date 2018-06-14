@@ -192,10 +192,10 @@ Target.create "AppService" (fun _ ->
     let client = new Net.WebClient(Credentials = Net.NetworkCredential("$" + appName, appPassword))
     tracefn "Uploading %s to %s" zipFile destinationUri
     client.UploadData(destinationUri, IO.File.ReadAllBytes zipFile) |> ignore)
+//#endif
 
 open Fake.Core.TargetOperators
 
-//#endif
 "Clean"
     ==> "InstallClient"
     ==> "Build"
