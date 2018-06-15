@@ -49,7 +49,9 @@ group Build
     nuget Fake.DotNet.Cli
     nuget Fake.IO.FileSystem
 //#if (deploy == "azure")
-    nuget Microsoft.Azure.Management.ResourceManager.Fluent 1.4.1
+    nuget Fake.Core.Environment
+    nuget Fake.Core.Trace
+    nuget Fake.IO.Zip
     github CompositionalIT/fshelpers src/FsHelpers/ArmHelper/ArmHelper.fs
 //#endif
 

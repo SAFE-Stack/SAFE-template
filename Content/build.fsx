@@ -1,6 +1,11 @@
 #r "paket: groupref build //"
-#r "netstandard"
 #load "./.fake/build.fsx/intellisense.fsx"
+
+-:cnd:noEmit
+#if !FAKE
+#r "netstandard"
+#endif
++:cnd:noEmit
 
 open System
 
@@ -143,23 +148,23 @@ type ArmOutput =
 let mutable deploymentOutputs : ArmOutput option = None
 
 Target.create "ArmTemplate" (fun _ ->
-    let environment = getBuildParamOrDefault "environment" (Guid.NewGuid().ToString().ToLower().Split '-' |> Array.head)
+    let environment = Environment.environVarOrDefault "environment" (Guid.NewGuid().ToString().ToLower().Split '-' |> Array.head)
     let armTemplate = @"arm-template.json"
     let resourceGroupName = "safe-" + environment
 
     let authCtx =
         // You can safely replace these with your own subscription and client IDs hard-coded into this script.
-        let subscriptionId = try getBuildParam "subscriptionId" |> Guid.Parse with _ -> failwith "Invalid Subscription ID. This should be your Azure Subscription ID."
-        let clientId = try getBuildParam "clientId" |> Guid.Parse with _ -> failwith "Invalid Client ID. This should be the Client ID of a Native application registered in Azure with permission to create resources in your subscription."
+        let subscriptionId = try Environment.environVar "subscriptionId" |> Guid.Parse with _ -> failwith "Invalid Subscription ID. This should be your Azure Subscription ID."
+        let clientId = try Environment.environVar "clientId" |> Guid.Parse with _ -> failwith "Invalid Client ID. This should be the Client ID of a Native application registered in Azure with permission to create resources in your subscription."
 
-        tracefn "Deploying template '%s' to resource group '%s' in subscription '%O'..." armTemplate resourceGroupName subscriptionId
+        Trace.tracefn "Deploying template '%s' to resource group '%s' in subscription '%O'..." armTemplate resourceGroupName subscriptionId
         subscriptionId
-        |> authenticateDevice trace { ClientId = clientId; TenantId = None }
+        |> authenticateDevice Trace.trace { ClientId = clientId; TenantId = None }
         |> Async.RunSynchronously
 
     let deployment =
-        let location = getBuildParamOrDefault "location" Region.EuropeWest.Name
-        let pricingTier = getBuildParamOrDefault "pricingTier" "F1"
+        let location = Environment.environVarOrDefault "location" Region.EuropeWest.Name
+        let pricingTier = Environment.environVarOrDefault "pricingTier" "F1"
         { DeploymentName = "SAFE-template-deploy"
           ResourceGroup = New(resourceGroupName, Region.Create location)
           ArmTemplate = IO.File.ReadAllText armTemplate
@@ -173,22 +178,24 @@ Target.create "ArmTemplate" (fun _ ->
     deployment
     |> deployWithProgress authCtx
     |> Seq.iter(function
-        | DeploymentInProgress (state, operations) -> tracefn "State is %s, completed %d operations." state operations
-        | DeploymentError (statusCode, message) -> traceError <| sprintf "DEPLOYMENT ERROR: %s - '%s'" statusCode message
+        | DeploymentInProgress (state, operations) -> Trace.tracefn "State is %s, completed %d operations." state operations
+        | DeploymentError (statusCode, message) -> Trace.traceError <| sprintf "DEPLOYMENT ERROR: %s - '%s'" statusCode message
         | DeploymentCompleted d -> deploymentOutputs <- d)
 )
+
+open Fake.IO.Globbing.Operators
 
 Target.create "AppService" (fun _ ->
     let zipFile = "deploy.zip"
     IO.File.Delete zipFile
-    Zip deployDir zipFile !!(deployDir + @"\**\**")
+    Zip.zip deployDir zipFile !!(deployDir + @"\**\**")
 
     let appName = deploymentOutputs.Value.WebAppName.value
     let appPassword = deploymentOutputs.Value.WebAppPassword.value
 
     let destinationUri = sprintf "https://%s.scm.azurewebsites.net/api/zipdeploy" appName
     let client = new Net.WebClient(Credentials = Net.NetworkCredential("$" + appName, appPassword))
-    tracefn "Uploading %s to %s" zipFile destinationUri
+    Trace.tracefn "Uploading %s to %s" zipFile destinationUri
     client.UploadData(destinationUri, IO.File.ReadAllBytes zipFile) |> ignore)
 //#endif
 
