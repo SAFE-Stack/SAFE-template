@@ -1,20 +1,18 @@
 #r "paket: groupref build //"
-#load "./.fake/build.fsx/intellisense.fsx"
-//#if (deploy == "azure")
 #r "netstandard"
-#I "packages/build/Microsoft.Rest.ClientRuntime.Azure/lib/net452"
-#load ".paket/load/netcoreapp2.1/Build/build.group.fsx"
-#load @"paket-files/build/CompositionalIT/fshelpers/src/FsHelpers/ArmHelper/ArmHelper.fs"
+#load "./.fake/build.fsx/intellisense.fsx"
 
-open Cit.Helpers.Arm
-open Cit.Helpers.Arm.Parameters
-open Microsoft.Azure.Management.ResourceManager.Fluent.Core
-//#endif
 open System
 
 open Fake.Core
 open Fake.DotNet
 open Fake.IO
+//#if (deploy == "azure")
+#load @"paket-files/build/CompositionalIT/fshelpers/src/FsHelpers/ArmHelper/ArmHelper.fs"
+open Cit.Helpers.Arm
+open Cit.Helpers.Arm.Parameters
+open Microsoft.Azure.Management.ResourceManager.Fluent.Core
+//#endif
 
 let serverPath = Path.getFullName "./src/Server"
 let clientPath = Path.getFullName "./src/Client"

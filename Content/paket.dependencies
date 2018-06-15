@@ -43,7 +43,6 @@ group Client
 
 group Build
     storage: none
-    generate_load_scripts: true
     source https://api.nuget.org/v3/index.json
 
     nuget Fake.Core.Target
