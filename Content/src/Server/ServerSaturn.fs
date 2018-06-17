@@ -71,6 +71,11 @@ let app = application {
     #if (deploy == "azure")
     service_config configureAzure
     #endif
+    #if (remoting)
+    // sitemap diagnostic data cannot be inferred when using Fable.Remoting
+    // Saturn issue at https://github.com/SaturnFramework/Saturn/issues/64
+    disable_diagnostics
+    #endif
     use_gzip
 }
 
