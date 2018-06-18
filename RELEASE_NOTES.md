@@ -1,3 +1,7 @@
+#### 0.21.4 - 18.06.2018
+
+* add 'disable_diagnostics' option to saturn application when Fable.Remoting is enabled - https://github.com/SAFE-Stack/SAFE-template/pull/105
+
 #### 0.21.3 - 07.06.2018
 
 * correct indentations for Azure option in build.fsx - https://github.com/SAFE-Stack/SAFE-template/issues/102
