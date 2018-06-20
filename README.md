@@ -12,8 +12,9 @@ This is a basic template to get started with each of the core components of the 
 ## Prerequisites
 
 * [dotnet SDK 2.1](https://www.microsoft.com/net/core) together with dotnet CLI
+* [FAKE 5](https://fake.build/) installed as a [global tool](https://fake.build/fake-gettingstarted.html#Install-FAKE)
 * [node.js](https://nodejs.org/)
-* [yarn](https://yarnpkg.com/)
+* [yarn](https://yarnpkg.com/) or [npm](https://www.npmjs.com/)
 * [.NET Framework](https://www.microsoft.com/net/download/dotnet-framework-runtime) (Windows) / [mono](http://www.mono-project.com/) (MacOS / Linux) additionally for Paket - migration to dotnet SDK is WIP
 
 ## Using the template
