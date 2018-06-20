@@ -1,3 +1,7 @@
+#### 0.22.0 - 20.06.2018
+
+* update to dotnet SDK 2.1.300 and FAKE 5 - https://github.com/SAFE-Stack/SAFE-template/pull/101
+
 #### 0.21.4 - 18.06.2018
 
 * add 'disable_diagnostics' option to saturn application when Fable.Remoting is enabled - https://github.com/SAFE-Stack/SAFE-template/pull/105
