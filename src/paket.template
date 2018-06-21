@@ -1,0 +1,7 @@
+type project
+id SAFE.Build
+authors Tomasz Heimowski
+description
+  description of this test package
+dependencies
+  FSharp.Core LOCKEDVERSION-Modules

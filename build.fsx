@@ -28,20 +28,16 @@ Target.create "Clean" (fun _ ->
     Git.CommandHelper.directRunGitCommandAndFail "./Content" "clean -fxd"
 )
 
-let mutable dotnetExePath = "dotnet"
-
-let runDotnet workingDir command args =
-    let result =
-        DotNet.exec (fun args ->
-            { args with 
-                WorkingDirectory = workingDir })
-            command
-            args
-    if not result.OK then failwithf "dotnet %s failed" args
-
 Target.create "Modules" (fun _ ->
-    runDotnet "src" "build" ""
-    ()
+    DotNet.build id "src"
+    Paket.pack (fun p ->
+        { p with
+            BuildConfig = "Release"
+            OutputPath = nupkgDir
+            Version = release.NugetVersion
+            ReleaseNotes = String.concat "\n" release.Notes
+            MinimumFromLockFile = true
+        })
 )
 
 Target.create "Pack" (fun _ ->
