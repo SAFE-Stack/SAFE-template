@@ -28,6 +28,22 @@ Target.create "Clean" (fun _ ->
     Git.CommandHelper.directRunGitCommandAndFail "./Content" "clean -fxd"
 )
 
+let mutable dotnetExePath = "dotnet"
+
+let runDotnet workingDir command args =
+    let result =
+        DotNet.exec (fun args ->
+            { args with 
+                WorkingDirectory = workingDir })
+            command
+            args
+    if not result.OK then failwithf "dotnet %s failed" args
+
+Target.create "Modules" (fun _ ->
+    runDotnet "src" "build" ""
+    ()
+)
+
 Target.create "Pack" (fun _ ->
     Shell.regexReplaceInFileWithEncoding
         "  \"name\": .+,"
@@ -83,6 +99,7 @@ Target.create "Release" ignore
 open Fake.Core.TargetOperators
 
 "Clean"
+    ==> "Modules"
     ==> "Pack"
     ==> "Push"
     ==> "Release"
