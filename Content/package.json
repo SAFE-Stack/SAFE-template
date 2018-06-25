@@ -3,31 +3,21 @@
     "dependencies": {
         "babel-polyfill": "6.26.0",
         "babel-runtime": "6.26.0",
-        "react": "16.3.2",
+        "react": "16.4.0",
         "react-bootstrap": "0.32.1",
-        "react-dom": "16.3.2",
+        "react-dom": "16.4.0",
         "remotedev": "0.2.7"
     },
     "devDependencies": {
         "babel-core": "6.26.3",
         "babel-loader": "7.1.4",
         "babel-plugin-transform-runtime": "6.23.0",
-        "babel-preset-env": "1.6.1",
+        "babel-preset-env": "1.7.0",
         "concurrently": "3.5.1",
         "fable-loader": "1.1.6",
         "fable-utils": "1.0.6",
-        "webpack": "4.6.0",
-        "webpack-cli": "^2.1.2",
+        "webpack": "4.11.1",
+        "webpack-cli": "^3.0.2",
         "webpack-dev-server": "3.1.4"
-    },
-    "scripts": {
-        "prebuildServer": "dotnet restore src/Server/Server.fsproj",
-        "buildServer": "dotnet build src/Server/Server.fsproj",
-        "prebuildServerTest": "dotnet restore test/ServerTests/ServerTests.fsproj",
-        "buildServerTest": "dotnet build test/ServerTests/ServerTests.fsproj",
-        "restoreClient": "cd src/Client && yarn install",
-        "restoreNetClient": "dotnet restore src/Client/Client.fsproj",
-        "prestartClient": "concurrently \"npm run restoreClient\" \"npm run restoreNetClient\" ",
-        "startClient": "cd src/Client && dotnet fable webpack-dev-server"
     }
 }

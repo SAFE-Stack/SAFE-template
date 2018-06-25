@@ -20,4 +20,3 @@ group Server
 //#elseif (remoting)
     Fable.Remoting.Giraffe
 //#endif
-    Microsoft.DotNet.Watcher.Tools

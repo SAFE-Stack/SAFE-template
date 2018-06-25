@@ -24,8 +24,6 @@ group Server
     nuget WindowsAzure.Storage
 //#endif
 
-    clitool Microsoft.DotNet.Watcher.Tools
-
 group Client
     storage: none
     source https://api.nuget.org/v3/index.json
@@ -44,11 +42,17 @@ group Client
     clitool dotnet-fable
 
 group Build
+    storage: none
     source https://api.nuget.org/v3/index.json
-    generate_load_scripts: true
 
-    nuget FAKE
+    nuget FSharp.Core 4.3.4 // https://github.com/fsharp/FAKE/issues/2001
+    nuget Fake.Core.Target
+    nuget Fake.DotNet.Cli
+    nuget Fake.IO.FileSystem
 //#if (deploy == "azure")
-    nuget Microsoft.Azure.Management.ResourceManager.Fluent 1.4.1
+    nuget Fake.Core.Environment
+    nuget Fake.Core.Trace
+    nuget Fake.IO.Zip
     github CompositionalIT/fshelpers src/FsHelpers/ArmHelper/ArmHelper.fs
 //#endif
+
