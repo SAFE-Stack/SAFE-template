@@ -1,3 +1,7 @@
+#### 0.23.0 - 26.06.2018
+
+* include paket.lock file for default options and azure option - https://github.com/SAFE-Stack/SAFE-template/pull/109
+
 #### 0.22.0 - 20.06.2018
 
 * update to dotnet SDK 2.1.300 and FAKE 5 - https://github.com/SAFE-Stack/SAFE-template/pull/101
