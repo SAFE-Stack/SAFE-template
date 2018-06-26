@@ -1,44 +1,54 @@
 #r @"packages/FAKE/tools/FakeLib.dll"
+#load "./.fake/build.fsx/intellisense.fsx"
 
-open Fake
-open Fake.ReleaseNotesHelper
+#if !FAKE
+#r "netstandard"
+#endif
+
+open Fake.Core
+open Fake.DotNet
+open Fake.IO
+open Fake.Tools
 
 let templatePath = "./Content/.template.config/template.json"
+let templateProj = "SAFE.Template.proj"
 let templateName = "SAFE-Stack Web App"
-let nupkgDir = FullName "./nupkg"
+let nupkgDir = Path.getFullName "./nupkg"
 
-let release = LoadReleaseNotes "RELEASE_NOTES.md"
+let release = ReleaseNotes.load "RELEASE_NOTES.md"
 
 let formattedRN =
     release.Notes
     |> List.map (sprintf "* %s")
     |> String.concat "\n"
 
-Target "Clean" (fun () ->
-    CleanDirs [ nupkgDir ]
+Target.create "Clean" (fun _ ->
+    Shell.cleanDirs [ nupkgDir ]
     Git.CommandHelper.directRunGitCommandAndFail "./Content" "clean -fxd"
 )
 
-Target "Pack" (fun () ->
-    RegexReplaceInFileWithEncoding
+Target.create "Pack" (fun _ ->
+    Shell.regexReplaceInFileWithEncoding
         "  \"name\": .+,"
        ("  \"name\": \"" + templateName + " v" + release.NugetVersion + "\",")
         System.Text.Encoding.UTF8
         templatePath
-    DotNetCli.Pack ( fun args ->
-        { args with
-                OutputPath = nupkgDir
-                AdditionalArgs =
-                    [
-                        sprintf "/p:PackageVersion=%s" release.NugetVersion
-                        sprintf "/p:PackageReleaseNotes=\"%s\"" formattedRN
-                    ]
-        }
-    )
+    DotNet.pack 
+        (fun args ->
+            { args with
+                    OutputPath = Some nupkgDir
+                    Common =
+                        { args.Common with 
+                            CustomParams = 
+                                Some (sprintf "/p:PackageVersion=%s /p:PackageReleaseNotes=\"%s\""
+                                        release.NugetVersion
+                                        formattedRN) }
+            })
+        templateProj
 )
 
-Target "Push" (fun () ->
-    Paket.Push ( fun args ->
+Target.create "Push" (fun _ ->
+    Paket.push ( fun args ->
         { args with
                 PublishUrl = "https://www.nuget.org"
                 WorkingDir = nupkgDir
@@ -53,19 +63,21 @@ Target "Push" (fun () ->
     Git.CommandHelper.directRunGitCommand "" "fetch origin" |> ignore
     Git.CommandHelper.directRunGitCommand "" "fetch origin --tags" |> ignore
 
-    Git.Staging.StageAll ""
-    Git.Commit.Commit "" commitMsg
+    Git.Staging.stageAll ""
+    Git.Commit.exec "" commitMsg
     Git.Branches.pushBranch "" remoteGit "master"
 
     Git.Branches.tag "" tagName
     Git.Branches.pushTag "" remoteGit tagName
 )
 
-Target "Release" DoNothing
+Target.create "Release" ignore
+
+open Fake.Core.TargetOperators
 
 "Clean"
     ==> "Pack"
     ==> "Push"
     ==> "Release"
 
-RunTargetOrDefault "Pack"
+Target.runOrDefault "Pack"
