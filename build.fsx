@@ -1,4 +1,4 @@
-#r @"packages/FAKE/tools/FakeLib.dll"
+#r "paket: groupref build //"
 #load "./.fake/build.fsx/intellisense.fsx"
 
 #if !FAKE

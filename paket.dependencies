@@ -1,3 +1,11 @@
-source https://api.nuget.org/v3/index.json
+group Build
+    storage: none
+    source https://api.nuget.org/v3/index.json
 
-nuget FAKE
+    nuget FSharp.Core 4.3.4 // https://github.com/fsharp/FAKE/issues/2001
+    nuget Fake.Core.ReleaseNotes
+    nuget Fake.Core.Target
+    nuget Fake.DotNet.Cli
+    nuget Fake.DotNet.Paket
+    nuget Fake.IO.FileSystem
+    nuget Fake.Tools.Git
