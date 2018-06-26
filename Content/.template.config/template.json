@@ -127,6 +127,24 @@
                     }
                 },
                 {
+                    "exclude": "**/paket-default.lock",
+                    "condition": "(server != \"saturn\" || remoting != false || deploy != \"none\")"
+                },
+                {
+                    "rename": {
+                        "paket-default.lock": "paket.lock"
+                    }
+                },
+                {
+                    "exclude": "**/paket-azure.lock",
+                    "condition": "(server != \"saturn\" || remoting != false || deploy != \"azure\")"
+                },
+                {
+                    "rename": {
+                        "paket-azure.lock": "paket.lock"
+                    }
+                },
+                {
                     "exclude": "**/Suaveweb.config",
                     "condition": "(server != \"suave\") || (deploy != \"azure\")"
                 },
