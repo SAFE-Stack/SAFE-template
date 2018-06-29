@@ -91,6 +91,9 @@ module SAFE =
         |> ignore
 
     module Azure =
+        open Cit.Helpers.Arm
+        open Cit.Helpers.Arm.Parameters
+        open Microsoft.Azure.Management.ResourceManager.Fluent.Core
                 
         type ArmOutput =
             { WebAppName : ParameterValue<string>
@@ -102,4 +105,52 @@ module SAFE =
             runDotNet (sprintf "publish %s -c release -o %s" serverPath deployPath) __SOURCE_DIRECTORY__
             Shell.copyDir (Path.combine deployPath "public") (Path.combine clientPath "public") FileFilter.allFiles
 
-        
+        let provisionARM () =
+            let environment = Environment.environVarOrDefault "environment" (Guid.NewGuid().ToString().ToLower().Split '-' |> Array.head)
+            let armTemplate = @"arm-template.json"
+            let resourceGroupName = "safe-" + environment
+
+            let authCtx =
+                // You can safely replace these with your own subscription and client IDs hard-coded into this script.
+                let subscriptionId = try Environment.environVar "subscriptionId" |> Guid.Parse with _ -> failwith "Invalid Subscription ID. This should be your Azure Subscription ID."
+                let clientId = try Environment.environVar "clientId" |> Guid.Parse with _ -> failwith "Invalid Client ID. This should be the Client ID of a Native application registered in Azure with permission to create resources in your subscription."
+
+                Trace.tracefn "Deploying template '%s' to resource group '%s' in subscription '%O'..." armTemplate resourceGroupName subscriptionId
+                subscriptionId
+                |> authenticateDevice Trace.trace { ClientId = clientId; TenantId = None }
+                |> Async.RunSynchronously
+
+            let deployment =
+                let location = Environment.environVarOrDefault "location" Region.EuropeWest.Name
+                let pricingTier = Environment.environVarOrDefault "pricingTier" "F1"
+                { DeploymentName = "SAFE-template-deploy"
+                  ResourceGroup = New(resourceGroupName, Region.Create location)
+                  ArmTemplate = IO.File.ReadAllText armTemplate
+                  Parameters =
+                      Simple
+                          [ "environment", ArmString environment
+                            "location", ArmString location
+                            "pricingTier", ArmString pricingTier ]
+                  DeploymentMode = Incremental }
+
+            deployment
+            |> deployWithProgress authCtx
+            |> Seq.iter(function
+                | DeploymentInProgress (state, operations) -> Trace.tracefn "State is %s, completed %d operations." state operations
+                | DeploymentError (statusCode, message) -> Trace.traceError <| sprintf "DEPLOYMENT ERROR: %s - '%s'" statusCode message
+                | DeploymentCompleted d -> deploymentOutputs <- d)
+
+        open Fake.IO.Globbing.Operators
+
+        let deploy () =
+            let zipFile = "deploy.zip"
+            IO.File.Delete zipFile
+            Zip.zip deployPath zipFile !!(deployPath + @"\**\**")
+
+            let appName = deploymentOutputs.Value.WebAppName.value
+            let appPassword = deploymentOutputs.Value.WebAppPassword.value
+
+            let destinationUri = sprintf "https://%s.scm.azurewebsites.net/api/zipdeploy" appName
+            let client = new Net.WebClient(Credentials = Net.NetworkCredential("$" + appName, appPassword))
+            Trace.tracefn "Uploading %s to %s" zipFile destinationUri
+            client.UploadData(destinationUri, IO.File.ReadAllBytes zipFile) |> ignore
