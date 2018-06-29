@@ -1,3 +1,8 @@
+#### 0.24.0 - 29.06.2018
+
+* update Fable.Remoting dependencies - https://github.com/SAFE-Stack/SAFE-template/pull/112
+* fix build script intellisense on Mono
+
 #### 0.23.0 - 26.06.2018
 
 * include paket.lock file for default options and azure option - https://github.com/SAFE-Stack/SAFE-template/pull/109
