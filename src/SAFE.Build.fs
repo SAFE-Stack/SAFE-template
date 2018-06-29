@@ -7,13 +7,11 @@ open Fake.DotNet
 open Fake.IO
 
 [<RequireQualifiedAccess>]
-module FakeTargets =
-
+module SAFE =
     [<AutoOpen>]
     module private Internal =
         let serverPath = Path.getFullName "./src/Server"
         let clientPath = Path.getFullName "./src/Client"
-        let deployDir = Path.getFullName "./deploy"
 
         let platformTool tool winTool =
             let tool = if Environment.isUnix then tool else winTool
@@ -53,43 +51,38 @@ module FakeTargets =
                     TimeSpan.MaxValue
             if result <> 0 then failwithf "opening browser failed"
 
-    let create () =
-        Target.create "Clean" (fun _ ->
-            Shell.cleanDirs [deployDir]
-        )
+    let restoreClient () =
+        printfn "Node version:"
+        runTool nodeTool "--version" __SOURCE_DIRECTORY__
+        printfn "Yarn version:"
+        runTool yarnTool "--version" __SOURCE_DIRECTORY__
+        runTool yarnTool "install --frozen-lockfile" __SOURCE_DIRECTORY__
+        runDotNet "restore" clientPath
 
-        Target.create "InstallClient" (fun _ ->
-            printfn "Node version:"
-            runTool nodeTool "--version" __SOURCE_DIRECTORY__
-            printfn "Yarn version:"
-            runTool yarnTool "--version" __SOURCE_DIRECTORY__
-            runTool yarnTool "install --frozen-lockfile" __SOURCE_DIRECTORY__
-            runDotNet "restore" clientPath
-        )
+    let restoreServer () =
+        runDotNet "restore" serverPath
 
-        Target.create "RestoreServer" (fun _ ->
-            runDotNet "restore" serverPath
-        )
+    let buildClient () =
+        runDotNet "fable webpack -- -p" clientPath
 
-        Target.create "Build" (fun _ ->
-            runDotNet "build" serverPath
-            runDotNet "fable webpack -- -p" clientPath
-        )
+    let buildServer () = 
+        runDotNet "build" serverPath
 
-        Target.create "Run" (fun _ ->
-            let server = async {
-                runDotNet "watch run" serverPath
-            }
-            let client = async {
-                runDotNet "fable webpack-dev-server" clientPath
-            }
-            let browser = async {
-                Threading.Thread.Sleep 5000
-                openBrowser "http://localhost:8080"
-            }
+    let runServer = async {
+        runDotNet "watch run" serverPath
+    }
 
-            [ server; client; browser ]
-            |> Async.Parallel
-            |> Async.RunSynchronously
-            |> ignore
-        )
+    let runClient = async {
+        runDotNet "fable webpack-dev-server" clientPath
+    }
+
+    let runBrowser = async {
+        Threading.Thread.Sleep 5000
+        openBrowser "http://localhost:8080"
+    }
+
+    let runInParallel tasks =
+        tasks
+        |> Async.Parallel
+        |> Async.RunSynchronously
+        |> ignore
