@@ -6,12 +6,15 @@ open Fake.Core
 open Fake.DotNet
 open Fake.IO
 
+open Cit.Helpers.Arm.Parameters
+
 [<RequireQualifiedAccess>]
 module SAFE =
     [<AutoOpen>]
     module private Internal =
         let serverPath = Path.getFullName "./src/Server"
         let clientPath = Path.getFullName "./src/Client"
+        let deployPath = Path.getFullName "./deploy"
 
         let platformTool tool winTool =
             let tool = if Environment.isUnix then tool else winTool
@@ -86,3 +89,17 @@ module SAFE =
         |> Async.Parallel
         |> Async.RunSynchronously
         |> ignore
+
+    module Azure =
+                
+        type ArmOutput =
+            { WebAppName : ParameterValue<string>
+              WebAppPassword : ParameterValue<string> }
+        
+        let mutable private deploymentOutputs : ArmOutput option = None
+
+        let bundle () =
+            runDotNet (sprintf "publish %s -c release -o %s" serverPath deployPath) __SOURCE_DIRECTORY__
+            Shell.copyDir (Path.combine deployPath "public") (Path.combine clientPath "public") FileFilter.allFiles
+
+        

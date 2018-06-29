@@ -15,6 +15,12 @@ group Modules
     source https://api.nuget.org/v3/index.json
 
     nuget FSharp.Core 4.3.4 // https://github.com/fsharp/FAKE/issues/2001
+
+    nuget Fake.Core.Environment
+    nuget Fake.Core.Trace
     nuget Fake.Core.Target
     nuget Fake.DotNet.Cli
     nuget Fake.IO.FileSystem
+    nuget Fake.IO.Zip
+
+    github CompositionalIT/fshelpers src/FsHelpers/ArmHelper/ArmHelper.fs
