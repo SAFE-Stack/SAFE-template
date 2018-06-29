@@ -15,9 +15,9 @@ group Server
 //#if (!remoting && server != "suave")
     nuget Fable.JsonConverter
 //#elseif (remoting && server == "suave")
-    nuget Fable.Remoting.Suave ~> 2.6
+    nuget Fable.Remoting.Suave ~> 2.7
 //#elseif (remoting && server != "suave")
-    nuget Fable.Remoting.Giraffe ~> 2.6
+    nuget Fable.Remoting.Giraffe ~> 2.7
 //#endif
 //#if (deploy == "azure")
     nuget Microsoft.ApplicationInsights.AspNetCore ~> 2.2
@@ -33,7 +33,7 @@ group Client
     nuget Fable.Elmish.React
     nuget Fable.Elmish.HMR
 //#if (remoting)
-    nuget Fable.Remoting.Client ~> 2.4
+    nuget Fable.Remoting.Client ~> 2.5.1
 //#endif
 //#if (layout != "none")
     nuget Fulma
