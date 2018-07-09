@@ -139,7 +139,7 @@ Target.create "Docker" (fun _ ->
 //#endif
 //#if (deploy == "azure")
 Target.create "Bundle" (fun _ ->
-    runDotNet (sprintf "publish %s -c release -o %s" serverPath deployDir) __SOURCE_DIRECTORY__
+    runDotNet (sprintf "publish \"%s\" -c release -o \"%s\"" serverPath deployDir) __SOURCE_DIRECTORY__
     Shell.copyDir (Path.combine deployDir "public") (Path.combine clientPath "public") FileFilter.allFiles
 )
 
