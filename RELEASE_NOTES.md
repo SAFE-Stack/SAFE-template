@@ -1,3 +1,7 @@
+#### 0.24.1 - 10.07.2018
+
+* Escape `dotnet publish` arguments - https://github.com/SAFE-Stack/SAFE-template/pull/115
+
 #### 0.24.0 - 29.06.2018
 
 * update Fable.Remoting dependencies - https://github.com/SAFE-Stack/SAFE-template/pull/112
