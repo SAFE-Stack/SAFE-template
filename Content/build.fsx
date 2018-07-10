@@ -29,11 +29,11 @@ let platformTool tool winTool =
     match Process.tryFindFileOnPath tool with
     | Some t -> t
     | _ ->
-        failwithf
-            "'%s' was not found in path." +.
-            "Please install it and make sure it's available from your path." +
+        let errorMsg =
+            tool + " was not found in path. " +
+            "Please install it and make sure it's available from your path. " +
             "See https://safe-stack.github.io/docs/quickstart/#install-pre-requisites for more info"
-            tool
+        failwith errorMsg
 
 let nodeTool = platformTool "node" "node.exe"
 //#if (js-deps == "npm")
