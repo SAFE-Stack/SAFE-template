@@ -1,3 +1,7 @@
+#### 0.24.2 - 11.07.2018
+
+* Pin compatible Remoting.Server to 3.6 - https://github.com/SAFE-Stack/SAFE-template/pull/117
+
 #### 0.24.1 - 10.07.2018
 
 * Escape `dotnet publish` arguments - https://github.com/SAFE-Stack/SAFE-template/pull/115
