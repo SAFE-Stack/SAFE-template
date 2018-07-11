@@ -24,12 +24,14 @@ type SAFEBuildParams =
     { ServerPath : string
       ClientPath : string
       DeployPath : string
+      RootPath : string
       JsDeps : JsDeps
       Docker : DockerParams }
 
     static member Create () =
         { ServerPath = "./src/Server"
           ClientPath = "./src/Client"
+          RootPath = "."
           DeployPath = "./deploy"
           JsDeps = Yarn
           Docker =
@@ -196,19 +198,19 @@ type SAFEBuild (setParams : SetSAFEBuildParams) =
     member __.RestoreClient () =
         let nodeTool = Tool.platformTool "node" "node.exe"
         printfn "Node version:"
-        Tool.runTool nodeTool "--version" __SOURCE_DIRECTORY__
+        Tool.runTool nodeTool "--version" safeBuildParams.RootPath
 
         match safeBuildParams.JsDeps with
         | Yarn ->
             let yarnTool = Tool.platformTool "yarn" "yarn.cmd"
             printfn "Yarn version:"
-            Tool.runTool yarnTool "--version" __SOURCE_DIRECTORY__
-            Tool.runTool yarnTool "install --frozen-lockfile" __SOURCE_DIRECTORY__
+            Tool.runTool yarnTool "--version" safeBuildParams.RootPath
+            Tool.runTool yarnTool "install --frozen-lockfile" safeBuildParams.RootPath
         | NPM ->
             let npmTool = Tool.platformTool "npm" "npm.cmd"
             printfn "Npm version:"
-            Tool.runTool npmTool "--version"  __SOURCE_DIRECTORY__
-            Tool.runTool npmTool "install" __SOURCE_DIRECTORY__
+            Tool.runTool npmTool "--version" safeBuildParams.RootPath
+            Tool.runTool npmTool "install" safeBuildParams.RootPath
 
         SAFEDotnet.run "restore" clientPath
 
