@@ -15,8 +15,10 @@ group Server
 //#if (!remoting && server != "suave")
     nuget Fable.JsonConverter
 //#elseif (remoting && server == "suave")
+    nuget Fable.Remoting.Server ~> 3.6
     nuget Fable.Remoting.Suave ~> 2.7
 //#elseif (remoting && server != "suave")
+    nuget Fable.Remoting.Server ~> 3.6
     nuget Fable.Remoting.Giraffe ~> 2.7
 //#endif
 //#if (deploy == "azure")
