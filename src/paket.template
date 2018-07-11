@@ -5,3 +5,9 @@ description
   description of this test package
 dependencies
   FSharp.Core LOCKEDVERSION-Modules
+  Fake.Core.Environment LOCKEDVERSION-Modules
+  Fake.Core.Trace LOCKEDVERSION-Modules
+  Fake.Core.Target LOCKEDVERSION-Modules
+  Fake.DotNet.Cli LOCKEDVERSION-Modules
+  Fake.IO.FileSystem LOCKEDVERSION-Modules
+  Fake.IO.Zip LOCKEDVERSION-Modules
