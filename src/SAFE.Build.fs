@@ -12,15 +12,29 @@ open Microsoft.Azure.Management.ResourceManager.Fluent.Core
 open Cit.Helpers.Arm
 open Cit.Helpers.Arm.Parameters
 
+type JsDeps =
+    | NPM
+    | Yarn
+
+type DockerParams =
+    { DockerUser : string
+      DockerImageName : string }
+
 type SAFEBuildParams =
     { ServerPath : string
       ClientPath : string
-      DeployPath : string }
+      DeployPath : string
+      JsDeps : JsDeps
+      Docker : DockerParams }
 
     static member Create () =
         { ServerPath = "./src/Server"
           ClientPath = "./src/Client"
-          DeployPath = "./deploy" }
+          DeployPath = "./deploy"
+          JsDeps = Yarn
+          Docker =
+            { DockerUser = "safe-template"
+              DockerImageName = "safe-template" } }
 
 type SetSAFEBuildParams = SAFEBuildParams -> SAFEBuildParams
 
@@ -36,9 +50,66 @@ module private SAFEDotnet =
             DotNet.exec (withWorkDir workingDir) cmd ""
         if result.ExitCode <> 0 then failwithf "'dotnet %s' failed in %s" cmd workingDir
 
+module private Tool =
+
+    let platformTool tool winTool =
+        let tool = if Environment.isUnix then tool else winTool
+        match Process.tryFindFileOnPath tool with
+        | Some t -> t
+        | _ ->
+            let errorMsg =
+                tool + " was not found in path. " +
+                "Please install it and make sure it's available from your path. " +
+                "See https://safe-stack.github.io/docs/quickstart/#install-pre-requisites for more info"
+            failwith errorMsg
+
+    let runTool cmd args workingDir =
+        let result =
+            Process.execSimple (fun info ->
+                { info with
+                    FileName = cmd
+                    WorkingDirectory = workingDir
+                    Arguments = args })
+                TimeSpan.MaxValue
+        if result <> 0 then failwithf "'%s %s' failed" cmd args
+
+type SAFEDockerIntegration (safeBuildParams : SAFEBuildParams) =
+
+    member __.Bundle () =
+        let serverDir = Path.combine safeBuildParams.DeployPath "Server"
+        let clientDir = Path.combine safeBuildParams.DeployPath "Client"
+        let publicDir = Path.combine clientDir "public"
+
+        let publishArgs = sprintf "publish -c Release -o \"%s\"" serverDir
+        SAFEDotnet.run publishArgs safeBuildParams.ServerPath
+
+        Shell.copyDir publicDir "src/Client/public" FileFilter.allFiles
+
+    member __.Build () =
+        let dockerUser = safeBuildParams.Docker.DockerUser
+        let dockerImageName = safeBuildParams.Docker.DockerImageName
+        let dockerFullName = sprintf "%s/%s" dockerUser dockerImageName
+
+        let buildArgs = sprintf "build -t %s ." dockerFullName
+        Tool.runTool "docker" buildArgs "."
+
+        let tagArgs = sprintf "tag %s %s" dockerFullName dockerFullName
+        Tool.runTool "docker" tagArgs "."
+
 type private ArmOutput =
     { WebAppName : ParameterValue<string>
       WebAppPassword : ParameterValue<string> }
+
+open System.Net
+
+// https://github.com/SAFE-Stack/SAFE-template/issues/120
+// https://stackoverflow.com/a/6994391/3232646
+type TimeoutWebClient() =
+    inherit WebClient()
+    override this.GetWebRequest uri =
+        let request = base.GetWebRequest uri
+        request.Timeout <- 30 * 60 * 1000
+        request
 
 type SAFEAzureIntegration (safeBuildParams : SAFEBuildParams) =
     let mutable deploymentOutputs : ArmOutput option = None
@@ -95,7 +166,7 @@ type SAFEAzureIntegration (safeBuildParams : SAFEBuildParams) =
         let appPassword = deploymentOutputs.Value.WebAppPassword.value
 
         let destinationUri = sprintf "https://%s.scm.azurewebsites.net/api/zipdeploy" appName
-        let client = new Net.WebClient(Credentials = Net.NetworkCredential("$" + appName, appPassword))
+        let client = new TimeoutWebClient(Credentials = NetworkCredential("$" + appName, appPassword))
         Trace.tracefn "Uploading %s to %s" zipFile destinationUri
         client.UploadData(destinationUri, IO.File.ReadAllBytes zipFile) |> ignore
 
@@ -108,22 +179,6 @@ type SAFEBuild (setParams : SetSAFEBuildParams) =
     let clientPath = safeBuildParams.ClientPath
     let deployPath = safeBuildParams.DeployPath
 
-    let platformTool tool winTool =
-        let tool = if Environment.isUnix then tool else winTool
-        match Process.tryFindFileOnPath tool with Some t -> t | _ -> failwithf "%s not found" tool
-
-    let nodeTool = platformTool "node" "node.exe"
-    let yarnTool = platformTool "yarn" "yarn.cmd"
-
-    let runTool cmd args workingDir =
-        let result =
-            Process.execSimple (fun info ->
-                { info with
-                    FileName = cmd
-                    WorkingDirectory = workingDir
-                    Arguments = args })
-                TimeSpan.MaxValue
-        if result <> 0 then failwithf "'%s %s' failed" cmd args
 
     let openBrowser url =
         let result =
@@ -139,11 +194,22 @@ type SAFEBuild (setParams : SetSAFEBuildParams) =
         Shell.cleanDirs [ deployPath ]
 
     member __.RestoreClient () =
+        let nodeTool = Tool.platformTool "node" "node.exe"
         printfn "Node version:"
-        runTool nodeTool "--version" __SOURCE_DIRECTORY__
-        printfn "Yarn version:"
-        runTool yarnTool "--version" __SOURCE_DIRECTORY__
-        runTool yarnTool "install --frozen-lockfile" __SOURCE_DIRECTORY__
+        Tool.runTool nodeTool "--version" __SOURCE_DIRECTORY__
+
+        match safeBuildParams.JsDeps with
+        | Yarn ->
+            let yarnTool = Tool.platformTool "yarn" "yarn.cmd"
+            printfn "Yarn version:"
+            Tool.runTool yarnTool "--version" __SOURCE_DIRECTORY__
+            Tool.runTool yarnTool "install --frozen-lockfile" __SOURCE_DIRECTORY__
+        | NPM ->
+            let npmTool = Tool.platformTool "npm" "npm.cmd"
+            printfn "Npm version:"
+            Tool.runTool npmTool "--version"  __SOURCE_DIRECTORY__
+            Tool.runTool npmTool "install" __SOURCE_DIRECTORY__
+
         SAFEDotnet.run "restore" clientPath
 
     member __.RestoreServer () =
@@ -175,3 +241,5 @@ type SAFEBuild (setParams : SetSAFEBuildParams) =
         |> ignore
 
     member __.Azure = SAFEAzureIntegration safeBuildParams
+
+    member __.Docker = SAFEDockerIntegration safeBuildParams

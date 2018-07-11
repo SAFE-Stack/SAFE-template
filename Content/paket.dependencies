@@ -46,15 +46,6 @@ group Client
 group Build
     storage: none
     source https://api.nuget.org/v3/index.json
+    source ~/oss/SAFE-template/nupkg
 
-    nuget FSharp.Core 4.3.4 // https://github.com/fsharp/FAKE/issues/2001
-    nuget Fake.Core.Target
-    nuget Fake.DotNet.Cli
-    nuget Fake.IO.FileSystem
-//#if (deploy == "azure")
-    nuget Fake.Core.Environment
-    nuget Fake.Core.Trace
-    nuget Fake.IO.Zip
-    github CompositionalIT/fshelpers src/FsHelpers/ArmHelper/ArmHelper.fs
-//#endif
-
+    nuget SAFE.Build
