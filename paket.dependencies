@@ -23,4 +23,4 @@ group Modules
     nuget Fake.IO.FileSystem
     nuget Fake.IO.Zip
 
-    github CompositionalIT/fshelpers src/FsHelpers/ArmHelper/ArmHelper.fs
+    nuget Microsoft.Azure.Management.ResourceManager.Fluent 1.4.1
