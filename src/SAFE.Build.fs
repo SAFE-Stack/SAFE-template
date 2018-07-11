@@ -54,6 +54,9 @@ module SAFE =
                     TimeSpan.MaxValue
             if result <> 0 then failwithf "opening browser failed"
 
+    let cleanBuildDirs () =
+        Shell.cleanDirs [ deployPath ]
+
     let restoreClient () =
         printfn "Node version:"
         runTool nodeTool "--version" __SOURCE_DIRECTORY__
@@ -68,7 +71,7 @@ module SAFE =
     let buildClient () =
         runDotNet "fable webpack -- -p" clientPath
 
-    let buildServer () = 
+    let buildServer () =
         runDotNet "build" serverPath
 
     let runServer = async {
@@ -94,11 +97,11 @@ module SAFE =
         open Cit.Helpers.Arm
         open Cit.Helpers.Arm.Parameters
         open Microsoft.Azure.Management.ResourceManager.Fluent.Core
-                
+
         type ArmOutput =
             { WebAppName : ParameterValue<string>
               WebAppPassword : ParameterValue<string> }
-        
+
         let mutable private deploymentOutputs : ArmOutput option = None
 
         let bundle () =
