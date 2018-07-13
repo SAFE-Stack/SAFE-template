@@ -47,7 +47,7 @@ Target.create "Run" (fun _ ->
 
 //#if (deploy == "docker")
 Target.create "Bundle" (fun _ ->
-    SAFE.Docker.Budle ()
+    SAFE.Docker.Bundle ()
 )
 
 Target.create "Docker" (fun _ ->
