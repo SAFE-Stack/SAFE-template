@@ -21,18 +21,16 @@ type DockerParams =
       DockerImageName : string }
 
 type SAFEBuildParams =
-    { ServerPath : string
-      ClientPath : string
-      DeployPath : string
-      RootPath : string
+    { ServerRelativePath : string
+      ClientRelativePath : string
+      DeployRelativePath : string
       JsDeps : JsDeps
       Docker : DockerParams }
 
     static member Create () =
-        { ServerPath = "./src/Server"
-          ClientPath = "./src/Client"
-          RootPath = "."
-          DeployPath = "./deploy"
+        { ServerRelativePath = "./src/Server"
+          ClientRelativePath = "./src/Client"
+          DeployRelativePath = "./deploy"
           JsDeps = Yarn
           Docker =
             { DockerUser = "safe-template"
@@ -76,16 +74,19 @@ module private Tool =
         if result <> 0 then failwithf "'%s %s' failed" cmd args
 
 type SAFEDockerIntegration (safeBuildParams : SAFEBuildParams) =
+    let serverPath = Path.getFullName safeBuildParams.ServerRelativePath
+    let clientPath = Path.getFullName safeBuildParams.ClientRelativePath
+    let deployPath = Path.getFullName safeBuildParams.DeployRelativePath
 
     member __.Bundle () =
-        let serverDir = Path.combine safeBuildParams.DeployPath "Server"
-        let clientDir = Path.combine safeBuildParams.DeployPath "Client"
+        let serverDir = Path.combine deployPath "Server"
+        let clientDir = Path.combine deployPath "Client"
         let publicDir = Path.combine clientDir "public"
 
         let publishArgs = sprintf "publish -c Release -o \"%s\"" serverDir
-        SAFEDotnet.run publishArgs safeBuildParams.ServerPath
+        SAFEDotnet.run publishArgs serverPath
 
-        Shell.copyDir publicDir "src/Client/public" FileFilter.allFiles
+        Shell.copyDir publicDir (sprintf "%s/public" clientPath) FileFilter.allFiles
 
     member __.Build () =
         let dockerUser = safeBuildParams.Docker.DockerUser
@@ -116,9 +117,9 @@ type TimeoutWebClient() =
 type SAFEAzureIntegration (safeBuildParams : SAFEBuildParams) =
     let mutable deploymentOutputs : ArmOutput option = None
 
-    let serverPath = safeBuildParams.ServerPath
-    let clientPath = safeBuildParams.ClientPath
-    let deployPath = safeBuildParams.DeployPath
+    let deployPath = Path.getFullName safeBuildParams.DeployRelativePath
+    let serverPath = Path.getFullName safeBuildParams.ServerRelativePath
+    let clientPath = Path.getFullName safeBuildParams.ClientRelativePath
 
     member __.Bundle () =
         SAFEDotnet.run (sprintf "publish %s -c release -o %s" serverPath deployPath) __SOURCE_DIRECTORY__
@@ -177,10 +178,10 @@ type SAFEBuild (setParams : SetSAFEBuildParams) =
         SAFEBuildParams.Create()
         |> setParams
 
-    let serverPath = safeBuildParams.ServerPath
-    let clientPath = safeBuildParams.ClientPath
-    let deployPath = safeBuildParams.DeployPath
-
+    let rootPath = Path.getFullName "."
+    let deployPath = Path.getFullName safeBuildParams.DeployRelativePath
+    let serverPath = Path.getFullName safeBuildParams.ServerRelativePath
+    let clientPath = Path.getFullName safeBuildParams.ClientRelativePath
 
     let openBrowser url =
         let result =
@@ -198,19 +199,19 @@ type SAFEBuild (setParams : SetSAFEBuildParams) =
     member __.RestoreClient () =
         let nodeTool = Tool.platformTool "node" "node.exe"
         printfn "Node version:"
-        Tool.runTool nodeTool "--version" safeBuildParams.RootPath
+        Tool.runTool nodeTool "--version" rootPath
 
         match safeBuildParams.JsDeps with
         | Yarn ->
             let yarnTool = Tool.platformTool "yarn" "yarn.cmd"
             printfn "Yarn version:"
-            Tool.runTool yarnTool "--version" safeBuildParams.RootPath
-            Tool.runTool yarnTool "install --frozen-lockfile" safeBuildParams.RootPath
+            Tool.runTool yarnTool "--version" rootPath
+            Tool.runTool yarnTool "install --frozen-lockfile" rootPath
         | NPM ->
             let npmTool = Tool.platformTool "npm" "npm.cmd"
             printfn "Npm version:"
-            Tool.runTool npmTool "--version" safeBuildParams.RootPath
-            Tool.runTool npmTool "install" safeBuildParams.RootPath
+            Tool.runTool npmTool "--version" rootPath
+            Tool.runTool npmTool "install" rootPath
 
         SAFEDotnet.run "restore" clientPath
 

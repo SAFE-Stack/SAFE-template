@@ -14,7 +14,6 @@ open SAFE.Build
 
 let SAFE = SAFEBuild (fun x ->
     { x with
-        RootPath = __SOURCE_DIRECTORY__
 //#if (js-deps == "npm")
         JsDeps = NPM
 //#else
