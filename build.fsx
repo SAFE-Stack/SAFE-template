@@ -34,18 +34,25 @@ Target.create "Pack" (fun _ ->
        ("  \"name\": \"" + templateName + " v" + release.NugetVersion + "\",")
         System.Text.Encoding.UTF8
         templatePath
-    DotNet.pack 
+    DotNet.pack
         (fun args ->
             { args with
                     OutputPath = Some nupkgDir
                     Common =
-                        { args.Common with 
-                            CustomParams = 
+                        { args.Common with
+                            CustomParams =
                                 Some (sprintf "/p:PackageVersion=%s /p:PackageReleaseNotes=\"%s\""
                                         release.NugetVersion
                                         formattedRN) }
             })
         templateProj
+)
+
+Target.create "Install" (fun _ ->
+    let result =
+        DotNet.exec id "new" (sprintf "-i %s/SAFE.Template.%s.nupkg" nupkgDir release.NugetVersion)
+    if not result.OK then
+        failwith "`dotnet new` failed"
 )
 
 Target.create "Push" (fun _ ->
@@ -80,5 +87,8 @@ open Fake.Core.TargetOperators
     ==> "Pack"
     ==> "Push"
     ==> "Release"
+
+"Pack"
+    ==> "Install"
 
 Target.runOrDefault "Pack"
