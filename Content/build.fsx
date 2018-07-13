@@ -8,11 +8,7 @@
 #endif
 +:cnd:noEmit
 
-open System
-
 open Fake.Core
-open Fake.DotNet
-open Fake.IO
 
 open SAFE.Build
 
@@ -39,10 +35,6 @@ Target.create "InstallClient" (fun _ ->
     SAFE.RestoreClient ()
 )
 
-Target.create "RestoreServer" (fun _ ->
-    SAFE.RestoreServer ()
-)
-
 Target.create "Build" (fun _ ->
     SAFE.BuildServer ()
     SAFE.BuildClient ()
@@ -61,8 +53,8 @@ Target.create "Bundle" (fun _ ->
 Target.create "Docker" (fun _ ->
     SAFE.Docker.Build ()
 )
-//#endif
-//#if (deploy == "azure")
+
+//#elseif (deploy == "azure")
 Target.create "Bundle" (fun _ ->
     SAFE.Azure.Bundle ()
 )
@@ -74,8 +66,8 @@ Target.create "ArmTemplate" (fun _ ->
 Target.create "AppService" (fun _ ->
     SAFE.Azure.Deploy ()
 )
-//#endif
 
+//#endif
 open Fake.Core.TargetOperators
 
 "Clean"
@@ -91,7 +83,6 @@ open Fake.Core.TargetOperators
 //#endif
 
 "InstallClient"
-    ==> "RestoreServer"
     ==> "Run"
 
 Target.runOrDefault "Build"

@@ -214,9 +214,6 @@ type SAFEBuild (setParams : SetSAFEBuildParams) =
 
         SAFEDotnet.run "restore" clientPath
 
-    member __.RestoreServer () =
-        SAFEDotnet.run "restore" serverPath
-
     member __.BuildClient () =
         SAFEDotnet.run "fable webpack -- -p" clientPath
 
