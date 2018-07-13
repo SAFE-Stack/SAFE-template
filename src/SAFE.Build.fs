@@ -99,7 +99,7 @@ type SAFEDockerIntegration (safeBuildParams : SAFEBuildParams) =
         let tagArgs = sprintf "tag %s %s" dockerFullName dockerFullName
         Tool.runTool "docker" tagArgs "."
 
-type private ArmOutput =
+type ArmOutput =
     { WebAppName : ParameterValue<string>
       WebAppPassword : ParameterValue<string> }
 
