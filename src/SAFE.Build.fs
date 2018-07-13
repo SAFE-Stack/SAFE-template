@@ -165,6 +165,7 @@ type SAFEAzureIntegration (safeBuildParams : SAFEBuildParams) =
         IO.File.Delete zipFile
         Zip.zip deployPath zipFile !!(deployPath + @"\**\**")
 
+        // TODO: This fails with NRE
         let appName = deploymentOutputs.Value.WebAppName.value
         let appPassword = deploymentOutputs.Value.WebAppPassword.value
 
