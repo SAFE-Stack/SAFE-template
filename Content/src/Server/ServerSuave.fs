@@ -36,6 +36,7 @@ let counterApi = {
     initialCounter = getInitCounter 
 }
 
+#if (remoting)
 let webApi =
     Remoting.createApi()
     |> Remoting.withRouteBuilder Route.builder 
