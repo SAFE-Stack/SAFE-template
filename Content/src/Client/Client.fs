@@ -75,8 +75,8 @@ let update (msg : Msg) (currentModel : Model) : Model * Cmd<Msg> =
           Cmd.ofPromise
               (fetchAs<int> "/api/init")
               []
-              (Ok >> Init)
-              (Error >> Init)
+              (Ok >> InitialCountLoaded)
+              (Error >> InitialCountLoaded)
 #endif
         currentModel, loadCountCmd
     
