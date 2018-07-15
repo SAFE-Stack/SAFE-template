@@ -2,6 +2,8 @@
 open System.Net
 
 open Suave
+open Suave.Successful
+open Suave.Filters
 open Suave.Operators
 
 open Shared
@@ -28,31 +30,31 @@ let config =
           homeFolder = Some publicPath
           bindings = [ HttpBinding.create HTTP (IPAddress.Parse "0.0.0.0") port ] }
 
-let getInitCounter () : Async<Counter> = async { return 42 }
+let getInitCounter() : Async<Counter> = async { return 42 }
 
-let webApi : WebPart =
-#if (remoting)
-    let counterProcotol =
-      { getInitCounter = getInitCounter }
-    // Create a WebPart for the given implementation of the protocol
-    remoting counterProcotol {
-      // define how routes are mapped
-      use_route_builder Route.builder
-    }
+let counterApi = {
+    initialCounter = getInitCounter 
+}
+
+let webApi =
+    Remoting.createApi()
+    |> Remoting.withRouteBuilder Route.builder 
+    |> Remoting.fromValue counterApi 
+    |> Remoting.buildWebPart 
 #else
-    Filters.path "/api/init" >=>
+    path "/api/init" >=>
         fun ctx ->
             async {
                 let! counter = getInitCounter()
-                return! Successful.OK (string counter) ctx
+                return! OK (string counter) ctx
             }
 #endif
 
 let webApp =
     choose [
         webApi
-        Filters.path "/" >=> Files.browseFileHome "index.html"
-        Files.browseHome
+        path "/" >=> Files.browseFileHome "index.html"
+        browseHome
         RequestErrors.NOT_FOUND "Not found!"
 #if (deploy == "azure")
     ] |> Azure.AI.withAppInsights Azure.AI.buildApiOperationName
