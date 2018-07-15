@@ -26,15 +26,18 @@ let publicPath = Path.GetFullPath "../Client/public"
 //#endif
 let port = 8085us
 
-let getInitCounter () : Task<Counter> = task { return 42 }
+let getInitCounter() : Task<Counter> = task { return 42 }
 
 #if (remoting)
+let counterApi = {
+    initialCounter = getInitCounter >> Async.AwaitTask 
+}
+
 let webApp =
-    let server =
-        { getInitCounter = getInitCounter >> Async.AwaitTask }
-    remoting server {
-        use_route_builder Route.builder
-    }
+    Remoting.createApi()
+    |> Remoting.withRouteBuilder Route.builder 
+    |> Remoting.fromValue counterApi 
+    |> Remoting.buildHttpHandler
 
 #else
 let webApp = scope {
@@ -62,7 +65,7 @@ let configureAzure (services:IServiceCollection) =
 #endif
 let app = application {
     url ("http://0.0.0.0:" + port.ToString() + "/")
-    router webApp
+    use_router webApp
     memory_cache
     use_static publicPath
     #if (!remoting)
@@ -70,11 +73,6 @@ let app = application {
     #endif
     #if (deploy == "azure")
     service_config configureAzure
-    #endif
-    #if (remoting)
-    // sitemap diagnostic data cannot be inferred when using Fable.Remoting
-    // Saturn issue at https://github.com/SaturnFramework/Saturn/issues/64
-    disable_diagnostics
     #endif
     use_gzip
 }
