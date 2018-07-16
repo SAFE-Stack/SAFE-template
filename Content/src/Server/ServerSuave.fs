@@ -2,6 +2,7 @@
 open System.Net
 
 open Suave
+open Suave.Files 
 open Suave.Successful
 open Suave.Filters
 open Suave.Operators
@@ -54,7 +55,7 @@ let webApi =
 let webApp =
     choose [
         webApi
-        path "/" >=> Files.browseFileHome "index.html"
+        path "/" >=> browseFileHome "index.html"
         browseHome
         RequestErrors.NOT_FOUND "Not found!"
 #if (deploy == "azure")
