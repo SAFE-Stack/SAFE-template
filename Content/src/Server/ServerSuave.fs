@@ -32,12 +32,11 @@ let config =
           bindings = [ HttpBinding.create HTTP (IPAddress.Parse "0.0.0.0") port ] }
 
 let getInitCounter() : Async<Counter> = async { return 42 }
-
+#if (remoting)
 let counterApi = {
     initialCounter = getInitCounter 
 }
 
-#if (remoting)
 let webApi =
     Remoting.createApi()
     |> Remoting.withRouteBuilder Route.builder 
