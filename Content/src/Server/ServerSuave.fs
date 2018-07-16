@@ -44,6 +44,7 @@ let webApi =
     |> Remoting.fromValue counterApi 
     |> Remoting.buildWebPart 
 #else
+let webApi =
     path "/api/init" >=>
         fun ctx ->
             async {
