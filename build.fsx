@@ -49,10 +49,9 @@ Target.create "Pack" (fun _ ->
 )
 
 Target.create "Install" (fun _ ->
-    let result =
-        DotNet.exec id "new" (sprintf "-i %s/SAFE.Template.%s.nupkg" nupkgDir release.NugetVersion)
-    if not result.OK then
-        failwith "`dotnet new` failed"
+    let args = sprintf "-i %s/SAFE.Template.%s.nupkg" nupkgDir release.NugetVersion
+    let result = DotNet.exec (fun x -> { x with DotNetCliPath = "dotnet" }) "new" args
+    if not result.OK then failwithf "`dotnet %s` failed" args
 )
 
 Target.create "Push" (fun _ ->
