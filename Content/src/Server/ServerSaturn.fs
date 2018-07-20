@@ -37,7 +37,7 @@ let webApp =
     }
 
 #else
-let webApp = scope {
+let webApp = router {
     get "/api/init" (fun next ctx ->
         task {
             let! counter = getInitCounter()
@@ -62,7 +62,7 @@ let configureAzure (services:IServiceCollection) =
 #endif
 let app = application {
     url ("http://0.0.0.0:" + port.ToString() + "/")
-    router webApp
+    use_router webApp
     memory_cache
     use_static publicPath
     #if (!remoting)
