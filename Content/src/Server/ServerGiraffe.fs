@@ -30,20 +30,16 @@ let publicPath = Path.GetFullPath "../Client/public"
 let port = 8085us
 
 let getInitCounter () : Task<Counter> = task { return 42 }
+
+let webApp : HttpHandler =
 #if (remoting)
-
-let counterApi = {
-    initialCounter = getInitCounter >> Async.AwaitTask 
-}
-
-let webApp =
-    Remoting.createApi()
-    |> Remoting.withRouteBuilder Route.builder 
-    |> Remoting.fromValue counterApi 
-    |> Remoting.buildHttpHandler
-
+    let counterProcotol =
+        { getInitCounter = getInitCounter >> Async.AwaitTask }
+    // creates a HttpHandler for the given implementation
+    remoting counterProcotol {
+        use_route_builder Route.builder
+    }
 #else
-let webApp =
     route "/api/init" >=>
         fun next ctx ->
             task {
@@ -52,7 +48,7 @@ let webApp =
             }
 #endif
 
-let configureApp (app : IApplicationBuilder) =
+let configureApp    (app : IApplicationBuilder) =
     app.UseDefaultFiles()
        .UseStaticFiles()
        .UseGiraffe webApp
