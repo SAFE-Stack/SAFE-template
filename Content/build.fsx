@@ -196,11 +196,11 @@ open System.Net
 
 // https://github.com/SAFE-Stack/SAFE-template/issues/120
 // https://stackoverflow.com/a/6994391/3232646
-type TimeoutWebClient(timeoutMiliSec) =
+type TimeoutWebClient() =
     inherit WebClient()
     override this.GetWebRequest uri =
         let request = base.GetWebRequest uri
-        request.Timeout <- timeoutMiliSec
+        request.Timeout <- 30 * 60 * 1000
         request
 
 Target.create "AppService" (fun _ ->
@@ -212,8 +212,7 @@ Target.create "AppService" (fun _ ->
     let appPassword = deploymentOutputs.Value.WebAppPassword.value
 
     let destinationUri = sprintf "https://%s.scm.azurewebsites.net/api/zipdeploy" appName
-    let halfHourTimeout = 30 * 60 * 1000
-    let client = new TimeoutWebClient(Credentials = NetworkCredential("$" + appName, appPassword), halfHourTimeout)
+    let client = new TimeoutWebClient(Credentials = NetworkCredential("$" + appName, appPassword))
     Trace.tracefn "Uploading %s to %s" zipFile destinationUri
     client.UploadData(destinationUri, IO.File.ReadAllBytes zipFile) |> ignore)
 //#endif
