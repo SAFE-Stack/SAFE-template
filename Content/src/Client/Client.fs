@@ -28,7 +28,6 @@ type Model = { Counter: Counter option }
 type Msg =
 | Increment
 | Decrement
-| LoadInitialCount 
 | InitialCountLoaded of Result<Counter, exn>
 
 
@@ -49,8 +48,21 @@ module Server =
 // defines the initial state and initial command (= side-effect) of the application
 let init () : Model * Cmd<Msg> =
     let initialModel = { Counter = None }
-    let initialCmd = Cmd.ofMsg LoadInitialCount
-    initialModel, initialCmd
+    let loadCountCmd = 
+#if remoting
+        Cmd.ofAsync
+            Server.api.initialCounter
+            ()
+            (Ok >> InitialCountLoaded)
+            (Error >> InitialCountLoaded)
+#else
+        Cmd.ofPromise
+            (fetchAs<int> "/api/init")
+            []
+            (Ok >> InitialCountLoaded)
+            (Error >> InitialCountLoaded)
+#endif
+    initialModel, loadCountCmd
 
 // The update function computes the next state of the application based on the current state and the incoming events/messages 
 // It can also run side-effects (encoded as commands) like calling the server via Http. 
@@ -63,23 +75,6 @@ let update (msg : Msg) (currentModel : Model) : Model * Cmd<Msg> =
     | Some x, Decrement -> 
         let nextModel = { currentModel with Counter = Some (x - 1) }
         nextModel, Cmd.none 
-    | _, LoadInitialCount ->  
-        let loadCountCmd = 
-#if remoting
-          Cmd.ofAsync
-              Server.api.initialCounter
-              ()
-              (Ok >> InitialCountLoaded)
-              (Error >> InitialCountLoaded)
-#else
-          Cmd.ofPromise
-              (fetchAs<int> "/api/init")
-              []
-              (Ok >> InitialCountLoaded)
-              (Error >> InitialCountLoaded)
-#endif
-        currentModel, loadCountCmd
-    
     | _, InitialCountLoaded (Ok initialCount)-> 
         let nextModel = { Counter = Some initialCount } 
         nextModel, Cmd.none
