@@ -2,7 +2,7 @@
 open System.Net
 
 open Suave
-open Suave.Files 
+open Suave.Files
 open Suave.Successful
 open Suave.Filters
 open Suave.Operators
@@ -34,14 +34,14 @@ let config =
 let getInitCounter() : Async<Counter> = async { return 42 }
 #if (remoting)
 let counterApi = {
-    initialCounter = getInitCounter 
+    initialCounter = getInitCounter
 }
 
 let webApi =
     Remoting.createApi()
-    |> Remoting.withRouteBuilder Route.builder 
-    |> Remoting.fromValue counterApi 
-    |> Remoting.buildWebPart 
+    |> Remoting.withRouteBuilder Route.builder
+    |> Remoting.fromValue counterApi
+    |> Remoting.buildWebPart
 #else
 let webApi =
     path "/api/init" >=>

@@ -30,13 +30,13 @@ let getInitCounter() : Task<Counter> = task { return 42 }
 
 #if (remoting)
 let counterApi = {
-    initialCounter = getInitCounter >> Async.AwaitTask 
+    initialCounter = getInitCounter >> Async.AwaitTask
 }
 
 let webApp =
     Remoting.createApi()
-    |> Remoting.withRouteBuilder Route.builder 
-    |> Remoting.fromValue counterApi 
+    |> Remoting.withRouteBuilder Route.builder
+    |> Remoting.fromValue counterApi
     |> Remoting.buildHttpHandler
 
 #else
