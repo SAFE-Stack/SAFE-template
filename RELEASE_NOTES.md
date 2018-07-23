@@ -1,3 +1,7 @@
+#### 0.26.0 - 23.07.2018
+
+* Update Fable.Remoting to newest version - https://github.com/SAFE-Stack/SAFE-template/pull/118
+
 #### 0.25.0 - 23.07.2018
 
 * Use Saturn 0.7.4 in default template - https://github.com/SAFE-Stack/SAFE-template/issues/124
