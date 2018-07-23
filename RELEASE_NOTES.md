@@ -1,3 +1,7 @@
+#### 0.25.0 - 23.07.2018
+
+* Use Saturn 0.7.4 in default template - https://github.com/SAFE-Stack/SAFE-template/issues/124
+
 #### 0.24.2 - 11.07.2018
 
 * Pin compatible Remoting.Server to 3.6 - https://github.com/SAFE-Stack/SAFE-template/pull/117
