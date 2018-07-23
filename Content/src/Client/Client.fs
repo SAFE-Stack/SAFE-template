@@ -24,7 +24,7 @@ open Fulma.FontAwesome
 type Model = { Counter: Counter option }
 
 // The Msg type defines what events/actions can occur while the application is running
-// the state of the application changes *only* in reaction to these events   
+// the state of the application changes *only* in reaction to these events
 type Msg =
 | Increment
 | Decrement
@@ -40,15 +40,15 @@ module Server =
     /// A proxy you can use to talk to server directly
     let api : ICounterApi =
       Remoting.createApi()
-      |> Remoting.withRouteBuilder Route.builder 
-      |> Remoting.buildProxy<ICounterApi>() 
+      |> Remoting.withRouteBuilder Route.builder
+      |> Remoting.buildProxy<ICounterApi>()
 
 #endif
 
 // defines the initial state and initial command (= side-effect) of the application
 let init () : Model * Cmd<Msg> =
     let initialModel = { Counter = None }
-    let loadCountCmd = 
+    let loadCountCmd =
 #if remoting
         Cmd.ofAsync
             Server.api.initialCounter
@@ -64,23 +64,31 @@ let init () : Model * Cmd<Msg> =
 #endif
     initialModel, loadCountCmd
 
-// The update function computes the next state of the application based on the current state and the incoming events/messages 
-// It can also run side-effects (encoded as commands) like calling the server via Http. 
-// these commands in turn, can dispatch messages to which the update function will react.  
+// The update function computes the next state of the application based on the current state and the incoming events/messages
+// It can also run side-effects (encoded as commands) like calling the server via Http.
+// these commands in turn, can dispatch messages to which the update function will react.
 let update (msg : Msg) (currentModel : Model) : Model * Cmd<Msg> =
+    let newModel =
+        match currentModel.Counter, msg with
+        | Some x, Increment -> { currentModel with Counter = Some (x + 1) }
+        | Some x, Decrement -> { currentModel with Counter = Some (x - 1) }
+        | _, InitialCountLoaded (Ok initialCount) -> { Counter = Some initialCount }
+        | _ -> currentModel
+    newModel, Cmd.none
+
     match currentModel.Counter, msg with
     | Some x, Increment ->
-        let nextModel = { currentModel with Counter = Some (x + 1) } 
-        nextModel, Cmd.none 
-    | Some x, Decrement -> 
+        let nextModel = { currentModel with Counter = Some (x + 1) }
+        nextModel, Cmd.none
+    | Some x, Decrement ->
         let nextModel = { currentModel with Counter = Some (x - 1) }
-        nextModel, Cmd.none 
-    | _, InitialCountLoaded (Ok initialCount)-> 
-        let nextModel = { Counter = Some initialCount } 
+        nextModel, Cmd.none
+    | _, InitialCountLoaded (Ok initialCount)->
+        let nextModel = { Counter = Some initialCount }
         nextModel, Cmd.none
 
-    | _ -> currentModel, Cmd.none 
-    
+    | _ -> currentModel, Cmd.none
+
 
 let safeComponents =
     let intersperse sep ls =
