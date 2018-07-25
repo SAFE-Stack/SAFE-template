@@ -109,7 +109,7 @@ Target.create "Run" (fun _ ->
         runDotNet "fable webpack-dev-server" clientPath
     }
     let browser = async {
-        Threading.Thread.Sleep 5000
+        do! Async.Sleep 5000
         openBrowser "http://localhost:8080"
     }
 
