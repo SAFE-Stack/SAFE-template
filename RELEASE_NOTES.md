@@ -1,3 +1,9 @@
+#### 0.26.1 - 25.07.2018
+
+* Remove redundant code from client - https://github.com/SAFE-Stack/SAFE-template/pull/126
+* Use Async.Sleep instead of Thread.Sleep in build.fsx - https://github.com/SAFE-Stack/SAFE-template/pull/129
+* Replace Menu.item with Menu.Item.a - https://github.com/SAFE-Stack/SAFE-template/pull/130
+
 #### 0.26.0 - 23.07.2018
 
 * Update Fable.Remoting to newest version - https://github.com/SAFE-Stack/SAFE-template/pull/118
