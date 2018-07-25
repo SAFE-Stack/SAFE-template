@@ -54,6 +54,11 @@ Target.create "Install" (fun _ ->
     if not result.OK then failwithf "`dotnet %s` failed" args
 )
 
+Target.create "Tests" (fun _ ->
+    "tests/tests.fsproj"
+    |> DotNet.test id
+)
+
 Target.create "Push" (fun _ ->
     Paket.push ( fun args ->
         { args with
