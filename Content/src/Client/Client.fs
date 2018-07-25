@@ -68,14 +68,6 @@ let init () : Model * Cmd<Msg> =
 // It can also run side-effects (encoded as commands) like calling the server via Http.
 // these commands in turn, can dispatch messages to which the update function will react.
 let update (msg : Msg) (currentModel : Model) : Model * Cmd<Msg> =
-    let newModel =
-        match currentModel.Counter, msg with
-        | Some x, Increment -> { currentModel with Counter = Some (x + 1) }
-        | Some x, Decrement -> { currentModel with Counter = Some (x - 1) }
-        | _, InitialCountLoaded (Ok initialCount) -> { Counter = Some initialCount }
-        | _ -> currentModel
-    newModel, Cmd.none
-
     match currentModel.Counter, msg with
     | Some x, Increment ->
         let nextModel = { currentModel with Counter = Some (x + 1) }
