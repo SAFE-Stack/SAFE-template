@@ -1,0 +1,5 @@
+group Tests
+    Expecto
+    FSharp.Core
+    YoloDev.Expecto.TestSdk
+    Microsoft.NET.Test.Sdk

@@ -9,3 +9,12 @@ group Build
     nuget Fake.DotNet.Paket
     nuget Fake.IO.FileSystem
     nuget Fake.Tools.Git
+
+group Tests
+    storage: none
+    source https://api.nuget.org/v3/index.json
+
+    nuget Expecto
+    nuget FSharp.Core
+    nuget Microsoft.NET.Test.Sdk
+    nuget YoloDev.Expecto.TestSdk
