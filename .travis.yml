@@ -12,7 +12,6 @@ addons:
       - libunwind8-dev
 
 before_install:
-  - chmod +x build.sh
   - nvm install 6.11.5
   - nvm use 6.11.5
   # Yarn
