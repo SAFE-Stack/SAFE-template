@@ -91,10 +91,9 @@ open Fake.Core.TargetOperators
 
 "Clean"
     ==> "Pack"
+    ==> "Install"
+    ==> "Tests"
     ==> "Push"
     ==> "Release"
-
-"Pack"
-    ==> "Install"
 
 Target.runOrDefault "Pack"
