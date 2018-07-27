@@ -1,5 +1,5 @@
 group Tests
     Expecto
+    Fake.Core.Process
+    Fake.DotNet.Cli
     FSharp.Core
-    YoloDev.Expecto.TestSdk
-    Microsoft.NET.Test.Sdk

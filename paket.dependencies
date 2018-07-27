@@ -15,6 +15,6 @@ group Tests
     source https://api.nuget.org/v3/index.json
 
     nuget Expecto
+    nuget Fake.Core.Process
+    nuget Fake.DotNet.Cli
     nuget FSharp.Core
-    nuget Microsoft.NET.Test.Sdk
-    nuget YoloDev.Expecto.TestSdk

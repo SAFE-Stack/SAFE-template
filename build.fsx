@@ -55,8 +55,10 @@ Target.create "Install" (fun _ ->
 )
 
 Target.create "Tests" (fun _ ->
-    "tests/tests.fsproj"
-    |> DotNet.test id
+    let cmd = "run"
+    let args = "--project tests/tests.fsproj"
+    let result = DotNet.exec id cmd args
+    if not result.OK then failwithf "`dotnet %s %s` failed" cmd args
 )
 
 Target.create "Push" (fun _ ->
