@@ -1,3 +1,8 @@
+#### 0.26.2 - 27.07.2018
+
+* Allow symlinks in webpack config to overcome issue with NuGet feed on a symlink-ed directory - https://github.com/SAFE-Stack/SAFE-template/pull/133
+* Remove intersperse function from Client to make life easier for new-comers - https://github.com/SAFE-Stack/SAFE-template/pull/134
+
 #### 0.26.1 - 25.07.2018
 
 * Remove redundant code from client - https://github.com/SAFE-Stack/SAFE-template/pull/126
