@@ -20,31 +20,25 @@ let psi exe arg dir (x: ProcStartInfo) : ProcStartInfo =
 let logger = Log.create "SAFE"
 
 let serverOpts =
-    [ "suave"
+    [ "saturn"
       "giraffe"
-      "saturn"
+      "suave"
     ]
 
 let deployOpts =
     [ "none"
-      "azure"
-      "docker"
     ]
 
 let layoutOpts =
-    [ "none"
-      "fulma-basic"
-      "fulma-admin"
+    [ "fulma-basic"
     ]
 
 let remotingOpts =
     [ ""
-      "--remoting"
     ]
 
 let jsDepsOpts =
-    [ "npm"
-      "yarn"
+    [ "yarn"
     ]
 
 let run exe arg dir =
