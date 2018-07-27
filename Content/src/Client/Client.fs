@@ -83,11 +83,6 @@ let update (msg : Msg) (currentModel : Model) : Model * Cmd<Msg> =
 
 
 let safeComponents =
-    let intersperse sep ls =
-        List.foldBack (fun x -> function
-            | [] -> [x]
-            | xs -> x::sep::xs) ls []
-
     let components =
         span [ ]
            [
