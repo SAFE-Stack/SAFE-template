@@ -89,29 +89,34 @@ let safeComponents =
             | xs -> x::sep::xs) ls []
 
     let components =
-        [
+        span [ ]
+           [
 #if (server == "suave")
-            "Suave", "http://suave.io"
+             a [ Href "http://suave.io" ] [ str "Suave" ]
+             str ", "
 #elseif (server == "giraffe")
-            "Giraffe", "https://github.com/giraffe-fsharp/Giraffe"
+             a [ Href "https://github.com/giraffe-fsharp/Giraffe" ] [ str "Giraffe" ]
+             str ", "
 #elseif (server == "saturn")
-            "Saturn", "https://saturnframework.github.io/docs/"
+             a [ Href "https://saturnframework.github.io/docs/" ] [ str "Saturn" ]
+             str ", "
 #endif
-            "Fable", "http://fable.io"
-            "Elmish", "https://elmish.github.io/elmish/"
+             a [ Href "http://fable.io" ] [ str "Fable" ]
+             str ", "
+             a [ Href "https://elmish.github.io/elmish/" ] [ str "Elmish" ]
 #if (layout != "none")
-            "Fulma", "https://mangelmaxime.github.io/Fulma"
+             str ", "
+             a [ Href "https://mangelmaxime.github.io/Fulma" ] [ str "Fulma" ]
 #endif
 #if (layout == "fulma-admin" || layout == "fulma-cover" || layout == "fulma-hero" || layout == "fulma-landing" || layout == "fulma-login")
-            "Bulma\u00A0Templates", "https://dansup.github.io/bulma-templates/"
+             str ", "
+             a [ Href "https://dansup.github.io/bulma-templates/" ] [ str "Bulma\u00A0Templates" ]
 #endif
 #if (remoting)
-            "Fable.Remoting", "https://zaid-ajaj.github.io/Fable.Remoting/"
+             str ", "
+             a [ Href "https://zaid-ajaj.github.io/Fable.Remoting/" ] [ str "Fable.Remoting" ]
 #endif
-        ]
-        |> List.map (fun (desc,link) -> a [ Href link ] [ str desc ] )
-        |> intersperse (str ", ")
-        |> span [ ]
+           ]
 
     p [ ]
         [ strong [] [ str "SAFE Template" ]
