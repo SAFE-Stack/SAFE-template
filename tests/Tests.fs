@@ -7,6 +7,8 @@ open Expecto
 open Expecto.Logging
 open Expecto.Logging.Message
 
+open FsCheck
+
 open Fake.Core
 open Fake.IO
 open Fake.IO.FileSystemOperators
@@ -29,27 +31,95 @@ let psi exe arg dir (x: ProcStartInfo) : ProcStartInfo =
 
 let logger = Log.create "SAFE"
 
-let serverOpts =
-    [ "saturn"
-      "giraffe"
-      "suave"
-    ]
+type TemplateArgs =
+    { Server : string option
+      Deploy : string option
+      Layout : string option
+      JsDeps : string option
+      Remoting : bool }
 
-let deployOpts =
-    [ "none"
-    ]
+    override args.ToString () =
+        let optArg (name, value) =
+            value
+            |> Option.map (sprintf "--%s %s" name)
+            |> Option.defaultValue ""
 
-let layoutOpts =
-    [ "fulma-basic"
-    ]
+        let remoting = if args.Remoting then "--remoting" else ""
 
-let remotingOpts =
-    [ ""
-    ]
+        [ "server", args.Server
+          "deploy", args.Deploy
+          "layout", args.Layout
+          "js-deps", args.JsDeps ]
+        |> List.map optArg
+        |> List.append [remoting]
+        |> String.concat " "
+        |> String.replace "  " " "
 
-let jsDepsOpts =
-    [ "yarn"
-    ]
+
+let serverGen = Gen.elements [
+    None
+    Some "giraffe"
+    Some "suave"
+]
+
+let deployGen = Gen.elements [
+    None
+    Some "docker"
+    Some "azure"
+]
+
+let layoutGen = Gen.elements [
+    None
+    Some "fulma-basic"
+    Some "fulma-admin"
+    Some "fulma-cover"
+    Some "fulma-hero"
+    Some "fulma-landing"
+    Some "fulma-login"
+]
+
+let jsDepsGen = Gen.elements [
+    None
+    Some "npm"
+]
+
+type TemplateArgsArb () =
+    static member Arb () : Arbitrary<TemplateArgs> =
+        let generator : Gen<TemplateArgs> =
+            gen {
+                let! server = serverGen
+                let! deploy = deployGen
+                let! layout = layoutGen
+                let! jsDeps = jsDepsGen
+                let! remoting = Gen.elements [false; true]
+                return
+                    { Server = server
+                      Deploy = deploy
+                      Layout = layout
+                      JsDeps = jsDeps
+                      Remoting = remoting }
+            }
+
+        let shrinker (x : TemplateArgs) : seq<TemplateArgs> =
+            seq {
+                match x.Server with
+                | Some _ -> yield { x with Server = None }
+                | _ -> ()
+                match x.Deploy with
+                | Some _ -> yield { x with Deploy = None }
+                | _ -> ()
+                match x.Layout with
+                | Some _ -> yield { x with Layout = None }
+                | _ -> ()
+                match x.JsDeps with
+                | Some _ -> yield { x with JsDeps = None }
+                | _ -> ()
+                if x.Remoting then
+                    yield { x with Remoting = false }
+            }
+
+        Arb.fromGenShrink (generator, shrinker)
+
 
 let run exe arg dir =
     logger.info(
@@ -61,36 +131,27 @@ let run exe arg dir =
     let result = Process.execWithResult (psi exe arg dir) TimeSpan.MaxValue
     Expect.isTrue (result.OK) (sprintf "`%s %s` failed: %A" exe arg result.Errors)
 
+let fsCheckConfig =
+    { FsCheckConfig.defaultConfig with
+        arbitrary = [typeof<TemplateArgsArb>]
+        maxTest = 5 }
+
 [<Tests>]
 let tests =
   testList "Project created from template" [
-    for server in serverOpts do
-    for deploy in deployOpts do
-    for layout in layoutOpts do
-    for remoting in remotingOpts do
-    for jsDeps in jsDepsOpts do
+    testPropertyWithConfig fsCheckConfig "Project should build properly" (fun (x : TemplateArgs) ->
+        let newSAFEArgs = x.ToString()
+        let uid = Guid.NewGuid().ToString("n")
+        let dir = Path.GetTempPath() </> uid
+        Directory.create dir
 
-        let newSAFEArgs =
-            sprintf
-                "--server %s --deploy %s --layout %s --js-deps %s %s"
-                server
-                deploy
-                layout
-                jsDeps
-                remoting
+        run dotnet (sprintf "new SAFE %s" newSAFEArgs) dir
 
-        yield testCase (sprintf "Template created with args `%s` should build properly" newSAFEArgs) (fun () ->
-            let uid = Guid.NewGuid().ToString("n")
-            let dir = Path.GetTempPath() </> uid
-            Directory.create dir
+        run fake "build" dir
 
-            run dotnet (sprintf "new SAFE %s" newSAFEArgs) dir
-
-            run fake "build" dir
-
-            logger.info(
-                eventX "Deleting `{dir}`"
-                >> setField "dir" dir)
-            Directory.delete dir
-        )
+        logger.info(
+            eventX "Deleting `{dir}`"
+            >> setField "dir" dir)
+        Directory.delete dir
+    )
   ]
