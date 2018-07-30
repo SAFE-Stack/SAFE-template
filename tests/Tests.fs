@@ -51,10 +51,9 @@ type TemplateArgs =
           "layout", args.Layout
           "js-deps", args.JsDeps ]
         |> List.map optArg
-        |> List.append [remoting]
+        |> fun x -> List.append x [remoting]
+        |> List.map String.trim
         |> String.concat " "
-        |> String.replace "  " " "
-
 
 let serverGen = Gen.elements [
     None
@@ -134,7 +133,7 @@ let run exe arg dir =
 let fsCheckConfig =
     { FsCheckConfig.defaultConfig with
         arbitrary = [typeof<TemplateArgsArb>]
-        maxTest = 5 }
+        maxTest = 10 }
 
 [<Tests>]
 let tests =
