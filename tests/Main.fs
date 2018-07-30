@@ -1,7 +1,8 @@
 module ExpectoTemplate
 open Expecto
 
-let config = defaultConfig
+let config =
+  { defaultConfig with parallel = false }
 
 [<EntryPoint>]
 let main argv =
