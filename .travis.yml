@@ -18,11 +18,11 @@ before_install:
   - curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
   - echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
   - sudo apt-get update && sudo apt-get install yarn
-  - dotnet tool install fake-cli -g
 
 cache:
   directories:
   - $HOME/.yarn-cache
 
 script:
+  - dotnet tool install fake-cli -g
   - fake build -t tests
