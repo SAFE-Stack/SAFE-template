@@ -11,6 +11,11 @@ open Fake.Core
 open Fake.IO
 open Fake.IO.FileSystemOperators
 
+let dotnetPath =
+    match Environment.GetEnvironmentVariable "DOTNET_PATH_FOR_EXPECTO" with
+    | null -> "dotnet"
+    | x -> x
+
 let psi exe arg dir (x: ProcStartInfo) : ProcStartInfo =
     { x with
         FileName = exe
@@ -74,8 +79,7 @@ let tests =
             let dir = Path.GetTempPath() </> uid
             Directory.create dir
 
-            let dotnet = "/usr/local/share/dotnet/dotnet"
-            run dotnet (sprintf "new SAFE %s" newSAFEArgs) dir
+            run dotnetPath (sprintf "new SAFE %s" newSAFEArgs) dir
 
             run "fake" "build" dir
 
