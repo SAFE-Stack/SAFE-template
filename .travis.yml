@@ -23,6 +23,9 @@ cache:
   directories:
   - $HOME/.yarn-cache
 
+env:
+  - FAKE_PATH=~/fake-cli/fake
+
 script:
   - dotnet tool install fake-cli --tool-path ~/fake-cli
-  - ~/fake-cli/fake build -t tests
+  - $FAKE_PATH build -t tests

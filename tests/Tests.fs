@@ -11,9 +11,14 @@ open Fake.Core
 open Fake.IO
 open Fake.IO.FileSystemOperators
 
-let dotnetPath =
-    match Environment.GetEnvironmentVariable "DOTNET_PATH_FOR_EXPECTO" with
+let dotnet =
+    match Environment.GetEnvironmentVariable "DOTNET_PATH" with
     | null -> "dotnet"
+    | x -> x
+
+let fake =
+    match Environment.GetEnvironmentVariable "FAKE_PATH" with
+    | null -> "fake"
     | x -> x
 
 let psi exe arg dir (x: ProcStartInfo) : ProcStartInfo =
@@ -79,9 +84,9 @@ let tests =
             let dir = Path.GetTempPath() </> uid
             Directory.create dir
 
-            run dotnetPath (sprintf "new SAFE %s" newSAFEArgs) dir
+            run dotnet (sprintf "new SAFE %s" newSAFEArgs) dir
 
-            run "fake" "build" dir
+            run fake "build" dir
 
             logger.info(
                 eventX "Deleting `{dir}`"
