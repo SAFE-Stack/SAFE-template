@@ -42,9 +42,8 @@ type TemplateArgs =
         let optArg (name, value) =
             value
             |> Option.map (sprintf "--%s %s" name)
-            |> Option.defaultValue ""
 
-        let remoting = if args.Remoting then "--remoting" else ""
+        let remoting = if args.Remoting then Some "--remoting" else None
 
         [ "server", args.Server
           "deploy", args.Deploy
@@ -52,7 +51,7 @@ type TemplateArgs =
           "js-deps", args.JsDeps ]
         |> List.map optArg
         |> fun x -> List.append x [remoting]
-        |> List.map String.trim
+        |> List.choose id
         |> String.concat " "
 
 let serverGen = Gen.elements [
