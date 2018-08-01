@@ -32,19 +32,6 @@ Target.create "Clean" (fun _ ->
     Git.CommandHelper.directRunGitCommandAndFail "./Content" "clean -fxd"
 )
 
-Target.create "BuildPaketLockFiles" (fun _ ->
-    let contents =
-        [
-            "Content" </> "src" </> "Build" </> "paket-default.lock"
-            "Content" </> "src" </> "Client" </> "paket-default.lock"
-            "Content" </> "src" </> "Server" </> "paket-default.lock"
-        ]
-        |> List.map File.read
-        |> Seq.concat
-
-    File.writeWithEncoding (Text.UTF8Encoding(false)) false ("Content" </> "paket-default.lock") contents
-)
-
 Target.create "Pack" (fun _ ->
     Shell.regexReplaceInFileWithEncoding
         "  \"name\": .+,"
@@ -80,6 +67,71 @@ let psi exe arg dir (x: ProcStartInfo) : ProcStartInfo =
 let run exe arg dir =
     let result = Process.execWithResult (psi exe arg dir) TimeSpan.MaxValue
     if not result.OK then (failwithf "`%s %s` failed: %A" exe arg result.Errors)
+
+type BuildPaketDependencies =
+    { Azure : bool }
+
+    with override x.ToString () =
+            if x.Azure then "azure" else "noazure"
+
+type ClientPaketDependencies =
+    { Remoting : bool
+      Fulma : bool }
+
+    with override x.ToString () =
+            let remoting = if x.Remoting then "remoting" else "noremoting"
+            let fulma = if x.Fulma then "fulma" else "nofulma"
+            sprintf "%s-%s" remoting fulma
+
+type ServerPaketDependency = Saturn | Giraffe | Suave
+
+    with override x.ToString () =
+            match x with
+            | Saturn -> "saturn"
+            | Giraffe -> "giraffe"
+            | Suave -> "suave"
+
+type ServerPaketDependencies =
+    { Server : ServerPaketDependency
+      Remoting : bool
+      Azure : bool }
+
+    with override x.ToString () =
+            let server = string x.Server
+            let remoting = if x.Remoting then "remoting" else "noremoting"
+            let azure = if x.Azure then "azure" else "noazure"
+            sprintf "%s-%s-%s" server remoting azure
+
+let buildGroups =
+    [ { Azure = false } ]
+
+let clientGroups =
+    [ { Remoting = false
+        Fulma = true } ]
+
+let serverGroups =
+    [ { Server = Saturn
+        Remoting = false
+        Azure = false } ]
+
+Target.create "BuildPaketLockFiles" (fun _ ->
+
+    for buildGroup in buildGroups do
+    for clientGroup in clientGroups do
+    for serverGroup in serverGroups do
+        let contents =
+            [
+                "Content" </> "src" </> "Build" </> sprintf "paket_%A.lock" buildGroup
+                "Content" </> "src" </> "Client" </> sprintf "paket_%A.lock" clientGroup
+                "Content" </> "src" </> "Server" </> sprintf "paket_%A.lock" serverGroup
+            ]
+            |> List.map File.read
+            |> Seq.concat
+
+        let lockName = sprintf "paket_%A_%A_%A.lock" buildGroup clientGroup serverGroup
+
+        File.writeWithEncoding (Text.UTF8Encoding(false)) false ("Content" </> lockName) contents
+)
 
 Target.create "GenPaketLockFiles" (fun _ ->
     let baseDir = "gen-paket-lock-files"
