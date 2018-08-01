@@ -90,6 +90,8 @@ Target.create "GenPaketLockFiles" (fun _ ->
         Directory.create dirName
         run "dotnet" (sprintf "new SAFE --server %s" server) dirName
 
+        run "mono" ".paket/paket.exe update --group Build" dirName
+
         let lockFile = dirName </> "paket.lock"
         let lines = File.readAsString lockFile
         Directory.delete dirName
