@@ -1,0 +1,6 @@
+group Tests
+    Expecto
+    Expecto.FsCheck
+    Fake.Core.Process
+    Fake.DotNet.Cli
+    FSharp.Core

@@ -1,5 +1,7 @@
 # SAFE template
 
+[![Build Status](https://travis-ci.org/SAFE-Stack/SAFE-template.svg?branch=master)](https://travis-ci.org/SAFE-Stack/SAFE-template)
+
 A dotnet CLI template for [SAFE-Stack](https://safe-stack.github.io/) projects.
 
 This is a basic template to get started with each of the core components of the stack:

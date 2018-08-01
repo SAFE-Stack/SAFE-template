@@ -1,0 +1,31 @@
+language: csharp
+sudo: required
+dist: trusty
+dotnet: 2.1.302
+
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - libstdc++-4.9-dev
+      - libunwind8-dev
+
+before_install:
+  - nvm install 6.11.5
+  - nvm use 6.11.5
+  # Yarn
+  - curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+  - echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+  - sudo apt-get update && sudo apt-get install yarn
+
+cache:
+  directories:
+  - $HOME/.yarn-cache
+
+env:
+  - FAKE_PATH=~/fake-cli/fake
+
+script:
+  - dotnet tool install fake-cli --tool-path ~/fake-cli
+  - $FAKE_PATH build -t tests

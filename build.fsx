@@ -54,6 +54,13 @@ Target.create "Install" (fun _ ->
     if not result.OK then failwithf "`dotnet %s` failed" args
 )
 
+Target.create "Tests" (fun _ ->
+    let cmd = "run"
+    let args = "--project tests/tests.fsproj"
+    let result = DotNet.exec id cmd args
+    if not result.OK then failwithf "`dotnet %s %s` failed" cmd args
+)
+
 Target.create "Push" (fun _ ->
     Paket.push ( fun args ->
         { args with
@@ -84,10 +91,9 @@ open Fake.Core.TargetOperators
 
 "Clean"
     ==> "Pack"
+    ==> "Install"
+    ==> "Tests"
     ==> "Push"
     ==> "Release"
-
-"Pack"
-    ==> "Install"
 
 Target.runOrDefault "Pack"

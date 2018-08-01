@@ -9,3 +9,13 @@ group Build
     nuget Fake.DotNet.Paket
     nuget Fake.IO.FileSystem
     nuget Fake.Tools.Git
+
+group Tests
+    storage: none
+    source https://api.nuget.org/v3/index.json
+
+    nuget Expecto
+    nuget Expecto.FsCheck
+    nuget Fake.Core.Process
+    nuget Fake.DotNet.Cli
+    nuget FSharp.Core
