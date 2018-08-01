@@ -32,6 +32,19 @@ Target.create "Clean" (fun _ ->
     Git.CommandHelper.directRunGitCommandAndFail "./Content" "clean -fxd"
 )
 
+Target.create "BuildPaketLockFiles" (fun _ ->
+    let contents =
+        [
+            "Content" </> "src" </> "Build" </> "paket-default.lock"
+            "Content" </> "src" </> "Client" </> "paket-default.lock"
+            "Content" </> "src" </> "Server" </> "paket-default.lock"
+        ]
+        |> List.map File.read
+        |> Seq.concat
+
+    File.writeWithEncoding (Text.UTF8Encoding(false)) false ("Content" </> "paket-default.lock") contents
+)
+
 Target.create "Pack" (fun _ ->
     Shell.regexReplaceInFileWithEncoding
         "  \"name\": .+,"
