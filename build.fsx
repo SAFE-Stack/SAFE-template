@@ -6,9 +6,13 @@
 #r "Facades/netstandard" // https://github.com/ionide/ionide-vscode-fsharp/issues/839#issuecomment-396296095
 #endif
 
+open System
+
 open Fake.Core
 open Fake.DotNet
 open Fake.IO
+open Fake.IO.FileSystemOperators
+open Fake.IO.Globbing.Operators
 open Fake.Tools
 
 let templatePath = "./Content/.template.config/template.json"
@@ -52,6 +56,41 @@ Target.create "Install" (fun _ ->
     let args = sprintf "-i %s/SAFE.Template.%s.nupkg" nupkgDir release.NugetVersion
     let result = DotNet.exec (fun x -> { x with DotNetCliPath = "dotnet" }) "new" args
     if not result.OK then failwithf "`dotnet %s` failed" args
+)
+
+let psi exe arg dir (x: ProcStartInfo) : ProcStartInfo =
+    { x with
+        FileName = exe
+        Arguments = arg
+        WorkingDirectory = dir }
+
+let run exe arg dir =
+    let result = Process.execWithResult (psi exe arg dir) TimeSpan.MaxValue
+    if not result.OK then (failwithf "`%s %s` failed: %A" exe arg result.Errors)
+
+Target.create "GenPaketLockFiles" (fun _ ->
+    let baseDir = "gen-paket-lock-files"
+    Directory.delete baseDir
+    Directory.create baseDir
+    for server in [ "saturn" ] do
+        let dirName = baseDir </> server
+        Directory.create dirName
+        run "dotnet" (sprintf "new SAFE --server %s" server) dirName
+
+        let lockFile = dirName </> "paket.lock"
+        let lines = File.readAsString lockFile
+        Directory.delete dirName
+        Directory.create dirName
+        let delimeter = "GROUP "
+        let groups =
+            lines
+            |> String.splitStr delimeter
+            |> List.filter (String.isNullOrWhiteSpace >> not)
+            |> List.map (fun group -> group.Substring(0, group.IndexOf Environment.NewLine), delimeter + group)
+        for (name, group) in groups do
+            let fileName = sprintf "paket-%s.lock" name
+            File.writeString false (dirName </> fileName) group
+            Shell.copyFile ("Content" </> "src" </> name </> "paket-default.lock") (dirName </> fileName)
 )
 
 Target.create "Tests" (fun _ ->

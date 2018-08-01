@@ -5,3 +5,4 @@ nupkg/
 obj/
 Content/paket.lock
 bin/
+gen-paket-lock-files/
