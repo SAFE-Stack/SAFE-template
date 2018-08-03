@@ -109,7 +109,7 @@ let configs =
           Fulma = true },
         { Server = Saturn
           Remoting = false
-          Azure = false } );
+          Azure = false } )
 
       "--deploy azure",
       ( { Azure = true },
@@ -117,7 +117,16 @@ let configs =
           Fulma = true },
         { Server = Saturn
           Remoting = false
-          Azure = true } ) ]
+          Azure = true } )
+
+      "--layout none",
+      ( { Azure = false },
+        { Remoting = false
+          Fulma = false },
+        { Server = Saturn
+          Remoting = false
+          Azure = false } )
+    ]
 
 
 let fullLockFileName build client server =
@@ -139,22 +148,23 @@ Target.create "BuildPaketLockFiles" (fun _ ->
         File.writeWithEncoding (Text.UTF8Encoding(false)) false ("Content" </> lockFileName) contents
 )
 
-
 Target.create "GenJsonConditions" (fun _ ->
     for (_, (build, client, server)) in configs do //TODO this combination is different?
         let lockFileName = fullLockFileName build client server
         let server = "saturn"
         let deploy = if build.Azure then "azure" else "none"
+        let layoutOperator = if client.Fulma then "!=" else "=="
         let template =
             sprintf """                    {
                         "include": "%s",
-                        "condition": "(server == \"%s\" && remoting == %b && deploy == \"%s\")",
+                        "condition": "(server == \"%s\" && remoting == %b && deploy == \"%s\" && layout %s \"none\")",
                         "rename": { "%s": "paket.lock" }
                     },"""
                  lockFileName
                  server
                  false
                  deploy
+                 layoutOperator
                  lockFileName
 
         printfn "%s" template
@@ -168,9 +178,12 @@ Target.create "GenPaketLockFiles" (fun _ ->
     for (arg, (build, client, server)) in configs do
         run "dotnet" (sprintf "new SAFE %s" arg) dirName
 
-        //run "mono" ".paket/paket.exe update --group Build" dirName
-
         let lockFile = dirName </> "paket.lock"
+
+        if not (File.exists lockFile) then
+            printfn "'paket.lock' doesn't exist for args '%s', installing..." arg
+            run "mono" ".paket/paket.exe install" dirName
+
         let lines = File.readAsString lockFile
         Directory.delete dirName
         Directory.create dirName
