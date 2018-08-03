@@ -118,17 +118,17 @@
             "exclude": [ "**/.template.config/**/*", "**/paket*.lock" ],
             "modifiers": [
                 {
-                    "include": "**/paket-default.lock",
+                    "include": "paket_noazure_noremoting-fulma_saturn-noremoting-noazure.lock",
                     "condition": "(server == \"saturn\" && remoting == false && deploy == \"none\")",
                     "rename": {
-                        "paket-default.lock": "paket.lock"
+                        "paket_noazure_noremoting-fulma_saturn-noremoting-noazure.lock": "paket.lock"
                     }
                 },
                 {
-                    "include": "**/paket-azure.lock",
+                    "include": "paket_azure_noremoting-fulma_saturn-noremoting-azure.lock",
                     "condition": "(server == \"saturn\" && remoting == false && deploy == \"azure\")",
                     "rename": {
-                        "paket-azure.lock": "paket.lock"
+                        "paket_azure_noremoting-fulma_saturn-noremoting-azure.lock": "paket.lock"
                     }
                 },
                 {
