@@ -121,14 +121,14 @@ Target.create "BuildPaketLockFiles" (fun _ ->
     for serverGroup in serverGroups do
         let contents =
             [
-                "Content" </> "src" </> "Build" </> sprintf "paket_%A.lock" buildGroup
-                "Content" </> "src" </> "Client" </> sprintf "paket_%A.lock" clientGroup
-                "Content" </> "src" </> "Server" </> sprintf "paket_%A.lock" serverGroup
+                "Content" </> "src" </> "Build" </> sprintf "paket_%O.lock" buildGroup
+                "Content" </> "src" </> "Client" </> sprintf "paket_%O.lock" clientGroup
+                "Content" </> "src" </> "Server" </> sprintf "paket_%O.lock" serverGroup
             ]
             |> List.map File.read
             |> Seq.concat
 
-        let lockName = sprintf "paket_%A_%A_%A.lock" buildGroup clientGroup serverGroup
+        let lockName = sprintf "paket_%O_%O_%O.lock" buildGroup clientGroup serverGroup
 
         File.writeWithEncoding (Text.UTF8Encoding(false)) false ("Content" </> lockName) contents
 )
@@ -137,27 +137,35 @@ Target.create "GenPaketLockFiles" (fun _ ->
     let baseDir = "gen-paket-lock-files"
     Directory.delete baseDir
     Directory.create baseDir
-    for server in [ "saturn" ] do
-        let dirName = baseDir </> server
-        Directory.create dirName
-        run "dotnet" (sprintf "new SAFE --server %s" server) dirName
 
-        run "mono" ".paket/paket.exe update --group Build" dirName
+    let dirName = baseDir </> "default"
+    Directory.create dirName
+    run "dotnet" (sprintf "new SAFE") dirName
 
-        let lockFile = dirName </> "paket.lock"
-        let lines = File.readAsString lockFile
-        Directory.delete dirName
+    //run "mono" ".paket/paket.exe update --group Build" dirName
+
+    let lockFile = dirName </> "paket.lock"
+    let lines = File.readAsString lockFile
+    Directory.delete dirName
+    Directory.create dirName
+    let delimeter = "GROUP "
+    let groups =
+        lines
+        |> String.splitStr delimeter
+        |> List.filter (String.isNullOrWhiteSpace >> not)
+        |> List.map (fun group -> group.Substring(0, group.IndexOf Environment.NewLine), delimeter + group)
+    for (groupName, group) in groups do
+        let dirName = dirName </> groupName
         Directory.create dirName
-        let delimeter = "GROUP "
-        let groups =
-            lines
-            |> String.splitStr delimeter
-            |> List.filter (String.isNullOrWhiteSpace >> not)
-            |> List.map (fun group -> group.Substring(0, group.IndexOf Environment.NewLine), delimeter + group)
-        for (name, group) in groups do
-            let fileName = sprintf "paket-%s.lock" name
-            File.writeString false (dirName </> fileName) group
-            Shell.copyFile ("Content" </> "src" </> name </> "paket-default.lock") (dirName </> fileName)
+        let lockFileSuffix =
+            match groupName with
+            | "Build" -> string buildGroups.[0]
+            | "Client" -> string clientGroups.[0]
+            | "Server" -> string serverGroups.[0]
+            | _ -> failwithf "Unhandled name '%s'" groupName
+        let fileName = sprintf "paket_%s.lock" lockFileSuffix
+        File.writeString false (dirName </> fileName) group
+        Shell.copyFile ("Content" </> "src" </> groupName </> fileName) (dirName </> fileName)
 )
 
 Target.create "Tests" (fun _ ->
