@@ -115,7 +115,7 @@
     },
     "sources": [
         {
-            "exclude": "**/.template.config/**/*",
+            "exclude": [ "**/.template.config/**/*", "**/paket*.lock" ],
             "modifiers": [
                 {
                     "exclude": "**/ServerSuave.fs",
@@ -127,19 +127,15 @@
                     }
                 },
                 {
-                    "exclude": "**/paket-default.lock",
-                    "condition": "(server != \"saturn\" || remoting != false || deploy != \"none\")"
-                },
-                {
+                    "include": "**/paket-default.lock",
+                    "condition": "(server == \"saturn\" && remoting == false && deploy == \"none\")",
                     "rename": {
                         "paket-default.lock": "paket.lock"
                     }
                 },
                 {
-                    "exclude": "**/paket-azure.lock",
-                    "condition": "(server != \"saturn\" || remoting != false || deploy != \"azure\")"
-                },
-                {
+                    "include": "**/paket-azure.lock",
+                    "condition": "(server == \"saturn\" && remoting == false && deploy == \"azure\")",
                     "rename": {
                         "paket-azure.lock": "paket.lock"
                     }
