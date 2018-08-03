@@ -102,8 +102,26 @@ type ServerPaketDependencies =
             let azure = if x.Azure then "azure" else "noazure"
             sprintf "%s-%s-%s" server remoting azure
 
+let configs =
+    [ "",
+      ( { Azure = false },
+        { Remoting = false
+          Fulma = true },
+        { Server = Saturn
+          Remoting = false
+          Azure = false } );
+
+      "--deploy azure",
+      ( { Azure = true },
+        { Remoting = false
+          Fulma = true },
+        { Server = Saturn
+          Remoting = false
+          Azure = true } ) ]
+
 let buildGroups =
-    [ { Azure = false } ]
+    [ { Azure = false };
+      { Azure = true } ]
 
 let clientGroups =
     [ { Remoting = false
@@ -112,7 +130,10 @@ let clientGroups =
 let serverGroups =
     [ { Server = Saturn
         Remoting = false
-        Azure = false } ]
+        Azure = false };
+      { Server = Saturn
+        Remoting = false
+        Azure = true } ]
 
 Target.create "BuildPaketLockFiles" (fun _ ->
 
@@ -134,38 +155,37 @@ Target.create "BuildPaketLockFiles" (fun _ ->
 )
 
 Target.create "GenPaketLockFiles" (fun _ ->
-    let baseDir = "gen-paket-lock-files"
-    Directory.delete baseDir
-    Directory.create baseDir
-
-    let dirName = baseDir </> "default"
-    Directory.create dirName
-    run "dotnet" (sprintf "new SAFE") dirName
-
-    //run "mono" ".paket/paket.exe update --group Build" dirName
-
-    let lockFile = dirName </> "paket.lock"
-    let lines = File.readAsString lockFile
+    let dirName = "gen-paket-lock-files"
     Directory.delete dirName
     Directory.create dirName
-    let delimeter = "GROUP "
-    let groups =
-        lines
-        |> String.splitStr delimeter
-        |> List.filter (String.isNullOrWhiteSpace >> not)
-        |> List.map (fun group -> group.Substring(0, group.IndexOf Environment.NewLine), delimeter + group)
-    for (groupName, group) in groups do
-        let dirName = dirName </> groupName
+
+    for (arg, (build, client, server)) in configs do
+        run "dotnet" (sprintf "new SAFE %s" arg) dirName
+
+        //run "mono" ".paket/paket.exe update --group Build" dirName
+
+        let lockFile = dirName </> "paket.lock"
+        let lines = File.readAsString lockFile
+        Directory.delete dirName
         Directory.create dirName
-        let lockFileSuffix =
-            match groupName with
-            | "Build" -> string buildGroups.[0]
-            | "Client" -> string clientGroups.[0]
-            | "Server" -> string serverGroups.[0]
-            | _ -> failwithf "Unhandled name '%s'" groupName
-        let fileName = sprintf "paket_%s.lock" lockFileSuffix
-        File.writeString false (dirName </> fileName) group
-        Shell.copyFile ("Content" </> "src" </> groupName </> fileName) (dirName </> fileName)
+        let delimeter = "GROUP "
+        let groups =
+            lines
+            |> String.splitStr delimeter
+            |> List.filter (String.isNullOrWhiteSpace >> not)
+            |> List.map (fun group -> group.Substring(0, group.IndexOf Environment.NewLine), delimeter + group)
+        for (groupName, group) in groups do
+            let dirName = dirName </> groupName
+            Directory.create dirName
+            let lockFileSuffix =
+                match groupName with
+                | "Build" -> string build
+                | "Client" -> string client
+                | "Server" -> string server
+                | _ -> failwithf "Unhandled name '%s'" groupName
+            let fileName = sprintf "paket_%s.lock" lockFileSuffix
+            File.writeString false (dirName </> fileName) group
+            Shell.copyFile ("Content" </> "src" </> groupName </> fileName) (dirName </> fileName)
 )
 
 Target.create "Tests" (fun _ ->
