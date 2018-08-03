@@ -128,6 +128,11 @@
                     "rename": { "paket_azure_noremoting-fulma_saturn-noremoting-azure.lock": "paket.lock" }
                 },
                 {
+                    "include": "paket_noazure_noremoting-nofulma_saturn-noremoting-noazure.lock",
+                    "condition": "(server == \"saturn\" && remoting == false && deploy == \"none\" && layout == \"none\")",
+                    "rename": { "paket_noazure_noremoting-nofulma_saturn-noremoting-noazure.lock": "paket.lock" }
+                },
+                {
                     "exclude": "**/ServerSuave.fs",
                     "condition": "(server != \"suave\")"
                 },
