@@ -119,37 +119,18 @@ let configs =
           Remoting = false
           Azure = true } ) ]
 
-let buildGroups =
-    [ { Azure = false };
-      { Azure = true } ]
-
-let clientGroups =
-    [ { Remoting = false
-        Fulma = true } ]
-
-let serverGroups =
-    [ { Server = Saturn
-        Remoting = false
-        Azure = false };
-      { Server = Saturn
-        Remoting = false
-        Azure = true } ]
-
 Target.create "BuildPaketLockFiles" (fun _ ->
-
-    for buildGroup in buildGroups do
-    for clientGroup in clientGroups do
-    for serverGroup in serverGroups do
+    for (_, (build, client, server)) in configs do
         let contents =
             [
-                "Content" </> "src" </> "Build" </> sprintf "paket_%O.lock" buildGroup
-                "Content" </> "src" </> "Client" </> sprintf "paket_%O.lock" clientGroup
-                "Content" </> "src" </> "Server" </> sprintf "paket_%O.lock" serverGroup
+                "Content" </> "src" </> "Build" </> sprintf "paket_%O.lock" build
+                "Content" </> "src" </> "Client" </> sprintf "paket_%O.lock" client
+                "Content" </> "src" </> "Server" </> sprintf "paket_%O.lock" server
             ]
             |> List.map File.read
             |> Seq.concat
 
-        let lockName = sprintf "paket_%O_%O_%O.lock" buildGroup clientGroup serverGroup
+        let lockName = sprintf "paket_%O_%O_%O.lock" build client server
 
         File.writeWithEncoding (Text.UTF8Encoding(false)) false ("Content" </> lockName) contents
 )
