@@ -119,6 +119,10 @@ let configs =
           Remoting = false
           Azure = true } ) ]
 
+
+let fullLockFileName build client server =
+    sprintf "paket_%O_%O_%O.lock" build client server
+
 Target.create "BuildPaketLockFiles" (fun _ ->
     for (_, (build, client, server)) in configs do
         let contents =
@@ -130,9 +134,30 @@ Target.create "BuildPaketLockFiles" (fun _ ->
             |> List.map File.read
             |> Seq.concat
 
-        let lockName = sprintf "paket_%O_%O_%O.lock" build client server
+        let lockFileName = fullLockFileName build client server
 
-        File.writeWithEncoding (Text.UTF8Encoding(false)) false ("Content" </> lockName) contents
+        File.writeWithEncoding (Text.UTF8Encoding(false)) false ("Content" </> lockFileName) contents
+)
+
+
+Target.create "GenJsonConditions" (fun _ ->
+    for (_, (build, client, server)) in configs do //TODO this combination is different?
+        let lockFileName = fullLockFileName build client server
+        let server = "saturn"
+        let deploy = if build.Azure then "azure" else "none"
+        let template =
+            sprintf """                    {
+                        "include": "%s",
+                        "condition": "(server == \"%s\" && remoting == %b && deploy == \"%s\")",
+                        "rename": { "%s": "paket.lock" }
+                    },"""
+                 lockFileName
+                 server
+                 false
+                 deploy
+                 lockFileName
+
+        printfn "%s" template
 )
 
 Target.create "GenPaketLockFiles" (fun _ ->
