@@ -118,15 +118,6 @@
             "exclude": [ "**/.template.config/**/*", "**/paket*.lock" ],
             "modifiers": [
                 {
-                    "exclude": "**/ServerSuave.fs",
-                    "condition": "(server != \"suave\")"
-                },
-                {
-                    "rename": {
-                        "ServerSuave.fs": "Server.fs"
-                    }
-                },
-                {
                     "include": "**/paket-default.lock",
                     "condition": "(server == \"saturn\" && remoting == false && deploy == \"none\")",
                     "rename": {
@@ -138,6 +129,15 @@
                     "condition": "(server == \"saturn\" && remoting == false && deploy == \"azure\")",
                     "rename": {
                         "paket-azure.lock": "paket.lock"
+                    }
+                },
+                {
+                    "exclude": "**/ServerSuave.fs",
+                    "condition": "(server != \"suave\")"
+                },
+                {
+                    "rename": {
+                        "ServerSuave.fs": "Server.fs"
                     }
                 },
                 {
