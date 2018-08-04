@@ -24,6 +24,7 @@ let storageAccount = Azure.tryGetEnv "STORAGE_CONNECTIONSTRING" |> Option.defaul
 //#elseif (deploy == "heroku")
 let tryGetEnv = System.Environment.GetEnvironmentVariable >> function null | "" -> None | x -> Some x
 let port = tryGetEnv "PORT" |> Option.map System.UInt16.Parse |> Option.defaultValue 8085us
+let publicPath = Path.GetFullPath "../Client/public"
 //#else
 let publicPath = Path.GetFullPath "../Client/public"
 let port = 8085us
