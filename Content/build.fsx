@@ -42,8 +42,12 @@ let npmTool = platformTool "npm" "npm.cmd"
 let yarnTool = platformTool "yarn" "yarn.cmd"
 //#endif
 
+//#if (deploy == "heroku")
+// Heroku may fail if trying to install a different version. Use the default
+let install = lazy DotNet.install id
+//#else
 let install = lazy DotNet.install DotNet.Versions.Release_2_1_300
-
+//#endif
 let inline withWorkDir wd =
     DotNet.Options.lift install.Value
     >> DotNet.Options.withWorkingDirectory wd
