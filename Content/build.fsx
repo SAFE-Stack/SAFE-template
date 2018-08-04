@@ -98,7 +98,7 @@ Target.create "RestoreServer" (fun _ ->
 
 Target.create "Build" (fun _ ->
     runDotNet "build" serverPath
-    runDotNet "fable --port free webpack -- -p" clientPath
+    runDotNet "fable webpack --port free -- -p" clientPath
 )
 
 Target.create "Run" (fun _ ->
@@ -106,7 +106,7 @@ Target.create "Run" (fun _ ->
         runDotNet "watch run" serverPath
     }
     let client = async {
-        runDotNet "fable --port free webpack-dev-server" clientPath
+        runDotNet "fable webpack-dev-server --port free" clientPath
     }
     let browser = async {
         do! Async.Sleep 5000
@@ -119,7 +119,7 @@ Target.create "Run" (fun _ ->
     |> ignore
 )
 
-//#if (deploy == "docker")
+//#if (deploy == "docker" || deploy == "heroku")
 Target.create "Bundle" (fun _ ->
     let serverDir = Path.combine deployDir "Server"
     let clientDir = Path.combine deployDir "Client"
@@ -129,8 +129,14 @@ Target.create "Bundle" (fun _ ->
     runDotNet publishArgs serverPath
 
     Shell.copyDir publicDir "src/Client/public" FileFilter.allFiles
-)
+//#if (deploy == "heroku")
+    let procFile = sprintf "web: cd \"%s\" && dotnet Server.dll" serverDir
+    File.writeNew "Procfile" [procFile]
+//#endif
 
+)
+//#endif
+//#if (deploy == "docker")
 let dockerUser = "safe-template"
 let dockerImageName = "safe-template"
 let dockerFullName = sprintf "%s/%s" dockerUser dockerImageName
@@ -143,8 +149,7 @@ Target.create "Docker" (fun _ ->
     runTool "docker" tagArgs "."
 )
 
-//#endif
-//#if (deploy == "azure")
+//#elseif (deploy == "azure")
 Target.create "Bundle" (fun _ ->
     runDotNet (sprintf "publish \"%s\" -c release -o \"%s\"" serverPath deployDir) __SOURCE_DIRECTORY__
     Shell.copyDir (Path.combine deployDir "public") (Path.combine clientPath "public") FileFilter.allFiles
@@ -229,6 +234,8 @@ open Fake.Core.TargetOperators
     ==> "Bundle"
     ==> "ArmTemplate"
     ==> "AppService"
+//#elseif (deploy == "heroku")
+    ==> "Bundle"
 //#endif
 
 "Clean"
@@ -236,4 +243,8 @@ open Fake.Core.TargetOperators
     ==> "RestoreServer"
     ==> "Run"
 
+//#if (deploy == "heroku")
+Target.runOrDefault "Bundle"
+//#else
 Target.runOrDefault "Build"
+//#endif

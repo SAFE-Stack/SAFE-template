@@ -109,6 +109,10 @@
                 {
                     "choice": "docker",
                     "description": "additional FAKE targets to bundle and build Docker image"
+                },
+                {
+                    "choice": "heroku",
+                    "description": "additional FAKE targets to deploy on Heroku"
                 }
             ]
         }
@@ -203,6 +207,10 @@
                 {
                     "exclude": "arm-template.json",
                     "condition": "(deploy != \"azure\")"
+                },
+                {
+                    "exclude": "app.json",
+                    "condition": "(deploy != \"heroku\")"
                 },
                 {
                     "exclude": "yarn.lock",

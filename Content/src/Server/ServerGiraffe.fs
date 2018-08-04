@@ -24,10 +24,15 @@ open Microsoft.WindowsAzure.Storage
 let tryGetEnv = System.Environment.GetEnvironmentVariable >> function null | "" -> None | x -> Some x
 let publicPath = tryGetEnv "public_path" |> Option.defaultValue "../Client/public" |> Path.GetFullPath
 let storageAccount = tryGetEnv "STORAGE_CONNECTIONSTRING" |> Option.defaultValue "UseDevelopmentStorage=true" |> CloudStorageAccount.Parse
+let port = 8085us
+//#elseif (deploy == "heroku")
+let tryGetEnv = System.Environment.GetEnvironmentVariable >> function null | "" -> None | x -> Some x
+let publicPath = Path.GetFullPath "../Client/public"
+let port = tryGetEnv "PORT" |> Option.map System.UInt16.Parse |> Option.defaultValue 8085us
 //#else
 let publicPath = Path.GetFullPath "../Client/public"
-//#endif
 let port = 8085us
+//#endif
 
 let getInitCounter () : Task<Counter> = task { return 42 }
 #if (remoting)

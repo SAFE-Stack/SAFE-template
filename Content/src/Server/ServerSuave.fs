@@ -21,6 +21,9 @@ open Microsoft.WindowsAzure.Storage
 let publicPath = Azure.tryGetEnv "public_path" |> Option.defaultValue "../Client/public" |> Path.GetFullPath
 let port = Azure.tryGetEnv "HTTP_PLATFORM_PORT" |> Option.map System.UInt16.Parse |> Option.defaultValue 8085us
 let storageAccount = Azure.tryGetEnv "STORAGE_CONNECTIONSTRING" |> Option.defaultValue "UseDevelopmentStorage=true" |> CloudStorageAccount.Parse
+//#elseif (deploy == "heroku")
+let tryGetEnv = System.Environment.GetEnvironmentVariable >> function null | "" -> None | x -> Some x
+let port = tryGetEnv "PORT" |> Option.map System.UInt16.Parse |> Option.defaultValue 8085us
 //#else
 let publicPath = Path.GetFullPath "../Client/public"
 let port = 8085us

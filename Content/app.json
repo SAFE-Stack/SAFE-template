@@ -1,0 +1,9 @@
+{
+    "buildpacks": [
+    {
+      "url" : "heroku/nodejs"
+    },
+    {
+      "url" : "https://github.com/SAFE-Stack/SAFE-buildpack"
+    }]
+  }
