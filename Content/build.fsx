@@ -43,12 +43,15 @@ let yarnTool = platformTool "yarn" "yarn.cmd"
 //#endif
 
 //#if (deploy != "heroku")
+let inline withWorkDir wd =
+//#else
 let install = lazy DotNet.install DotNet.Versions.Release_2_1_300
 
 let inline withWorkDir wd =
-    DotNet.Options.lift install.Value
-    >> DotNet.Options.withWorkingDirectory wd
+    DotNet.Options.lift install.Value >>
 //#endif
+    DotNet.Options.withWorkingDirectory wd
+
 let runTool cmd args workingDir =
     let result =
         Process.execSimple (fun info ->
@@ -61,12 +64,7 @@ let runTool cmd args workingDir =
 
 let runDotNet cmd workingDir =
     let result =
-//#if (deploy == "heroku")
-        // Heroku may fail if trying to install a different version. Use the default
-        DotNet.exec id cmd ""
-//#else
         DotNet.exec (withWorkDir workingDir) cmd ""
-//#endif
     if result.ExitCode <> 0 then failwithf "'dotnet %s' failed in %s" cmd workingDir
 
 let openBrowser url =
