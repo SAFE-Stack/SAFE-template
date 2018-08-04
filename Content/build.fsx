@@ -42,7 +42,7 @@ let npmTool = platformTool "npm" "npm.cmd"
 let yarnTool = platformTool "yarn" "yarn.cmd"
 //#endif
 
-//#if (deploy != "heroku")
+//#if (deploy == "heroku")
 let inline withWorkDir wd =
 //#else
 let install = lazy DotNet.install DotNet.Versions.Release_2_1_300
