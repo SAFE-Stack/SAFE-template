@@ -137,7 +137,7 @@ let configs =
     [ for azure in [ false; true ] do
       for fulma in [ false; true ] do
       for remoting in [ false; true ] do
-      for server in [ Saturn ] do
+      for server in [ Saturn; Giraffe ] do
       yield
           { Azure = azure
             Fulma = fulma
