@@ -137,7 +137,7 @@ let configs =
     [ for azure in [ false; true ] do
       for fulma in [ false; true ] do
       for remoting in [ false; true ] do
-      for server in [ Saturn; Giraffe ] do
+      for server in [ Saturn; Giraffe; Suave ] do
       yield
           { Azure = azure
             Fulma = fulma
@@ -164,10 +164,16 @@ Target.create "BuildPaketLockFiles" (fun _ ->
         File.writeWithEncoding (Text.UTF8Encoding(false)) false ("Content" </> lockFileName) contents
 )
 
-Target.create "GenJsonConditions" (fun _ ->
-    for config in configs do //TODO this combination is different?
+Target.create "RemovePaketLockFiles" (fun _ ->
+    for config in configs do
         let lockFileName = fullLockFileName config.ToBuild config.ToClient config.ToServer
-        let server = "saturn"
+        File.delete ("Content" </> lockFileName)
+)
+
+Target.create "GenJsonConditions" (fun _ ->
+    for config in configs do
+        let lockFileName = fullLockFileName config.ToBuild config.ToClient config.ToServer
+        let server = string config.Server
         let deploy = if config.Azure then "azure" else "none"
         let remoting = config.Remoting
         let layoutOperator = if config.Fulma then "!=" else "=="
@@ -267,7 +273,9 @@ Target.create "Release" ignore
 open Fake.Core.TargetOperators
 
 "Clean"
+    ==> "BuildPaketLockFiles"
     ==> "Pack"
+    ==> "RemovePaketLockFiles"
     ==> "Install"
     ==> "Tests"
     ==> "Push"
@@ -276,4 +284,4 @@ open Fake.Core.TargetOperators
 "Install"
     ==> "GenPaketLockFiles"
 
-Target.runOrDefault "Pack"
+Target.runOrDefault "Install"
