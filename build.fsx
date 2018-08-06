@@ -120,32 +120,36 @@ type CombinedPaketDependencies =
           Remoting = x.Remoting
           Azure = x.Azure }
 
+    override x.ToString () =
+        let remoting = if x.Remoting then Some "--remoting" else None
+        let azure = if x.Azure then Some "--deploy azure" else None
+        let fulma = if not x.Fulma then Some "--layout none" else None
+        let server = if x.Server <> Saturn then Some (sprintf "--server %O" x.Server) else None
+
+        [ remoting
+          azure
+          fulma
+          server ]
+        |> List.choose id
+        |> String.concat " "
+
 let configs =
-    [ "",
-      { Azure = false
-        Fulma = true
-        Server = Saturn
-        Remoting = false }
-
-      "--deploy azure",
-      { Azure = true
-        Fulma = true
-        Server = Saturn
-        Remoting = false }
-
-      "--layout none",
-      { Azure = false
-        Fulma = false
-        Server = Saturn
-        Remoting = false }
+    [ for azure in [ false; true ] do
+      for fulma in [ false; true ] do
+      for remoting in [ false; true ] do
+      for server in [ Saturn ] do
+      yield
+          { Azure = azure
+            Fulma = fulma
+            Server = server
+            Remoting = remoting }
     ]
-
 
 let fullLockFileName build client server =
     sprintf "paket_%O_%O_%O.lock" build client server
 
 Target.create "BuildPaketLockFiles" (fun _ ->
-    for (_, config) in configs do
+    for config in configs do
         let contents =
             [
                 "Content" </> "src" </> "Build" </> sprintf "paket_%O.lock" config.ToBuild
@@ -161,10 +165,11 @@ Target.create "BuildPaketLockFiles" (fun _ ->
 )
 
 Target.create "GenJsonConditions" (fun _ ->
-    for (_, config) in configs do //TODO this combination is different?
+    for config in configs do //TODO this combination is different?
         let lockFileName = fullLockFileName config.ToBuild config.ToClient config.ToServer
         let server = "saturn"
         let deploy = if config.Azure then "azure" else "none"
+        let remoting = config.Remoting
         let layoutOperator = if config.Fulma then "!=" else "=="
         let template =
             sprintf """                    {
@@ -174,7 +179,7 @@ Target.create "GenJsonConditions" (fun _ ->
                     },"""
                  lockFileName
                  server
-                 false
+                 remoting
                  deploy
                  layoutOperator
                  lockFileName
@@ -187,10 +192,11 @@ Target.create "GenPaketLockFiles" (fun _ ->
     Directory.delete baseDir
     Directory.create baseDir
 
-    for (arg, config) in configs do
+    for config in configs do
         let dirName = baseDir </> "tmp"
         Directory.delete dirName
         Directory.create dirName
+        let arg = string config
 
         run "dotnet" (sprintf "new SAFE %s" arg) dirName
 

@@ -118,9 +118,34 @@
             "exclude": [ "**/.template.config/**/*", "**/paket*.lock" ],
             "modifiers": [
                 {
+                    "include": "paket_noazure_noremoting-nofulma_saturn-noremoting-noazure.lock",
+                    "condition": "(server == \"saturn\" && remoting == false && deploy == \"none\" && layout == \"none\")",
+                    "rename": { "paket_noazure_noremoting-nofulma_saturn-noremoting-noazure.lock": "paket.lock" }
+                },
+                {
+                    "include": "paket_noazure_remoting-nofulma_saturn-remoting-noazure.lock",
+                    "condition": "(server == \"saturn\" && remoting == true && deploy == \"none\" && layout == \"none\")",
+                    "rename": { "paket_noazure_remoting-nofulma_saturn-remoting-noazure.lock": "paket.lock" }
+                },
+                {
                     "include": "paket_noazure_noremoting-fulma_saturn-noremoting-noazure.lock",
                     "condition": "(server == \"saturn\" && remoting == false && deploy == \"none\" && layout != \"none\")",
                     "rename": { "paket_noazure_noremoting-fulma_saturn-noremoting-noazure.lock": "paket.lock" }
+                },
+                {
+                    "include": "paket_noazure_remoting-fulma_saturn-remoting-noazure.lock",
+                    "condition": "(server == \"saturn\" && remoting == true && deploy == \"none\" && layout != \"none\")",
+                    "rename": { "paket_noazure_remoting-fulma_saturn-remoting-noazure.lock": "paket.lock" }
+                },
+                {
+                    "include": "paket_azure_noremoting-nofulma_saturn-noremoting-azure.lock",
+                    "condition": "(server == \"saturn\" && remoting == false && deploy == \"azure\" && layout == \"none\")",
+                    "rename": { "paket_azure_noremoting-nofulma_saturn-noremoting-azure.lock": "paket.lock" }
+                },
+                {
+                    "include": "paket_azure_remoting-nofulma_saturn-remoting-azure.lock",
+                    "condition": "(server == \"saturn\" && remoting == true && deploy == \"azure\" && layout == \"none\")",
+                    "rename": { "paket_azure_remoting-nofulma_saturn-remoting-azure.lock": "paket.lock" }
                 },
                 {
                     "include": "paket_azure_noremoting-fulma_saturn-noremoting-azure.lock",
@@ -128,9 +153,9 @@
                     "rename": { "paket_azure_noremoting-fulma_saturn-noremoting-azure.lock": "paket.lock" }
                 },
                 {
-                    "include": "paket_noazure_noremoting-nofulma_saturn-noremoting-noazure.lock",
-                    "condition": "(server == \"saturn\" && remoting == false && deploy == \"none\" && layout == \"none\")",
-                    "rename": { "paket_noazure_noremoting-nofulma_saturn-noremoting-noazure.lock": "paket.lock" }
+                    "include": "paket_azure_remoting-fulma_saturn-remoting-azure.lock",
+                    "condition": "(server == \"saturn\" && remoting == true && deploy == \"azure\" && layout != \"none\")",
+                    "rename": { "paket_azure_remoting-fulma_saturn-remoting-azure.lock": "paket.lock" }
                 },
                 {
                     "exclude": "**/ServerSuave.fs",
