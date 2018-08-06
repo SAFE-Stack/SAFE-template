@@ -134,7 +134,7 @@ Target.create "Bundle" (fun _ ->
 
     Shell.copyDir publicDir "src/Client/public" FileFilter.allFiles
 //#if (deploy == "heroku")
-    let procFile = sprintf "web: cd \"%s\" && dotnet Server.dll" serverDir
+    let procFile = sprintf "web: cd \"%s\" && dotnet Server.dll" (Path.shortenCurrentDirectory serverDir)
     File.writeNew "Procfile" [procFile]
 //#endif
 
