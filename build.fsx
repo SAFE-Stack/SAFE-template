@@ -145,6 +145,13 @@ let configs =
             Remoting = remoting }
     ]
 
+let specific f =
+    List.map (fun x -> f x, string x)
+    >> List.groupBy fst
+    >> List.map (snd >> List.head)
+
+let buildConfigs = configs |> specific (fun x -> x.ToBuild)
+
 let fullLockFileName build client server =
     sprintf "paket_%O_%O_%O.lock" build client server
 
@@ -235,6 +242,51 @@ Target.create "GenPaketLockFiles" (fun _ ->
             if not (File.exists filePath) then
                 File.writeString false filePath group
                 Shell.copyFile ("Content" </> "src" </> groupName </> fileName) (dirName </> fileName)
+            else
+                printfn "'%s' already exists" filePath
+)
+
+Target.create "UpdatePaketLockFiles" (fun _ ->
+    let baseDir = "gen-paket-lock-files"
+    Directory.delete baseDir
+    Directory.create baseDir
+
+    let groupName = "Build"
+
+    for (config, arg) in buildConfigs do
+        let dirName = baseDir </> "tmp"
+        Directory.delete dirName
+        Directory.create dirName
+
+        run "dotnet" (sprintf "new SAFE %s" arg) dirName
+
+        let lockFile = dirName </> "paket.lock"
+
+        if not (File.exists lockFile) then
+            failwithf "'paket.lock' doesn't exist for args '%s'" arg
+
+        run "mono" (sprintf ".paket/paket.exe update -g %s" groupName) dirName
+
+        let lines = File.readAsString lockFile
+        Directory.delete dirName
+        Directory.create dirName
+        let delimeter = "GROUP "
+        let (groupName, group) =
+            lines
+            |> String.splitStr delimeter
+            |> List.filter (String.isNullOrWhiteSpace >> not)
+            |> List.map (fun group -> group.Substring(0, group.IndexOf Environment.NewLine), delimeter + group)
+            |> List.filter (fst >> ((=) groupName))
+            |> List.head
+        let dirName = baseDir </> groupName
+        Directory.create dirName
+        let fileName = sprintf "paket_%s.lock" (string config)
+        let filePath = dirName </> fileName
+        if not (File.exists filePath) then
+            File.writeString false filePath group
+            Shell.copyFile ("Content" </> "src" </> groupName </> fileName) (dirName </> fileName)
+        else
+            printfn "'%s' already exists" filePath
 )
 
 Target.create "Tests" (fun _ ->
