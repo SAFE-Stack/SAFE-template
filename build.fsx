@@ -185,19 +185,19 @@ Target.create "GenJsonConditions" (fun _ ->
     for config in configs do
         let lockFileName = fullLockFileName config.ToBuild config.ToClient config.ToServer
         let server = string config.Server
-        let deploy = if config.Azure then "azure" else "none"
+        let azureOperator = if config.Azure then "==" else "!="
         let remoting = config.Remoting
         let layoutOperator = if config.Fulma then "!=" else "=="
         let template =
             sprintf """                    {
                         "include": "%s",
-                        "condition": "(server == \"%s\" && remoting == %b && deploy == \"%s\" && layout %s \"none\")",
+                        "condition": "(server == \"%s\" && remoting == %b && deploy %s \"azure\" && layout %s \"none\")",
                         "rename": { "%s": "paket.lock" }
                     },"""
                  lockFileName
                  server
                  remoting
-                 deploy
+                 azureOperator
                  layoutOperator
                  lockFileName
 
