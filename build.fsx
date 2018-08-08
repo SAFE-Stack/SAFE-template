@@ -255,52 +255,53 @@ Target.create "UpdatePaketLockFiles" (fun x ->
     Directory.delete baseDir
     Directory.create baseDir
 
-    let groupName =
+    let groupNames =
         match x.Context.Arguments with
-        | [ x ] -> x
-        | _ -> failwith "provide one group Name"
+        | [ ] -> specificConfigs |> Seq.map (fun kv -> kv.Key) |> Seq.toList
+        | xs -> xs
 
-    let configs =
-        match Map.tryFind groupName specificConfigs with
-        | Some x -> x
-        | None -> failwithf "unknown group: '%s'" groupName
+    for groupName in groupNames do
+        let configs =
+            match Map.tryFind groupName specificConfigs with
+            | Some x -> x
+            | None -> failwithf "unknown group: '%s'" groupName
 
-    printfn "Group name: %s, all configs: %A" groupName configs
+        printfn "Group name: %s, all configs: %A" groupName configs
 
-    for (configAbbr, safeArgs) in configs do
-        let dirName = baseDir </> "tmp"
-        Directory.delete dirName
-        Directory.create dirName
+        for (configAbbr, safeArgs) in configs do
+            let dirName = baseDir </> "tmp"
+            Directory.delete dirName
+            Directory.create dirName
 
-        run "dotnet" (sprintf "new SAFE %s" safeArgs) dirName
+            run "dotnet" (sprintf "new SAFE %s" safeArgs) dirName
 
-        let lockFile = dirName </> "paket.lock"
+            let lockFile = dirName </> "paket.lock"
 
-        if not (File.exists lockFile) then
-            failwithf "'paket.lock' doesn't exist for args '%s'" safeArgs
+            if not (File.exists lockFile) then
+                failwithf "'paket.lock' doesn't exist for args '%s'" safeArgs
 
-        run "mono" (sprintf ".paket/paket.exe update -g %s" groupName) dirName
+            run "mono" (sprintf ".paket/paket.exe update -g %s" groupName) dirName
 
-        let lines = File.readAsString lockFile
-        Directory.delete dirName
-        Directory.create dirName
-        let delimeter = "GROUP "
-        let (groupName, group) =
-            lines
-            |> String.splitStr delimeter
-            |> List.filter (String.isNullOrWhiteSpace >> not)
-            |> List.map (fun group -> group.Substring(0, group.IndexOf Environment.NewLine), delimeter + group)
-            |> List.filter (fst >> ((=) groupName))
-            |> List.head
-        let dirName = baseDir </> groupName
-        Directory.create dirName
-        let fileName = sprintf "paket_%s.lock" configAbbr
-        let filePath = dirName </> fileName
-        if not (File.exists filePath) then
-            File.writeString false filePath group
-            Shell.copyFile ("Content" </> "src" </> groupName </> fileName) (dirName </> fileName)
-        else
-            printfn "'%s' already exists" filePath
+            let lines = File.readAsString lockFile
+            Directory.delete dirName
+            Directory.create dirName
+            let delimeter = "GROUP "
+            let (groupName, group) =
+                lines
+                |> String.splitStr delimeter
+                |> List.filter (String.isNullOrWhiteSpace >> not)
+                |> List.map (fun group -> group.Substring(0, group.IndexOf Environment.NewLine), delimeter + group)
+                |> List.filter (fst >> ((=) groupName))
+                |> List.head
+            let dirName = baseDir </> groupName
+            Directory.create dirName
+            let fileName = sprintf "paket_%s.lock" configAbbr
+            let filePath = dirName </> fileName
+            if not (File.exists filePath) then
+                File.writeString false filePath group
+                Shell.copyFile ("Content" </> "src" </> groupName </> fileName) (dirName </> fileName)
+            else
+                printfn "'%s' already exists" filePath
 )
 
 Target.create "Tests" (fun _ ->
@@ -349,5 +350,8 @@ open Fake.Core.TargetOperators
 
 "Install"
     ==> "GenPaketLockFiles"
+
+"Install"
+    ==> "UpdatePaketLockFiles"
 
 Target.runOrDefaultWithArguments "Install"

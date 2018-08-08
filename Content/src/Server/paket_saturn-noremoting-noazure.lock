@@ -464,7 +464,7 @@ NUGET
     runtime.ubuntu.16.04-x64.runtime.native.System.Security.Cryptography.OpenSsl (4.3.3) - restriction: || (&& (>= dnxcore50) (>= netstandard1.6)) (&& (< monoandroid) (< monotouch) (< net45) (>= netstandard1.6) (< netstandard2.0) (< win8) (< wpa81) (< xamarinios) (< xamarinmac) (< xamarintvos) (< xamarinwatchos))
     runtime.ubuntu.16.10-x64.runtime.native.System.Security.Cryptography.OpenSsl (4.3.3) - restriction: || (&& (>= dnxcore50) (>= netstandard1.6)) (&& (< monoandroid) (< monotouch) (< net45) (>= netstandard1.6) (< netstandard2.0) (< win8) (< wpa81) (< xamarinios) (< xamarinmac) (< xamarintvos) (< xamarinwatchos))
     runtime.ubuntu.18.04-x64.runtime.native.System.Security.Cryptography.OpenSsl (4.3.3) - restriction: || (&& (>= dnxcore50) (>= netstandard1.6)) (&& (< monoandroid) (< monotouch) (< net45) (>= netstandard1.6) (< netstandard2.0) (< win8) (< wpa81) (< xamarinios) (< xamarinmac) (< xamarintvos) (< xamarinwatchos))
-    Saturn (0.7.4)
+    Saturn (0.7.5)
       FSharp.Core (>= 4.2.3)
       Giraffe (>= 1.1)
       Microsoft.AspNetCore (>= 2.1)
