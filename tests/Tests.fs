@@ -145,6 +145,8 @@ let tests =
 
         run dotnet (sprintf "new SAFE %s" newSAFEArgs) dir
 
+        Expect.isTrue (File.exists (dir </> "paket.lock")) (sprintf "paket.lock not present for '%s'" newSAFEArgs)
+
         run fake "build" dir
 
         logger.info(
