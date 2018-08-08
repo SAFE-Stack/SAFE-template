@@ -150,7 +150,11 @@ let specific f =
     >> List.groupBy fst
     >> List.map (snd >> List.head)
 
-let buildConfigs = configs |> specific (fun x -> x.ToBuild)
+let specificConfigs =
+    [ "Build", configs |> specific (fun x -> string x.ToBuild)
+      "Client", configs |> specific (fun x -> string x.ToClient)
+      "Server", configs |> specific (fun x -> string x.ToServer) ]
+    |> Map.ofList
 
 let fullLockFileName build client server =
     sprintf "paket_%O_%O_%O.lock" build client server
@@ -246,24 +250,34 @@ Target.create "GenPaketLockFiles" (fun _ ->
                 printfn "'%s' already exists" filePath
 )
 
-Target.create "UpdatePaketLockFiles" (fun _ ->
+Target.create "UpdatePaketLockFiles" (fun x ->
     let baseDir = "gen-paket-lock-files"
     Directory.delete baseDir
     Directory.create baseDir
 
-    let groupName = "Build"
+    let groupName =
+        match x.Context.Arguments with
+        | [ x ] -> x
+        | _ -> failwith "provide one group Name"
 
-    for (config, arg) in buildConfigs do
+    let configs =
+        match Map.tryFind groupName specificConfigs with
+        | Some x -> x
+        | None -> failwithf "unknown group: '%s'" groupName
+
+    printfn "Group name: %s, all configs: %A" groupName configs
+
+    for (configAbbr, safeArgs) in configs do
         let dirName = baseDir </> "tmp"
         Directory.delete dirName
         Directory.create dirName
 
-        run "dotnet" (sprintf "new SAFE %s" arg) dirName
+        run "dotnet" (sprintf "new SAFE %s" safeArgs) dirName
 
         let lockFile = dirName </> "paket.lock"
 
         if not (File.exists lockFile) then
-            failwithf "'paket.lock' doesn't exist for args '%s'" arg
+            failwithf "'paket.lock' doesn't exist for args '%s'" safeArgs
 
         run "mono" (sprintf ".paket/paket.exe update -g %s" groupName) dirName
 
@@ -280,7 +294,7 @@ Target.create "UpdatePaketLockFiles" (fun _ ->
             |> List.head
         let dirName = baseDir </> groupName
         Directory.create dirName
-        let fileName = sprintf "paket_%s.lock" (string config)
+        let fileName = sprintf "paket_%s.lock" configAbbr
         let filePath = dirName </> fileName
         if not (File.exists filePath) then
             File.writeString false filePath group
@@ -336,4 +350,4 @@ open Fake.Core.TargetOperators
 "Install"
     ==> "GenPaketLockFiles"
 
-Target.runOrDefault "Install"
+Target.runOrDefaultWithArguments "Install"
