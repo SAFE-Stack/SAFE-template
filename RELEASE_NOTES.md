@@ -1,3 +1,7 @@
+#### 0.27.0 - 10.08.2018
+
+* Add paket.lock for all possible template options - https://github.com/SAFE-Stack/SAFE-template/pull/139
+
 #### 0.26.2 - 27.07.2018
 
 * Allow symlinks in webpack config to overcome issue with NuGet feed on a symlink-ed directory - https://github.com/SAFE-Stack/SAFE-template/pull/133
