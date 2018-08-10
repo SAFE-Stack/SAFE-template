@@ -54,32 +54,36 @@ type TemplateArgs =
         |> List.choose id
         |> String.concat " "
 
-let serverGen = Gen.elements [
-    None
-    Some "giraffe"
-    Some "suave"
-]
+let serverGen =
+    Gen.elements [
+        None
+        Some "giraffe"
+        Some "suave"
+    ]
 
-let deployGen = Gen.elements [
-    None
-    Some "docker"
-    Some "azure"
-]
+let deployGen =
+    Gen.elements [
+        None
+        Some "docker"
+        Some "azure"
+    ]
 
-let layoutGen = Gen.elements [
-    None
-    Some "fulma-basic"
-    Some "fulma-admin"
-    Some "fulma-cover"
-    Some "fulma-hero"
-    Some "fulma-landing"
-    Some "fulma-login"
-]
+let layoutGen =
+    Gen.elements [
+        None
+        Some "fulma-basic"
+        Some "fulma-admin"
+        Some "fulma-cover"
+        Some "fulma-hero"
+        Some "fulma-landing"
+        Some "fulma-login"
+    ]
 
-let jsDepsGen = Gen.elements [
-    None
-    Some "npm"
-]
+let jsDepsGen =
+    Gen.elements [
+        None
+        Some "npm"
+    ]
 
 type TemplateArgsArb () =
     static member Arb () : Arbitrary<TemplateArgs> =
@@ -136,22 +140,22 @@ let fsCheckConfig =
 
 [<Tests>]
 let tests =
-  testList "Project created from template" [
-    testPropertyWithConfig fsCheckConfig "Project should build properly" (fun (x : TemplateArgs) ->
-        let newSAFEArgs = x.ToString()
-        let uid = Guid.NewGuid().ToString("n")
-        let dir = Path.GetTempPath() </> uid
-        Directory.create dir
+    testList "Project created from template" [
+        testPropertyWithConfig fsCheckConfig "Project should build properly" (fun (x : TemplateArgs) ->
+            let newSAFEArgs = x.ToString()
+            let uid = Guid.NewGuid().ToString("n")
+            let dir = Path.GetTempPath() </> uid
+            Directory.create dir
 
-        run dotnet (sprintf "new SAFE %s" newSAFEArgs) dir
+            run dotnet (sprintf "new SAFE %s" newSAFEArgs) dir
 
-        Expect.isTrue (File.exists (dir </> "paket.lock")) (sprintf "paket.lock not present for '%s'" newSAFEArgs)
+            Expect.isTrue (File.exists (dir </> "paket.lock")) (sprintf "paket.lock not present for '%s'" newSAFEArgs)
 
-        run fake "build" dir
+            run fake "build" dir
 
-        logger.info(
-            eventX "Deleting `{dir}`"
-            >> setField "dir" dir)
-        Directory.delete dir
-    )
-  ]
+            logger.info(
+                eventX "Deleting `{dir}`"
+                >> setField "dir" dir)
+            Directory.delete dir
+        )
+    ]
