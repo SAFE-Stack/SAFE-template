@@ -115,8 +115,130 @@
     },
     "sources": [
         {
-            "exclude": "**/.template.config/**/*",
+            "exclude": [ "**/.template.config/**/*", "**/paket*.lock" ],
             "modifiers": [
+                {
+                    "include": "paket_noazure_noremoting-nofulma_saturn-noremoting-noazure.lock",
+                    "condition": "(server == \"saturn\" && remoting == false && deploy != \"azure\" && layout == \"none\")",
+                    "rename": { "paket_noazure_noremoting-nofulma_saturn-noremoting-noazure.lock": "paket.lock" }
+                },
+                {
+                    "include": "paket_noazure_noremoting-nofulma_giraffe-noremoting-noazure.lock",
+                    "condition": "(server == \"giraffe\" && remoting == false && deploy != \"azure\" && layout == \"none\")",
+                    "rename": { "paket_noazure_noremoting-nofulma_giraffe-noremoting-noazure.lock": "paket.lock" }
+                },
+                {
+                    "include": "paket_noazure_noremoting-nofulma_suave-noremoting-noazure.lock",
+                    "condition": "(server == \"suave\" && remoting == false && deploy != \"azure\" && layout == \"none\")",
+                    "rename": { "paket_noazure_noremoting-nofulma_suave-noremoting-noazure.lock": "paket.lock" }
+                },
+                {
+                    "include": "paket_noazure_remoting-nofulma_saturn-remoting-noazure.lock",
+                    "condition": "(server == \"saturn\" && remoting == true && deploy != \"azure\" && layout == \"none\")",
+                    "rename": { "paket_noazure_remoting-nofulma_saturn-remoting-noazure.lock": "paket.lock" }
+                },
+                {
+                    "include": "paket_noazure_remoting-nofulma_giraffe-remoting-noazure.lock",
+                    "condition": "(server == \"giraffe\" && remoting == true && deploy != \"azure\" && layout == \"none\")",
+                    "rename": { "paket_noazure_remoting-nofulma_giraffe-remoting-noazure.lock": "paket.lock" }
+                },
+                {
+                    "include": "paket_noazure_remoting-nofulma_suave-remoting-noazure.lock",
+                    "condition": "(server == \"suave\" && remoting == true && deploy != \"azure\" && layout == \"none\")",
+                    "rename": { "paket_noazure_remoting-nofulma_suave-remoting-noazure.lock": "paket.lock" }
+                },
+                {
+                    "include": "paket_noazure_noremoting-fulma_saturn-noremoting-noazure.lock",
+                    "condition": "(server == \"saturn\" && remoting == false && deploy != \"azure\" && layout != \"none\")",
+                    "rename": { "paket_noazure_noremoting-fulma_saturn-noremoting-noazure.lock": "paket.lock" }
+                },
+                {
+                    "include": "paket_noazure_noremoting-fulma_giraffe-noremoting-noazure.lock",
+                    "condition": "(server == \"giraffe\" && remoting == false && deploy != \"azure\" && layout != \"none\")",
+                    "rename": { "paket_noazure_noremoting-fulma_giraffe-noremoting-noazure.lock": "paket.lock" }
+                },
+                {
+                    "include": "paket_noazure_noremoting-fulma_suave-noremoting-noazure.lock",
+                    "condition": "(server == \"suave\" && remoting == false && deploy != \"azure\" && layout != \"none\")",
+                    "rename": { "paket_noazure_noremoting-fulma_suave-noremoting-noazure.lock": "paket.lock" }
+                },
+                {
+                    "include": "paket_noazure_remoting-fulma_saturn-remoting-noazure.lock",
+                    "condition": "(server == \"saturn\" && remoting == true && deploy != \"azure\" && layout != \"none\")",
+                    "rename": { "paket_noazure_remoting-fulma_saturn-remoting-noazure.lock": "paket.lock" }
+                },
+                {
+                    "include": "paket_noazure_remoting-fulma_giraffe-remoting-noazure.lock",
+                    "condition": "(server == \"giraffe\" && remoting == true && deploy != \"azure\" && layout != \"none\")",
+                    "rename": { "paket_noazure_remoting-fulma_giraffe-remoting-noazure.lock": "paket.lock" }
+                },
+                {
+                    "include": "paket_noazure_remoting-fulma_suave-remoting-noazure.lock",
+                    "condition": "(server == \"suave\" && remoting == true && deploy != \"azure\" && layout != \"none\")",
+                    "rename": { "paket_noazure_remoting-fulma_suave-remoting-noazure.lock": "paket.lock" }
+                },
+                {
+                    "include": "paket_azure_noremoting-nofulma_saturn-noremoting-azure.lock",
+                    "condition": "(server == \"saturn\" && remoting == false && deploy == \"azure\" && layout == \"none\")",
+                    "rename": { "paket_azure_noremoting-nofulma_saturn-noremoting-azure.lock": "paket.lock" }
+                },
+                {
+                    "include": "paket_azure_noremoting-nofulma_giraffe-noremoting-azure.lock",
+                    "condition": "(server == \"giraffe\" && remoting == false && deploy == \"azure\" && layout == \"none\")",
+                    "rename": { "paket_azure_noremoting-nofulma_giraffe-noremoting-azure.lock": "paket.lock" }
+                },
+                {
+                    "include": "paket_azure_noremoting-nofulma_suave-noremoting-azure.lock",
+                    "condition": "(server == \"suave\" && remoting == false && deploy == \"azure\" && layout == \"none\")",
+                    "rename": { "paket_azure_noremoting-nofulma_suave-noremoting-azure.lock": "paket.lock" }
+                },
+                {
+                    "include": "paket_azure_remoting-nofulma_saturn-remoting-azure.lock",
+                    "condition": "(server == \"saturn\" && remoting == true && deploy == \"azure\" && layout == \"none\")",
+                    "rename": { "paket_azure_remoting-nofulma_saturn-remoting-azure.lock": "paket.lock" }
+                },
+                {
+                    "include": "paket_azure_remoting-nofulma_giraffe-remoting-azure.lock",
+                    "condition": "(server == \"giraffe\" && remoting == true && deploy == \"azure\" && layout == \"none\")",
+                    "rename": { "paket_azure_remoting-nofulma_giraffe-remoting-azure.lock": "paket.lock" }
+                },
+                {
+                    "include": "paket_azure_remoting-nofulma_suave-remoting-azure.lock",
+                    "condition": "(server == \"suave\" && remoting == true && deploy == \"azure\" && layout == \"none\")",
+                    "rename": { "paket_azure_remoting-nofulma_suave-remoting-azure.lock": "paket.lock" }
+                },
+                {
+                    "include": "paket_azure_noremoting-fulma_saturn-noremoting-azure.lock",
+                    "condition": "(server == \"saturn\" && remoting == false && deploy == \"azure\" && layout != \"none\")",
+                    "rename": { "paket_azure_noremoting-fulma_saturn-noremoting-azure.lock": "paket.lock" }
+                },
+                {
+                    "include": "paket_azure_noremoting-fulma_giraffe-noremoting-azure.lock",
+                    "condition": "(server == \"giraffe\" && remoting == false && deploy == \"azure\" && layout != \"none\")",
+                    "rename": { "paket_azure_noremoting-fulma_giraffe-noremoting-azure.lock": "paket.lock" }
+                },
+                {
+                    "include": "paket_azure_noremoting-fulma_suave-noremoting-azure.lock",
+                    "condition": "(server == \"suave\" && remoting == false && deploy == \"azure\" && layout != \"none\")",
+                    "rename": { "paket_azure_noremoting-fulma_suave-noremoting-azure.lock": "paket.lock" }
+                },
+                {
+                    "include": "paket_azure_remoting-fulma_saturn-remoting-azure.lock",
+                    "condition": "(server == \"saturn\" && remoting == true && deploy == \"azure\" && layout != \"none\")",
+                    "rename": { "paket_azure_remoting-fulma_saturn-remoting-azure.lock": "paket.lock" }
+                },
+                {
+                    "include": "paket_azure_remoting-fulma_giraffe-remoting-azure.lock",
+                    "condition": "(server == \"giraffe\" && remoting == true && deploy == \"azure\" && layout != \"none\")",
+                    "rename": { "paket_azure_remoting-fulma_giraffe-remoting-azure.lock": "paket.lock" }
+                },
+                {
+                    "include": "paket_azure_remoting-fulma_suave-remoting-azure.lock",
+                    "condition": "(server == \"suave\" && remoting == true && deploy == \"azure\" && layout != \"none\")",
+                    "rename": { "paket_azure_remoting-fulma_suave-remoting-azure.lock": "paket.lock" }
+                },
+
+
                 {
                     "exclude": "**/ServerSuave.fs",
                     "condition": "(server != \"suave\")"
@@ -124,24 +246,6 @@
                 {
                     "rename": {
                         "ServerSuave.fs": "Server.fs"
-                    }
-                },
-                {
-                    "exclude": "**/paket-default.lock",
-                    "condition": "(server != \"saturn\" || remoting != false || deploy != \"none\")"
-                },
-                {
-                    "rename": {
-                        "paket-default.lock": "paket.lock"
-                    }
-                },
-                {
-                    "exclude": "**/paket-azure.lock",
-                    "condition": "(server != \"saturn\" || remoting != false || deploy != \"azure\")"
-                },
-                {
-                    "rename": {
-                        "paket-azure.lock": "paket.lock"
                     }
                 },
                 {
