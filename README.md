@@ -9,7 +9,7 @@ This is a basic template to get started with each of the core components of the 
 * [Saturn](https://saturnframework.github.io/docs/), [Giraffe](https://github.com/giraffe-fsharp/Giraffe) or [Suave](https://suave.io/) (see `Server` option below)
 * [Azure](https://azure.microsoft.com/) (or [Docker](https://www.docker.com/)) integration.
 * [Fable](http://fable.io/)
-* [Elmish](https://fable-elmish.github.io/elmish/)
+* [Elmish](https://elmish.github.io/elmish/)
 
 ## Prerequisites
 
