@@ -93,7 +93,7 @@ let safeComponents =
              a [ Href "https://github.com/giraffe-fsharp/Giraffe" ] [ str "Giraffe" ]
              str ", "
 #elseif (server == "saturn")
-             a [ Href "https://saturnframework.github.io/docs/" ] [ str "Saturn" ]
+             a [ Href "https://saturnframework.github.io" ] [ str "Saturn" ]
              str ", "
 #endif
              a [ Href "http://fable.io" ] [ str "Fable" ]
@@ -237,8 +237,7 @@ let hero =
             [ Container.container [ ]
                 [ Heading.h1 [ ]
                       [ str "Hello, Admin." ]
-                  Heading.h4 [ Heading.IsSubtitle ]
-                      [ safeComponents ] ] ] ]
+                  safeComponents ] ] ]
 
 let info =
     section [ Class "info-tiles" ]
