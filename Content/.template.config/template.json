@@ -311,6 +311,10 @@
                 {
                     "exclude": "yarn.lock",
                     "condition": "(js-deps != \"yarn\")"
+                },
+                {
+                    "exclude": "package-lock.json",
+                    "condition": "(js-deps != \"npm\")"
                 }
             ]
         }
