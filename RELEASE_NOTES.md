@@ -1,3 +1,9 @@
+#### 0.27.1 - 14.08.2018
+
+* Fix 'fulma-admin' layout - https://github.com/SAFE-Stack/SAFE-template/issues/128
+* Add lock file for NPM
+* Move "remotedev" dependency to "devDependencies" - https://github.com/SAFE-Stack/SAFE-template/issues/113
+
 #### 0.27.0 - 10.08.2018
 
 * Add paket.lock for all possible template options - https://github.com/SAFE-Stack/SAFE-template/pull/139
