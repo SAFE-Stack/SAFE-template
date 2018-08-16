@@ -121,7 +121,7 @@ type CombinedPaketDependencies =
           Azure = x.Azure }
 
     override x.ToString () =
-        let remoting = if x.Remoting then Some "--remoting" else None
+        let remoting = if x.Remoting then Some "--communication remoting" else None
         let azure = if x.Azure then Some "--deploy azure" else None
         let fulma = if not x.Fulma then Some "--layout none" else None
         let server = if x.Server <> Saturn then Some (sprintf "--server %O" x.Server) else None

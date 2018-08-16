@@ -48,35 +48,48 @@
                 },
                 {
                     "choice": "fulma-basic",
-                    "description": "adds Fulma basic template"
+                    "description": "add Fulma basic template"
                 },
                 {
                     "choice": "fulma-admin",
-                    "description": "adds Fulma with 'Admin' Bulma template from https://dansup.github.io/bulma-templates/"
+                    "description": "add Fulma with 'Admin' Bulma template from https://dansup.github.io/bulma-templates/"
                 },
                 {
                     "choice": "fulma-cover",
-                    "description": "adds Fulma with 'Cover' Bulma template from https://dansup.github.io/bulma-templates/"
+                    "description": "add Fulma with 'Cover' Bulma template from https://dansup.github.io/bulma-templates/"
                 },
                 {
                     "choice": "fulma-hero",
-                    "description": "adds Fulma with 'Hero' Bulma template from https://dansup.github.io/bulma-templates/"
+                    "description": "add Fulma with 'Hero' Bulma template from https://dansup.github.io/bulma-templates/"
                 },
                 {
                     "choice": "fulma-landing",
-                    "description": "adds Fulma with 'Landing' Bulma template from https://dansup.github.io/bulma-templates/"
+                    "description": "add Fulma with 'Landing' Bulma template from https://dansup.github.io/bulma-templates/"
                 },
                 {
                     "choice": "fulma-login",
-                    "description": "adds Fulma with 'Login' Bulma template from https://dansup.github.io/bulma-templates/"
+                    "description": "add Fulma with 'Login' Bulma template from https://dansup.github.io/bulma-templates/"
                 }
             ]
         },
-        "remoting": {
+        "communication": {
             "type": "parameter",
-            "dataType": "bool",
-            "defaultValue": "false",
-            "description": "adds Fable.Remoting to server and client"
+            "dataType": "choice",
+            "defaultValue": "none",
+            "choices": [
+                {
+                    "choice": "none",
+                    "description": "don't add any additional libraries for client-server communication"
+                },
+                {
+                    "choice": "remoting",
+                    "description": "add Fable.Remoting (https://zaid-ajaj.github.io/Fable.Remoting/) to server and client"
+                }
+            ]
+        },
+        "remoting":{
+            "type": "computed",
+            "value": "(communication == \"remoting\")"
         },
         "js-deps": {
             "type": "parameter",
@@ -104,7 +117,7 @@
                 },
                 {
                     "choice": "azure",
-                    "description": "additional FAKE targets to deploy to Azure"
+                    "description": "additional FAKE targets to deploy to Azure App Service"
                 },
                 {
                     "choice": "docker",

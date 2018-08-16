@@ -36,21 +36,19 @@ type TemplateArgs =
       Deploy : string option
       Layout : string option
       JsDeps : string option
-      Remoting : bool }
+      Communication : string option }
 
     override args.ToString () =
         let optArg (name, value) =
             value
             |> Option.map (sprintf "--%s %s" name)
 
-        let remoting = if args.Remoting then Some "--remoting" else None
-
         [ "server", args.Server
           "deploy", args.Deploy
           "layout", args.Layout
-          "js-deps", args.JsDeps ]
+          "js-deps", args.JsDeps
+          "communication", args.Communication ]
         |> List.map optArg
-        |> fun x -> List.append x [remoting]
         |> List.choose id
         |> String.concat " "
 
@@ -85,6 +83,12 @@ let jsDepsGen =
         Some "npm"
     ]
 
+let communicationGen =
+    Gen.elements [
+        None
+        Some "remoting"
+    ]
+
 type TemplateArgsArb () =
     static member Arb () : Arbitrary<TemplateArgs> =
         let generator : Gen<TemplateArgs> =
@@ -93,13 +97,13 @@ type TemplateArgsArb () =
                 let! deploy = deployGen
                 let! layout = layoutGen
                 let! jsDeps = jsDepsGen
-                let! remoting = Gen.elements [false; true]
+                let! communication = communicationGen
                 return
                     { Server = server
                       Deploy = deploy
                       Layout = layout
                       JsDeps = jsDeps
-                      Remoting = remoting }
+                      Communication = communication }
             }
 
         let shrinker (x : TemplateArgs) : seq<TemplateArgs> =
@@ -116,8 +120,9 @@ type TemplateArgsArb () =
                 match x.JsDeps with
                 | Some _ -> yield { x with JsDeps = None }
                 | _ -> ()
-                if x.Remoting then
-                    yield { x with Remoting = false }
+                match x.Communication with
+                | Some _ -> yield { x with Communication = None }
+                | _ -> ()
             }
 
         Arb.fromGenShrink (generator, shrinker)
