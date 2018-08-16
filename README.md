@@ -6,10 +6,14 @@ A dotnet CLI template for [SAFE-Stack](https://safe-stack.github.io/) projects.
 
 This is a basic template to get started with each of the core components of the stack:
 
-* [Saturn](https://saturnframework.github.io/docs/), [Giraffe](https://github.com/giraffe-fsharp/Giraffe) or [Suave](https://suave.io/) (see `Server` option below)
-* [Azure](https://azure.microsoft.com/) (or [Docker](https://www.docker.com/)) integration.
+* [Saturn](https://saturnframework.github.io/docs/), [Giraffe](https://github.com/giraffe-fsharp/Giraffe) or [Suave](https://suave.io/)
+* [Azure App Service](https://azure.microsoft.com/) and [Docker](https://www.docker.com/) integration.
 * [Fable](http://fable.io/)
 * [Elmish](https://elmish.github.io/elmish/)
+
+## Using the template
+
+The template comes with plenty different options. Please see [SAFE docs](https://safe-stack.github.io/docs/template-overview/) for details.
 
 ## Prerequisites
 
@@ -18,10 +22,6 @@ This is a basic template to get started with each of the core components of the 
 * [node.js](https://nodejs.org/)
 * [yarn](https://yarnpkg.com/) or [npm](https://www.npmjs.com/)
 * [.NET Framework](https://www.microsoft.com/net/download/dotnet-framework-runtime) (Windows) / [mono](http://www.mono-project.com/) (MacOS / Linux) additionally for Paket - migration to dotnet SDK is WIP
-
-## Using the template
-
-The template comes with different options. Please see [SAFE docs](https://safe-stack.github.io/docs/template-overview/) for details.
 
 ## Contributing
 
