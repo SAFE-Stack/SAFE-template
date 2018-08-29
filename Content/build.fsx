@@ -42,7 +42,7 @@ let npmTool = platformTool "npm" "npm.cmd"
 let yarnTool = platformTool "yarn" "yarn.cmd"
 //#endif
 
-let install = lazy DotNet.install DotNet.Versions.Release_2_1_300
+let install = lazy DotNet.install DotNet.Versions.FromGlobalJson
 
 let inline withWorkDir wd =
     DotNet.Options.lift install.Value
