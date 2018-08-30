@@ -41,7 +41,7 @@ module Server =
     let api : ICounterApi =
       Remoting.createApi()
       |> Remoting.withRouteBuilder Route.builder
-      |> Remoting.buildProxy<ICounterApi>()
+      |> Remoting.buildProxy<ICounterApi>
 
 #endif
 
