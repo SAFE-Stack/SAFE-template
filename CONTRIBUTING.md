@@ -8,7 +8,7 @@
 
 ## Updating Paket dependencies
 
-See #139
+See https://github.com/SAFE-Stack/SAFE-template/pull/139
 
 ## Known issues
 
