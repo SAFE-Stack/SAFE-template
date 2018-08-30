@@ -1,4 +1,4 @@
-﻿open System
+open System
 open System.IO
 open System.Threading.Tasks
 
@@ -7,6 +7,7 @@ open Microsoft.AspNetCore.Builder
 open Microsoft.AspNetCore.Hosting
 open Microsoft.Extensions.DependencyInjection
 
+open FSharp.Control.Tasks.V2
 open Giraffe
 open Shared
 
