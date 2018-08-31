@@ -6,7 +6,7 @@ group Server
 //#if (server == "suave")
     nuget Suave
 //#elseif (server == "giraffe")
-    nuget Giraffe ~> 1
+    nuget Giraffe
     nuget Microsoft.AspNetCore
     nuget Microsoft.AspNetCore.StaticFiles
 //#elseif (server == "saturn")

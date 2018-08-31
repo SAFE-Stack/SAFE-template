@@ -159,6 +159,12 @@ let specificConfigs =
 let fullLockFileName build client server =
     sprintf "paket_%O_%O_%O.lock" build client server
 
+let runPaket args wd =
+    if Environment.isUnix then
+        run "mono" (".paket/paket.exe " + args) wd
+    else
+        run ".paket/paket.exe" args wd
+
 Target.create "BuildPaketLockFiles" (fun _ ->
     for config in configs do
         let contents =
@@ -221,7 +227,7 @@ Target.create "GenPaketLockFiles" (fun _ ->
 
         if not (File.exists lockFile) then
             printfn "'paket.lock' doesn't exist for args '%s', installing..." arg
-            run "mono" ".paket/paket.exe install" dirName
+            runPaket "install" dirName
 
         let lines = File.readAsString lockFile
         Directory.delete dirName
@@ -280,7 +286,7 @@ Target.create "UpdatePaketLockFiles" (fun x ->
             if not (File.exists lockFile) then
                 failwithf "'paket.lock' doesn't exist for args '%s'" safeArgs
 
-            run "mono" (sprintf ".paket/paket.exe update -g %s" groupName) dirName
+            runPaket (sprintf "update -g %s" groupName) dirName
 
             let lines = File.readAsString lockFile
             Directory.delete dirName
