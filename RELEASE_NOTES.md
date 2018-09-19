@@ -1,3 +1,7 @@
+#### 0.28.0 - 19.09.2018
+
+* Update paket dependencies - https://github.com/SAFE-Stack/SAFE-template/pull/151
+
 #### 0.27.1 - 14.08.2018
 
 * Fix 'fulma-admin' layout - https://github.com/SAFE-Stack/SAFE-template/issues/128
