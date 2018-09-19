@@ -57,7 +57,7 @@ let init () : Model * Cmd<Msg> =
             (Error >> InitialCountLoaded)
 #else
         Cmd.ofPromise
-            (fetchAs<int> "/api/init")
+            (fetchAs<Counter> "/api/init")
             []
             (Ok >> InitialCountLoaded)
             (Error >> InitialCountLoaded)
