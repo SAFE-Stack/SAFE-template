@@ -1,3 +1,8 @@
+#### 0.29.0 - 25.09.2018
+
+* Change 'remoting' parameter to 'communication' - https://github.com/SAFE-Stack/SAFE-template/pull/143
+* Don't install dotnet in build.fsx
+
 #### 0.28.0 - 19.09.2018
 
 * Update paket dependencies - https://github.com/SAFE-Stack/SAFE-template/pull/151
