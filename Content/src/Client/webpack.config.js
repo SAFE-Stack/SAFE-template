@@ -25,7 +25,7 @@ console.log("Bundling for " + (isProduction ? "production" : "development") + ".
 
 module.exports = {
     devtool: "source-map",
-    entry: resolve('./Client.fsproj'),
+    entry : [ "whatwg-fetch", "babel-polyfill", resolve('./Client.fsproj')],
     mode: isProduction ? "production" : "development",
     output: {
         path: resolve('./public/js'),
