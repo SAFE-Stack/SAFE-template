@@ -1,3 +1,8 @@
+#### 0.29.1 - 26.09.2018
+
+* Add polyfill to webpack to support fetch in IE 11 - https://github.com/SAFE-Stack/SAFE-template/issues/155
+* Use Microsoft.NET.Sdk.Web project type for all template options - https://github.com/SAFE-Stack/SAFE-template/issues/153
+
 #### 0.29.0 - 25.09.2018
 
 * Change 'remoting' parameter to 'communication' - https://github.com/SAFE-Stack/SAFE-template/pull/143
