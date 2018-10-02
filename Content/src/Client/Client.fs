@@ -7,6 +7,8 @@ open Fable.Helpers.React
 open Fable.Helpers.React.Props
 open Fable.PowerPack.Fetch
 
+open Thoth.Json
+
 open Shared
 
 #if (layout != "none")
@@ -57,7 +59,7 @@ let init () : Model * Cmd<Msg> =
             (Error >> InitialCountLoaded)
 #else
         Cmd.ofPromise
-            (fetchAs<Counter> "/api/init")
+            (fetchAs<Counter> "/api/init" Decode.int)
             []
             (Ok >> InitialCountLoaded)
             (Error >> InitialCountLoaded)
