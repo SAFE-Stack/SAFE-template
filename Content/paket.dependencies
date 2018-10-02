@@ -28,11 +28,11 @@ group Client
     storage: none
     source https://api.nuget.org/v3/index.json
 
-    nuget Fable.Core prerelease
-    nuget Fable.Elmish prerelease
-    nuget Fable.Elmish.Debugger prerelease
-    nuget Fable.Elmish.React prerelease
-    nuget Fable.Elmish.HMR prerelease
+    nuget Fable.Core ~> 2
+    nuget Fable.Elmish
+    nuget Fable.Elmish.Debugger
+    nuget Fable.Elmish.React
+    nuget Fable.Elmish.HMR
 //#if (remoting)
     nuget Fable.Remoting.Client
 //#endif
@@ -40,7 +40,7 @@ group Client
     nuget Fulma
 //#endif
 
-    clitool dotnet-fable prerelease
+    clitool dotnet-fable ~> 2
 
 group Build
     storage: none
