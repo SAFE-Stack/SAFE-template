@@ -41,18 +41,24 @@ var isProduction = process.argv.indexOf("-p") >= 0;
 console.log("Bundling for " + (isProduction ? "production" : "development") + "...");
 
 module.exports = {
-    devtool: isProduction ? undefined : "source-map",
     entry : CONFIG.fsharpEntry,
-    mode: isProduction ? "production" : "development",
     output: {
         path: resolve('./public/js'),
         publicPath: "/js",
         filename: "bundle.js"
     },
+    mode: isProduction ? "production" : "development",
+    devtool: isProduction ? undefined : "source-map",
     resolve: {
         symlinks: false,
         modules: [resolve("../../node_modules/")]
     },
+    // DEVELOPMENT
+    //      - HotModuleReplacementPlugin: Enables hot reloading when code changes without refreshing
+    plugins: isProduction ? [] : [
+        new webpack.HotModuleReplacementPlugin(),
+        new webpack.NamedModulesPlugin()
+    ],
     // Configuration for webpack-dev-server
     devServer: {
         proxy: CONFIG.devServerProxy,
@@ -78,9 +84,5 @@ module.exports = {
                 },
             }
         ]
-    },
-    plugins: isProduction ? [] : [
-        new webpack.HotModuleReplacementPlugin(),
-        new webpack.NamedModulesPlugin()
-    ]
+    }
 };
