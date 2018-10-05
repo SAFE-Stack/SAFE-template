@@ -50,8 +50,7 @@ module.exports = {
     mode: isProduction ? "production" : "development",
     devtool: isProduction ? undefined : "source-map",
     resolve: {
-        symlinks: false,
-        modules: [resolve("../../node_modules/")]
+        symlinks: false
     },
     // DEVELOPMENT
     //      - HotModuleReplacementPlugin: Enables hot reloading when code changes without refreshing
