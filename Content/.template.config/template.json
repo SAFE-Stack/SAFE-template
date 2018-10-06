@@ -131,6 +131,11 @@
             "exclude": [ "**/.template.config/**/*", "**/paket*.lock" ],
             "modifiers": [
                 {
+                    "include": [
+                        "**/.vscode/*"
+                    ]
+                },
+                {
                     "include": "paket_noazure_noremoting-nofulma_saturn-noremoting-noazure.lock",
                     "condition": "(server == \"saturn\" && remoting == false && deploy != \"azure\" && layout == \"none\")",
                     "rename": { "paket_noazure_noremoting-nofulma_saturn-noremoting-noazure.lock": "paket.lock" }
