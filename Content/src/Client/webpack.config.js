@@ -1,5 +1,6 @@
 var path = require("path");
 var webpack = require("webpack");
+var MinifyPlugin = require("terser-webpack-plugin");
 
 function resolve(filePath) {
     return path.join(__dirname, filePath)
@@ -51,6 +52,20 @@ module.exports = {
     devtool: isProduction ? undefined : "source-map",
     resolve: {
         symlinks: false
+    },
+    optimization: {
+        // Split the code coming from npm packages into a different file.
+        // 3rd party dependencies change less often, let the browser cache them.
+        splitChunks: {
+            cacheGroups: {
+                commons: {
+                    test: /node_modules/,
+                    name: "vendors",
+                    chunks: "all"
+                }
+            }
+        },
+        minimizer: isProduction ? [new MinifyPlugin()] : []
     },
     // DEVELOPMENT
     //      - HotModuleReplacementPlugin: Enables hot reloading when code changes without refreshing

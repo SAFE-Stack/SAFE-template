@@ -23,6 +23,14 @@ let fake =
     | null -> "fake"
     | x -> x
 
+let maxTests =
+    match Environment.GetEnvironmentVariable "MAX_TESTS" with
+    | null -> 20
+    | x ->
+        match System.Int32.TryParse x with
+        | true, n -> n
+        | _ -> 20
+
 let psi exe arg dir (x: ProcStartInfo) : ProcStartInfo =
     { x with
         FileName = exe
@@ -141,7 +149,7 @@ let run exe arg dir =
 let fsCheckConfig =
     { FsCheckConfig.defaultConfig with
         arbitrary = [typeof<TemplateArgsArb>]
-        maxTest = 10 }
+        maxTest = maxTests }
 
 [<Tests>]
 let tests =
