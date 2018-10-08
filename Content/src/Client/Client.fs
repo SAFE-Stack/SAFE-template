@@ -320,7 +320,7 @@ let columns (model : Model) (dispatch : Msg -> unit) =
                                                       Button.Color IsPrimary ]
                                                     [ str "Action" ] ] ] ] ] ] ]
                   Card.footer [ ]
-                      [ Card.Footer.item [ ]
+                      [ Card.Footer.div [ ]
                           [ str "View All" ] ] ] ]
           Column.column [ Column.Width (Screen.All, Column.Is6) ]
               [ Card.card [ ]
