@@ -92,7 +92,7 @@ Target.create "RestoreServer" (fun _ ->
 
 Target.create "Build" (fun _ ->
     runDotNet "build" serverPath
-    runDotNet "fable webpack-cli -- --config src/Client/webpack.config.js -p" clientPath
+    runDotNet "fable webpack-cli --port free -- --config src/Client/webpack.config.js -p" clientPath
 )
 
 Target.create "Run" (fun _ ->
@@ -100,7 +100,7 @@ Target.create "Run" (fun _ ->
         runDotNet "watch run" serverPath
     }
     let client = async {
-        runDotNet "fable webpack-dev-server -- --config src/Client/webpack.config.js" clientPath
+        runDotNet "fable webpack-dev-server --port free -- --config src/Client/webpack.config.js" clientPath
     }
     let browser = async {
         do! Async.Sleep 5000
