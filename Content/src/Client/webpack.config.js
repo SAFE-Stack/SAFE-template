@@ -7,11 +7,13 @@ function resolve(filePath) {
 }
 
 var CONFIG = {
-    fsharpEntry: [
-        "whatwg-fetch",
-        "@babel/polyfill",
-        resolve("./Client.fsproj")
-    ],
+    fsharpEntry: {
+        "app": [
+            "whatwg-fetch",
+            "@babel/polyfill",
+            resolve("./Client.fsproj")
+        ]
+    },
     devServerProxy: {
         '/api/*': {
             target: 'http://localhost:' + (process.env.SUAVE_FABLE_PORT || "8085"),
@@ -46,7 +48,7 @@ module.exports = {
     output: {
         path: resolve('./public/js'),
         publicPath: "/js",
-        filename: "bundle.js"
+        filename: "[name].js"
     },
     mode: isProduction ? "production" : "development",
     devtool: isProduction ? undefined : "source-map",
