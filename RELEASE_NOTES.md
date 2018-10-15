@@ -1,3 +1,7 @@
+#### 0.30.0 - 15.10.2018
+
+* Upgrade to Fable 2 - https://github.com/SAFE-Stack/SAFE-template/issues/144
+
 #### 0.29.1 - 26.09.2018
 
 * Add polyfill to webpack to support fetch in IE 11 - https://github.com/SAFE-Stack/SAFE-template/issues/155
