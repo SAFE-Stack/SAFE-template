@@ -7,6 +7,8 @@ open Fable.Helpers.React
 open Fable.Helpers.React.Props
 open Fable.PowerPack.Fetch
 
+open Thoth.Json
+
 open Shared
 
 #if (layout != "none")
@@ -57,7 +59,7 @@ let init () : Model * Cmd<Msg> =
             (Error >> InitialCountLoaded)
 #else
         Cmd.ofPromise
-            (fetchAs<Counter> "/api/init")
+            (fetchAs<Counter> "/api/init" Decode.int)
             []
             (Ok >> InitialCountLoaded)
             (Error >> InitialCountLoaded)
@@ -318,7 +320,7 @@ let columns (model : Model) (dispatch : Msg -> unit) =
                                                       Button.Color IsPrimary ]
                                                     [ str "Action" ] ] ] ] ] ] ]
                   Card.footer [ ]
-                      [ Card.Footer.item [ ]
+                      [ Card.Footer.div [ ]
                           [ str "View All" ] ] ] ]
           Column.column [ Column.Width (Screen.All, Column.Is6) ]
               [ Card.card [ ]
