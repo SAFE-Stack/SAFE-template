@@ -1,6 +1,7 @@
 group Server
-    storage: none
     source https://api.nuget.org/v3/index.json
+    framework: netcoreapp2.1
+    storage: none
 
     nuget FSharp.Core
 //#if (server == "suave")
@@ -25,8 +26,9 @@ group Server
 //#endif
 
 group Client
-    storage: none
     source https://api.nuget.org/v3/index.json
+    framework: netstandard2.0
+    storage: none
 
     nuget Fable.Core ~> 2
     nuget Fable.Elmish ~> 2
@@ -44,8 +46,9 @@ group Client
     clitool dotnet-fable ~> 2
 
 group Build
-    storage: none
     source https://api.nuget.org/v3/index.json
+    framework: netstandard2.0
+    storage: none
 
     nuget FSharp.Core 4.3.4 // https://github.com/fsharp/FAKE/issues/2001
     nuget Fake.Core.Target
