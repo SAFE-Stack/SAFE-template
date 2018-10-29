@@ -1,3 +1,7 @@
+#### 0.30.1 - 29.10.2018
+
+* Restrict frameworks in paket.dependencies - https://github.com/SAFE-Stack/SAFE-template/pull/163
+
 #### 0.30.0 - 15.10.2018
 
 * Upgrade to Fable 2 - https://github.com/SAFE-Stack/SAFE-template/issues/144
