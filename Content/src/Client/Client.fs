@@ -11,6 +11,11 @@ open Thoth.Json
 
 open Shared
 
+#if (reaction)
+open Fable.Reaction
+open Reaction
+#endif
+
 #if (layout != "none")
 open Fulma
 #endif
@@ -801,6 +806,17 @@ let view (model : Model) (dispatch : Msg -> unit) =
 
 #endif
 
+#if (reaction)
+let loadCountCmd =
+    ofPromise (fetchAs<int> "api/init" Decode.int [])
+    |> AsyncObservable.map (Ok >> InitialCountLoaded)
+    |> AsyncObservable.catch (Error >> InitialCountLoaded >> AsyncObservable.single)
+
+let query msgs =
+    AsyncObservable.concat
+        [ loadCountCmd
+          msgs ]
+#endif
 
 //-:cnd:noEmit
 #if DEBUG
@@ -809,6 +825,11 @@ open Elmish.HMR
 #endif
 
 Program.mkProgram init update view
+//+:cnd:noEmit
+#if (reaction)
+|> Program.withQuery query
+#endif
+//-:cnd:noEmit
 #if DEBUG
 |> Program.withConsoleTrace
 |> Program.withHMR
