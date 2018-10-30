@@ -87,9 +87,28 @@
                 }
             ]
         },
-        "remoting":{
+        "remoting": {
             "type": "computed",
             "value": "(communication == \"remoting\")"
+        },
+        "pattern": {
+            "type": "parameter",
+            "dataType": "choice",
+            "defaultValue": "default",
+            "choices": [
+                {
+                    "choice": "default",
+                    "description": "use standard Elmish architecture with Commands"
+                },
+                {
+                    "choice": "reaction",
+                    "description": "use simple Elmish architecture without Commands + Fable.Reaction for reactive pattern"
+                }
+            ]
+        },
+        "reaction": {
+            "type": "computed",
+            "value": "(pattern == \"reaction\")"
         },
         "js-deps": {
             "type": "parameter",
