@@ -4,10 +4,14 @@ group Client
     Fable.Elmish.React
     Fable.Elmish.HMR
     Fable.Core
-    dotnet-fable
-//#if (layout != "none")
-    Fulma
+//#if (reaction)
+    Fable.Reaction
 //#endif
 //#if (remoting)
     Fable.Remoting.Client
 //#endif
+//#if (layout != "none")
+    Fulma
+//#endif
+
+    dotnet-fable
