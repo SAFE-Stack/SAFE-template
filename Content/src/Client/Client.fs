@@ -52,24 +52,49 @@ module Server =
 
 #endif
 
+#if remoting
+let initialCounter = Server.api.initialCounter
+#else
+let initialCounter = fetchAs<Counter> "/api/init" Decode.int
+#endif
+
 // defines the initial state and initial command (= side-effect) of the application
 let init () : Model * Cmd<Msg> =
     let initialModel = { Counter = None }
     let loadCountCmd =
 #if remoting
         Cmd.ofAsync
-            Server.api.initialCounter
+            initialCounter
             ()
             (Ok >> InitialCountLoaded)
             (Error >> InitialCountLoaded)
 #else
         Cmd.ofPromise
-            (fetchAs<Counter> "/api/init" Decode.int)
+            initialCounter
             []
             (Ok >> InitialCountLoaded)
             (Error >> InitialCountLoaded)
 #endif
     initialModel, loadCountCmd
+
+#if (reaction && remoting)
+let load = AsyncObservable.ofAsync (initialCounter ())
+#endif
+#if (reaction && !remoting)
+let load = ofPromise (initialCounter [])
+#endif
+
+#if (reaction)
+let loadCount =
+    load
+    |> AsyncObservable.map (Ok >> InitialCountLoaded)
+    |> AsyncObservable.catch (Error >> InitialCountLoaded >> AsyncObservable.single)
+
+let query msgs =
+    AsyncObservable.concat
+        [ loadCount
+          msgs ]
+#endif
 
 // The update function computes the next state of the application based on the current state and the incoming events/messages
 // It can also run side-effects (encoded as commands) like calling the server via Http.
@@ -113,6 +138,10 @@ let safeComponents =
 #if (layout == "fulma-admin" || layout == "fulma-cover" || layout == "fulma-hero" || layout == "fulma-landing" || layout == "fulma-login")
              str ", "
              a [ Href "https://dansup.github.io/bulma-templates/" ] [ str "Bulma\u00A0Templates" ]
+#endif
+#if (reaction)
+             str ", "
+             a [ Href "https://github.com/dbrattli/Fable.Reaction" ] [ str "Fable.Reaction" ]
 #endif
 #if (remoting)
              str ", "
@@ -804,18 +833,6 @@ let view (model : Model) (dispatch : Msg -> unit) =
                 [ Container.Modifiers [ Modifier.TextAlignment (Screen.All, TextAlignment.Centered) ] ]
                 [ column model dispatch ] ] ]
 
-#endif
-
-#if (reaction)
-let loadCountCmd =
-    ofPromise (fetchAs<int> "api/init" Decode.int [])
-    |> AsyncObservable.map (Ok >> InitialCountLoaded)
-    |> AsyncObservable.catch (Error >> InitialCountLoaded >> AsyncObservable.single)
-
-let query msgs =
-    AsyncObservable.concat
-        [ loadCountCmd
-          msgs ]
 #endif
 
 //-:cnd:noEmit
