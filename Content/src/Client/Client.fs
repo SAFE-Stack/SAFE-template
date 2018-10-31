@@ -59,23 +59,31 @@ let initialCounter = fetchAs<Counter> "/api/init" Decode.int
 #endif
 
 // defines the initial state and initial command (= side-effect) of the application
+#if reaction
+let init () : Model =
+    { Counter = None }
+#else
 let init () : Model * Cmd<Msg> =
     let initialModel = { Counter = None }
     let loadCountCmd =
-#if remoting
+#endif
+#if (!reaction && remoting)
         Cmd.ofAsync
             initialCounter
             ()
             (Ok >> InitialCountLoaded)
             (Error >> InitialCountLoaded)
-#else
+#endif
+#if (!reaction && !remoting)
         Cmd.ofPromise
             initialCounter
             []
             (Ok >> InitialCountLoaded)
             (Error >> InitialCountLoaded)
 #endif
+#if (!reaction)
     initialModel, loadCountCmd
+#endif
 
 #if (reaction && remoting)
 let load = AsyncObservable.ofAsync (initialCounter ())
