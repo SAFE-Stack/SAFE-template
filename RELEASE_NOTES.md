@@ -1,3 +1,7 @@
+#### 0.31.0 - 31.10.2018
+
+* Use FAKE's new CreateProcess API - https://github.com/SAFE-Stack/SAFE-template/pull/169
+
 #### 0.30.1 - 29.10.2018
 
 * Restrict frameworks in paket.dependencies - https://github.com/SAFE-Stack/SAFE-template/pull/163
