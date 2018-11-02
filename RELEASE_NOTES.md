@@ -1,3 +1,7 @@
+#### 0.32.0 - 02.11.2018
+
+* Build script - Change to runOrDefaultWithArguments to provide support for default arguments. - https://github.com/SAFE-Stack/SAFE-template/pull/170
+
 #### 0.31.0 - 31.10.2018
 
 * Use FAKE's new CreateProcess API - https://github.com/SAFE-Stack/SAFE-template/pull/169
