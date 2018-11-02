@@ -102,7 +102,7 @@
                 },
                 {
                     "choice": "reaction",
-                    "description": "use simple Elmish architecture without Commands + Fable.Reaction for reactive pattern"
+                    "description": "use simple Elmish architecture without Commands + Fable.Reaction (https://dbrattli.github.io/Fable.Reaction/) for reactive pattern"
                 }
             ]
         },

@@ -37,7 +37,6 @@ type Msg =
 | Decrement
 | InitialCountLoaded of Result<Counter, exn>
 
-
 #if (remoting)
 module Server =
 
@@ -51,18 +50,18 @@ module Server =
       |> Remoting.buildProxy<ICounterApi>
 
 #endif
-
 #if remoting
 let initialCounter = Server.api.initialCounter
 #else
 let initialCounter = fetchAs<Counter> "/api/init" Decode.int
 #endif
 
-// defines the initial state and initial command (= side-effect) of the application
 #if reaction
+// defines the initial state
 let init () : Model =
     { Counter = None }
 #else
+// defines the initial state and initial command (= side-effect) of the application
 let init () : Model * Cmd<Msg> =
     let initialModel = { Counter = None }
     let loadCountCmd =
@@ -104,6 +103,18 @@ let query msgs =
           msgs ]
 #endif
 
+#if (reaction)
+// The update function computes the next state of the application based on the current state and the incoming events/messages
+let update (msg : Msg) (currentModel : Model) : Model =
+    match currentModel.Counter, msg with
+    | Some x, Increment ->
+        { currentModel with Counter = Some (x + 1) }
+    | Some x, Decrement ->
+        { currentModel with Counter = Some (x - 1) }
+    | _, InitialCountLoaded (Ok initialCount)->
+        { Counter = Some initialCount }
+    | _ -> currentModel
+#else
 // The update function computes the next state of the application based on the current state and the incoming events/messages
 // It can also run side-effects (encoded as commands) like calling the server via Http.
 // these commands in turn, can dispatch messages to which the update function will react.
@@ -120,6 +131,7 @@ let update (msg : Msg) (currentModel : Model) : Model * Cmd<Msg> =
         nextModel, Cmd.none
 
     | _ -> currentModel, Cmd.none
+#endif
 
 
 let safeComponents =
@@ -149,7 +161,7 @@ let safeComponents =
 #endif
 #if (reaction)
              str ", "
-             a [ Href "https://github.com/dbrattli/Fable.Reaction" ] [ str "Fable.Reaction" ]
+             a [ Href "https://dbrattli.github.io/Fable.Reaction/" ] [ str "Fable.Reaction" ]
 #endif
 #if (remoting)
              str ", "
@@ -849,10 +861,12 @@ open Elmish.Debug
 open Elmish.HMR
 #endif
 
-Program.mkProgram init update view
 //+:cnd:noEmit
 #if (reaction)
+Program.mkSimple init update view
 |> Program.withQuery query
+#else
+Program.mkProgram init update view
 #endif
 //-:cnd:noEmit
 #if DEBUG
