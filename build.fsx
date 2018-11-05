@@ -76,12 +76,14 @@ type BuildPaketDependencies =
 
 type ClientPaketDependencies =
     { Remoting : bool
-      Fulma : bool }
+      Fulma : bool
+      Reaction : bool }
 
     with override x.ToString () =
             let remoting = if x.Remoting then "remoting" else "noremoting"
             let fulma = if x.Fulma then "fulma" else "nofulma"
-            sprintf "%s-%s" remoting fulma
+            let reaction = if x.Reaction then "reaction" else "noreaction"
+            sprintf "%s-%s-%s" remoting fulma reaction
 
 type ServerPaketDependency = Saturn | Giraffe | Suave
 
@@ -106,14 +108,16 @@ type CombinedPaketDependencies =
     { Azure : bool
       Remoting : bool
       Fulma : bool
-      Server : ServerPaketDependency }
+      Server : ServerPaketDependency
+      Reaction : bool }
 
     member x.ToBuild : BuildPaketDependencies =
             { Azure = x.Azure }
 
     member x.ToClient : ClientPaketDependencies =
         { Remoting = x.Remoting
-          Fulma = x.Fulma }
+          Fulma = x.Fulma
+          Reaction = x.Reaction }
 
     member x.ToServer : ServerPaketDependencies =
         { Server = x.Server
@@ -125,11 +129,13 @@ type CombinedPaketDependencies =
         let azure = if x.Azure then Some "--deploy azure" else None
         let fulma = if not x.Fulma then Some "--layout none" else None
         let server = if x.Server <> Saturn then Some (sprintf "--server %O" x.Server) else None
+        let reaction = if x.Reaction then Some "--pattern reaction" else None
 
         [ remoting
           azure
           fulma
-          server ]
+          server
+          reaction ]
         |> List.choose id
         |> String.concat " "
 
@@ -138,11 +144,13 @@ let configs =
       for fulma in [ false; true ] do
       for remoting in [ false; true ] do
       for server in [ Saturn; Giraffe; Suave ] do
+      for reaction in [ false; true ] do
       yield
           { Azure = azure
             Fulma = fulma
             Server = server
-            Remoting = remoting }
+            Remoting = remoting
+            Reaction = reaction }
     ]
 
 let specific f =
@@ -194,10 +202,11 @@ Target.create "GenJsonConditions" (fun _ ->
         let azureOperator = if config.Azure then "==" else "!="
         let remoting = config.Remoting
         let layoutOperator = if config.Fulma then "!=" else "=="
+        let reaction = config.Reaction
         let template =
             sprintf """                    {
                         "include": "%s",
-                        "condition": "(server == \"%s\" && remoting == %b && deploy %s \"azure\" && layout %s \"none\")",
+                        "condition": "(server == \"%s\" && remoting == %b && deploy %s \"azure\" && layout %s \"none\" && reaction == %b)",
                         "rename": { "%s": "paket.lock" }
                     },"""
                  lockFileName
@@ -205,6 +214,7 @@ Target.create "GenJsonConditions" (fun _ ->
                  remoting
                  azureOperator
                  layoutOperator
+                 reaction
                  lockFileName
 
         printfn "%s" template

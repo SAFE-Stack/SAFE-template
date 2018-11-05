@@ -36,6 +36,9 @@ group Client
     nuget Fable.Elmish.React ~> 2
     nuget Fable.Elmish.HMR ~> 2
     nuget Fable.React ~> 4
+//#if (reaction)
+    nuget Fable.Reaction ~> 2
+//#endif
 //#if (remoting)
     nuget Fable.Remoting.Client ~> 4
 //#endif
