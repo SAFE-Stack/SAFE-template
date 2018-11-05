@@ -1,3 +1,7 @@
+#### 0.33.0 - 05.11.2018
+
+* New option for Fable.Reaction - https://github.com/SAFE-Stack/SAFE-template/pull/168
+
 #### 0.32.0 - 02.11.2018
 
 * Build script - Change to runOrDefaultWithArguments to provide support for default arguments. - https://github.com/SAFE-Stack/SAFE-template/pull/170
