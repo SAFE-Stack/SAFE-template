@@ -1,3 +1,7 @@
+#### 0.33.1 - 06.11.2018
+
+* Cleanup JavaScript dependencies - https://github.com/SAFE-Stack/SAFE-template/pull/173
+
 #### 0.33.0 - 05.11.2018
 
 * New option for Fable.Reaction - https://github.com/SAFE-Stack/SAFE-template/pull/168
