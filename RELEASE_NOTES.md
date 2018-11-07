@@ -1,3 +1,7 @@
+#### 0.34.0 - 07.11.2018
+
+* Demonstrate usage of "nothing" from Fable.React in "fulma-hero" - https://github.com/SAFE-Stack/SAFE-template/pull/175
+
 #### 0.33.1 - 06.11.2018
 
 * Cleanup JavaScript dependencies - https://github.com/SAFE-Stack/SAFE-template/pull/173
