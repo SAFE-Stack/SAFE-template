@@ -11,8 +11,6 @@ open Shared
 #if (remoting)
 open Fable.Remoting.Server
 open Fable.Remoting.Giraffe
-#else
-open Giraffe.Serialization
 #endif
 #if (deploy == "azure")
 open Microsoft.WindowsAzure.Storage
@@ -52,9 +50,7 @@ let webApp = router {
 #endif
 #if (!remoting)
 let configureSerialization (services:IServiceCollection) =
-    let fableJsonSettings = Newtonsoft.Json.JsonSerializerSettings()
-    fableJsonSettings.Converters.Add(Fable.JsonConverter())
-    services.AddSingleton<IJsonSerializer>(NewtonsoftJsonSerializer fableJsonSettings)
+    services.AddSingleton<Giraffe.Serialization.Json.IJsonSerializer>(Thoth.Json.Giraffe.ThothSerializer())
 
 #endif
 #if (deploy == "azure")

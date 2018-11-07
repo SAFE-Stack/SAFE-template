@@ -14,7 +14,7 @@ group Server
     WindowsAzure.Storage
 //#endif
 //#if     (!remoting && server != "suave")
-    Fable.JsonConverter
+    Thoth.Json.Giraffe
 //#elseif (remoting && server == "suave")
     Fable.Remoting.Suave
 //#elseif (remoting)
