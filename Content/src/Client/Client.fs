@@ -587,13 +587,16 @@ let intro =
           p [ ClassName "subtitle"] [ str "Vel fringilla est ullamcorper eget nulla facilisi. Nulla facilisi nullam vehicula ipsum a. Neque egestas congue quisque egestas diam in arcu cursus." ] ]
 
 let tile title subtitle content =
+    let details =
+        match content with
+        | Some c -> c
+        | None -> nothing
+
     Tile.child [ ]
         [ Notification.notification [ Notification.Color IsWhite ]
-            [ yield Heading.p [ ] [ str title ]
-              yield Heading.p [ Heading.IsSubtitle ] [ str subtitle ]
-              match content with
-              | Some c -> yield c
-              | None -> () ] ]
+            [ Heading.p [ ] [ str title ]
+              Heading.p [ Heading.IsSubtitle ] [ str subtitle ]
+              details ] ]
 
 let content txts =
     Content.content [ ]
