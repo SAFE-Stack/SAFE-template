@@ -14,7 +14,7 @@ group Server
     nuget Saturn
 //#endif
 //#if (!remoting && server != "suave")
-    nuget Fable.JsonConverter
+    nuget Thoth.Json.Giraffe
 //#elseif (remoting && server == "suave")
     nuget Fable.Remoting.Suave
 //#elseif (remoting && server != "suave")
