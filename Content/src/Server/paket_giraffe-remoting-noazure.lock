@@ -15,7 +15,7 @@ NUGET
       Fable.Remoting.Json (>= 2.2)
       FSharp.Core (>= 4.3.4)
     FSharp.Core (4.5.2)
-    Giraffe (3.2)
+    Giraffe (3.4)
       FSharp.Core (>= 4.5.2)
       Microsoft.AspNetCore.Authentication (>= 2.1.2)
       Microsoft.AspNetCore.Authorization (>= 2.1.2)
