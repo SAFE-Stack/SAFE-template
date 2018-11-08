@@ -15,8 +15,10 @@ group Server
 //#endif
 //#if     (!remoting && server != "suave")
     Thoth.Json.Giraffe
+//#elseif (!remoting && server == "suave")
+    Thoth.Json.Net
+//#elseif (remoting && server != "suave")
+    Fable.Remoting.Giraffe
 //#elseif (remoting && server == "suave")
     Fable.Remoting.Suave
-//#elseif (remoting)
-    Fable.Remoting.Giraffe
 //#endif
