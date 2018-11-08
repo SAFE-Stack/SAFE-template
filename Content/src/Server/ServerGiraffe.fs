@@ -28,7 +28,7 @@ let publicPath = Path.GetFullPath "../Client/public"
 //#endif
 let port = 8085us
 
-let getInitCounter () : Task<Counter> = task { return 42 }
+let getInitCounter () : Task<Counter> = task { return { Value = 42 } }
 #if (remoting)
 
 let counterApi = {

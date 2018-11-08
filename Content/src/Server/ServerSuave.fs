@@ -31,7 +31,7 @@ let config =
           homeFolder = Some publicPath
           bindings = [ HttpBinding.create HTTP (IPAddress.Parse "0.0.0.0") port ] }
 
-let getInitCounter() : Async<Counter> = async { return 42 }
+let getInitCounter() : Async<Counter> = async { return { Value = 42 } }
 #if (remoting)
 let counterApi = {
     initialCounter = getInitCounter
