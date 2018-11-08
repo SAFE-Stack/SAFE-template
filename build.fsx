@@ -29,7 +29,7 @@ let formattedRN =
 
 Target.create "Clean" (fun _ ->
     Shell.cleanDirs [ nupkgDir ]
-    Git.CommandHelper.directRunGitCommandAndFail "./Content" "clean -fxd"
+    // Git.CommandHelper.directRunGitCommandAndFail "./Content" "clean -fxd"
 )
 
 Target.create "Pack" (fun _ ->
@@ -279,16 +279,16 @@ Target.create "UpdatePaketLockFiles" (fun x ->
     for groupName in groupNames do
         let configs =
             match Map.tryFind groupName specificConfigs with
-            | Some x -> x
+            | Some x -> x |> List.indexed
             | None -> failwithf "unknown group: '%s'" groupName
 
         printfn "Group name: %s, all configs: %A" groupName configs
 
-        for (configAbbr, safeArgs) in configs do
+        for (index, (configAbbr, safeArgs)) in configs do
             let dirName = baseDir </> "tmp"
             Directory.delete dirName
             Directory.create dirName
-
+            printfn "Updating lock file %d of %d" (index + 1) configs.Length
             run "dotnet" (sprintf "new SAFE %s" safeArgs) dirName
 
             let lockFile = dirName </> "paket.lock"
