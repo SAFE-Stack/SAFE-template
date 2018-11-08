@@ -1,3 +1,7 @@
+#### 0.35.0 - 08.11.2018
+
+* Use Thoth.Json on server side when not using Fable.Remoting - https://github.com/SAFE-Stack/SAFE-template/pull/179
+
 #### 0.34.0 - 07.11.2018
 
 * Demonstrate usage of "nothing" from Fable.React in "fulma-hero" - https://github.com/SAFE-Stack/SAFE-template/pull/175
