@@ -14,8 +14,6 @@ open Shared
 #if (remoting)
 open Fable.Remoting.Server
 open Fable.Remoting.Giraffe
-#else
-open Giraffe.Serialization
 #endif
 #if (deploy == "azure")
 open Microsoft.WindowsAzure.Storage
@@ -61,9 +59,7 @@ let configureApp (app : IApplicationBuilder) =
 let configureServices (services : IServiceCollection) =
     services.AddGiraffe() |> ignore
     #if (!remoting)
-    let fableJsonSettings = Newtonsoft.Json.JsonSerializerSettings()
-    fableJsonSettings.Converters.Add(Fable.JsonConverter())
-    services.AddSingleton<IJsonSerializer>(NewtonsoftJsonSerializer fableJsonSettings) |> ignore
+    services.AddSingleton<Giraffe.Serialization.Json.IJsonSerializer>(Thoth.Json.Giraffe.ThothSerializer()) |> ignore
     #endif
     #if (deploy == "azure")
     tryGetEnv "APPINSIGHTS_INSTRUMENTATIONKEY" |> Option.iter (services.AddApplicationInsightsTelemetry >> ignore)

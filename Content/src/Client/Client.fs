@@ -7,7 +7,14 @@ open Fable.Helpers.React
 open Fable.Helpers.React.Props
 open Fable.PowerPack.Fetch
 
+open Thoth.Json
+
 open Shared
+
+#if (reaction)
+open Fable.Reaction
+open Reaction
+#endif
 
 #if (layout != "none")
 open Fulma
@@ -30,7 +37,6 @@ type Msg =
 | Decrement
 | InitialCountLoaded of Result<Counter, exn>
 
-
 #if (remoting)
 module Server =
 
@@ -44,26 +50,71 @@ module Server =
       |> Remoting.buildProxy<ICounterApi>
 
 #endif
+#if remoting
+let initialCounter = Server.api.initialCounter
+#else
+let initialCounter = fetchAs<Counter> "/api/init" Decode.int
+#endif
 
+#if reaction
+// defines the initial state
+let init () : Model =
+    { Counter = None }
+#else
 // defines the initial state and initial command (= side-effect) of the application
 let init () : Model * Cmd<Msg> =
     let initialModel = { Counter = None }
     let loadCountCmd =
-#if remoting
+#endif
+#if (!reaction && remoting)
         Cmd.ofAsync
-            Server.api.initialCounter
+            initialCounter
             ()
             (Ok >> InitialCountLoaded)
             (Error >> InitialCountLoaded)
-#else
+#endif
+#if (!reaction && !remoting)
         Cmd.ofPromise
-            (fetchAs<Counter> "/api/init")
+            initialCounter
             []
             (Ok >> InitialCountLoaded)
             (Error >> InitialCountLoaded)
 #endif
+#if (!reaction)
     initialModel, loadCountCmd
+#endif
 
+#if (reaction && remoting)
+let load = AsyncObservable.ofAsync (initialCounter ())
+#endif
+#if (reaction && !remoting)
+let load = ofPromise (initialCounter [])
+#endif
+
+#if (reaction)
+let loadCount =
+    load
+    |> AsyncObservable.map (Ok >> InitialCountLoaded)
+    |> AsyncObservable.catch (Error >> InitialCountLoaded >> AsyncObservable.single)
+
+let query msgs =
+    AsyncObservable.concat
+        [ loadCount
+          msgs ]
+#endif
+
+#if (reaction)
+// The update function computes the next state of the application based on the current state and the incoming events/messages
+let update (msg : Msg) (currentModel : Model) : Model =
+    match currentModel.Counter, msg with
+    | Some x, Increment ->
+        { currentModel with Counter = Some (x + 1) }
+    | Some x, Decrement ->
+        { currentModel with Counter = Some (x - 1) }
+    | _, InitialCountLoaded (Ok initialCount)->
+        { Counter = Some initialCount }
+    | _ -> currentModel
+#else
 // The update function computes the next state of the application based on the current state and the incoming events/messages
 // It can also run side-effects (encoded as commands) like calling the server via Http.
 // these commands in turn, can dispatch messages to which the update function will react.
@@ -80,6 +131,7 @@ let update (msg : Msg) (currentModel : Model) : Model * Cmd<Msg> =
         nextModel, Cmd.none
 
     | _ -> currentModel, Cmd.none
+#endif
 
 
 let safeComponents =
@@ -106,6 +158,10 @@ let safeComponents =
 #if (layout == "fulma-admin" || layout == "fulma-cover" || layout == "fulma-hero" || layout == "fulma-landing" || layout == "fulma-login")
              str ", "
              a [ Href "https://dansup.github.io/bulma-templates/" ] [ str "Bulma\u00A0Templates" ]
+#endif
+#if (reaction)
+             str ", "
+             a [ Href "https://dbrattli.github.io/Fable.Reaction/" ] [ str "Fable.Reaction" ]
 #endif
 #if (remoting)
              str ", "
@@ -318,7 +374,7 @@ let columns (model : Model) (dispatch : Msg -> unit) =
                                                       Button.Color IsPrimary ]
                                                     [ str "Action" ] ] ] ] ] ] ]
                   Card.footer [ ]
-                      [ Card.Footer.item [ ]
+                      [ Card.Footer.div [ ]
                           [ str "View All" ] ] ] ]
           Column.column [ Column.Width (Screen.All, Column.Is6) ]
               [ Card.card [ ]
@@ -531,13 +587,16 @@ let intro =
           p [ ClassName "subtitle"] [ str "Vel fringilla est ullamcorper eget nulla facilisi. Nulla facilisi nullam vehicula ipsum a. Neque egestas congue quisque egestas diam in arcu cursus." ] ]
 
 let tile title subtitle content =
+    let details =
+        match content with
+        | Some c -> c
+        | None -> nothing
+
     Tile.child [ ]
         [ Notification.notification [ Notification.Color IsWhite ]
-            [ yield Heading.p [ ] [ str title ]
-              yield Heading.p [ Heading.IsSubtitle ] [ str subtitle ]
-              match content with
-              | Some c -> yield c
-              | None -> () ] ]
+            [ Heading.p [ ] [ str title ]
+              Heading.p [ Heading.IsSubtitle ] [ str subtitle ]
+              details ] ]
 
 let content txts =
     Content.content [ ]
@@ -799,14 +858,20 @@ let view (model : Model) (dispatch : Msg -> unit) =
 
 #endif
 
-
 //-:cnd:noEmit
 #if DEBUG
 open Elmish.Debug
 open Elmish.HMR
 #endif
 
+//+:cnd:noEmit
+#if (reaction)
+Program.mkSimple init update view
+|> Program.withQuery query
+#else
 Program.mkProgram init update view
+#endif
+//-:cnd:noEmit
 #if DEBUG
 |> Program.withConsoleTrace
 |> Program.withHMR

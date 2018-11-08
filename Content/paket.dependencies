@@ -1,6 +1,7 @@
 group Server
-    storage: none
     source https://api.nuget.org/v3/index.json
+    framework: netcoreapp2.1
+    storage: none
 
     nuget FSharp.Core
 //#if (server == "suave")
@@ -13,7 +14,7 @@ group Server
     nuget Saturn
 //#endif
 //#if (!remoting && server != "suave")
-    nuget Fable.JsonConverter
+    nuget Thoth.Json.Giraffe
 //#elseif (remoting && server == "suave")
     nuget Fable.Remoting.Suave
 //#elseif (remoting && server != "suave")
@@ -25,25 +26,32 @@ group Server
 //#endif
 
 group Client
-    storage: none
     source https://api.nuget.org/v3/index.json
+    framework: netstandard2.0
+    storage: none
 
-    nuget Fable.Core
-    nuget Fable.Elmish.Debugger
-    nuget Fable.Elmish.React
-    nuget Fable.Elmish.HMR
+    nuget Fable.Core ~> 2
+    nuget Fable.Elmish ~> 2
+    nuget Fable.Elmish.Debugger ~> 2
+    nuget Fable.Elmish.React ~> 2
+    nuget Fable.Elmish.HMR ~> 2
+    nuget Fable.React ~> 4
+//#if (reaction)
+    nuget Fable.Reaction ~> 2
+//#endif
 //#if (remoting)
-    nuget Fable.Remoting.Client
+    nuget Fable.Remoting.Client ~> 4
 //#endif
 //#if (layout != "none")
-    nuget Fulma
+    nuget Fulma ~> 1
 //#endif
 
-    clitool dotnet-fable
+    clitool dotnet-fable ~> 2
 
 group Build
-    storage: none
     source https://api.nuget.org/v3/index.json
+    framework: netstandard2.0
+    storage: none
 
     nuget FSharp.Core 4.3.4 // https://github.com/fsharp/FAKE/issues/2001
     nuget Fake.Core.Target

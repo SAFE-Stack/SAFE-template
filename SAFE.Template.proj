@@ -14,6 +14,7 @@
     </PropertyGroup>
     <PropertyGroup>
         <ExcludeFromPackage>
+**/.fable/**/*;
 **/.fake/**/*;
 **/obj/**/*;
 **/bin/**/*;

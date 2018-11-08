@@ -23,6 +23,14 @@ let fake =
     | null -> "fake"
     | x -> x
 
+let maxTests =
+    match Environment.GetEnvironmentVariable "MAX_TESTS" with
+    | null -> 20
+    | x ->
+        match System.Int32.TryParse x with
+        | true, n -> n
+        | _ -> 20
+
 let psi exe arg dir (x: ProcStartInfo) : ProcStartInfo =
     { x with
         FileName = exe
@@ -36,7 +44,8 @@ type TemplateArgs =
       Deploy : string option
       Layout : string option
       JsDeps : string option
-      Communication : string option }
+      Communication : string option
+      Pattern : string option }
 
     override args.ToString () =
         let optArg (name, value) =
@@ -47,7 +56,8 @@ type TemplateArgs =
           "deploy", args.Deploy
           "layout", args.Layout
           "js-deps", args.JsDeps
-          "communication", args.Communication ]
+          "communication", args.Communication
+          "pattern", args.Pattern ]
         |> List.map optArg
         |> List.choose id
         |> String.concat " "
@@ -89,6 +99,12 @@ let communicationGen =
         Some "remoting"
     ]
 
+let patternGen =
+    Gen.elements [
+        None
+        Some "reaction"
+    ]
+
 type TemplateArgsArb () =
     static member Arb () : Arbitrary<TemplateArgs> =
         let generator : Gen<TemplateArgs> =
@@ -98,12 +114,14 @@ type TemplateArgsArb () =
                 let! layout = layoutGen
                 let! jsDeps = jsDepsGen
                 let! communication = communicationGen
+                let! pattern = patternGen
                 return
                     { Server = server
                       Deploy = deploy
                       Layout = layout
                       JsDeps = jsDeps
-                      Communication = communication }
+                      Communication = communication
+                      Pattern = pattern }
             }
 
         let shrinker (x : TemplateArgs) : seq<TemplateArgs> =
@@ -123,6 +141,9 @@ type TemplateArgsArb () =
                 match x.Communication with
                 | Some _ -> yield { x with Communication = None }
                 | _ -> ()
+                match x.Pattern with
+                | Some _ -> yield { x with Pattern = None }
+                | _ -> ()
             }
 
         Arb.fromGenShrink (generator, shrinker)
@@ -141,7 +162,7 @@ let run exe arg dir =
 let fsCheckConfig =
     { FsCheckConfig.defaultConfig with
         arbitrary = [typeof<TemplateArgsArb>]
-        maxTest = 10 }
+        maxTest = maxTests }
 
 [<Tests>]
 let tests =

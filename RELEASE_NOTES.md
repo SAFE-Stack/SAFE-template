@@ -1,3 +1,35 @@
+#### 0.35.0 - 08.11.2018
+
+* Use Thoth.Json on server side when not using Fable.Remoting - https://github.com/SAFE-Stack/SAFE-template/pull/179
+
+#### 0.34.0 - 07.11.2018
+
+* Demonstrate usage of "nothing" from Fable.React in "fulma-hero" - https://github.com/SAFE-Stack/SAFE-template/pull/175
+
+#### 0.33.1 - 06.11.2018
+
+* Cleanup JavaScript dependencies - https://github.com/SAFE-Stack/SAFE-template/pull/173
+
+#### 0.33.0 - 05.11.2018
+
+* New option for Fable.Reaction - https://github.com/SAFE-Stack/SAFE-template/pull/168
+
+#### 0.32.0 - 02.11.2018
+
+* Build script - Change to runOrDefaultWithArguments to provide support for default arguments. - https://github.com/SAFE-Stack/SAFE-template/pull/170
+
+#### 0.31.0 - 31.10.2018
+
+* Use FAKE's new CreateProcess API - https://github.com/SAFE-Stack/SAFE-template/pull/169
+
+#### 0.30.1 - 29.10.2018
+
+* Restrict frameworks in paket.dependencies - https://github.com/SAFE-Stack/SAFE-template/pull/163
+
+#### 0.30.0 - 15.10.2018
+
+* Upgrade to Fable 2 - https://github.com/SAFE-Stack/SAFE-template/issues/144
+
 #### 0.29.1 - 26.09.2018
 
 * Add polyfill to webpack to support fetch in IE 11 - https://github.com/SAFE-Stack/SAFE-template/issues/155
