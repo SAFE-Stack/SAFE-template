@@ -154,13 +154,11 @@
                     "condition": "(server == \"saturn\" && remoting == false && deploy != \"azure\" && layout == \"none\" && reaction == false)",
                     "rename": { "paket_noazure_noremoting-nofulma-noreaction_saturn-noremoting-noazure.lock": "paket.lock" }
                 },
-                {                {
+                {
                     "include": "paket_noazure_noremoting-nofulma-noreaction_saturn-noremoting-noazure.lock",
                     "condition": "(server == \"saturn\" && remoting == false && deploy != \"azure\" && layout == \"none\" && reaction == false)",
                     "rename": { "paket_noazure_noremoting-nofulma-noreaction_saturn-noremoting-noazure.lock": "paket.lock" }
-		},
-                {
-                },
+        		},
                 {
                     "include": "paket_noazure_noremoting-nofulma-reaction_saturn-noremoting-noazure.lock",
                     "condition": "(server == \"saturn\" && remoting == false && deploy != \"azure\" && layout == \"none\" && reaction == true)",
