@@ -8,6 +8,9 @@
             "preLaunchTask": "Build Server",
             "program": "${workspaceFolder}/src/Server/bin/Debug/netcoreapp2.1/Server.dll",
             "args": [],
+            "logging": {
+                "moduleLoad": false
+            },
             "stopAtEntry": false,
             "console": "internalConsole",
         },
