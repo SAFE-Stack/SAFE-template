@@ -29,7 +29,7 @@ let formattedRN =
 
 Target.create "Clean" (fun _ ->
     Shell.cleanDirs [ nupkgDir ]
-    // Git.CommandHelper.directRunGitCommandAndFail "./Content" "clean -fxd"
+    Git.CommandHelper.directRunGitCommandAndFail "./Content" "clean -fxd"
 )
 
 Target.create "Pack" (fun _ ->
