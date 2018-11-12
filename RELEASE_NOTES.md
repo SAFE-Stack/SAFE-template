@@ -1,3 +1,8 @@
+#### 0.36.0 - 12.11.2018
+
+* Model counter as a record - https://github.com/SAFE-Stack/SAFE-template/pull/182
+* Add README.md file to SAFE Template content - https://github.com/SAFE-Stack/SAFE-template/pull/183
+
 #### 0.35.0 - 08.11.2018
 
 * Use Thoth.Json on server side when not using Fable.Remoting - https://github.com/SAFE-Stack/SAFE-template/pull/179
