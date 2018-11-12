@@ -53,7 +53,7 @@ module Server =
 #if remoting
 let initialCounter = Server.api.initialCounter
 #else
-let initialCounter = fetchAs<Counter> "/api/init" Decode.int
+let initialCounter = fetchAs<Counter> "/api/init" (Decode.Auto.generateDecoder())
 #endif
 
 #if reaction
@@ -107,11 +107,11 @@ let query msgs =
 // The update function computes the next state of the application based on the current state and the incoming events/messages
 let update (msg : Msg) (currentModel : Model) : Model =
     match currentModel.Counter, msg with
-    | Some x, Increment ->
-        { currentModel with Counter = Some (x + 1) }
-    | Some x, Decrement ->
-        { currentModel with Counter = Some (x - 1) }
-    | _, InitialCountLoaded (Ok initialCount)->
+    | Some counter, Increment ->
+        { currentModel with Counter = Some { Value = counter.Value + 1 } }
+    | Some counter, Decrement ->
+        { currentModel with Counter = Some { Value = counter.Value - 1 } }
+    | _, InitialCountLoaded (Ok initialCount) ->
         { Counter = Some initialCount }
     | _ -> currentModel
 #else
@@ -120,11 +120,11 @@ let update (msg : Msg) (currentModel : Model) : Model =
 // these commands in turn, can dispatch messages to which the update function will react.
 let update (msg : Msg) (currentModel : Model) : Model * Cmd<Msg> =
     match currentModel.Counter, msg with
-    | Some x, Increment ->
-        let nextModel = { currentModel with Counter = Some (x + 1) }
+    | Some counter, Increment ->
+        let nextModel = { currentModel with Counter = Some { Value = counter.Value + 1 } }
         nextModel, Cmd.none
-    | Some x, Decrement ->
-        let nextModel = { currentModel with Counter = Some (x - 1) }
+    | Some counter, Decrement ->
+        let nextModel = { currentModel with Counter = Some { Value = counter.Value - 1 } }
         nextModel, Cmd.none
     | _, InitialCountLoaded (Ok initialCount)->
         let nextModel = { Counter = Some initialCount }
@@ -175,7 +175,7 @@ let safeComponents =
           components ]
 
 let show = function
-| { Counter = Some x } -> string x
+| { Counter = Some counter } -> string counter.Value
 | { Counter = None   } -> "Loading..."
 
 #if (layout == "none")

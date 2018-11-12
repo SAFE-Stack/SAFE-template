@@ -1,22 +1,26 @@
 ﻿open System.IO
 open System.Net
 
+open Shared
+
 open Suave
 open Suave.Files
 open Suave.Successful
 open Suave.Filters
 open Suave.Operators
 
-open Shared
-
 #if (remoting)
 open Fable.Remoting.Server
 open Fable.Remoting.Suave
+
+#else
+open Thoth.Json.Net
+
 #endif
 #if (deploy == "azure")
 open Microsoft.WindowsAzure.Storage
-#endif
 
+#endif
 //#if (deploy == "azure")
 let publicPath = Azure.tryGetEnv "public_path" |> Option.defaultValue "../Client/public" |> Path.GetFullPath
 let port = Azure.tryGetEnv "HTTP_PLATFORM_PORT" |> Option.map System.UInt16.Parse |> Option.defaultValue 8085us
@@ -31,7 +35,7 @@ let config =
           homeFolder = Some publicPath
           bindings = [ HttpBinding.create HTTP (IPAddress.Parse "0.0.0.0") port ] }
 
-let getInitCounter() : Async<Counter> = async { return 42 }
+let getInitCounter() : Async<Counter> = async { return { Value = 42 } }
 #if (remoting)
 let counterApi = {
     initialCounter = getInitCounter
@@ -48,7 +52,7 @@ let webApi =
         fun ctx ->
             async {
                 let! counter = getInitCounter()
-                return! OK (string counter) ctx
+                return! OK (Encode.Auto.toString(4, counter)) ctx
             }
 #endif
 

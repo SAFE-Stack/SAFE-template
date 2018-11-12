@@ -1,6 +1,6 @@
 namespace Shared
 
-type Counter = int
+type Counter = { Value : int }
 
 #if (remoting)
 module Route =
