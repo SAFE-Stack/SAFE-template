@@ -6,55 +6,30 @@ function resolve(filePath) {
     return path.join(__dirname, filePath)
 }
 
-var CONFIG = {
-    fsharpEntry: {
+// passing -p on the command line to webpack specifies production mode, otherwise debug is used.
+var isProduction = process.argv.indexOf("-p") >= 0;
+
+console.log("Bundling for " + (isProduction ? "production" : "development") + "...");
+
+module.exports = {
+    entry: {
         "app": [
             "whatwg-fetch",
             "@babel/polyfill",
             resolve("./Client.fsproj")
         ]
     },
-    devServerProxy: {
-        '/api/*': {
-            target: 'http://localhost:' + (process.env.SUAVE_FABLE_PORT || "8085"),
-            changeOrigin: true
-        }
-    },
-    historyApiFallback: {
-        index: resolve("./index.html")
-    },
-    contentBase: resolve("./public"),
-    // Use babel-preset-env to generate JS compatible with most-used browsers.
-    // More info at https://github.com/babel/babel/blob/master/packages/babel-preset-env/README.md
-    babel: {
-        presets: [
-            ["@babel/preset-env", {
-                "targets": {
-                    "browsers": ["last 2 versions"]
-                },
-                "modules": false,
-                "useBuiltIns": "usage",
-            }]
-        ],
-        plugins: ["@babel/plugin-transform-runtime"]
-    }
-}
-
-var isProduction = process.argv.indexOf("-p") >= 0;
-console.log("Bundling for " + (isProduction ? "production" : "development") + "...");
-
-module.exports = {
-    entry : CONFIG.fsharpEntry,
     output: {
         path: resolve('./public/js'),
         publicPath: "/js",
         filename: "[name].js"
     },
+    // Set up default webpack optimisations for prod or dev builds
     mode: isProduction ? "production" : "development",
+    // Turn on source maps when debugging
     devtool: isProduction ? undefined : "source-map",
-    resolve: {
-        symlinks: false
-    },
+    // Turn off symlinks for module resolution
+    resolve: { symlinks: false },
     optimization: {
         // Split the code coming from npm packages into a different file.
         // 3rd party dependencies change less often, let the browser cache them.
@@ -67,36 +42,59 @@ module.exports = {
                 }
             }
         },
+        // In production, turn on minification to make JS files smaller
         minimizer: isProduction ? [new MinifyPlugin()] : []
     },
-    // DEVELOPMENT
-    //      - HotModuleReplacementPlugin: Enables hot reloading when code changes without refreshing
+    // In development, enable hot reloading when code changes without refreshing the browser or losing state.
     plugins: isProduction ? [] : [
         new webpack.HotModuleReplacementPlugin(),
         new webpack.NamedModulesPlugin()
     ],
-    // Configuration for webpack-dev-server
+    // Configuration for the development server
     devServer: {
-        proxy: CONFIG.devServerProxy,
+        // redirect requests that start with /api/* to the server on port 8085
+        proxy: {
+            '/api/*': {
+                target: 'http://localhost:' + (process.env.SERVER_PROXY_PORT || "8085"),
+                changeOrigin: true
+            }
+        },
+        // turn on hot module reloading
         hot: true,
+        // more automatic reloading
         inline: true,
-        historyApiFallback: CONFIG.historyApiFallback,
-        contentBase: CONFIG.contentBase
+        // default page
+        historyApiFallback: { index: resolve("./index.html") },
+        // where to server static files from
+        contentBase: resolve("./public")
     },
-    // - fable-loader: transforms F# into JS
-    // - babel-loader: transforms JS to old syntax (compatible with old browsers)
+    // The modules that are used by webpack for transformations
     module: {
         rules: [
             {
+                // - fable-loader: transforms F# into JS
                 test: /\.fs(x|proj)?$/,
                 use: "fable-loader"
             },
             {
+                // - babel-loader: transforms JS to old syntax (compatible with old browsers)
                 test: /\.js$/,
                 exclude: /node_modules/,
                 use: {
                     loader: 'babel-loader',
-                    options: CONFIG.babel
+                    options: {
+                        presets: [
+                            // Use babel-preset-env to generate JS compatible with most-used browsers.
+                            // More info at https://github.com/babel/babel/blob/master/packages/babel-preset-env/README.md
+                            ["@babel/preset-env", {
+                                "targets": { "browsers": ["last 2 versions"] },
+                                "modules": false,
+                                "useBuiltIns": "usage",
+                            }]
+                        ],
+                        // A plugin that enables the re-use of Babel's injected helper code to save on codesize.
+                        plugins: ["@babel/plugin-transform-runtime"]
+                    }
                 },
             }
         ]
