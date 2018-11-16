@@ -89,7 +89,13 @@ module.exports = {
         rules: [
             {
                 test: /\.fs(x|proj)?$/,
-                use: "fable-loader"
+                use: {
+					loader: "fable-loader",
+					options: {
+						babel: CONFIG.babel,
+						define: isProduction ? [] : ["DEBUG"]
+					}
+				},
             },
             {
                 test: /\.js$/,
