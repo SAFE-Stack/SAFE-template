@@ -90,12 +90,12 @@ module.exports = {
             {
                 test: /\.fs(x|proj)?$/,
                 use: {
-					loader: "fable-loader",
-					options: {
-						babel: CONFIG.babel,
-						define: isProduction ? [] : ["DEBUG"]
-					}
-				},
+                    loader: "fable-loader",
+                    options: {
+                        babel: CONFIG.babel,
+                        define: isProduction ? [] : ["DEBUG"]
+                   }
+                },
             },
             {
                 test: /\.js$/,
