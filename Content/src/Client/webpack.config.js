@@ -11,6 +11,22 @@ var isProduction = process.argv.indexOf("-p") >= 0;
 
 console.log("Bundling for " + (isProduction ? "production" : "development") + "...");
 
+// Use babel-preset-env to generate JS compatible with most-used browsers.
+// More info at https://github.com/babel/babel/blob/master/packages/babel-preset-env/README.md
+var babelOptions = {
+    presets: [
+        ["@babel/preset-env", {
+            "targets": {
+                "browsers": ["last 2 versions"]
+            },
+            "modules": false,
+            "useBuiltIns": "usage",
+        }]
+    ],
+    // A plugin that enables the re-use of Babel's injected helper code to save on codesize.
+    plugins: ["@babel/plugin-transform-runtime"]
+};
+
 module.exports = {
     entry: {
         "app": [
@@ -77,7 +93,7 @@ module.exports = {
                 use: {
                     loader: "fable-loader",
                     options: {
-                        babel: CONFIG.babel,
+                        babel: babelOptions,
                         define: isProduction ? [] : ["DEBUG"]
                    }
                 },
@@ -88,19 +104,7 @@ module.exports = {
                 exclude: /node_modules/,
                 use: {
                     loader: 'babel-loader',
-                    options: {
-                        presets: [
-                            // Use babel-preset-env to generate JS compatible with most-used browsers.
-                            // More info at https://github.com/babel/babel/blob/master/packages/babel-preset-env/README.md
-                            ["@babel/preset-env", {
-                                "targets": { "browsers": ["last 2 versions"] },
-                                "modules": false,
-                                "useBuiltIns": "usage",
-                            }]
-                        ],
-                        // A plugin that enables the re-use of Babel's injected helper code to save on codesize.
-                        plugins: ["@babel/plugin-transform-runtime"]
-                    }
+                    options: babelOptions
                 },
             }
         ]
