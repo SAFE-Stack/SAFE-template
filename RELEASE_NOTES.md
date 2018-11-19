@@ -1,3 +1,9 @@
+#### 0.37.0 - 19.11.2018
+
+* Pass Babel options to fable-loader - https://github.com/SAFE-Stack/SAFE-template/pull/189
+* Add more comments to webpack.js - https://github.com/SAFE-Stack/SAFE-template/pull/186
+* Change webpack environment variable from SUAVE_FABLE_PORT to SERVER_PROXY_PORT
+
 #### 0.36.0 - 12.11.2018
 
 * Model counter as a record - https://github.com/SAFE-Stack/SAFE-template/pull/182
