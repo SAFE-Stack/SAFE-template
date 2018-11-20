@@ -1,3 +1,7 @@
+#### 0.38.0 - 20.11.2018
+
+* VS Code Launchers and Tasks do Debug the project - https://github.com/SAFE-Stack/SAFE-template/pull/161
+
 #### 0.37.0 - 19.11.2018
 
 * Pass Babel options to fable-loader - https://github.com/SAFE-Stack/SAFE-template/pull/189
