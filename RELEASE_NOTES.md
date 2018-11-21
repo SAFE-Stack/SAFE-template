@@ -1,3 +1,7 @@
+#### 0.38.1 - 21.11.2018
+
+* Cleanup 'Run' target in build script
+
 #### 0.38.0 - 20.11.2018
 
 * VS Code Launchers and Tasks do Debug the project - https://github.com/SAFE-Stack/SAFE-template/pull/161

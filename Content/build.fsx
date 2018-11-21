@@ -88,16 +88,24 @@ Target.create "Build" (fun _ ->
     runDotNet "fable webpack-cli -- --config src/Client/webpack.config.js -p" clientPath
 )
 Target.create "Run" (fun p ->
+    let server = async {
+        runDotNet "watch run" serverPath
+    }
+    let client = async {
+        runDotNet "fable webpack-dev-server -- --config src/Client/webpack.config.js" clientPath
+    }
+    let browser = async {
+        do! Async.Sleep 5000
+        openBrowser "http://localhost:8080"
+    }
+
     let vsCodeSession = Environment.hasEnvironVar "vsCodeSession"
     let safeClientOnly = Environment.hasEnvironVar "safeClientOnly"
 
     let tasks =
-        [ if not safeClientOnly then yield async { runDotNet "watch run" serverPath }          
-          yield async { runDotNet "fable webpack-dev-server -- --config src/Client/webpack.config.js" clientPath }
-          if not vsCodeSession then
-            yield async {
-                  do! Async.Sleep 5000
-                  openBrowser "http://localhost:8080" } ]
+        [ if not safeClientOnly then yield server
+          yield client
+          if not vsCodeSession then yield browser ]
 
     tasks
     |> Async.Parallel
