@@ -161,7 +161,7 @@ let safeComponents =
 #endif
 #if (reaction)
              str ", "
-             a [ Href "https://dbrattli.github.io/Fable.Reaction/" ] [ str "Fable.Reaction" ]
+             a [ Href "https://dbrattli.github.io/Reaction/" ] [ str "Fable.Reaction" ]
 #endif
 #if (remoting)
              str ", "
