@@ -59,7 +59,14 @@ module.exports = {
             }
         },
         // In production, turn on minification to make JS files smaller
-        minimizer: isProduction ? [new MinifyPlugin()] : []
+        minimizer: isProduction ? [new MinifyPlugin({
+            terserOptions: {
+              compress: {
+                  // See https://github.com/SAFE-Stack/SAFE-template/issues/190
+                  inline: false
+              }
+            }
+          })] : []
     },
     // In development, enable hot reloading when code changes without refreshing the browser or losing state.
     plugins: isProduction ? [] : [
