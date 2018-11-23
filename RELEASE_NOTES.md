@@ -1,3 +1,7 @@
+#### 0.38.2 - 23.11.2018
+
+* Webpack - set terser minifier configuration compress.inline to false - https://github.com/SAFE-Stack/SAFE-template/pull/193
+
 #### 0.38.1 - 21.11.2018
 
 * Cleanup 'Run' target in build script
