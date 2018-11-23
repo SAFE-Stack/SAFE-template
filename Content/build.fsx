@@ -87,7 +87,7 @@ Target.create "Build" (fun _ ->
     runDotNet "build" serverPath
     runDotNet "fable webpack-cli -- --config src/Client/webpack.config.js -p" clientPath
 )
-Target.create "Run" (fun p ->
+Target.create "Run" (fun _ ->
     let server = async {
         runDotNet "watch run" serverPath
     }
