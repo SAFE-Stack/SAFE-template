@@ -16,9 +16,7 @@ console.log("Bundling for " + (isProduction ? "production" : "development") + ".
 var babelOptions = {
     presets: [
         ["@babel/preset-env", {
-            "targets": {
-                "browsers": ["last 2 versions"]
-            },
+            "targets": "defaults",
             "modules": false,
             "useBuiltIns": "usage",
         }]
