@@ -1,6 +1,6 @@
 var path = require("path");
 var webpack = require("webpack");
-var MinifyPlugin = require("terser-webpack-plugin");
+var MinifyPlugin = require("uglifyjs-webpack-plugin");
 
 function resolve(filePath) {
     return path.join(__dirname, filePath)
@@ -59,14 +59,7 @@ module.exports = {
             }
         },
         // In production, turn on minification to make JS files smaller
-        minimizer: isProduction ? [new MinifyPlugin({
-            terserOptions: {
-              compress: {
-                  // See https://github.com/SAFE-Stack/SAFE-template/issues/190
-                  inline: false
-              }
-            }
-          })] : []
+        minimizer: isProduction ? [new MinifyPlugin()] : []
     },
     // In development, enable hot reloading when code changes without refreshing the browser or losing state.
     plugins: isProduction ? [] : [
