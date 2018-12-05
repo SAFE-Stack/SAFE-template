@@ -219,11 +219,7 @@ let navBrand =
         [ Container.container [ ]
             [ Navbar.Brand.div [ ]
                 [ Navbar.Item.a [ Navbar.Item.CustomClass "brand-text" ]
-                      [ str "SAFE Admin" ]
-                  Navbar.burger [ ]
-                      [ span [ ] [ ]
-                        span [ ] [ ]
-                        span [ ] [ ] ] ]
+                      [ str "SAFE Admin" ] ]
               Navbar.menu [ ]
                   [ Navbar.Start.div [ ]
                       [ Navbar.Item.a [ ]
@@ -430,11 +426,7 @@ let navBrand =
                 [ Href "https://safe-stack.github.io/"
                   Style [ BackgroundColor "#00d1b2" ] ] ]
             [ img [ Src "https://safe-stack.github.io/images/safe_top.png"
-                    Alt "Logo" ] ]
-          Navbar.burger [ ]
-            [ span [ ] [ ]
-              span [ ] [ ]
-              span [ ] [ ] ] ]
+                    Alt "Logo" ] ] ]
 
 let navMenu =
     Navbar.menu [ ]
@@ -511,11 +503,7 @@ let navBrand =
         [ Navbar.Item.a
             [ Navbar.Item.Props [ Href "https://safe-stack.github.io/" ] ]
             [ img [ Src "https://safe-stack.github.io/images/safe_top.png"
-                    Alt "Logo" ] ]
-          Navbar.burger [ ]
-            [ span [ ] [ ]
-              span [ ] [ ]
-              span [ ] [ ] ] ]
+                    Alt "Logo" ] ] ]
 
 let navMenu =
     Navbar.menu [ ]
@@ -722,11 +710,7 @@ let navBrand =
             [ Navbar.Item.Props [ Href "https://safe-stack.github.io/" ]
               Navbar.Item.IsActive true ]
             [ img [ Src "https://safe-stack.github.io/images/safe_top.png"
-                    Alt "Logo" ] ]
-          Navbar.burger [ ]
-            [ span [ ] [ ]
-              span [ ] [ ]
-              span [ ] [ ] ] ]
+                    Alt "Logo" ] ] ]
 
 let navMenu =
     Navbar.menu [ ]
