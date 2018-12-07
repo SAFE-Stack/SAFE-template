@@ -1,3 +1,7 @@
+#### 0.39.0 - 05.12.2018
+
+* Remove bulma burgers from fulma layouts - https://github.com/SAFE-Stack/SAFE-template/pull/197
+
 #### 0.38.2 - 23.11.2018
 
 * Webpack - set terser minifier configuration compress.inline to false - https://github.com/SAFE-Stack/SAFE-template/pull/193
