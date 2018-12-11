@@ -38,6 +38,7 @@ let platformTool tool winTool =
 let nodeTool = platformTool "node" "node.exe"
 //#if (js-deps == "npm")
 let npmTool = platformTool "npm" "npm.cmd"
+let npxTool = platformTool "npx" "npx.cmd"
 //#else
 let yarnTool = platformTool "yarn" "yarn.cmd"
 //#endif
@@ -85,14 +86,22 @@ Target.create "InstallClient" (fun _ ->
 
 Target.create "Build" (fun _ ->
     runDotNet "build" serverPath
-    runDotNet "fable webpack-cli -- --config src/Client/webpack.config.js -p" clientPath
+//#if (js-deps == "npm")
+    runTool npxTool "webpack-cli --config src/Client/webpack.config.js -p" clientPath
+//#else
+    runTool yarnTool "webpack-cli --config src/Client/webpack.config.js -p" clientPath
+//#endif
 )
 Target.create "Run" (fun _ ->
     let server = async {
         runDotNet "watch run" serverPath
     }
     let client = async {
-        runDotNet "fable webpack-dev-server -- --config src/Client/webpack.config.js" clientPath
+//#if (js-deps == "npm")
+        runTool npxTool "webpack-dev-server --config src/Client/webpack.config.js" clientPath
+//#else
+        runTool yarnTool "webpack-dev-server --config src/Client/webpack.config.js" clientPath
+//#endif
     }
     let browser = async {
         do! Async.Sleep 5000
