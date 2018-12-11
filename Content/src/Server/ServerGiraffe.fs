@@ -19,14 +19,15 @@ open Fable.Remoting.Giraffe
 open Microsoft.WindowsAzure.Storage
 #endif
 
-//#if (deploy == "azure")
 let tryGetEnv = System.Environment.GetEnvironmentVariable >> function null | "" -> None | x -> Some x
+
+//#if (deploy == "azure")
 let publicPath = tryGetEnv "public_path" |> Option.defaultValue "../Client/public" |> Path.GetFullPath
 let storageAccount = tryGetEnv "STORAGE_CONNECTIONSTRING" |> Option.defaultValue "UseDevelopmentStorage=true" |> CloudStorageAccount.Parse
 //#else
 let publicPath = Path.GetFullPath "../Client/public"
 //#endif
-let port = 8085us
+let port = "SERVER_PROXY_PORT" |> tryGetEnv |> Option.map uint16 |> Option.defaultValue 8085us
 
 let getInitCounter () : Task<Counter> = task { return { Value = 42 } }
 #if (remoting)
