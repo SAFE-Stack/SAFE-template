@@ -45,7 +45,8 @@ group Client
     nuget Fable.Remoting.Client ~> 4
 //#endif
 //#if (layout != "none")
-    nuget Fulma ~> 1
+    # fulma 1.1 removed FontAwesome
+    nuget Fulma < 1.1
 //#endif
 
 group Build
