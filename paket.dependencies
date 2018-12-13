@@ -11,8 +11,11 @@ group Build
     nuget Fake.Tools.Git
 
 group Tests
+    framework: netcoreapp2.1
     storage: none
     source https://api.nuget.org/v3/index.json
+
+    nuget System.Net.Http
 
     nuget Expecto
     nuget Expecto.FsCheck

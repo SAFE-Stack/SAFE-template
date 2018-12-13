@@ -1,4 +1,6 @@
 group Tests
+    System.Net.Http
+
     Expecto
     Expecto.FsCheck
     Fake.Core.Process
