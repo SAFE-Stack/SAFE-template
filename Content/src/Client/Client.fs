@@ -21,7 +21,7 @@ open Fulma
 #endif
 
 #if (layout == "fulma-admin" || layout == "fulma-cover" || layout == "fulma-hero" || layout == "fulma-landing" || layout == "fulma-login")
-open Fulma.FontAwesome
+open Fable.FontAwesome
 #endif
 
 // The model holds data that you want to keep track of while the application is running
