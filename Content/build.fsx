@@ -92,6 +92,7 @@ Target.create "Build" (fun _ ->
     runTool yarnTool "webpack-cli --config src/Client/webpack.config.js -p" __SOURCE_DIRECTORY__
 //#endif
 )
+
 Target.create "Run" (fun _ ->
     let server = async {
         runDotNet "watch run" serverPath

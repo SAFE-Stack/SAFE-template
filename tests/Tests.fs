@@ -164,9 +164,11 @@ let run exe arg dir =
     |> Proc.run
     |> ignore
 
-let runWaitForStdOut exe arg dir (stdOutPhrase : string) =
+open System.Threading.Tasks
+
+let start exe arg dir =
     logger.info(
-        eventX "Running `{exe} {arg}` in `{dir}`"
+        eventX "Starting `{exe} {arg}` in `{dir}`"
         >> setField "exe" exe
         >> setField "arg" arg
         >> setField "dir" dir)
@@ -180,14 +182,22 @@ let runWaitForStdOut exe arg dir (stdOutPhrase : string) =
             RedirectStandardInput = true
             UseShellExecute = false }.AsStartInfo
 
-    let proc = Process.Start psi
+    Process.Start psi
 
-    let mutable line = ""
-    while line <> null && line.Contains stdOutPhrase |> not do
-        line <- proc.StandardOutput.ReadLine()
-        printfn "--> %s" line
+let waitForStdOut (proc : Process) (stdOutPhrase : string) (timeout : TimeSpan) =
 
-    proc
+    let readTask =
+        Task.Factory.StartNew (Func<_>(fun _ ->
+            let mutable line = ""
+            while line <> null && line.Contains stdOutPhrase |> not do
+                line <- proc.StandardOutput.ReadLine()
+                printfn "--> %s" line
+        ))
+
+    if readTask.Wait timeout then
+        ()
+    else
+        failwithf "Timeout!"
 
 let get (url: string) =
     use client = new HttpClient ()
@@ -243,9 +253,13 @@ let tests =
             // see if `fake build -t run` succeeds and webpack serves the index page
             let stdOutPhrase = ": Compiled successfully."
             let htmlSearchPhrase = """<title>SAFE Template</title>"""
-            let proc = runWaitForStdOut fake "build -t run" dir stdOutPhrase
+            let timeout = TimeSpan.FromMinutes 5.
+            let proc = start fake "build -t run" dir
+            try
+                waitForStdOut proc stdOutPhrase timeout
+            finally
+                killProcessTree proc.Id
             let response = get "http://localhost:8080"
-            killProcessTree proc.Id
             Expect.stringContains response htmlSearchPhrase (sprintf "html fragment not found for '%s'" newSAFEArgs)
 
             logger.info(
