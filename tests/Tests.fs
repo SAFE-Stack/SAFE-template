@@ -194,10 +194,7 @@ let waitForStdOut (proc : Process) (stdOutPhrase : string) (timeout : TimeSpan) 
                 printfn "--> %s" line
         ))
 
-    if readTask.Wait timeout then
-        ()
-    else
-        failwithf "Timeout!"
+    readTask.Wait timeout
 
 let get (url: string) =
     use client = new HttpClient ()
@@ -255,12 +252,14 @@ let tests =
             let htmlSearchPhrase = """<title>SAFE Template</title>"""
             let timeout = TimeSpan.FromMinutes 5.
             let proc = start fake "build -t run" dir
-            try
-                waitForStdOut proc stdOutPhrase timeout
-            finally
+            let waitResult = waitForStdOut proc stdOutPhrase timeout
+            if waitResult then
+                let response = get "http://localhost:8080"
                 killProcessTree proc.Id
-            let response = get "http://localhost:8080"
-            Expect.stringContains response htmlSearchPhrase (sprintf "html fragment not found for '%s'" newSAFEArgs)
+                Expect.stringContains response htmlSearchPhrase (sprintf "html fragment not found for '%s'" newSAFEArgs)
+            else
+                killProcessTree proc.Id
+                raise (Expecto.FailedException (sprintf "`fake build -t run` timeout for '%s'" newSAFEArgs))
 
             logger.info(
                 eventX "Deleting `{dir}`"
