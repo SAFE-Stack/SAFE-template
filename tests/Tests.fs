@@ -242,7 +242,8 @@ let tests =
 
             run dotnet (sprintf "new SAFE %s" newSAFEArgs) dir
 
-            Expect.isTrue (File.exists (dir </> "paket.lock")) (sprintf "paket.lock not present for '%s'" newSAFEArgs)
+            Expect.isTrue (File.exists (dir </> "paket.lock"))
+                (sprintf "paket.lock not present for '%s'" newSAFEArgs)
 
             // see if `fake build` succeeds
             run fake "build" dir
@@ -252,14 +253,17 @@ let tests =
             let htmlSearchPhrase = """<title>SAFE Template</title>"""
             let timeout = TimeSpan.FromMinutes 5.
             let proc = start fake "build -t run" dir
-            let waitResult = waitForStdOut proc stdOutPhrase timeout
-            if waitResult then
-                let response = get "http://localhost:8080"
+            try
+                let waitResult = waitForStdOut proc stdOutPhrase timeout
+                if waitResult then
+                    let response = get "http://localhost:8080"
+                    Expect.stringContains response htmlSearchPhrase
+                        (sprintf "html fragment not found for '%s'" newSAFEArgs)
+                else
+                    raise (Expecto.FailedException (sprintf "`fake build -t run` timeout for '%s'" newSAFEArgs))
+            finally
                 killProcessTree proc.Id
-                Expect.stringContains response htmlSearchPhrase (sprintf "html fragment not found for '%s'" newSAFEArgs)
-            else
-                killProcessTree proc.Id
-                raise (Expecto.FailedException (sprintf "`fake build -t run` timeout for '%s'" newSAFEArgs))
+
 
             logger.info(
                 eventX "Deleting `{dir}`"
