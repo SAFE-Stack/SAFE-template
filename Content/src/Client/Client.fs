@@ -21,6 +21,7 @@ open Fulma
 #endif
 
 #if (layout == "fulma-admin" || layout == "fulma-cover" || layout == "fulma-hero" || layout == "fulma-landing" || layout == "fulma-login")
+open Fable.FontAwesome
 open Fable.FontAwesome.Free
 #endif
 
@@ -348,8 +349,8 @@ let columns (model : Model) (dispatch : Msg -> unit) =
                     [ Card.Header.title [ ]
                         [ str "Events" ]
                       Card.Header.icon [ ]
-                          [ Icon.faIcon [ ]
-                              [ Fa.icon Fa.I.AngleDown ] ] ]
+                          [ Icon.icon [ ]
+                              [ Fa.i [ Fa.Solid.AngleDown ] [] ] ] ]
                   div [ Class "card-table" ]
                       [ Content.content [ ]
                           [ Table.table
@@ -359,9 +360,9 @@ let columns (model : Model) (dispatch : Msg -> unit) =
                                   [ for _ in 1..10 ->
                                       tr [ ]
                                           [ td [ Style [ Width "5%" ] ]
-                                              [ Icon.faIcon
+                                              [ Icon.icon
                                                   [ ]
-                                                  [ Fa.icon Fa.I.BellO ] ]
+                                                  [ Fa.i [ Fa.Solid.Bell ] [] ] ]
                                             td [ ]
                                                 [ str "Lorem ipsum dolor aire" ]
                                             td [ ]
@@ -378,8 +379,8 @@ let columns (model : Model) (dispatch : Msg -> unit) =
                       [ Card.Header.title [ ]
                           [ str "Inventory Search" ]
                         Card.Header.icon [ ]
-                            [ Icon.faIcon [ ]
-                                [ Fa.icon Fa.I.AngleDown ] ] ]
+                            [ Icon.icon [ ]
+                                [ Fa.i [Fa.Solid.AngleDown] [] ] ] ]
                     Card.content [ ]
                         [ Content.content [ ]
                             [ Control.div
@@ -387,21 +388,21 @@ let columns (model : Model) (dispatch : Msg -> unit) =
                                   Control.HasIconRight ]
                                 [ Input.text
                                       [ Input.Size IsLarge ]
-                                  Icon.faIcon
+                                  Icon.icon
                                       [ Icon.Size IsMedium
                                         Icon.IsLeft ]
-                                      [ Fa.icon Fa.I.Search ]
-                                  Icon.faIcon
+                                      [ Fa.i [Fa.Solid.Search] [] ]
+                                  Icon.icon
                                       [ Icon.Size IsMedium
                                         Icon.IsRight ]
-                                      [ Fa.icon Fa.I.Check ] ] ] ] ]
+                                      [ Fa.i [Fa.Solid.Check] [] ] ] ] ] ]
                 Card.card [ ]
                     [ Card.header [ ]
                         [ Card.Header.title [ ]
                               [ str "Counter" ]
                           Card.Header.icon [ ]
-                              [ Icon.faIcon [ ]
-                                  [ Fa.icon Fa.I.AngleDown ] ] ]
+                              [ Icon.icon [ ]
+                                  [ Fa.i [Fa.Solid.AngleDown] [] ] ] ]
                       Card.content [ ]
                         [ Content.content   [ ]
                             [ counter model dispatch ] ] ]   ] ]
@@ -441,8 +442,8 @@ let navMenu =
                 [ Button.a
                     [ Button.Size IsSmall
                       Button.Props [ Href "https://github.com/SAFE-Stack/SAFE-template" ] ]
-                    [ Icon.faIcon [ ]
-                        [ Fa.icon Fa.I.Github; Fa.fw ]
+                    [ Icon.icon [ ]
+                        [ Fa.i [Fa.Brand.Github] [] ]
                       span [ ] [ str "View Source" ] ] ] ] ]
 
 let containerBox (model : Model) (dispatch : Msg -> unit) =
@@ -520,8 +521,8 @@ let navMenu =
                       Button.IsOutlined
                       Button.Size IsSmall
                       Button.Props [ Href "https://github.com/SAFE-Stack/SAFE-template" ] ]
-                    [ Icon.faIcon [ ]
-                        [ Fa.icon Fa.I.Github; Fa.fw ]
+                    [ Icon.icon [ ]
+                        [ Fa.i [Fa.Brand.Github] [] ]
                       span [ ] [ str "View Source" ] ] ] ] ]
 
 let buttonBox (model : Model) (dispatch : Msg -> unit) =
@@ -547,10 +548,9 @@ let card icon heading body =
     [ Card.card [ ]
         [ Card.image
             [ Modifiers [ Modifier.TextAlignment (Screen.All, TextAlignment.Centered) ] ]
-            [ Icon.faIcon [ Icon.Size IsMedium
-                            Icon.Props [ Style [ MarginTop "15px" ] ] ]
-                [ Fa.icon icon
-                  Fa.fa2x ] ]
+            [ Icon.icon [ Icon.Size IsMedium
+                          Icon.Props [ Style [ MarginTop "15px" ] ] ]
+                [ Fa.i [icon] [] ] ]
           Card.content [ ]
             [ Content.content [ ]
                 [ h4 [ ] [ str heading ]
@@ -561,9 +561,9 @@ let card icon heading body =
 
 let features =
     Columns.columns [ Columns.CustomClass "features" ]
-        [ card Fa.I.Paw "Tristique senectus et netus et." "Purus semper eget duis at tellus at urna condimentum mattis. Non blandit massa enim nec. Integer enim neque volutpat ac tincidunt vitae semper quis. Accumsan tortor posuere ac ut consequat semper viverra nam."
-          card Fa.I.IdCardO "Tempor orci dapibus ultrices in." "Ut venenatis tellus in metus vulputate. Amet consectetur adipiscing elit pellentesque. Sed arcu non odio euismod lacinia at quis risus. Faucibus turpis in eu mi bibendum neque egestas cmonsu songue. Phasellus vestibulum lorem sed risus."
-          card Fa.I.Rocket "Leo integer malesuada nunc vel risus." "Imperdiet dui accumsan sit amet nulla facilisi morbi. Fusce ut placerat orci nulla pellentesque dignissim enim. Libero id faucibus nisl tincidunt eget nullam. Commodo viverra maecenas accumsan lacus vel facilisis." ]
+        [ card Fa.Solid.Paw "Tristique senectus et netus et." "Purus semper eget duis at tellus at urna condimentum mattis. Non blandit massa enim nec. Integer enim neque volutpat ac tincidunt vitae semper quis. Accumsan tortor posuere ac ut consequat semper viverra nam."
+          card Fa.Solid.IdCard "Tempor orci dapibus ultrices in." "Ut venenatis tellus in metus vulputate. Amet consectetur adipiscing elit pellentesque. Sed arcu non odio euismod lacinia at quis risus. Faucibus turpis in eu mi bibendum neque egestas cmonsu songue. Phasellus vestibulum lorem sed risus."
+          card Fa.Solid.Rocket "Leo integer malesuada nunc vel risus." "Imperdiet dui accumsan sit amet nulla facilisi morbi. Fusce ut placerat orci nulla pellentesque dignissim enim. Libero id faucibus nisl tincidunt eget nullam. Commodo viverra maecenas accumsan lacus vel facilisis." ]
 
 let intro =
     Column.column
@@ -673,8 +673,8 @@ let footerContainer =
                 [ safeComponents ]
               p [ ]
                 [ a [ Href "https://github.com/SAFE-Stack/SAFE-template" ]
-                    [ Icon.faIcon [ ]
-                        [ Fa.icon Fa.I.Github; Fa.fw ] ] ] ] ]
+                    [ Icon.icon [ ]
+                        [ Fa.i [Fa.Brand.Github] [] ] ] ] ] ]
 
 let view (model : Model) (dispatch : Msg -> unit) =
     div [ ]
