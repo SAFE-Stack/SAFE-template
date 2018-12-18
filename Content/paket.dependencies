@@ -45,10 +45,9 @@ group Client
     nuget Fable.Remoting.Client ~> 4
 //#endif
 //#if (layout != "none")
-    nuget Fulma ~> 1
+    nuget Fulma
+    nuget Fable.FontAwesome.Free
 //#endif
-
-    clitool dotnet-fable ~> 2
 
 group Build
     source https://api.nuget.org/v3/index.json

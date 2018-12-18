@@ -12,6 +12,6 @@ group Client
 //#endif
 //#if (layout != "none")
     Fulma
+    Fable.FontAwesome.Free
 //#endif
 
-    dotnet-fable
