@@ -1,3 +1,7 @@
+#### 0.40.0 - 18.12.2018
+
+* Update dependencies (nuget and npm) - https://github.com/SAFE-Stack/SAFE-template/pull/199
+
 #### 0.39.0 - 05.12.2018
 
 * Remove bulma burgers from fulma layouts - https://github.com/SAFE-Stack/SAFE-template/pull/197
