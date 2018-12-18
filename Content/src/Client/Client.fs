@@ -550,7 +550,7 @@ let card icon heading body =
             [ Modifiers [ Modifier.TextAlignment (Screen.All, TextAlignment.Centered) ] ]
             [ Icon.icon [ Icon.Size IsMedium
                           Icon.Props [ Style [ MarginTop "15px" ] ] ]
-                [ Fa.i [icon] [] ] ]
+                [ Fa.i [icon; Fa.IconOption.Size Fa.Fa2x] [] ] ]
           Card.content [ ]
             [ Content.content [ ]
                 [ h4 [ ] [ str heading ]
