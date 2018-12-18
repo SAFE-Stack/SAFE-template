@@ -5,14 +5,50 @@ var CopyWebpackPlugin = require('copy-webpack-plugin');
 var MiniCssExtractPlugin = require("mini-css-extract-plugin");
 var MinifyPlugin = require("terser-webpack-plugin");
 
+var CONFIG = {
+    // The tags to include the generated JS and CSS will be automatically injected in the HTML template
+    // See https://github.com/jantimon/html-webpack-plugin
+    indexHtmlTemplate: "./public/index.html",
+    fsharpEntry: "./Client.fsproj",
+    cssEntry: "./public/style.sass",
+    outputDir: "./deploy",
+    assetsDir: "./public",
+    devServerPort: 8080,
+    // When using webpack-dev-server, you may need to redirect some calls
+    // to a external API server. See https://webpack.js.org/configuration/dev-server/#devserver-proxy
+    devServerProxy: undefined,
+    // Use babel-preset-env to generate JS compatible with most-used browsers.
+    // More info at https://babeljs.io/docs/en/next/babel-preset-env.html
+    babel: {
+        presets: [
+            ["@babel/preset-env", {
+                "targets": "> 0.25%, not dead",
+                "modules": false,
+                // This adds polyfills when needed. Requires core-js dependency.
+                // See https://babeljs.io/docs/en/babel-preset-env#usebuiltins
+                "useBuiltIns": "usage",
+            }]
+        ],
+    }
+}
+
 function resolve(filePath) {
     return path.join(__dirname, filePath)
 }
 
-// passing -p on the command line to webpack specifies production mode, otherwise debug is used.
-var isProduction = process.argv.indexOf("-p") >= 0;
-
+// If we're running the webpack-dev-server, assume we're in development mode
+var isProduction = !process.argv.find(v => v.indexOf('webpack-dev-server') !== -1);
 console.log("Bundling for " + (isProduction ? "production" : "development") + "...");
+
+
+// The HtmlWebpackPlugin allows us to use a template for the index.html page
+// and automatically injects <script> or <link> tags for generated bundles.
+var commonPlugins = [
+    new HtmlWebpackPlugin({
+        filename: 'index.html',
+        template: resolve(CONFIG.indexHtmlTemplate)
+    })
+];
 
 // Use babel-preset-env to generate JS compatible with most-used browsers.
 // More info at https://github.com/babel/babel/blob/master/packages/babel-preset-env/README.md
@@ -31,13 +67,14 @@ var babelOptions = {
 };
 
 module.exports = {
-    entry: {
-        "app": [
-            "whatwg-fetch",
-            "@babel/polyfill",
-            resolve("./Client.fsproj")
-        ]
-    },
+     // In development, bundle styles together with the code so they can also
+    // trigger hot reloads. In production, put them in a separate CSS file.
+    entry: isProduction ? {
+        app: [resolve(CONFIG.fsharpEntry), resolve(CONFIG.cssEntry)]
+    } : {
+            app: [resolve(CONFIG.fsharpEntry)],
+            style: [resolve(CONFIG.cssEntry)]
+        },
     output: {
         path: resolve('./public/js'),
         publicPath: "/js",
