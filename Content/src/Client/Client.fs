@@ -727,8 +727,8 @@ let navMenu =
                       Button.IsOutlined
                       Button.Size IsSmall
                       Button.Props [ Href "https://github.com/SAFE-Stack/SAFE-template" ] ]
-                    [ Icon.faIcon [ ]
-                        [ Fa.icon Fa.I.Github; Fa.fw ]
+                    [ Icon.icon [ ]
+                        [ Fa.i [Fa.Brand.Github] [] ]
                       span [ ] [ str "View Source" ] ] ] ] ]
 
 let containerBox (model : Model) (dispatch : Msg -> unit) =
