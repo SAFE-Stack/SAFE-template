@@ -132,7 +132,7 @@ Target.create "Bundle" (fun _ ->
     let publishArgs = sprintf "publish -c Release -o \"%s\"" serverDir
     runDotNet publishArgs serverPath
 
-    Shell.copyDir publicDir "src/Client/public" FileFilter.allFiles
+    Shell.copyDir publicDir "src/Client/deploy" FileFilter.allFiles
 )
 
 let dockerUser = "safe-template"
@@ -150,8 +150,13 @@ Target.create "Docker" (fun _ ->
 //#endif
 //#if (deploy == "azure")
 Target.create "Bundle" (fun _ ->
-    runDotNet (sprintf "publish \"%s\" -c release -o \"%s\"" serverPath deployDir) __SOURCE_DIRECTORY__
-    Shell.copyDir (Path.combine deployDir "public") (Path.combine clientPath "public") FileFilter.allFiles
+    let serverDir = deployDir
+    let publicDir = Path.combine deployDir "public"
+
+    let publishArgs = sprintf "publish -c Release -o \"%s\"" serverDir
+    runDotNet publishArgs serverPath
+
+    Shell.copyDir publicDir "src/Client/deploy" FileFilter.allFiles
 )
 
 type ArmOutput =
