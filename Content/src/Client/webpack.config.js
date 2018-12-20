@@ -1,4 +1,4 @@
-// Template for webpack.config.js in Fable projects
+﻿// Template for webpack.config.js in Fable projects
 // Find latest version in https://github.com/fable-compiler/webpack-config-template
 
 // In most cases, you'll only need to edit the CONFIG object (after dependencies)
@@ -44,7 +44,6 @@ var CONFIG = {
         ],
     }
 }
-
 
 // If we're running the webpack-dev-server, assume we're in development mode
 var isProduction = !process.argv.find(v => v.indexOf('webpack-dev-server') !== -1);
@@ -92,7 +91,7 @@ module.exports = {
     // Besides the HtmlPlugin, we use the following plugins:
     // PRODUCTION
     //      - MiniCssExtractPlugin: Extracts CSS from bundle to a different file
-    //          To minify CSS, see https://github.com/webpack-contrib/mini-css-extract-plugin#minimizing-for-production
+    //          To minify CSS, see https://github.com/webpack-contrib/mini-css-extract-plugin#minimizing-for-production    
     //      - CopyWebpackPlugin: Copies static assets to output directory
     // DEVELOPMENT
     //      - HotModuleReplacementPlugin: Enables hot reloading when code changes without refreshing
