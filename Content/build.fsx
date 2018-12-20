@@ -22,6 +22,7 @@ open Microsoft.Azure.Management.ResourceManager.Fluent.Core
 
 let serverPath = Path.getFullName "./src/Server"
 let clientPath = Path.getFullName "./src/Client"
+let clientDeployPath = Path.combine clientPath "deploy"
 let deployDir = Path.getFullName "./deploy"
 
 let platformTool tool winTool =
@@ -66,7 +67,9 @@ let openBrowser url =
     |> ignore
 
 Target.create "Clean" (fun _ ->
-    Shell.cleanDirs [deployDir]
+    [ deployDir
+      clientDeployPath ]
+    |> Shell.cleanDirs
 )
 
 Target.create "InstallClient" (fun _ ->
@@ -132,7 +135,7 @@ Target.create "Bundle" (fun _ ->
     let publishArgs = sprintf "publish -c Release -o \"%s\"" serverDir
     runDotNet publishArgs serverPath
 
-    Shell.copyDir publicDir "src/Client/deploy" FileFilter.allFiles
+    Shell.copyDir publicDir clientDeployPath FileFilter.allFiles
 )
 
 let dockerUser = "safe-template"
@@ -156,7 +159,7 @@ Target.create "Bundle" (fun _ ->
     let publishArgs = sprintf "publish -c Release -o \"%s\"" serverDir
     runDotNet publishArgs serverPath
 
-    Shell.copyDir publicDir "src/Client/deploy" FileFilter.allFiles
+    Shell.copyDir publicDir clientDeployPath FileFilter.allFiles
 )
 
 type ArmOutput =
