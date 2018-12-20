@@ -221,10 +221,18 @@ let killProcessTree (pid: int) =
           yield pid ]
 
     for pid in getProcessTree pid do
-        logger.info(
-            eventX "killing process {pid}"
-            >> setField "pid" pid)
-        (Process.GetProcessById pid).Kill ()
+        let proc = Process.GetProcessById pid
+        if proc <> null && not proc.HasExited then
+            logger.info(
+                eventX "Killing process {pid}"
+                >> setField "pid" pid)
+            try
+                proc.Kill ()
+            with e ->
+                logger.warn(
+                    eventX "Failed to kill process {pid}: {msg}"
+                    >> setField "pid" pid
+                    >> setField "msg" e.Message)
 
 let fsCheckConfig =
     { FsCheckConfig.defaultConfig with
