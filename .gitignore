@@ -8,4 +8,4 @@ gen-paket-lock-files/
 /.vs
 
 # webpack config comes from https://github.com/fable-compiler/webpack-config-template, see build script
-Content/src/Client/webpack.config.js
+Content/webpack.config.js

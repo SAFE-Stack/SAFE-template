@@ -90,9 +90,9 @@ Target.create "InstallClient" (fun _ ->
 Target.create "Build" (fun _ ->
     runDotNet "build" serverPath
 //#if (js-deps == "npm")
-    runTool npxTool "webpack-cli --config src/Client/webpack.config.js -p" __SOURCE_DIRECTORY__
+    runTool npxTool "webpack-cli -p" __SOURCE_DIRECTORY__
 //#else
-    runTool yarnTool "webpack-cli --config src/Client/webpack.config.js -p" __SOURCE_DIRECTORY__
+    runTool yarnTool "webpack-cli -p" __SOURCE_DIRECTORY__
 //#endif
 )
 
@@ -102,9 +102,9 @@ Target.create "Run" (fun _ ->
     }
     let client = async {
 //#if (js-deps == "npm")
-        runTool npxTool "webpack-dev-server --config src/Client/webpack.config.js" __SOURCE_DIRECTORY__
+        runTool npxTool "webpack-dev-server" __SOURCE_DIRECTORY__
 //#else
-        runTool yarnTool "webpack-dev-server --config src/Client/webpack.config.js" __SOURCE_DIRECTORY__
+        runTool yarnTool "webpack-dev-server" __SOURCE_DIRECTORY__
 //#endif
     }
     let browser = async {
