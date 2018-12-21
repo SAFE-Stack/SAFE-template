@@ -1,3 +1,7 @@
+#### 0.40.1 - 21.12.2018
+
+* Upgrade CSS references for Bulma to 0.7.1 and Font Awesome to 5.6.1
+
 #### 0.40.0 - 18.12.2018
 
 * Update dependencies (nuget and npm) - https://github.com/SAFE-Stack/SAFE-template/pull/199
