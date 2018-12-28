@@ -123,7 +123,7 @@ Target.create "Run" (fun _ ->
     |> ignore
 )
 
-//#if (deploy == "docker")
+//#if (deploy == "docker" || deploy == "gcp-appengine")
 Target.create "Bundle" (fun _ ->
     let serverDir = Path.combine deployDir "Server"
     let clientDir = Path.combine deployDir "Client"
@@ -221,18 +221,30 @@ Target.create "AppService" (fun _ ->
     client.UploadData(destinationUri, IO.File.ReadAllBytes zipFile) |> ignore)
 //#endif
 
+//#if (deploy == "gcp-appengine")
+Target.create "Deploy" (fun _ ->
+    let args = sprintf "app deploy --quiet"
+    runTool "gcloud" args "."
+)
+//#endif
+
 open Fake.Core.TargetOperators
 
 "Clean"
     ==> "InstallClient"
     ==> "Build"
-//#if (deploy == "docker")
+//#if (deploy == "docker" || deploy == "gcp-appengine")
     ==> "Bundle"
     ==> "Docker"
 //#elseif (deploy == "azure")
     ==> "Bundle"
     ==> "ArmTemplate"
     ==> "AppService"
+//#endif
+
+//#if (deploy == "gcp-appengine")
+"Bundle"
+    ==> "Deploy"
 //#endif
 
 "Clean"
