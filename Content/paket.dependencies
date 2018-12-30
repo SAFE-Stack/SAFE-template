@@ -16,7 +16,7 @@ group Server
 //#if (!remoting && server != "suave")
     nuget Thoth.Json.Giraffe
 //#elseif (!remoting && server == "suave")
-    nuget Thoth.Json.Net    
+    nuget Thoth.Json.Net
 //#elseif (remoting && server == "suave")
     nuget Fable.Remoting.Suave
 //#elseif (remoting && server != "suave")
@@ -63,5 +63,8 @@ group Build
     nuget Fake.Core.Trace
     nuget Fake.IO.Zip
     github CompositionalIT/fshelpers src/FsHelpers/ArmHelper/ArmHelper.fs
+//#endif
+//#if (deploy == "gcp-kubernetes")
+    nuget Fake.Tools.Git
 //#endif
 
