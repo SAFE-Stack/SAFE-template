@@ -1,31 +1,52 @@
-open System.IO
-open System.Threading.Tasks
-
-open Microsoft.AspNetCore.Builder
-open Microsoft.Extensions.DependencyInjection
-open FSharp.Control.Tasks.V2
-open Giraffe
-open Saturn
-open Shared
-
 #if (remoting)
 open Fable.Remoting.Server
 open Fable.Remoting.Giraffe
 #endif
 #if (deploy == "azure")
-open Microsoft.WindowsAzure.Storage
+open FSharp.Azure.StorageTypeProvider
+#endif
+open FSharp.Control.Tasks.V2
+open Giraffe
+#if (deploy == "azure")
+open global.Shared
+#endif
+open Microsoft.Extensions.DependencyInjection
+open Saturn
+#if (deploy != "azure")
+open Shared
+#endif
+open System.IO
+#if (deploy == "azure")
+open Thoth.Json.Net
 #endif
 
-//#if (deploy == "azure")
+#if (deploy == "azure")
 let tryGetEnv = System.Environment.GetEnvironmentVariable >> function null | "" -> None | x -> Some x
 let publicPath = tryGetEnv "public_path" |> Option.defaultValue "../Client/public" |> Path.GetFullPath
-let storageAccount = tryGetEnv "STORAGE_CONNECTIONSTRING" |> Option.defaultValue "UseDevelopmentStorage=true" |> CloudStorageAccount.Parse
-//#else
+let runtimeAzure = tryGetEnv "STORAGE_CONNECTIONSTRING" |> Option.defaultValue "UseDevelopmentStorage=true"
+
+/// A handle to an Azure storage account without a connection string. Schema is provided by the
+/// azure-schema.json file. You can remove the blobSchema key/value and replace with a full Azure
+/// connection string; schema will be inferred from the storage account contents directly.
+type Azure = AzureTypeProvider<blobSchema="azure-schema.json">
+let safeData = Azure.Containers.safedata
+#else
 let publicPath = Path.GetFullPath "../Client/public"
-//#endif
+#endif
 let port = 8085us
 
-let getInitCounter() : Task<Counter> = task { return { Value = 42 } }
+#if (deploy == "azure")
+// Initialise the Azure storage account with a container and the counter state.
+do
+    safeData.AsCloudBlobContainer(runtimeAzure).CreateIfNotExistsAsync().Wait()
+    safeData.``counter.txt``.AsCloudBlockBlob(runtimeAzure).UploadTextAsync(Encode.Auto.toString(4, { Value = 42 })).Wait()
+
+let getInitCounter() = task {
+    let! counter = safeData.``counter.txt``.ReadAsync(runtimeAzure)
+    return Decode.Auto.unsafeFromString<Counter>(counter) }
+#else
+let getInitCounter() = task { return { Value = 42 } }
+#endif
 
 #if (remoting)
 let counterApi = {
@@ -37,7 +58,6 @@ let webApp =
     |> Remoting.withRouteBuilder Route.builder
     |> Remoting.fromValue counterApi
     |> Remoting.buildHttpHandler
-
 #else
 let webApp = router {
     get "/api/init" (fun next ctx ->
