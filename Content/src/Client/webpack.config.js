@@ -45,7 +45,13 @@ module.exports = {
     // Turn on source maps when debugging
     devtool: isProduction ? undefined : "source-map",
     // Turn off symlinks for module resolution
-    resolve: { symlinks: false },
+    resolve: {
+        symlinks: false,
+        alias: {
+            "react": "preact-compat",
+            "react-dom": "preact-compat"
+        }
+    },
     optimization: {
         // Split the code coming from npm packages into a different file.
         // 3rd party dependencies change less often, let the browser cache them.
@@ -61,12 +67,12 @@ module.exports = {
         // In production, turn on minification to make JS files smaller
         minimizer: isProduction ? [new MinifyPlugin({
             terserOptions: {
-              compress: {
-                  // See https://github.com/SAFE-Stack/SAFE-template/issues/190
-                  inline: false
-              }
+                compress: {
+                    // See https://github.com/SAFE-Stack/SAFE-template/issues/190
+                    inline: false
+                }
             }
-          })] : []
+        })] : []
     },
     // In development, enable hot reloading when code changes without refreshing the browser or losing state.
     plugins: isProduction ? [] : [
@@ -102,7 +108,7 @@ module.exports = {
                     options: {
                         babel: babelOptions,
                         define: isProduction ? [] : ["DEBUG"]
-                   }
+                    }
                 },
             },
             {
