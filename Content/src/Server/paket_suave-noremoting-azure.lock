@@ -3,6 +3,10 @@ STORAGE: NONE
 RESTRICTION: == netcoreapp2.1
 NUGET
   remote: https://api.nuget.org/v3/index.json
+    FSharp.Azure.StorageTypeProvider (2.0)
+      FSharp.Compiler.Tools (>= 10.2.1)
+      WindowsAzure.Storage (>= 9.3.2)
+    FSharp.Compiler.Tools (10.2.1)
     FSharp.Core (4.5.4)
     Microsoft.ApplicationInsights (2.8.1)
       NETStandard.Library (>= 1.6.1)

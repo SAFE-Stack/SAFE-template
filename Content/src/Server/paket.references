@@ -11,7 +11,7 @@ group Server
 //#endif
 //#if (deploy == "azure")
     Microsoft.ApplicationInsights.AspNetCore
-    WindowsAzure.Storage
+    FSharp.Azure.StorageTypeProvider
 //#endif
 //#if     (!remoting && server != "suave")
     Thoth.Json.Giraffe

@@ -24,7 +24,7 @@ group Server
 //#endif
 //#if (deploy == "azure")
     nuget Microsoft.ApplicationInsights.AspNetCore ~> 2.2
-    nuget WindowsAzure.Storage
+    nuget FSharp.Azure.StorageTypeProvider ~> 2.0
 //#endif
 
 group Client
