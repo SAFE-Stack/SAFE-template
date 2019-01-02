@@ -210,7 +210,7 @@ Target.create "Publish" (fun _ ->
 )
 
 Target.create "ClusterAuth" (fun _ ->
-    let clusterName = "safe-cluster"
+    let clusterName = Environment.environVarOrDefault "SAFE_CLUSTER" "safe-cluster"
     let authArgs = sprintf "container clusters get-credentials %s" clusterName
     runTool "gcloud" authArgs "."
 )
