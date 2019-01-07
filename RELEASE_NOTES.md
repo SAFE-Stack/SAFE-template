@@ -1,3 +1,7 @@
+#### 0.41.0 - 07.01.2019
+
+* Unify webpack.config.js with webpack-config-template - https://github.com/SAFE-Stack/SAFE-template/pull/204
+
 #### 0.40.1 - 21.12.2018
 
 * Upgrade CSS references for Bulma to 0.7.1 and Font Awesome to 5.6.1
