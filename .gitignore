@@ -3,7 +3,9 @@ packages/
 paket-files/
 nupkg/
 obj/
-Content/paket.lock
 bin/
 gen-paket-lock-files/
 /.vs
+
+# webpack config comes from https://github.com/fable-compiler/webpack-config-template, see build script
+Content/webpack.config.js

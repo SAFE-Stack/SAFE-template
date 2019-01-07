@@ -1,3 +1,5 @@
+github fable-compiler/webpack-config-template webpack.config.js
+
 group Build
     storage: none
     source https://api.nuget.org/v3/index.json

@@ -22,6 +22,7 @@ open Microsoft.Azure.Management.ResourceManager.Fluent.Core
 
 let serverPath = Path.getFullName "./src/Server"
 let clientPath = Path.getFullName "./src/Client"
+let clientDeployPath = Path.combine clientPath "deploy"
 let deployDir = Path.getFullName "./deploy"
 
 let platformTool tool winTool =
@@ -66,7 +67,9 @@ let openBrowser url =
     |> ignore
 
 Target.create "Clean" (fun _ ->
-    Shell.cleanDirs [deployDir]
+    [ deployDir
+      clientDeployPath ]
+    |> Shell.cleanDirs
 )
 
 Target.create "InstallClient" (fun _ ->
@@ -87,9 +90,9 @@ Target.create "InstallClient" (fun _ ->
 Target.create "Build" (fun _ ->
     runDotNet "build" serverPath
 //#if (js-deps == "npm")
-    runTool npxTool "webpack-cli --config src/Client/webpack.config.js -p" __SOURCE_DIRECTORY__
+    runTool npxTool "webpack-cli -p" __SOURCE_DIRECTORY__
 //#else
-    runTool yarnTool "webpack-cli --config src/Client/webpack.config.js -p" __SOURCE_DIRECTORY__
+    runTool yarnTool "webpack-cli -p" __SOURCE_DIRECTORY__
 //#endif
 )
 
@@ -99,9 +102,9 @@ Target.create "Run" (fun _ ->
     }
     let client = async {
 //#if (js-deps == "npm")
-        runTool npxTool "webpack-dev-server --config src/Client/webpack.config.js" __SOURCE_DIRECTORY__
+        runTool npxTool "webpack-dev-server" __SOURCE_DIRECTORY__
 //#else
-        runTool yarnTool "webpack-dev-server --config src/Client/webpack.config.js" __SOURCE_DIRECTORY__
+        runTool yarnTool "webpack-dev-server" __SOURCE_DIRECTORY__
 //#endif
     }
     let browser = async {
@@ -132,7 +135,7 @@ Target.create "Bundle" (fun _ ->
     let publishArgs = sprintf "publish -c Release -o \"%s\"" serverDir
     runDotNet publishArgs serverPath
 
-    Shell.copyDir publicDir "src/Client/public" FileFilter.allFiles
+    Shell.copyDir publicDir clientDeployPath FileFilter.allFiles
 )
 
 let dockerUser = "safe-template"
@@ -150,8 +153,13 @@ Target.create "Docker" (fun _ ->
 //#endif
 //#if (deploy == "azure")
 Target.create "Bundle" (fun _ ->
-    runDotNet (sprintf "publish \"%s\" -c release -o \"%s\"" serverPath deployDir) __SOURCE_DIRECTORY__
-    Shell.copyDir (Path.combine deployDir "public") (Path.combine clientPath "public") FileFilter.allFiles
+    let serverDir = deployDir
+    let publicDir = Path.combine deployDir "public"
+
+    let publishArgs = sprintf "publish -c Release -o \"%s\"" serverDir
+    runDotNet publishArgs serverPath
+
+    Shell.copyDir publicDir clientDeployPath FileFilter.allFiles
 )
 
 type ArmOutput =

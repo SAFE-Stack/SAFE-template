@@ -32,6 +32,40 @@ Target.create "Clean" (fun _ ->
     Git.CommandHelper.directRunGitCommandAndFail "./Content" "clean -fxd"
 )
 
+Target.create "BuildWebPackConfig" (fun _ ->
+    let srcDir = "paket-files/fable-compiler/webpack-config-template/webpack.config.js"
+    let destDir = "Content/webpack.config.js"
+    Shell.copyFile destDir srcDir
+
+    let devServerProxy =
+        """{
+        // redirect requests that start with /api/* to the server on port 8085
+        '/api/*': {
+            target: 'http://localhost:' + (process.env.SERVER_PROXY_PORT || "8085"),
+               changeOrigin: true
+           }
+       }"""
+
+    let quote = sprintf "\"%s\""
+
+    let replacements =
+        [
+            "indexHtmlTemplate", quote "./src/Client/index.html"
+            "fsharpEntry", quote "./src/Client/Client.fsproj"
+            "cssEntry", quote "./src/Client/style.sass"
+            "outputDir", quote "./src/Client/deploy"
+            "assetsDir", quote "./src/Client/public"
+            "devServerProxy", devServerProxy
+        ]
+
+    for (key, value) in replacements do
+        Shell.regexReplaceInFileWithEncoding
+           (sprintf "    %s: .+," key)
+           (sprintf "    %s: %s," key value)
+            System.Text.Encoding.UTF8
+            destDir
+)
+
 Target.create "Pack" (fun _ ->
     Shell.regexReplaceInFileWithEncoding
         "  \"name\": .+,"
@@ -356,6 +390,7 @@ Target.create "Release" ignore
 open Fake.Core.TargetOperators
 
 "Clean"
+    ==> "BuildWebPackConfig"
     ==> "BuildPaketLockFiles"
     ==> "Pack"
     ==> "RemovePaketLockFiles"
