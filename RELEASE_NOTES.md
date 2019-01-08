@@ -1,3 +1,7 @@
+#### 0.41.1 - 08.01.2019
+
+* Update JS dependencies to remove security vulnerability warnings - https://github.com/SAFE-Stack/SAFE-template/issues/113
+
 #### 0.41.0 - 07.01.2019
 
 * Unify webpack.config.js with webpack-config-template - https://github.com/SAFE-Stack/SAFE-template/pull/204
