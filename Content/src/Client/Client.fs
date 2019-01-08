@@ -828,7 +828,7 @@ let column (model : Model) (dispatch : Msg -> unit) =
               str "\u00A0·\u00A0"
               a [ ] [ str "Need Help?" ] ]
           br [ ]
-          Text.p [ Modifiers [   Modifier.TextColor IsGrey ] ]
+          Text.div [ Modifiers [   Modifier.TextColor IsGrey ] ]
             [ safeComponents ] ]
 
 let view (model : Model) (dispatch : Msg -> unit) =
