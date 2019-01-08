@@ -43,7 +43,7 @@ let webApp = router {
     get "/api/init" (fun next ctx ->
         task {
             let! counter = getInitCounter()
-            return! Successful.OK counter next ctx
+            return! json counter next ctx
         })
 }
 
