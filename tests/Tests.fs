@@ -27,11 +27,11 @@ let fake =
 
 let maxTests =
     match Environment.GetEnvironmentVariable "MAX_TESTS" with
-    | null -> 20
+    | null -> 15
     | x ->
         match System.Int32.TryParse x with
         | true, n -> n
-        | _ -> 20
+        | _ -> 15
 
 let execParams exe arg dir : ExecParams =
     { Program = exe
