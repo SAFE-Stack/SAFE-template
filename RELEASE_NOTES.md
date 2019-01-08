@@ -1,6 +1,8 @@
-#### 0.41.1 - 08.01.2019
+#### 0.42 - 08.01.2019
 
 * Update JS dependencies to remove security vulnerability warnings - https://github.com/SAFE-Stack/SAFE-template/issues/113
+* Replace 'successful.ok' with 'json' in Saturn template - https://github.com/SAFE-Stack/SAFE-template/issues/211
+* Replace 'Text.p' with 'Text.div' to prevent DOMNesting warning - https://github.com/SAFE-Stack/SAFE-template/issues/215
 
 #### 0.41.0 - 07.01.2019
 
