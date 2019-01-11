@@ -20,6 +20,7 @@ open Cit.Helpers.Arm.Parameters
 open Microsoft.Azure.Management.ResourceManager.Fluent.Core
 //#endif
 //#if (deploy == "gcp-kubernetes")
+open System.Text.RegularExpressions
 open Fake.Tools.Git
 //#endif
 
@@ -56,6 +57,17 @@ let runTool cmd args workingDir =
     |> Proc.run
     |> ignore
 
+let runToolWithOutput cmd args workingDir =
+    let arguments = args |> String.split ' ' |> Arguments.OfArgs
+    let result =
+        Command.RawCommand (cmd, arguments)
+        |> CreateProcess.fromCommand
+        |> CreateProcess.withWorkingDirectory workingDir
+        |> CreateProcess.ensureExitCode
+        |> CreateProcess.redirectOutput
+        |> Proc.run
+    result.Result.Output |> (fun s -> s.TrimEnd())
+
 let runDotNet cmd workingDir =
     let result =
         DotNet.exec (DotNet.Options.withWorkingDirectory workingDir) cmd ""
@@ -71,18 +83,7 @@ let openBrowser url =
 
 //#if (deploy == "gcp-kubernetes")
 let getGcloudProject() =
-    let cmd = "gcloud"
-    let args = "config get-value project -q"
-    let workingDir = "."
-    let arguments = args |> String.split ' ' |> Arguments.OfArgs
-    let result =
-        Command.RawCommand (cmd, arguments)
-        |> CreateProcess.fromCommand
-        |> CreateProcess.withWorkingDirectory workingDir
-        |> CreateProcess.ensureExitCode
-        |> CreateProcess.redirectOutput
-        |> Proc.run
-    result.Result.Output |> (fun s -> s.TrimEnd())
+    runToolWithOutput "gcloud" "config get-value project -q" "."
 
 let createDockerTag projectName =
     let gitHash = Information.getCurrentHash()
@@ -90,13 +91,9 @@ let createDockerTag projectName =
     sprintf "gcr.io/%s/%s:%s" projectId projectName gitHash
 
 let deployExists appName =
-    let args = sprintf "get deploy %s" appName
-    try
-        runTool "kubectl" args "."
-        true
-    with
-    | _ ->
-        false
+    let result = runToolWithOutput "kubectl" "get deploy" "."
+    let pattern = "^" + appName + "\s+"
+    Regex.IsMatch(result, pattern, RegexOptions.Multiline)
 
 let updateKubernetesDeploy appName dockerTag =
     let updateArgs = sprintf "set image deployment/%s %s=%s" appName appName dockerTag
