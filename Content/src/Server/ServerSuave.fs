@@ -30,7 +30,7 @@ let tryGetEnv = System.Environment.GetEnvironmentVariable >> function null | "" 
 
 let publicPath = Path.GetFullPath "../Client/public"
 
-let port = "SERVER_PROXY_PORT" |> tryGetEnv |> Option.map uint16 |> Option.defaultValue 8085us
+let port = "SERVER_PORT" |> tryGetEnv |> Option.map uint16 |> Option.defaultValue 8085us
 //#endif
 
 let config =

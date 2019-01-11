@@ -19,4 +19,4 @@ resources:
     disk_size_gb: 10
 
 env_variables:
-    SERVER_PROXY_PORT: "8080"
+    SERVER_PORT: "8080"

@@ -223,8 +223,7 @@ Target.create "AppService" (fun _ ->
 
 //#if (deploy == "gcp-appengine")
 Target.create "Deploy" (fun _ ->
-    let args = sprintf "app deploy --quiet"
-    runTool "gcloud" args "."
+    runTool "gcloud" "app deploy --quiet" "."
 )
 //#endif
 
