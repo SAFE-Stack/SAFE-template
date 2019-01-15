@@ -1,3 +1,7 @@
+#### 0.43.0 - 15.01.2019
+
+* Support for deploying to Google Cloud AppEngine - https://github.com/SAFE-Stack/SAFE-template/pull/207
+
 #### 0.42.0 - 08.01.2019
 
 * Update JS dependencies to remove security vulnerability warnings - https://github.com/SAFE-Stack/SAFE-template/issues/113

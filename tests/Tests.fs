@@ -76,6 +76,7 @@ let deployGen =
         None
         Some "docker"
         Some "azure"
+        Some "gcp-appengine"
     ]
 
 let layoutGen =
