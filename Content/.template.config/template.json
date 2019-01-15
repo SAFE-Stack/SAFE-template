@@ -141,6 +141,10 @@
                 {
                     "choice": "docker",
                     "description": "additional FAKE targets to bundle and build Docker image"
+                },
+                {
+                    "choice": "gcp-appengine",
+                    "description": "additional FAKE targets to deploy to GCP appengine"
                 }
             ]
         }
@@ -457,7 +461,11 @@
                 },
                 {
                     "exclude": "Dockerfile",
-                    "condition": "(deploy != \"docker\")"
+                    "condition": "(deploy != \"docker\" && deploy != \"gcp-appengine\" )"
+                },
+                {
+                    "exclude": "app.yaml",
+                    "condition": "(deploy != \"gcp-appengine\" )"
                 },
                 {
                     "exclude": "arm-template.json",

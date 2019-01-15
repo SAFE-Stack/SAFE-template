@@ -26,8 +26,11 @@ let publicPath = Azure.tryGetEnv "public_path" |> Option.defaultValue "../Client
 let port = Azure.tryGetEnv "HTTP_PLATFORM_PORT" |> Option.map System.UInt16.Parse |> Option.defaultValue 8085us
 let storageAccount = Azure.tryGetEnv "STORAGE_CONNECTIONSTRING" |> Option.defaultValue "UseDevelopmentStorage=true" |> CloudStorageAccount.Parse
 //#else
+let tryGetEnv = System.Environment.GetEnvironmentVariable >> function null | "" -> None | x -> Some x
+
 let publicPath = Path.GetFullPath "../Client/public"
-let port = 8085us
+
+let port = "SERVER_PORT" |> tryGetEnv |> Option.map uint16 |> Option.defaultValue 8085us
 //#endif
 
 let config =
