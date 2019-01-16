@@ -1,3 +1,7 @@
+#### 0.44.0 - 16.01.2019
+
+* Add VSCode extensions.json to recommend extensions - https://github.com/SAFE-Stack/SAFE-template/issues/202
+
 #### 0.43.0 - 15.01.2019
 
 * Support for deploying to Google Cloud AppEngine - https://github.com/SAFE-Stack/SAFE-template/pull/207
