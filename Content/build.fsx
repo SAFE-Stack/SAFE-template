@@ -186,7 +186,7 @@ Target.create "Bundle" (fun _ ->
 let dockerUser = "safe-template"
 let dockerImageName = "safe-template"
 //#endif
-//#if (deploy == "docker")
+//#if (deploy == "docker" || deploy == "gcp-appengine")
 let dockerFullName = sprintf "%s/%s" dockerUser dockerImageName
 
 Target.create "Docker" (fun _ ->
