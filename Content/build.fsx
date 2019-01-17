@@ -21,7 +21,6 @@ open Microsoft.Azure.Management.ResourceManager.Fluent.Core
 //#endif
 //#if (deploy == "gcp-kubernetes")
 open System.Text.RegularExpressions
-open Fake.Tools.Git
 //#endif
 
 let serverPath = Path.getFullName "./src/Server"
@@ -85,10 +84,12 @@ let runToolWithOutput cmd args workingDir =
 let getGcloudProject() =
     runToolWithOutput "gcloud" "config get-value project -q" "."
 
-let createDockerTag projectName =
-    let gitHash = Information.getCurrentHash()
+let getDockerTag() = "v1"
+
+let createDockerImageName projectName =
+    let dockerTag = getDockerTag()
     let projectId = getGcloudProject()
-    sprintf "gcr.io/%s/%s:%s" projectId projectName gitHash
+    sprintf "gcr.io/%s/%s:%s" projectId projectName dockerTag
 
 let deployExists appName =
     let result = runToolWithOutput "kubectl" "get deploy" "."
@@ -196,13 +197,13 @@ Target.create "Docker" (fun _ ->
 //#endif
 //#if (deploy == "gcp-kubernetes")
 Target.create "Docker" (fun _ ->
-    let dockerTag = createDockerTag dockerImageName
-    buildDocker dockerTag
+    let imageName = createDockerImageName dockerImageName
+    buildDocker imageName
 )
 
 Target.create "Publish" (fun _ ->
-    let dockerTag = createDockerTag dockerImageName
-    let pushArgs = sprintf "push %s" dockerTag
+    let imageName = createDockerImageName dockerImageName
+    let pushArgs = sprintf "push %s" imageName
     runTool "docker" pushArgs "."
 )
 
@@ -213,14 +214,14 @@ Target.create "ClusterAuth" (fun _ ->
 )
 
 Target.create "Deploy" (fun _ ->
-    let dockerTag = createDockerTag dockerImageName
+    let imageName = createDockerImageName dockerImageName
     let appName = dockerImageName
     let port = 8085
     if deployExists appName
     then
-        updateKubernetesDeploy appName dockerTag
+        updateKubernetesDeploy appName imageName
     else
-        createAndExposeKubernetesDeploy appName dockerTag port
+        createAndExposeKubernetesDeploy appName imageName port
 )
 //#endif
 

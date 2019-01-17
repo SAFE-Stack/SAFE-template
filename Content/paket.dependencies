@@ -64,7 +64,4 @@ group Build
     nuget Fake.IO.Zip
     github CompositionalIT/fshelpers src/FsHelpers/ArmHelper/ArmHelper.fs
 //#endif
-//#if (deploy == "gcp-kubernetes")
-    nuget Fake.Tools.Git
-//#endif
 
