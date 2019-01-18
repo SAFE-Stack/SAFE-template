@@ -1,6 +1,6 @@
 ﻿GROUP Server
 STORAGE: NONE
-RESTRICTION: == netcoreapp2.1
+RESTRICTION: == netcoreapp2.2
 NUGET
   remote: https://api.nuget.org/v3/index.json
     Fable.Remoting.Json (2.2)
