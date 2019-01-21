@@ -10,7 +10,7 @@
         "Giraffe",
         "Bulma"
     ],
-    "name": "SAFE-Stack Web App v0.44.0",
+    "name": "SAFE-Stack Web App v0.45.0",
     "tags": {
         "language": "F#",
         "type": "project"
@@ -145,6 +145,10 @@
                 {
                     "choice": "gcp-appengine",
                     "description": "additional FAKE targets to deploy to Google Cloud AppEngine"
+                },
+                {
+                    "choice": "gcp-kubernetes",
+                    "description": "additional FAKE targets to publish to gcp container registry and deploy to google kubernetes engine"
                 }
             ]
         }
@@ -461,7 +465,7 @@
                 },
                 {
                     "exclude": "Dockerfile",
-                    "condition": "(deploy != \"docker\" && deploy != \"gcp-appengine\" )"
+                    "condition": "(deploy != \"docker\" && deploy != \"gcp-appengine\" && deploy != \"gcp-kubernetes\" )"
                 },
                 {
                     "exclude": "app.yaml",
