@@ -17,7 +17,7 @@ The template comes with plenty different options. Please see [SAFE docs](https:/
 
 ## Prerequisites
 
-* [dotnet SDK 2.1](https://www.microsoft.com/net/core) together with dotnet CLI
+* [dotnet SDK 2.2](https://www.microsoft.com/net/core) together with dotnet CLI
 * [FAKE 5](https://fake.build/) installed as a [global tool](https://fake.build/fake-gettingstarted.html#Install-FAKE)
 * [node.js](https://nodejs.org/)
 * [yarn](https://yarnpkg.com/) or [npm](https://www.npmjs.com/)

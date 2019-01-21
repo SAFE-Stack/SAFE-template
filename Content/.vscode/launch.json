@@ -1,12 +1,12 @@
 {
     "version": "0.2.0",
-    "configurations": [       
+    "configurations": [
         {
             "name": "Debug Server",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "Build Server",
-            "program": "${workspaceFolder}/src/Server/bin/Debug/netcoreapp2.1/Server.dll",
+            "program": "${workspaceFolder}/src/Server/bin/Debug/netcoreapp2.2/Server.dll",
             "args": [],
             "logging": {
                 "moduleLoad": false
