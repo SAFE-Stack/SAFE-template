@@ -1,3 +1,7 @@
+#### 0.46.0 - 21.01.2019
+
+* Update to .NET Core 2.2 - https://github.com/SAFE-Stack/SAFE-template/pull/218
+
 #### 0.45.0 - 21.01.2019
 
 * Support for deploying to Google Cloud Kubernetes Engine - https://github.com/SAFE-Stack/SAFE-template/pull/209

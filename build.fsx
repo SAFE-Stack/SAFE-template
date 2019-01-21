@@ -357,7 +357,7 @@ Target.create "UpdatePaketLockFiles" (fun x ->
 Target.create "Tests" (fun _ ->
     let cmd = "run"
     let args = "--project tests/tests.fsproj"
-    let result = DotNet.exec id cmd args
+    let result = DotNet.exec (fun x -> { x with DotNetCliPath = "dotnet" }) cmd args
     if not result.OK then failwithf "`dotnet %s %s` failed" cmd args
 )
 
