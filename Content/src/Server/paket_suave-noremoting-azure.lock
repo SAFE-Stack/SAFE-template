@@ -3,7 +3,7 @@ STORAGE: NONE
 RESTRICTION: == netcoreapp2.2
 NUGET
   remote: https://api.nuget.org/v3/index.json
-    FSharp.Core (4.5.4)
+    FSharp.Core (4.6)
     Microsoft.ApplicationInsights (2.8.1)
       NETStandard.Library (>= 1.6.1)
       System.Diagnostics.DiagnosticSource (>= 4.5)
