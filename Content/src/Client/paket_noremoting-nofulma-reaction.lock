@@ -51,7 +51,7 @@ NUGET
       Reaction (>= 1.0)
     FSharp.Control.AsyncSeq (2.0.21)
       FSharp.Core (>= 4.3.2)
-    FSharp.Core (4.5.4)
+    FSharp.Core (4.6)
     Reaction (1.0)
       FSharp.Control.AsyncSeq (>= 2.0.21)
       FSharp.Core (>= 4.5.2)
