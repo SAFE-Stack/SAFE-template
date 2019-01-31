@@ -3,7 +3,7 @@ STORAGE: NONE
 RESTRICTION: == netcoreapp2.2
 NUGET
   remote: https://api.nuget.org/v3/index.json
-    FSharp.Core (4.5.4)
+    FSharp.Core (4.6)
     Newtonsoft.Json (12.0.1)
     Suave (2.5.3)
       FSharp.Core (>= 4.0 < 5.0)

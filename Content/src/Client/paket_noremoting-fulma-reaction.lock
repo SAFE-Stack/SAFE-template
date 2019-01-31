@@ -58,7 +58,7 @@ NUGET
       Reaction (>= 1.0)
     FSharp.Control.AsyncSeq (2.0.21)
       FSharp.Core (>= 4.3.2)
-    FSharp.Core (4.5.4)
+    FSharp.Core (4.6)
     Fulma (1.1)
       Fable.Core (>= 2.0.2)
       Fable.React (>= 4.1.3)

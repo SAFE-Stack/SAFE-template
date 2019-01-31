@@ -3,8 +3,8 @@ STORAGE: NONE
 RESTRICTION: == netcoreapp2.2
 NUGET
   remote: https://api.nuget.org/v3/index.json
-    FSharp.Core (4.5.4)
-    Giraffe (3.5)
+    FSharp.Core (4.6)
+    Giraffe (3.5.1)
       FSharp.Core (>= 4.5.2)
       Microsoft.AspNetCore.Authentication (>= 2.2)
       Microsoft.AspNetCore.Authorization (>= 2.2)
