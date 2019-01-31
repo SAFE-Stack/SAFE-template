@@ -1,3 +1,8 @@
+#### 0.47.0 - 31.01.2019
+
+* Update dependencies - https://github.com/SAFE-Stack/SAFE-template/pull/223
+* Update Fulma URL - https://github.com/SAFE-Stack/SAFE-template/pull/224
+
 #### 0.46.0 - 21.01.2019
 
 * Update to .NET Core 2.2 - https://github.com/SAFE-Stack/SAFE-template/pull/218
