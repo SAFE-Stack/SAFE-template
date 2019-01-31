@@ -154,7 +154,7 @@ let safeComponents =
              a [ Href "https://elmish.github.io/elmish/" ] [ str "Elmish" ]
 #if (layout != "none")
              str ", "
-             a [ Href "https://mangelmaxime.github.io/Fulma" ] [ str "Fulma" ]
+             a [ Href "https://fulma.github.io/Fulma" ] [ str "Fulma" ]
 #endif
 #if (layout == "fulma-admin" || layout == "fulma-cover" || layout == "fulma-hero" || layout == "fulma-landing" || layout == "fulma-login")
              str ", "
