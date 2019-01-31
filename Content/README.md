@@ -51,7 +51,7 @@ You will find more documentation about the used F# components at the following p
 * [Fable.Remoting](https://zaid-ajaj.github.io/Fable.Remoting/)
 //#endif
 //#if (layout != "none")
-* [Fulma](https://mangelmaxime.github.io/Fulma/)
+* [Fulma](https://fulma.github.io/Fulma/)
 //#endif
 
 If you want to know more about the full Azure Stack and all of it's components (including Azure) visit the official [SAFE documentation](https://safe-stack.github.io/docs/).
