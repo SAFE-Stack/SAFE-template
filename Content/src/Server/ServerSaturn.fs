@@ -73,6 +73,9 @@ let app = application {
     #if (deploy == "azure")
     service_config configureAzure
     #endif
+    #if (deploy == "iis")
+    use_iis
+    #endif
     use_gzip
 }
 
