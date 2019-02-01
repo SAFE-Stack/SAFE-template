@@ -38,22 +38,64 @@ type Msg =
 | Decrement
 | InitialCountLoaded of Result<Counter, exn>
 
+#if (deploy == "iis" && server != "sauve") 
+module ServerPath = 
+    open System
+    open Fable.Core
+    
+    /// when publishing to IIS, your application most likely runs inside a virtual path (i.e. localhost/SafeApp)
+    /// every request made to the server will have to account for this virtual path
+    /// so we get the virtual path from the location
+    /// `virtualPath` of `http://localhost/SafeApp` -> `/SafeApp/` 
+    [<Emit("window.location.pathname")>]
+    let virtualPath : string = jsNative 
+
+    /// takes path segments and combines them into a valid path
+    let combine (paths: string list) =
+        paths 
+        |> List.map (fun path -> List.ofArray (path.Split('/')))
+        |> List.concat 
+        |> List.filter (String.IsNullOrWhiteSpace >> not) 
+        |> String.concat "/"
+        |> sprintf "/%s"
+
+    /// Normalized the path taking into account the virtual path of the server
+    let normalize (path: string) = combine [virtualPath; path]
+#endif
+
+
 #if (remoting)
 module Server =
 
     open Shared
     open Fable.Remoting.Client
+    
+    #if (deploy == "iis" && server != "sauve")
+    // normalize routes so that they work with IIS virtual path in production
+    let normalizeRoutes typeName methodName =
+        Route.builder typeName methodName
+        |> ServerPath.normalize   
 
+    /// A proxy you can use to talk to server directly
+    let api : ICounterApi =
+      Remoting.createApi()
+      |> Remoting.withRouteBuilder normalizeRoutes
+      |> Remoting.buildProxy<ICounterApi>
+    #else 
     /// A proxy you can use to talk to server directly
     let api : ICounterApi =
       Remoting.createApi()
       |> Remoting.withRouteBuilder Route.builder
       |> Remoting.buildProxy<ICounterApi>
+    #endif  
+
 
 #endif
-#if remoting
+#if (remoting)
 let initialCounter = Server.api.initialCounter
-#else
+#elif (deploy == "iis" && server != "sauve")
+let initialCounter = fetchAs<Counter> (ServerPath.normalize "/api/init") (Decode.Auto.generateDecoder())
+#else 
 let initialCounter = fetchAs<Counter> "/api/init" (Decode.Auto.generateDecoder())
 #endif
 

@@ -313,6 +313,18 @@ Target.create "Deploy" (fun _ ->
 )
 //#endif
 
+//#if (deploy == "iis" && server != "suave")
+Target.create "Bundle" (fun _ ->
+    let serverDir = Path.combine deployDir "Server"
+    let clientDir = Path.combine deployDir "Client"
+    let publicDir = Path.combine clientDir "public"
+    let publishArgs = sprintf "publish -c Release -o \"%s\"" serverDir
+
+    runDotNet publishArgs serverPath
+    Shell.copyDir publicDir clientDeployPath FileFilter.allFiles
+)
+//#endif
+
 open Fake.Core.TargetOperators
 
 "Clean"
@@ -331,6 +343,8 @@ open Fake.Core.TargetOperators
     ==> "Publish"
     ==> "ClusterAuth"
     ==> "Deploy"
+//#elseif (deploy == "iis")
+    ==> "Bundle"
 //#endif
 
 //#if (deploy == "gcp-appengine")

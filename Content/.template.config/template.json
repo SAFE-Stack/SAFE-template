@@ -147,6 +147,10 @@
                 {
                     "choice": "gcp-kubernetes",
                     "description": "additional FAKE targets to publish to gcp container registry and deploy to google kubernetes engine"
+                },
+                {
+                    "choice": "iis",
+                    "description": "FAKE targets and client paths normalization to easily publish the application to IIS"
                 }
             ]
         }
