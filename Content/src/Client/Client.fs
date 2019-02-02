@@ -55,6 +55,7 @@ module ServerPath =
         paths 
         |> List.map (fun path -> List.ofArray (path.Split('/')))
         |> List.concat 
+        |> List.filter (fun segment -> not (segment.Contains(".")))
         |> List.filter (String.IsNullOrWhiteSpace >> not) 
         |> String.concat "/"
         |> sprintf "/%s"
