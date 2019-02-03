@@ -20,6 +20,10 @@
         <None Include="web.config">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
+        #elseif (deploy == "iis" && server == "suave")
+        <None Include="web.config">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
         #endif
     </ItemGroup>
     <Import Project="..\..\.paket\Paket.Restore.targets" />
