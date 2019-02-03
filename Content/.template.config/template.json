@@ -417,7 +417,7 @@
                 },
                 {
                     "exclude": "**/Suaveweb.config",
-                    "condition": "(server != \"suave\") || (deploy != \"azure\")"
+                    "condition": "(server != \"suave\") || ((deploy != \"azure\") && (deploy != \"iis\"))"
                 },
                 {
                     "rename": {

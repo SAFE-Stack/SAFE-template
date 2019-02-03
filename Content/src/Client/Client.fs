@@ -38,7 +38,7 @@ type Msg =
 | Decrement
 | InitialCountLoaded of Result<Counter, exn>
 
-#if (deploy == "iis" && server != "sauve") 
+#if (deploy == "iis" && server != "suave") 
 module ServerPath = 
     open System
     open Fable.Core
@@ -71,7 +71,7 @@ module Server =
     open Shared
     open Fable.Remoting.Client
     
-    #if (deploy == "iis" && server != "sauve")
+    #if (deploy == "iis" && server != "suave")
     // normalize routes so that they work with IIS virtual path in production
     let normalizeRoutes typeName methodName =
         Route.builder typeName methodName
@@ -94,7 +94,7 @@ module Server =
 #endif
 #if (remoting)
 let initialCounter = Server.api.initialCounter
-#elif (deploy == "iis" && server != "sauve")
+#elseif (deploy == "iis" && server != "suave")
 let initialCounter = fetchAs<Counter> (ServerPath.normalize "/api/init") (Decode.Auto.generateDecoder())
 #else 
 let initialCounter = fetchAs<Counter> "/api/init" (Decode.Auto.generateDecoder())
