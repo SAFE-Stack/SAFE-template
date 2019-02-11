@@ -13,7 +13,7 @@ This is a basic template to get started with each of the core components of the 
 
 ## Using the template
 
-The template comes with plenty different options. Please see [SAFE docs](https://safe-stack.github.io/docs/template-overview/) for details.
+The template comes with plenty of different options. Please see [SAFE docs](https://safe-stack.github.io/docs/template-overview/) for details.
 
 ## Prerequisites
 
