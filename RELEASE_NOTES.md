@@ -1,4 +1,4 @@
-#### 0.48.0 - 19.02.2019
+#### 0.48.0 - 04.03.2019
 
 * Remove paket.exe - https://github.com/SAFE-Stack/SAFE-template/issues/106
 
