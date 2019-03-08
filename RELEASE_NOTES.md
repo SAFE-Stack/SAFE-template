@@ -1,3 +1,38 @@
+#### 0.48.0 - 04.03.2019
+
+* Remove paket.exe - https://github.com/SAFE-Stack/SAFE-template/issues/106
+
+#### 0.47.0 - 31.01.2019
+
+* Update dependencies - https://github.com/SAFE-Stack/SAFE-template/pull/223
+* Update Fulma URL - https://github.com/SAFE-Stack/SAFE-template/pull/224
+
+#### 0.46.0 - 21.01.2019
+
+* Update to .NET Core 2.2 - https://github.com/SAFE-Stack/SAFE-template/pull/218
+
+#### 0.45.0 - 21.01.2019
+
+* Support for deploying to Google Cloud Kubernetes Engine - https://github.com/SAFE-Stack/SAFE-template/pull/209
+
+#### 0.44.0 - 16.01.2019
+
+* Add VSCode extensions.json to recommend extensions - https://github.com/SAFE-Stack/SAFE-template/issues/202
+
+#### 0.43.0 - 15.01.2019
+
+* Support for deploying to Google Cloud AppEngine - https://github.com/SAFE-Stack/SAFE-template/pull/207
+
+#### 0.42.0 - 08.01.2019
+
+* Update JS dependencies to remove security vulnerability warnings - https://github.com/SAFE-Stack/SAFE-template/issues/113
+* Replace 'successful.ok' with 'json' in Saturn template - https://github.com/SAFE-Stack/SAFE-template/issues/211
+* Replace 'Text.p' with 'Text.div' to prevent DOMNesting warning - https://github.com/SAFE-Stack/SAFE-template/issues/215
+
+#### 0.41.0 - 07.01.2019
+
+* Unify webpack.config.js with webpack-config-template - https://github.com/SAFE-Stack/SAFE-template/pull/204
+
 #### 0.40.1 - 21.12.2018
 
 * Upgrade CSS references for Bulma to 0.7.1 and Font Awesome to 5.6.1

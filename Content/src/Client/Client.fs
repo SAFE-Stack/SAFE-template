@@ -154,7 +154,7 @@ let safeComponents =
              a [ Href "https://elmish.github.io/elmish/" ] [ str "Elmish" ]
 #if (layout != "none")
              str ", "
-             a [ Href "https://mangelmaxime.github.io/Fulma" ] [ str "Fulma" ]
+             a [ Href "https://fulma.github.io/Fulma" ] [ str "Fulma" ]
 #endif
 #if (layout == "fulma-admin" || layout == "fulma-cover" || layout == "fulma-hero" || layout == "fulma-landing" || layout == "fulma-login")
              str ", "
@@ -828,7 +828,7 @@ let column (model : Model) (dispatch : Msg -> unit) =
               str "\u00A0·\u00A0"
               a [ ] [ str "Need Help?" ] ]
           br [ ]
-          Text.p [ Modifiers [   Modifier.TextColor IsGrey ] ]
+          Text.div [ Modifiers [   Modifier.TextColor IsGrey ] ]
             [ safeComponents ] ]
 
 let view (model : Model) (dispatch : Msg -> unit) =

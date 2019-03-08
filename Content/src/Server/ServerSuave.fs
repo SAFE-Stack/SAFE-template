@@ -24,13 +24,15 @@ let publicPath = Azure.tryGetEnv "public_path" |> Option.defaultValue "../Client
 let port = Azure.tryGetEnv "HTTP_PLATFORM_PORT" |> Option.map System.UInt16.Parse |> Option.defaultValue 8085us
 let runtimeAzure = Azure.tryGetEnv "STORAGE_CONNECTIONSTRING" |> Option.defaultValue "UseDevelopmentStorage=true"
 
+let tryGetEnv = System.Environment.GetEnvironmentVariable >> function null | "" -> None | x -> Some x
+
 /// A handle to an Azure storage account without a connection string. Schema is provided by the
 /// azure-schema.json file. You can remove the blobSchema key/value and replace with a full Azure
 /// connection string; schema will be inferred from the storage account contents directly.
 type Azure = AzureTypeProvider<blobSchema="azure-schema.json">
 #else
 let publicPath = Path.GetFullPath "../Client/public"
-let port = 8085us
+let port = "SERVER_PORT" |> tryGetEnv |> Option.map uint16 |> Option.defaultValue 8085us
 #endif
 
 let config =

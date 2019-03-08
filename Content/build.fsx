@@ -19,9 +19,13 @@ open Cit.Helpers.Arm
 open Cit.Helpers.Arm.Parameters
 open Microsoft.Azure.Management.ResourceManager.Fluent.Core
 //#endif
+//#if (deploy == "gcp-kubernetes")
+open System.Text.RegularExpressions
+//#endif
 
 let serverPath = Path.getFullName "./src/Server"
 let clientPath = Path.getFullName "./src/Client"
+let clientDeployPath = Path.combine clientPath "deploy"
 let deployDir = Path.getFullName "./deploy"
 
 let platformTool tool winTool =
@@ -65,8 +69,49 @@ let openBrowser url =
     |> Proc.run
     |> ignore
 
+//#if (deploy == "gcp-kubernetes")
+let runToolWithOutput cmd args workingDir =
+    let arguments = args |> String.split ' ' |> Arguments.OfArgs
+    let result =
+        Command.RawCommand (cmd, arguments)
+        |> CreateProcess.fromCommand
+        |> CreateProcess.withWorkingDirectory workingDir
+        |> CreateProcess.ensureExitCode
+        |> CreateProcess.redirectOutput
+        |> Proc.run
+    result.Result.Output |> (fun s -> s.TrimEnd())
+
+let getGcloudProject() =
+    runToolWithOutput "gcloud" "config get-value project -q" "."
+
+let getDockerTag() = "v1"
+
+let createDockerImageName projectName =
+    let dockerTag = getDockerTag()
+    let projectId = getGcloudProject()
+    sprintf "gcr.io/%s/%s:%s" projectId projectName dockerTag
+
+let deployExists appName =
+    let result = runToolWithOutput "kubectl" "get deploy" "."
+    let pattern = "^" + appName + "\s+"
+    Regex.IsMatch(result, pattern, RegexOptions.Multiline)
+
+let updateKubernetesDeploy appName dockerTag =
+    let updateArgs = sprintf "set image deployment/%s %s=%s" appName appName dockerTag
+    runTool "kubectl" updateArgs "."
+
+let createAndExposeKubernetesDeploy appName dockerTag port =
+    let deployArgs = sprintf "run %s --image=%s --port %i" appName dockerTag port
+    runTool "kubectl" deployArgs "."
+
+    let exposeArgs = sprintf "expose deployment %s --type=LoadBalancer --port 80 --target-port %i" appName port
+    runTool "kubectl" exposeArgs "."
+//#endif
+
 Target.create "Clean" (fun _ ->
-    Shell.cleanDirs [deployDir]
+    [ deployDir
+      clientDeployPath ]
+    |> Shell.cleanDirs
 )
 
 Target.create "InstallClient" (fun _ ->
@@ -87,9 +132,9 @@ Target.create "InstallClient" (fun _ ->
 Target.create "Build" (fun _ ->
     runDotNet "build" serverPath
 //#if (js-deps == "npm")
-    runTool npxTool "webpack-cli --config src/Client/webpack.config.js -p" __SOURCE_DIRECTORY__
+    runTool npxTool "webpack-cli -p" __SOURCE_DIRECTORY__
 //#else
-    runTool yarnTool "webpack-cli --config src/Client/webpack.config.js -p" __SOURCE_DIRECTORY__
+    runTool yarnTool "webpack-cli -p" __SOURCE_DIRECTORY__
 //#endif
 )
 
@@ -99,9 +144,9 @@ Target.create "Run" (fun _ ->
     }
     let client = async {
 //#if (js-deps == "npm")
-        runTool npxTool "webpack-dev-server --config src/Client/webpack.config.js" __SOURCE_DIRECTORY__
+        runTool npxTool "webpack-dev-server" __SOURCE_DIRECTORY__
 //#else
-        runTool yarnTool "webpack-dev-server --config src/Client/webpack.config.js" __SOURCE_DIRECTORY__
+        runTool yarnTool "webpack-dev-server" __SOURCE_DIRECTORY__
 //#endif
     }
     let browser = async {
@@ -123,7 +168,11 @@ Target.create "Run" (fun _ ->
     |> ignore
 )
 
-//#if (deploy == "docker")
+//#if (deploy == "docker" || deploy == "gcp-kubernetes" || deploy == "gcp-appengine")
+let buildDocker tag =
+    let args = sprintf "build -t %s ." tag
+    runTool "docker" args "."
+
 Target.create "Bundle" (fun _ ->
     let serverDir = Path.combine deployDir "Server"
     let clientDir = Path.combine deployDir "Client"
@@ -132,26 +181,60 @@ Target.create "Bundle" (fun _ ->
     let publishArgs = sprintf "publish -c Release -o \"%s\"" serverDir
     runDotNet publishArgs serverPath
 
-    Shell.copyDir publicDir "src/Client/public" FileFilter.allFiles
+    Shell.copyDir publicDir clientDeployPath FileFilter.allFiles
 )
 
 let dockerUser = "safe-template"
 let dockerImageName = "safe-template"
+//#endif
+//#if (deploy == "docker" || deploy == "gcp-appengine")
 let dockerFullName = sprintf "%s/%s" dockerUser dockerImageName
 
 Target.create "Docker" (fun _ ->
-    let buildArgs = sprintf "build -t %s ." dockerFullName
-    runTool "docker" buildArgs "."
-
-    let tagArgs = sprintf "tag %s %s" dockerFullName dockerFullName
-    runTool "docker" tagArgs "."
+    buildDocker dockerFullName
 )
 
 //#endif
+//#if (deploy == "gcp-kubernetes")
+Target.create "Docker" (fun _ ->
+    let imageName = createDockerImageName dockerImageName
+    buildDocker imageName
+)
+
+Target.create "Publish" (fun _ ->
+    let imageName = createDockerImageName dockerImageName
+    let pushArgs = sprintf "push %s" imageName
+    runTool "docker" pushArgs "."
+)
+
+Target.create "ClusterAuth" (fun _ ->
+    let clusterName = Environment.environVarOrDefault "SAFE_CLUSTER" "safe-cluster"
+    let authArgs = sprintf "container clusters get-credentials %s" clusterName
+    runTool "gcloud" authArgs "."
+)
+
+Target.create "Deploy" (fun _ ->
+    let imageName = createDockerImageName dockerImageName
+    let appName = dockerImageName
+    let port = 8085
+    if deployExists appName
+    then
+        updateKubernetesDeploy appName imageName
+    else
+        createAndExposeKubernetesDeploy appName imageName port
+)
+//#endif
+
+
 //#if (deploy == "azure")
 Target.create "Bundle" (fun _ ->
-    runDotNet (sprintf "publish \"%s\" -c release -o \"%s\"" serverPath deployDir) __SOURCE_DIRECTORY__
-    Shell.copyDir (Path.combine deployDir "public") (Path.combine clientPath "public") FileFilter.allFiles
+    let serverDir = deployDir
+    let publicDir = Path.combine deployDir "public"
+
+    let publishArgs = sprintf "publish -c Release -o \"%s\"" serverDir
+    runDotNet publishArgs serverPath
+
+    Shell.copyDir publicDir clientDeployPath FileFilter.allFiles
 )
 
 type ArmOutput =
@@ -221,18 +304,35 @@ Target.create "AppService" (fun _ ->
     client.UploadData(destinationUri, IO.File.ReadAllBytes zipFile) |> ignore)
 //#endif
 
+//#if (deploy == "gcp-appengine")
+Target.create "Deploy" (fun _ ->
+    runTool "gcloud" "app deploy --quiet" "."
+)
+//#endif
+
 open Fake.Core.TargetOperators
 
 "Clean"
     ==> "InstallClient"
     ==> "Build"
-//#if (deploy == "docker")
+//#if (deploy == "docker" || deploy == "gcp-appengine")
     ==> "Bundle"
     ==> "Docker"
 //#elseif (deploy == "azure")
     ==> "Bundle"
     ==> "ArmTemplate"
     ==> "AppService"
+//#elseif (deploy == "gcp-kubernetes")
+    ==> "Bundle"
+    ==> "Docker"
+    ==> "Publish"
+    ==> "ClusterAuth"
+    ==> "Deploy"
+//#endif
+
+//#if (deploy == "gcp-appengine")
+"Bundle"
+    ==> "Deploy"
 //#endif
 
 "Clean"

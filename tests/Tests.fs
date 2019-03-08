@@ -27,11 +27,11 @@ let fake =
 
 let maxTests =
     match Environment.GetEnvironmentVariable "MAX_TESTS" with
-    | null -> 20
+    | null -> 15
     | x ->
         match System.Int32.TryParse x with
         | true, n -> n
-        | _ -> 20
+        | _ -> 15
 
 let execParams exe arg dir : ExecParams =
     { Program = exe
@@ -76,6 +76,8 @@ let deployGen =
         None
         Some "docker"
         Some "azure"
+        Some "gcp-appengine"
+        Some "gcp-kubernetes"
     ]
 
 let layoutGen =
@@ -221,8 +223,18 @@ let killProcessTree (pid: int) =
           yield pid ]
 
     for pid in getProcessTree pid do
-        let proc = Process.GetProcessById pid
-        if proc <> null && not proc.HasExited then
+        let proc =
+            try
+                Process.GetProcessById pid |> Some
+            // The process specified by the processId parameter is not running. The identifier might be expired.
+            with :? ArgumentException ->
+                logger.warn(
+                        eventX "Can't kill process {pid}: process is not running"
+                        >> setField "pid" pid)
+                None
+
+        match proc with
+        | Some proc when not proc.HasExited ->
             logger.info(
                 eventX "Killing process {pid}"
                 >> setField "pid" pid)
@@ -233,6 +245,8 @@ let killProcessTree (pid: int) =
                     eventX "Failed to kill process {pid}: {msg}"
                     >> setField "pid" pid
                     >> setField "msg" e.Message)
+        | _ ->
+            ()
 
 let fsCheckConfig =
     { FsCheckConfig.defaultConfig with

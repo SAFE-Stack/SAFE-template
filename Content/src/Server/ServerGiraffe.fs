@@ -23,8 +23,9 @@ open System.IO
 open Thoth.Json.Net
 #endif
 
-#if (deploy == "azure")
 let tryGetEnv = System.Environment.GetEnvironmentVariable >> function null | "" -> None | x -> Some x
+
+//#if (deploy == "azure")
 let publicPath = tryGetEnv "public_path" |> Option.defaultValue "../Client/public" |> Path.GetFullPath
 let runtimeAzure = tryGetEnv "STORAGE_CONNECTIONSTRING" |> Option.defaultValue "UseDevelopmentStorage=true"
 
@@ -35,7 +36,7 @@ type Azure = AzureTypeProvider<blobSchema="azure-schema.json">
 #else
 let publicPath = Path.GetFullPath "../Client/public"
 #endif
-let port = 8085us
+let port = "SERVER_PORT" |> tryGetEnv |> Option.map uint16 |> Option.defaultValue 8085us
 
 let getInitCounter() = task { return { Value = 42 } }
 #if (remoting)
