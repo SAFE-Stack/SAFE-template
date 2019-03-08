@@ -29,24 +29,12 @@ let runtimeAzure = tryGetEnv "STORAGE_CONNECTIONSTRING" |> Option.defaultValue "
 /// azure-schema.json file. You can remove the blobSchema key/value and replace with a full Azure
 /// connection string; schema will be inferred from the storage account contents directly.
 type Azure = AzureTypeProvider<blobSchema="azure-schema.json">
-let safeData = Azure.Containers.safedata
 #else
 let publicPath = Path.GetFullPath "../Client/public"
 #endif
 let port = 8085us
 
-#if (deploy == "azure")
-// Initialise the Azure storage account with a container and the counter state.
-do
-    safeData.AsCloudBlobContainer(runtimeAzure).CreateIfNotExistsAsync().Wait()
-    safeData.``counter.txt``.AsCloudBlockBlob(runtimeAzure).UploadTextAsync(Encode.Auto.toString(4, { Value = 42 })).Wait()
-
-let getInitCounter() = task {
-    let! counter = safeData.``counter.txt``.ReadAsync(runtimeAzure)
-    return Decode.Auto.unsafeFromString<Counter>(counter) }
-#else
 let getInitCounter() = task { return { Value = 42 } }
-#endif
 
 #if (remoting)
 let counterApi = {
