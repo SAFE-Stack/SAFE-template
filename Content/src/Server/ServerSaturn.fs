@@ -50,11 +50,6 @@ let webApp = router {
 }
 
 #endif
-#if (!remoting)
-let configureSerialization (services:IServiceCollection) =
-    services.AddSingleton<Giraffe.Serialization.Json.IJsonSerializer>(Thoth.Json.Giraffe.ThothSerializer())
-
-#endif
 #if (deploy == "azure")
 let configureAzure (services:IServiceCollection) =
     tryGetEnv "APPINSIGHTS_INSTRUMENTATIONKEY"
@@ -68,7 +63,7 @@ let app = application {
     memory_cache
     use_static publicPath
     #if (!remoting)
-    service_config configureSerialization
+    use_json_serializer(Thoth.Json.Giraffe.ThothSerializer())
     #endif
     #if (deploy == "azure")
     service_config configureAzure
