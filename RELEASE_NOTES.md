@@ -1,3 +1,8 @@
+#### 0.49.0 - 27.03.2019
+
+* Take advantage of use_json_serializer - https://github.com/SAFE-Stack/SAFE-template/pull/237
+* Remove FAKE issue warning - https://github.com/SAFE-Stack/SAFE-template/pull/236
+
 #### 0.48.0 - 04.03.2019
 
 * Remove paket.exe - https://github.com/SAFE-Stack/SAFE-template/issues/106
