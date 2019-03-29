@@ -29,7 +29,7 @@
                 "fileLocation": "absolute",
                 "background": {
                     "beginsPattern": { "regexp": "run Run" },
-                    "endsPattern": { "regexp": "i ｢wdm｣: Compiled|The terminal process terminated" },
+                    "endsPattern": { "regexp": "i ｢wdm｣: Compiled|ℹ ｢wdm｣: Compiled|The terminal process terminated" },
                     "activeOnStart": true
                 },
                 "pattern": {
@@ -62,7 +62,7 @@
                 "fileLocation": "absolute",
                 "background": {
                     "beginsPattern": { "regexp": "run Run" },
-                    "endsPattern": { "regexp": "i ｢wdm｣: Compiled|The terminal process terminated" },
+                    "endsPattern": { "regexp": "i ｢wdm｣: Compiled|ℹ ｢wdm｣: Compiled|The terminal process terminated" },
                     "activeOnStart": true
                 },
                 "pattern": {
