@@ -1,3 +1,7 @@
+#### 0.49.1 - 29.03.2019
+
+* Add unicode regex to recognize 'watch client' vs code task end - https://github.com/SAFE-Stack/SAFE-template/issues/240
+
 #### 0.49.0 - 27.03.2019
 
 * Take advantage of use_json_serializer - https://github.com/SAFE-Stack/SAFE-template/pull/237
