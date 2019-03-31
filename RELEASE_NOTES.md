@@ -1,3 +1,7 @@
+#### 0.49.2 - 31.03.2019
+
+* Fix initial build failure - https://github.com/SAFE-Stack/SAFE-template/pull/241
+
 #### 0.49.1 - 29.03.2019
 
 * Add unicode regex to recognize 'watch client' vs code task end - https://github.com/SAFE-Stack/SAFE-template/issues/240
