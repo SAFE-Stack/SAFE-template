@@ -1,3 +1,7 @@
+#### 1.0.0 - 05.04.2019
+
+* Release version 1.0 live from stage from F# eXchange 2019
+
 #### 0.49.2 - 31.03.2019
 
 * Fix initial build failure - https://github.com/SAFE-Stack/SAFE-template/pull/241
