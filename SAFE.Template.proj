@@ -4,8 +4,9 @@
         <Authors>Tomasz Heimowski</Authors>
         <PackageProjectUrl>https://github.com/SAFE-Stack/SAFE-template</PackageProjectUrl>
         <PackageLicenseUrl>https://github.com/SAFE-Stack/SAFE-template/blob/master/LICENSE</PackageLicenseUrl>
+        <PackageIconUrl>https://raw.githubusercontent.com/SAFE-Stack/SAFE-template/master/safe-logo.png</PackageIconUrl>
         <RepositoryUrl>https://github.com/SAFE-Stack/SAFE-template.git</RepositoryUrl>
-        <PackageTags>template;fsharp;fable;suave;elmish;azure</PackageTags>
+        <PackageTags>template;fsharp;saturn;azure;fable;elmish</PackageTags>
         <NeutralLanguage>en-US</NeutralLanguage>
         <PackageType>Template</PackageType>
         <NoBuild>true</NoBuild>
