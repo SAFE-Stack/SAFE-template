@@ -1,3 +1,7 @@
+#### 1.0.1 - 11.04.2019
+
+* Fix gcloud tool name on Windows - https://github.com/SAFE-Stack/SAFE-template/pull/243
+
 #### 1.0.0 - 05.04.2019
 
 * Release version 1.0 live from stage from F# eXchange 2019
