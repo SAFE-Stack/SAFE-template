@@ -46,7 +46,7 @@ let npxTool = platformTool "npx" "npx.cmd"
 //#else
 let yarnTool = platformTool "yarn" "yarn.cmd"
 //#endif
-//#if (deploy == "gcp-kubernetes")
+//#if (deploy == "gcp-kubernetes" || deploy == "gcp-appengine")
 let gcloudTool = platformTool "gcloud" "gcloud.cmd"
 //#endif
 
