@@ -2,13 +2,11 @@
     "$schema": "http://json.schemastore.org/template",
     "author": "Tomasz Heimowski",
     "classifications": [
-        "F#",
         "Web",
-        "Suave",
+        "Saturn",
+        "Azure",
         "Fable",
-        "Elmish",
-        "Giraffe",
-        "Bulma"
+        "Elmish"
     ],
     "name": "SAFE-Stack Web App v1.0.1",
     "tags": {
