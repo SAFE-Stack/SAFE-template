@@ -338,6 +338,31 @@ Target.create "Bundle" (fun _ ->
 
 //#endif
 
+//#if (deploy == "iis")
+Target.create "Bundle" (fun _ ->
+    let serverDir = Path.combine deployDir "Server"
+    let clientDir = Path.combine deployDir "Client"
+    let publicDir = Path.combine clientDir "public"
+    let publishArgs = sprintf "publish -c Release -o \"%s\"" serverDir
+    runDotNet publishArgs serverPath
+    
+//#if (server == "suave")
+    // read and transform web.config, removing aspNetCore generated info
+    let config = Path.combine serverDir "web.config"
+    let mutable xmlDoc = new System.Xml.XmlDocument()
+    xmlDoc.LoadXml(File.readAsString config)
+    for node in xmlDoc.SelectNodes("/configuration/system.webServer/aspNetCore") do 
+        ignore (node.ParentNode.RemoveChild(node))
+    for node in xmlDoc.SelectNodes("/configuration/system.webServer/handlers/add[@name='aspNetCore']") do 
+        ignore (node.ParentNode.RemoveChild(node))
+    xmlDoc.Save(config) 
+//#endif
+    
+    Shell.copyDir publicDir clientDeployPath FileFilter.allFiles
+)
+
+//#endif
+
 open Fake.Core.TargetOperators
 
 "Clean"
