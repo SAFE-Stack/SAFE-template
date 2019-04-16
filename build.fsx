@@ -52,7 +52,7 @@ Target.create "BuildWebPackConfig" (fun _ ->
         [
             "indexHtmlTemplate", quote "./src/Client/index.html"
             "fsharpEntry", quote "./src/Client/Client.fsproj"
-            "cssEntry", quote "./src/Client/style.sass"
+            "cssEntry", quote "./src/Client/style.scss"
             "outputDir", quote "./src/Client/deploy"
             "assetsDir", quote "./src/Client/public"
             "devServerProxy", devServerProxy
