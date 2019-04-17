@@ -202,10 +202,7 @@ let fullLockFileName build client server =
     sprintf "paket_%O_%O_%O.lock" build client server
 
 let runPaket args wd =
-    if Environment.isUnix then
-        run "mono" (".paket/paket.exe " + args) wd
-    else
-        run ".paket/paket.exe" args wd
+    run "paket" args wd
 
 Target.create "BuildPaketLockFiles" (fun _ ->
     for config in configs do
