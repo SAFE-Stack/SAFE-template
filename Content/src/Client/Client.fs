@@ -170,7 +170,7 @@ let safeComponents =
 #endif
            ]
 
-    p [ ]
+    span [ ]
         [ strong [] [ str "SAFE Template" ]
           str " powered by: "
           components ]
