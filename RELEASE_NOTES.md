@@ -1,3 +1,7 @@
+#### 1.1.0 - 17.04.2019
+
+* Change default from sass to scss - https://github.com/SAFE-Stack/SAFE-template/pull/248
+
 #### 1.0.1 - 11.04.2019
 
 * Fix gcloud tool name on Windows - https://github.com/SAFE-Stack/SAFE-template/pull/243
