@@ -147,6 +147,10 @@
                 {
                     "choice": "gcp-kubernetes",
                     "description": "additional FAKE targets to publish to gcp container registry and deploy to google kubernetes engine"
+                },
+                {
+                    "choice": "iis",
+                    "description": "FAKE targets and client paths normalization to easily publish the application to IIS"
                 }
             ]
         }
@@ -411,7 +415,7 @@
                 },
                 {
                     "exclude": "**/Suaveweb.config",
-                    "condition": "(server != \"suave\") || (deploy != \"azure\")"
+                    "condition": "(server != \"suave\") || ((deploy != \"azure\") && (deploy != \"iis\"))"
                 },
                 {
                     "rename": {

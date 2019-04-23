@@ -72,6 +72,9 @@ WebHost
     .UseContentRoot(publicPath)
     .Configure(Action<IApplicationBuilder> configureApp)
     .ConfigureServices(configureServices)
+    #if (deploy == "iis")
+    .UseIISIntegration()
+    #endif
     .UseUrls("http://0.0.0.0:" + port.ToString() + "/")
     .Build()
     .Run()
