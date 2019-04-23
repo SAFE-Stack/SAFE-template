@@ -1,3 +1,7 @@
+#### 1.2.0 - 23.04.2019
+
+* Add IIS deployment option - https://github.com/SAFE-Stack/SAFE-template/pull/226
+
 #### 1.1.0 - 17.04.2019
 
 * Change default from sass to scss - https://github.com/SAFE-Stack/SAFE-template/pull/248
