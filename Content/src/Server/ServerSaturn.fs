@@ -25,7 +25,13 @@ let storageAccount = tryGetEnv "STORAGE_CONNECTIONSTRING" |> Option.defaultValue
 let publicPath = Path.GetFullPath "../Client/public"
 //#endif
 
-let port = "SERVER_PORT" |> tryGetEnv |> Option.map uint16 |> Option.defaultValue 8085us
+let port =
+//#if (deploy == "heroku")
+    "PORT"
+//#else
+    "SERVER_PORT"
+//#endif
+    |> tryGetEnv |> Option.map uint16 |> Option.defaultValue 8085us
 
 let getInitCounter() : Task<Counter> = task { return { Value = 42 } }
 

@@ -151,6 +151,10 @@
                 {
                     "choice": "iis",
                     "description": "FAKE targets and client paths normalization to easily publish the application to IIS"
+                },
+                {
+                    "choice": "heroku",
+                    "description": "additional FAKE targets to deploy on Heroku"
                 }
             ]
         }
