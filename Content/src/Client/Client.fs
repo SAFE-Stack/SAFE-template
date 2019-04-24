@@ -2,11 +2,16 @@ module Client
 
 open Elmish
 open Elmish.React
-
-open Fable.Helpers.React
-open Fable.Helpers.React.Props
-open Fable.PowerPack.Fetch
-
+#if (layout == "fulma-admin" || layout == "fulma-cover" || layout == "fulma-hero" || layout == "fulma-landing" || layout == "fulma-login")
+open Fable.FontAwesome
+open Fable.FontAwesome.Free
+#endif
+open Fable.React
+open Fable.React.Props
+open Fetch.Types
+#if (layout != "none")
+open Fulma
+#endif
 open Thoth.Json
 
 open Shared
@@ -14,15 +19,6 @@ open Shared
 #if (reaction)
 open Fable.Reaction
 open Reaction
-#endif
-
-#if (layout != "none")
-open Fulma
-#endif
-
-#if (layout == "fulma-admin" || layout == "fulma-cover" || layout == "fulma-hero" || layout == "fulma-landing" || layout == "fulma-login")
-open Fable.FontAwesome
-open Fable.FontAwesome.Free
 #endif
 
 // The model holds data that you want to keep track of while the application is running
@@ -36,27 +32,27 @@ type Model = { Counter: Counter option }
 type Msg =
 | Increment
 | Decrement
-| InitialCountLoaded of Result<Counter, exn>
+| InitialCountLoaded of Result<Counter, string>
 
-#if (deploy == "iis" && server != "suave") 
-module ServerPath = 
+#if (deploy == "iis" && server != "suave")
+module ServerPath =
     open System
     open Fable.Core
-    
+
     /// when publishing to IIS, your application most likely runs inside a virtual path (i.e. localhost/SafeApp)
     /// every request made to the server will have to account for this virtual path
     /// so we get the virtual path from the location
-    /// `virtualPath` of `http://localhost/SafeApp` -> `/SafeApp/` 
+    /// `virtualPath` of `http://localhost/SafeApp` -> `/SafeApp/`
     [<Emit("window.location.pathname")>]
-    let virtualPath : string = jsNative 
+    let virtualPath : string = jsNative
 
     /// takes path segments and combines them into a valid path
     let combine (paths: string list) =
-        paths 
+        paths
         |> List.map (fun path -> List.ofArray (path.Split('/')))
-        |> List.concat 
+        |> List.concat
         |> List.filter (fun segment -> not (segment.Contains(".")))
-        |> List.filter (String.IsNullOrWhiteSpace >> not) 
+        |> List.filter (String.IsNullOrWhiteSpace >> not)
         |> String.concat "/"
         |> sprintf "/%s"
 
@@ -70,25 +66,25 @@ module Server =
 
     open Shared
     open Fable.Remoting.Client
-    
+
     #if (deploy == "iis" && server != "suave")
     // normalize routes so that they work with IIS virtual path in production
     let normalizeRoutes typeName methodName =
         Route.builder typeName methodName
-        |> ServerPath.normalize   
+        |> ServerPath.normalize
 
     /// A proxy you can use to talk to server directly
     let api : ICounterApi =
       Remoting.createApi()
       |> Remoting.withRouteBuilder normalizeRoutes
       |> Remoting.buildProxy<ICounterApi>
-    #else 
+    #else
     /// A proxy you can use to talk to server directly
     let api : ICounterApi =
       Remoting.createApi()
       |> Remoting.withRouteBuilder Route.builder
       |> Remoting.buildProxy<ICounterApi>
-    #endif  
+    #endif
 
 
 #endif
@@ -96,8 +92,27 @@ module Server =
 let initialCounter = Server.api.initialCounter
 #elseif (deploy == "iis" && server != "suave")
 let initialCounter = fetchAs<Counter> (ServerPath.normalize "/api/init") (Decode.Auto.generateDecoder())
-#else 
-let initialCounter = fetchAs<Counter> "/api/init" (Decode.Auto.generateDecoder())
+#else
+// Fetch a data structure from specified url and using the decoder
+// Return error as string if response is not successful or if failed to decode the response body
+let fetchWithDecoder<'T> (url: string) (decoder: Decoder<'T>) (init: RequestProperties list) =
+    promise {
+        let! response = GlobalFetch.fetch(RequestInfo.Url url, Fetch.requestProps init)
+        if not response.Ok then
+            return Error (sprintf "%d %s for URL %s" response.Status response.StatusText response.Url)
+        else
+            let! body = response.text()
+            return Decode.fromString decoder body
+    }
+
+// Inline the function so Fable can resolve the generic parameter at compile time
+let inline fetchAs<'T> (url: string) (init: RequestProperties list) =
+    // In this example we use Thoth.Json cached auto decoders
+    // More info at: https://mangelmaxime.github.io/Thoth/json/v3.html#caching
+    let decoder = Decode.Auto.generateDecoderCached<'T>()
+    fetchWithDecoder url decoder init
+
+let initialCounter = fetchAs<Counter> "/api/init"
 #endif
 
 #if reaction
@@ -118,11 +133,7 @@ let init () : Model * Cmd<Msg> =
             (Error >> InitialCountLoaded)
 #endif
 #if (!reaction && !remoting)
-        Cmd.ofPromise
-            initialCounter
-            []
-            (Ok >> InitialCountLoaded)
-            (Error >> InitialCountLoaded)
+        Cmd.OfPromise.perform initialCounter [] InitialCountLoaded
 #endif
 #if (!reaction)
     initialModel, loadCountCmd
@@ -901,9 +912,8 @@ Program.mkProgram init update view
 //-:cnd:noEmit
 #if DEBUG
 |> Program.withConsoleTrace
-|> Program.withHMR
 #endif
-|> Program.withReact "elmish-app"
+|> Program.withReactBatched "elmish-app"
 #if DEBUG
 |> Program.withDebugger
 #endif
