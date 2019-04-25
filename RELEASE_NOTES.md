@@ -1,3 +1,7 @@
+#### 1.3.0 - 25.04.2019
+
+* Support heroku - https://github.com/SAFE-Stack/SAFE-template/pull/251
+
 #### 1.2.0 - 23.04.2019
 
 * Add IIS deployment option - https://github.com/SAFE-Stack/SAFE-template/pull/226
