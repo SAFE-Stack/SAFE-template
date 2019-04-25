@@ -8,7 +8,9 @@ open Fable.FontAwesome.Free
 #endif
 open Fable.React
 open Fable.React.Props
+#if (!remoting)
 open Fetch.Types
+#endif
 #if (layout != "none")
 open Fulma
 #endif
@@ -32,7 +34,7 @@ type Model = { Counter: Counter option }
 type Msg =
 | Increment
 | Decrement
-| InitialCountLoaded of Result<Counter, string>
+| InitialCountLoaded of Counter
 
 #if (deploy == "iis" && server != "suave")
 module ServerPath =
@@ -94,15 +96,11 @@ let initialCounter = Server.api.initialCounter
 let initialCounter = fetchAs<Counter> (ServerPath.normalize "/api/init") (Decode.Auto.generateDecoder())
 #else
 // Fetch a data structure from specified url and using the decoder
-// Return error as string if response is not successful or if failed to decode the response body
 let fetchWithDecoder<'T> (url: string) (decoder: Decoder<'T>) (init: RequestProperties list) =
     promise {
         let! response = GlobalFetch.fetch(RequestInfo.Url url, Fetch.requestProps init)
-        if not response.Ok then
-            return Error (sprintf "%d %s for URL %s" response.Status response.StatusText response.Url)
-        else
-            let! body = response.text()
-            return Decode.fromString decoder body
+        let! body = response.text()
+        return Decode.unsafeFromString decoder body
     }
 
 // Inline the function so Fable can resolve the generic parameter at compile time
@@ -126,11 +124,7 @@ let init () : Model * Cmd<Msg> =
     let loadCountCmd =
 #endif
 #if (!reaction && remoting)
-        Cmd.ofAsync
-            initialCounter
-            ()
-            (Ok >> InitialCountLoaded)
-            (Error >> InitialCountLoaded)
+        Cmd.OfAsync.perform initialCounter () InitialCountLoaded
 #endif
 #if (!reaction && !remoting)
         Cmd.OfPromise.perform initialCounter [] InitialCountLoaded
@@ -166,7 +160,7 @@ let update (msg : Msg) (currentModel : Model) : Model =
         { currentModel with Counter = Some { Value = counter.Value + 1 } }
     | Some counter, Decrement ->
         { currentModel with Counter = Some { Value = counter.Value - 1 } }
-    | _, InitialCountLoaded (Ok initialCount) ->
+    | _, InitialCountLoaded initialCount ->
         { Counter = Some initialCount }
     | _ -> currentModel
 #else
@@ -181,7 +175,7 @@ let update (msg : Msg) (currentModel : Model) : Model * Cmd<Msg> =
     | Some counter, Decrement ->
         let nextModel = { currentModel with Counter = Some { Value = counter.Value - 1 } }
         nextModel, Cmd.none
-    | _, InitialCountLoaded (Ok initialCount)->
+    | _, InitialCountLoaded initialCount->
         let nextModel = { Counter = Some initialCount }
         nextModel, Cmd.none
 
