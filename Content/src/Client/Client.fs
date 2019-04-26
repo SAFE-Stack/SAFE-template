@@ -14,14 +14,12 @@ open Fetch.Types
 #if (layout != "none")
 open Fulma
 #endif
+#if (reaction)
+open Reaction
+#endif
 open Thoth.Json
 
 open Shared
-
-#if (reaction)
-open Fable.Reaction
-open Reaction
-#endif
 
 // The model holds data that you want to keep track of while the application is running
 // in this case, we are keeping track of a counter
@@ -134,22 +132,18 @@ let init () : Model * Cmd<Msg> =
 #endif
 
 #if (reaction && remoting)
-let load = AsyncObservable.ofAsync (initialCounter ())
+let load = AsyncRx.ofAsync (initialCounter ())
 #endif
 #if (reaction && !remoting)
-let load = ofPromise (initialCounter [])
+let load = AsyncRx.ofPromise (initialCounter [])
 #endif
 
 #if (reaction)
 let loadCount =
     load
-    |> AsyncObservable.map (Ok >> InitialCountLoaded)
-    |> AsyncObservable.catch (Error >> InitialCountLoaded >> AsyncObservable.single)
+    |> AsyncRx.map InitialCountLoaded
 
-let query msgs =
-    AsyncObservable.concat
-        [ loadCount
-          msgs ]
+let query msgs = loadCount ++ msgs
 #endif
 
 #if (reaction)
