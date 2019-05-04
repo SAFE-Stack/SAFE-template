@@ -17,7 +17,7 @@ RUN apt-get autoremove -y \
 # Install fake
 RUN dotnet tool install fake-cli -g
 
-# Install fake
+# Install Paket
 RUN dotnet tool install paket -g
 
 # add dotnet tools to path to pick up fake and paket installation
