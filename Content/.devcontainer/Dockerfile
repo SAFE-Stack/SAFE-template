@@ -6,7 +6,7 @@ RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
 RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" \
     | tee /etc/apt/sources.list.d/yarn.list
 
-# Install node, 7zip, yarn, mono, git, process tools
+# Install node, 7zip, yarn, git, process tools
 RUN apt-get update && apt-get install -y nodejs p7zip-full yarn git procps
 
 # Clean up
