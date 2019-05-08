@@ -1,0 +1,11 @@
+{
+	"name": "SAFE",
+	"dockerFile": "Dockerfile",
+	"appPort": [8080, 8085],
+	"extensions": [
+		"ionide.ionide-fsharp",
+        "ms-vscode.csharp",
+        "editorconfig.editorconfig",
+        "msjsdiag.debugger-for-chrome"
+	]
+}
