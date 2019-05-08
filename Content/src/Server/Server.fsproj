@@ -11,7 +11,7 @@
         #endif
     </PropertyGroup>
     <ItemGroup>
-        <Compile Include="..\Shared\Shared.fs" />
+        <ProjectReference Include="..\Shared\Shared.fsproj" />
         #if (deploy == "azure" && server == "suave")
         <Compile Include="Azure.fs" />
         #endif
