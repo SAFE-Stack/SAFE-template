@@ -1,3 +1,8 @@
+#### 1.4.0 - 10.05.2019
+
+* Add devcontainer definition - https://github.com/SAFE-Stack/SAFE-template/pull/254
+* Add Shared.fsproj - https://github.com/SAFE-Stack/SAFE-template/pull/256
+
 #### 1.3.0 - 25.04.2019
 
 * Support heroku - https://github.com/SAFE-Stack/SAFE-template/pull/251
