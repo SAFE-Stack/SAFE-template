@@ -46,7 +46,7 @@ Target.create "BuildWebPackConfig" (fun _ ->
            }
        }"""
 
-    let quote = sprintf "\"%s\""
+    let quote = sprintf "'%s'"
 
     let replacements =
         [
