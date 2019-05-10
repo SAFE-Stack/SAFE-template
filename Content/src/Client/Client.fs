@@ -898,7 +898,7 @@ open Elmish.HMR
 //+:cnd:noEmit
 #if (reaction)
 Program.mkSimple init update view
-|> Program.withStreams stream "msgs"
+|> Program.withStream stream "msgs"
 #else
 Program.mkProgram init update view
 #endif
