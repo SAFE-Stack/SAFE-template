@@ -38,7 +38,7 @@ group Client
     nuget Fable.Elmish.HMR ~> 4
     nuget Fable.Elmish.React ~> 3
 //#if (reaction)
-    nuget Fable.Elmish.Reaction ~> 3
+    nuget Fable.Elmish.Streams ~> 3
 //#endif
 //#if (!remoting)
     nuget Fable.Fetch ~> 2

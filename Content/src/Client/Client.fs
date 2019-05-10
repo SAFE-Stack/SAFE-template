@@ -2,6 +2,10 @@ module Client
 
 open Elmish
 open Elmish.React
+#if (reaction)
+open Elmish.Streams
+open FSharp.Control
+#endif
 #if (layout == "fulma-admin" || layout == "fulma-cover" || layout == "fulma-hero" || layout == "fulma-landing" || layout == "fulma-login")
 open Fable.FontAwesome
 open Fable.FontAwesome.Free
@@ -13,9 +17,6 @@ open Fetch.Types
 #endif
 #if (layout != "none")
 open Fulma
-#endif
-#if (reaction)
-open Reaction
 #endif
 open Thoth.Json
 
@@ -142,8 +143,12 @@ let load = AsyncRx.ofPromise (initialCounter [])
 let loadCount =
     load
     |> AsyncRx.map InitialCountLoaded
+    |> AsyncRx.toStream "loading"
 
-let query msgs = loadCount ++ msgs
+let stream model msgs =
+    match model.Counter with
+    | None -> loadCount
+    | _ -> msgs
 #endif
 
 #if (reaction)
@@ -204,7 +209,7 @@ let safeComponents =
 #endif
 #if (reaction)
              str ", "
-             a [ Href "https://dbrattli.github.io/Reaction/" ] [ str "Fable.Reaction" ]
+             a [ Href "http://elmish-streams.rtfd.io/" ] [ str "Elmish.Streams" ]
 #endif
 #if (remoting)
              str ", "
@@ -893,7 +898,7 @@ open Elmish.HMR
 //+:cnd:noEmit
 #if (reaction)
 Program.mkSimple init update view
-|> Program.withQuery query
+|> Program.withStreams stream "msgs"
 #else
 Program.mkProgram init update view
 #endif

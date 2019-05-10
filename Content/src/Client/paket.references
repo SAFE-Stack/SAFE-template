@@ -4,7 +4,7 @@ group Client
     Fable.Elmish.Debugger
     Fable.Elmish.React
 //#if (reaction)
-    Fable.Elmish.Reaction
+    Fable.Elmish.Streams
 //#endif
     Fable.Elmish.HMR
 //#if (remoting)
