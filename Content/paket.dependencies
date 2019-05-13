@@ -45,7 +45,7 @@ group Client
 //#endif
     nuget Fable.React ~> 5
 //#if (remoting)
-    nuget Fable.Remoting.Client ~> 4
+    nuget Fable.Remoting.Client ~> 5
 //#endif
 //#if (layout != "none")
     nuget Fulma ~> 2

@@ -33,7 +33,7 @@ NUGET
       Fable.Core (>= 3.0)
       Fable.Elmish (>= 3.0)
       FSharp.Core (>= 4.6.2)
-    Fable.Elmish.Debugger (3.0.1)
+    Fable.Elmish.Debugger (3.0.2)
       Fable.Core (>= 3.0)
       Fable.Elmish (>= 3.0)
       FSharp.Core (>= 4.6.2)
