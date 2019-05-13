@@ -87,12 +87,7 @@ module Server =
       |> Remoting.buildProxy<ICounterApi>
     #endif
 
-
-#endif
-#if (remoting)
 let initialCounter = Server.api.initialCounter
-#elseif (deploy == "iis" && server != "suave")
-let initialCounter = fetchAs<Counter> (ServerPath.normalize "/api/init") (Decode.Auto.generateDecoder())
 #else
 // Fetch a data structure from specified url and using the decoder
 let fetchWithDecoder<'T> (url: string) (decoder: Decoder<'T>) (init: RequestProperties list) =
@@ -108,7 +103,11 @@ let inline fetchAs<'T> (url: string) (init: RequestProperties list) =
     // More info at: https://mangelmaxime.github.io/Thoth/json/v3.html#caching
     let decoder = Decode.Auto.generateDecoderCached<'T>()
     fetchWithDecoder url decoder init
+#endif
 
+#if (deploy == "iis" && server != "suave")
+let initialCounter = fetchAs<Counter> (ServerPath.normalize "/api/init")
+#else
 let initialCounter = fetchAs<Counter> "/api/init"
 #endif
 
