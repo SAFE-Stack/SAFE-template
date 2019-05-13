@@ -86,8 +86,6 @@ module Server =
       |> Remoting.withRouteBuilder Route.builder
       |> Remoting.buildProxy<ICounterApi>
     #endif
-
-let initialCounter = Server.api.initialCounter
 #else
 // Fetch a data structure from specified url and using the decoder
 let fetchWithDecoder<'T> (url: string) (decoder: Decoder<'T>) (init: RequestProperties list) =
@@ -105,7 +103,9 @@ let inline fetchAs<'T> (url: string) (init: RequestProperties list) =
     fetchWithDecoder url decoder init
 #endif
 
-#if (deploy == "iis" && server != "suave")
+#if (remoting)
+let initialCounter = Server.api.initialCounter
+#elseif (deploy == "iis" && server != "suave")
 let initialCounter = fetchAs<Counter> (ServerPath.normalize "/api/init")
 #else
 let initialCounter = fetchAs<Counter> "/api/init"
