@@ -104,7 +104,7 @@
                 },
                 {
                     "choice": "reaction",
-                    "description": "same as 'streams' - Reaction has been rebranded to Elmish.Streams"
+                    "description": "obsolete - use `streams` (Fable.Reaction rebranded to Fable.Streams)"
                 }
             ]
         },
