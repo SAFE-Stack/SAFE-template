@@ -1,3 +1,7 @@
+#### 1.5.0 - 13.05.2019
+
+* Revert 'Add Shared.fsproj' - https://github.com/SAFE-Stack/SAFE-template/pull/256
+
 #### 1.4.0 - 10.05.2019
 
 * Add devcontainer definition - https://github.com/SAFE-Stack/SAFE-template/pull/254
