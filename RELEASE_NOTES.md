@@ -1,3 +1,7 @@
+#### 1.5.1 - 14.05.2019
+
+* Giraffe - Be explicit that the returned object should be JSON - https://github.com/SAFE-Stack/SAFE-template/pull/259
+
 #### 1.5.0 - 13.05.2019
 
 * Revert 'Add Shared.fsproj' - https://github.com/SAFE-Stack/SAFE-template/pull/256
