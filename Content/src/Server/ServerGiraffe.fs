@@ -54,7 +54,7 @@ let webApp =
         fun next ctx ->
             task {
                 let! counter = getInitCounter()
-                return! Successful.ok (json counter) next ctx
+                return! json counter next ctx
             }
 #endif
 
