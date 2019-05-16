@@ -1,3 +1,7 @@
+#### 1.6.0 - 16.05.2019
+
+* New Fable dependencies - https://github.com/SAFE-Stack/SAFE-template/pull/250
+
 #### 1.5.1 - 14.05.2019
 
 * Giraffe - Be explicit that the returned object should be JSON - https://github.com/SAFE-Stack/SAFE-template/pull/259
