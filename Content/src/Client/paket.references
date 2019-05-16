@@ -11,7 +11,7 @@ group Client
     Fable.Remoting.Client
 //#endif
 //#if (!remoting)
-    Fable.Fetch
+    Thoth.Fetch
 //#endif
 //#if (layout != "none")
     Fulma

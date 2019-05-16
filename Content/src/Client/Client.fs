@@ -14,6 +14,7 @@ open Fable.React
 open Fable.React.Props
 #if (!remoting)
 open Fetch.Types
+open Thoth.Fetch
 #endif
 #if (layout != "none")
 open Fulma
@@ -86,29 +87,11 @@ module Server =
       |> Remoting.withRouteBuilder Route.builder
       |> Remoting.buildProxy<ICounterApi>
     #endif
-#else
-// Fetch a data structure from specified url and using the decoder
-let fetchWithDecoder<'T> (url: string) (decoder: Decoder<'T>) (init: RequestProperties list) =
-    promise {
-        let! response = GlobalFetch.fetch(RequestInfo.Url url, Fetch.requestProps init)
-        let! body = response.text()
-        return Decode.unsafeFromString decoder body
-    }
-
-// Inline the function so Fable can resolve the generic parameter at compile time
-let inline fetchAs<'T> (url: string) (init: RequestProperties list) =
-    // In this example we use Thoth.Json cached auto decoders
-    // More info at: https://mangelmaxime.github.io/Thoth/json/v3.html#caching
-    let decoder = Decode.Auto.generateDecoderCached<'T>()
-    fetchWithDecoder url decoder init
-#endif
-
-#if (remoting)
 let initialCounter = Server.api.initialCounter
 #elseif (deploy == "iis" && server != "suave")
-let initialCounter = fetchAs<Counter> (ServerPath.normalize "/api/init")
+let initialCounter () = Fetch.fetchAs<Counter> (ServerPath.normalize "/api/init")
 #else
-let initialCounter = fetchAs<Counter> "/api/init"
+let initialCounter () = Fetch.fetchAs<Counter> "/api/init"
 #endif
 
 #if reaction
@@ -125,7 +108,7 @@ let init () : Model * Cmd<Msg> =
         Cmd.OfAsync.perform initialCounter () InitialCountLoaded
 #endif
 #if (!reaction && !remoting)
-        Cmd.OfPromise.perform initialCounter [] InitialCountLoaded
+        Cmd.OfPromise.perform initialCounter () InitialCountLoaded
 #endif
 #if (!reaction)
     initialModel, loadCountCmd
@@ -135,7 +118,7 @@ let init () : Model * Cmd<Msg> =
 let load = AsyncRx.ofAsync (initialCounter ())
 #endif
 #if (reaction && !remoting)
-let load = AsyncRx.ofPromise (initialCounter [])
+let load = AsyncRx.ofPromise (initialCounter ())
 #endif
 
 #if (reaction)

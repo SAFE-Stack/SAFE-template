@@ -41,7 +41,7 @@ group Client
     nuget Fable.Elmish.Streams ~> 3
 //#endif
 //#if (!remoting)
-    nuget Fable.Fetch ~> 2
+    nuget Thoth.Fetch ~> 1
 //#endif
     nuget Fable.React ~> 5
 //#if (remoting)
