@@ -18,9 +18,9 @@ group Server
 //#elseif (!remoting && server == "suave")
     nuget Thoth.Json.Net
 //#elseif (remoting && server == "suave")
-    nuget Fable.Remoting.Suave
+    nuget Fable.Remoting.Suave ~> 3
 //#elseif (remoting && server != "suave")
-    nuget Fable.Remoting.Giraffe
+    nuget Fable.Remoting.Giraffe ~> 3
 //#endif
 //#if (deploy == "azure")
     nuget Microsoft.ApplicationInsights.AspNetCore ~> 2.2
@@ -32,21 +32,24 @@ group Client
     framework: netstandard2.0
     storage: none
 
-    nuget Fable.Core ~> 2
-    nuget Fable.Elmish ~> 2
-    nuget Fable.Elmish.Debugger ~> 2
-    nuget Fable.Elmish.React ~> 2
-    nuget Fable.Elmish.HMR ~> 2
-    nuget Fable.React ~> 4
+    nuget Fable.Core ~> 3
+    nuget Fable.Elmish ~> 3
+    nuget Fable.Elmish.Debugger ~> 3
+    nuget Fable.Elmish.HMR ~> 4
+    nuget Fable.Elmish.React ~> 3
 //#if (reaction)
-    nuget Fable.Reaction ~> 2
+    nuget Fable.Elmish.Streams ~> 3
 //#endif
+//#if (!remoting)
+    nuget Thoth.Fetch ~> 1
+//#endif
+    nuget Fable.React ~> 5
 //#if (remoting)
-    nuget Fable.Remoting.Client ~> 4
+    nuget Fable.Remoting.Client ~> 5
 //#endif
 //#if (layout != "none")
-    nuget Fulma
-    nuget Fable.FontAwesome.Free
+    nuget Fulma ~> 2
+    nuget Fable.FontAwesome.Free ~> 2
 //#endif
 
 group Build

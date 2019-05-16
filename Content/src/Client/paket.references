@@ -1,14 +1,17 @@
 group Client
     FSharp.Core
+    Fable.Core
     Fable.Elmish.Debugger
     Fable.Elmish.React
-    Fable.Elmish.HMR
-    Fable.Core
 //#if (reaction)
-    Fable.Reaction
+    Fable.Elmish.Streams
 //#endif
+    Fable.Elmish.HMR
 //#if (remoting)
     Fable.Remoting.Client
+//#endif
+//#if (!remoting)
+    Thoth.Fetch
 //#endif
 //#if (layout != "none")
     Fulma

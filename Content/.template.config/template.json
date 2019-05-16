@@ -99,14 +99,18 @@
                     "description": "use standard Elmish architecture with Commands"
                 },
                 {
+                    "choice": "streams",
+                    "description": "use simple Elmish architecture without Commands + Elmish.Streams (https://elmish-streams.readthedocs.io/) for reactive pattern"
+                },
+                {
                     "choice": "reaction",
-                    "description": "use simple Elmish architecture without Commands + Fable.Reaction (https://dbrattli.github.io/Fable.Reaction/) for reactive pattern"
+                    "description": "obsolete - use `streams` (Fable.Reaction rebranded to Fable.Streams)"
                 }
             ]
         },
         "reaction": {
             "type": "computed",
-            "value": "(pattern == \"reaction\")"
+            "value": "(pattern == \"streams\") || (pattern == \"reaction\")"
         },
         "js-deps": {
             "type": "parameter",

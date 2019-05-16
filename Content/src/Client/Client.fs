@@ -2,28 +2,26 @@ module Client
 
 open Elmish
 open Elmish.React
-
-open Fable.Helpers.React
-open Fable.Helpers.React.Props
-open Fable.PowerPack.Fetch
-
-open Thoth.Json
-
-open Shared
-
 #if (reaction)
-open Fable.Reaction
-open Reaction
+open Elmish.Streams
+open FSharp.Control
 #endif
-
-#if (layout != "none")
-open Fulma
-#endif
-
 #if (layout == "fulma-admin" || layout == "fulma-cover" || layout == "fulma-hero" || layout == "fulma-landing" || layout == "fulma-login")
 open Fable.FontAwesome
 open Fable.FontAwesome.Free
 #endif
+open Fable.React
+open Fable.React.Props
+#if (!remoting)
+open Fetch.Types
+open Thoth.Fetch
+#endif
+#if (layout != "none")
+open Fulma
+#endif
+open Thoth.Json
+
+open Shared
 
 // The model holds data that you want to keep track of while the application is running
 // in this case, we are keeping track of a counter
@@ -36,27 +34,27 @@ type Model = { Counter: Counter option }
 type Msg =
 | Increment
 | Decrement
-| InitialCountLoaded of Result<Counter, exn>
+| InitialCountLoaded of Counter
 
-#if (deploy == "iis" && server != "suave") 
-module ServerPath = 
+#if (deploy == "iis" && server != "suave")
+module ServerPath =
     open System
     open Fable.Core
-    
+
     /// when publishing to IIS, your application most likely runs inside a virtual path (i.e. localhost/SafeApp)
     /// every request made to the server will have to account for this virtual path
     /// so we get the virtual path from the location
-    /// `virtualPath` of `http://localhost/SafeApp` -> `/SafeApp/` 
+    /// `virtualPath` of `http://localhost/SafeApp` -> `/SafeApp/`
     [<Emit("window.location.pathname")>]
-    let virtualPath : string = jsNative 
+    let virtualPath : string = jsNative
 
     /// takes path segments and combines them into a valid path
     let combine (paths: string list) =
-        paths 
+        paths
         |> List.map (fun path -> List.ofArray (path.Split('/')))
-        |> List.concat 
+        |> List.concat
         |> List.filter (fun segment -> not (segment.Contains(".")))
-        |> List.filter (String.IsNullOrWhiteSpace >> not) 
+        |> List.filter (String.IsNullOrWhiteSpace >> not)
         |> String.concat "/"
         |> sprintf "/%s"
 
@@ -70,34 +68,30 @@ module Server =
 
     open Shared
     open Fable.Remoting.Client
-    
+
     #if (deploy == "iis" && server != "suave")
     // normalize routes so that they work with IIS virtual path in production
     let normalizeRoutes typeName methodName =
         Route.builder typeName methodName
-        |> ServerPath.normalize   
+        |> ServerPath.normalize
 
     /// A proxy you can use to talk to server directly
     let api : ICounterApi =
       Remoting.createApi()
       |> Remoting.withRouteBuilder normalizeRoutes
       |> Remoting.buildProxy<ICounterApi>
-    #else 
+    #else
     /// A proxy you can use to talk to server directly
     let api : ICounterApi =
       Remoting.createApi()
       |> Remoting.withRouteBuilder Route.builder
       |> Remoting.buildProxy<ICounterApi>
-    #endif  
-
-
-#endif
-#if (remoting)
+    #endif
 let initialCounter = Server.api.initialCounter
 #elseif (deploy == "iis" && server != "suave")
-let initialCounter = fetchAs<Counter> (ServerPath.normalize "/api/init") (Decode.Auto.generateDecoder())
-#else 
-let initialCounter = fetchAs<Counter> "/api/init" (Decode.Auto.generateDecoder())
+let initialCounter () = Fetch.fetchAs<Counter> (ServerPath.normalize "/api/init")
+#else
+let initialCounter () = Fetch.fetchAs<Counter> "/api/init"
 #endif
 
 #if reaction
@@ -111,40 +105,32 @@ let init () : Model * Cmd<Msg> =
     let loadCountCmd =
 #endif
 #if (!reaction && remoting)
-        Cmd.ofAsync
-            initialCounter
-            ()
-            (Ok >> InitialCountLoaded)
-            (Error >> InitialCountLoaded)
+        Cmd.OfAsync.perform initialCounter () InitialCountLoaded
 #endif
 #if (!reaction && !remoting)
-        Cmd.ofPromise
-            initialCounter
-            []
-            (Ok >> InitialCountLoaded)
-            (Error >> InitialCountLoaded)
+        Cmd.OfPromise.perform initialCounter () InitialCountLoaded
 #endif
 #if (!reaction)
     initialModel, loadCountCmd
 #endif
 
 #if (reaction && remoting)
-let load = AsyncObservable.ofAsync (initialCounter ())
+let load = AsyncRx.ofAsync (initialCounter ())
 #endif
 #if (reaction && !remoting)
-let load = ofPromise (initialCounter [])
+let load = AsyncRx.ofPromise (initialCounter ())
 #endif
 
 #if (reaction)
 let loadCount =
     load
-    |> AsyncObservable.map (Ok >> InitialCountLoaded)
-    |> AsyncObservable.catch (Error >> InitialCountLoaded >> AsyncObservable.single)
+    |> AsyncRx.map InitialCountLoaded
+    |> AsyncRx.toStream "loading"
 
-let query msgs =
-    AsyncObservable.concat
-        [ loadCount
-          msgs ]
+let stream model msgs =
+    match model.Counter with
+    | None -> loadCount
+    | _ -> msgs
 #endif
 
 #if (reaction)
@@ -155,7 +141,7 @@ let update (msg : Msg) (currentModel : Model) : Model =
         { currentModel with Counter = Some { Value = counter.Value + 1 } }
     | Some counter, Decrement ->
         { currentModel with Counter = Some { Value = counter.Value - 1 } }
-    | _, InitialCountLoaded (Ok initialCount) ->
+    | _, InitialCountLoaded initialCount ->
         { Counter = Some initialCount }
     | _ -> currentModel
 #else
@@ -170,7 +156,7 @@ let update (msg : Msg) (currentModel : Model) : Model * Cmd<Msg> =
     | Some counter, Decrement ->
         let nextModel = { currentModel with Counter = Some { Value = counter.Value - 1 } }
         nextModel, Cmd.none
-    | _, InitialCountLoaded (Ok initialCount)->
+    | _, InitialCountLoaded initialCount->
         let nextModel = { Counter = Some initialCount }
         nextModel, Cmd.none
 
@@ -205,7 +191,7 @@ let safeComponents =
 #endif
 #if (reaction)
              str ", "
-             a [ Href "https://dbrattli.github.io/Reaction/" ] [ str "Fable.Reaction" ]
+             a [ Href "http://elmish-streams.rtfd.io/" ] [ str "Elmish.Streams" ]
 #endif
 #if (remoting)
              str ", "
@@ -894,16 +880,15 @@ open Elmish.HMR
 //+:cnd:noEmit
 #if (reaction)
 Program.mkSimple init update view
-|> Program.withQuery query
+|> Program.withStream stream "msgs"
 #else
 Program.mkProgram init update view
 #endif
 //-:cnd:noEmit
 #if DEBUG
 |> Program.withConsoleTrace
-|> Program.withHMR
 #endif
-|> Program.withReact "elmish-app"
+|> Program.withReactBatched "elmish-app"
 #if DEBUG
 |> Program.withDebugger
 #endif
