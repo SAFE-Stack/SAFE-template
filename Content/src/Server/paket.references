@@ -22,3 +22,9 @@ group Server
 //#elseif (remoting && server == "suave")
     Fable.Remoting.Suave
 //#endif
+//#if (bridge && server != "suave")
+    Elmish.Bridge.Giraffe
+//#elseif (bridge && server == "suave")
+    Elmish.Bridge.Suave
+//#endif
+

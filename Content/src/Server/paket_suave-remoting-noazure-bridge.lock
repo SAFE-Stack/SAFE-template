@@ -1,0 +1,28 @@
+﻿GROUP Server
+STORAGE: NONE
+RESTRICTION: == netcoreapp2.2
+NUGET
+  remote: https://api.nuget.org/v3/index.json
+    Elmish (3.0)
+      FSharp.Core (>= 4.6.2)
+    Elmish.Bridge.Server (3.0.3)
+      Elmish (>= 3.0)
+      Fable.Remoting.Json (>= 2.3)
+    Elmish.Bridge.Suave (3.0.3)
+      Elmish.Bridge.Server (>= 3.0.3)
+      Suave (>= 2.5.4)
+    Fable.Remoting.Json (2.3)
+      FSharp.Core (>= 4.3.4)
+      Newtonsoft.Json (>= 11.0.1)
+    Fable.Remoting.Server (4.7)
+      Fable.Remoting.Json (>= 2.3)
+      FSharp.Core (>= 4.3.4)
+    Fable.Remoting.Suave (3.8)
+      Fable.Remoting.Json (>= 2.3)
+      Fable.Remoting.Server (>= 4.7)
+      FSharp.Core (>= 4.3.4)
+      Suave (>= 2.5.4)
+    FSharp.Core (4.6.2)
+    Newtonsoft.Json (12.0.2)
+    Suave (2.5.4)
+      FSharp.Core (>= 4.3.4 < 5.0)

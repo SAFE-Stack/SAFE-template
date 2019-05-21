@@ -22,6 +22,11 @@ group Server
 //#elseif (remoting && server != "suave")
     nuget Fable.Remoting.Giraffe ~> 3
 //#endif
+//#if (bridge && server == "suave")
+    nuget Elmish.Bridge.Suave ~> 3
+//#elseif (bridge && server != "suave")
+    nuget Elmish.Bridge.Giraffe ~> 3
+//#endif
 //#if (deploy == "azure")
     nuget Microsoft.ApplicationInsights.AspNetCore ~> 2.2
     nuget WindowsAzure.Storage
@@ -46,6 +51,9 @@ group Client
     nuget Fable.React ~> 5
 //#if (remoting)
     nuget Fable.Remoting.Client ~> 5
+//#endif
+//#if (bridge)
+    nuget Elmish.Bridge.Client ~> 3
 //#endif
 //#if (layout != "none")
     nuget Fulma ~> 2

@@ -42,7 +42,12 @@ Target.create "BuildWebPackConfig" (fun _ ->
         // redirect requests that start with /api/* to the server on port 8085
         '/api/*': {
             target: 'http://localhost:' + (process.env.SERVER_PROXY_PORT || "8085"),
-               changeOrigin: true
+            changeOrigin: true
+           },
+        // redirect websocket requests that start with /socket/* to the server on the port 8085
+        '/socket/*': {
+            target: 'http://localhost:' + (process.env.SERVER_PROXY_PORT || "8085"),
+            ws: true
            }
        }"""
 
@@ -110,6 +115,7 @@ type BuildPaketDependencies =
 
 type ClientPaketDependencies =
     { Remoting : bool
+      Bridge : bool
       Fulma : bool
       Reaction : bool }
 
@@ -117,7 +123,8 @@ type ClientPaketDependencies =
             let remoting = if x.Remoting then "remoting" else "noremoting"
             let fulma = if x.Fulma then "fulma" else "nofulma"
             let reaction = if x.Reaction then "reaction" else "noreaction"
-            sprintf "%s-%s-%s" remoting fulma reaction
+            let bridge = if x.Bridge then "bridge" else "nobridge"
+            sprintf "%s-%s-%s-%s" remoting fulma reaction bridge
 
 type ServerPaketDependency = Saturn | Giraffe | Suave
 
@@ -130,17 +137,20 @@ type ServerPaketDependency = Saturn | Giraffe | Suave
 type ServerPaketDependencies =
     { Server : ServerPaketDependency
       Remoting : bool
+      Bridge : bool
       Azure : bool }
 
     with override x.ToString () =
             let server = string x.Server
             let remoting = if x.Remoting then "remoting" else "noremoting"
             let azure = if x.Azure then "azure" else "noazure"
-            sprintf "%s-%s-%s" server remoting azure
+            let bridge = if x.Bridge then "bridge" else "nobridge"
+            sprintf "%s-%s-%s-%s" server remoting azure bridge
 
 type CombinedPaketDependencies =
     { Azure : bool
       Remoting : bool
+      Bridge : bool
       Fulma : bool
       Server : ServerPaketDependency
       Reaction : bool }
@@ -150,16 +160,23 @@ type CombinedPaketDependencies =
 
     member x.ToClient : ClientPaketDependencies =
         { Remoting = x.Remoting
+          Bridge = x.Bridge
           Fulma = x.Fulma
           Reaction = x.Reaction }
 
     member x.ToServer : ServerPaketDependencies =
         { Server = x.Server
+          Bridge = x.Bridge
           Remoting = x.Remoting
           Azure = x.Azure }
 
     override x.ToString () =
-        let remoting = if x.Remoting then Some "--communication remoting" else None
+        let remoting =
+            match x.Remoting, x.Bridge with
+            | true, true -> Some "--communication bridge-remoting"
+            | true, false -> Some "--communication remoting"
+            | false, true -> Some "--communication bridge"
+            | false, false -> None
         let azure = if x.Azure then Some "--deploy azure" else None
         let fulma = if not x.Fulma then Some "--layout none" else None
         let server = if x.Server <> Saturn then Some (sprintf "--server %O" x.Server) else None
@@ -177,6 +194,7 @@ let configs =
     [ for azure in [ false; true ] do
       for fulma in [ false; true ] do
       for remoting in [ false; true ] do
+      for bridge in [ false; true ] do
       for server in [ Saturn; Giraffe; Suave ] do
       for reaction in [ false; true ] do
       yield
@@ -184,6 +202,7 @@ let configs =
             Fulma = fulma
             Server = server
             Remoting = remoting
+            Bridge = bridge
             Reaction = reaction }
     ]
 
@@ -231,18 +250,20 @@ Target.create "GenJsonConditions" (fun _ ->
         let lockFileName = fullLockFileName config.ToBuild config.ToClient config.ToServer
         let server = string config.Server
         let azureOperator = if config.Azure then "==" else "!="
+        let bridge = config.Bridge
         let remoting = config.Remoting
         let layoutOperator = if config.Fulma then "!=" else "=="
         let reaction = config.Reaction
         let template =
             sprintf """                    {
                         "include": "%s",
-                        "condition": "(server == \"%s\" && remoting == %b && deploy %s \"azure\" && layout %s \"none\" && reaction == %b)",
+                        "condition": "(server == \"%s\" && remoting == %b && bridge == %b && deploy %s \"azure\" && layout %s \"none\" && reaction == %b)",
                         "rename": { "%s": "paket.lock" }
                     },"""
                  lockFileName
                  server
                  remoting
+                 bridge
                  azureOperator
                  layoutOperator
                  reaction
