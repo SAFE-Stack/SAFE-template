@@ -69,16 +69,22 @@ let config =
 let getInitCounter() : Async<Counter> = async { return { Value = 42 } }
 
 #if (bridge)
+/// Elmish.Bridge model for keeping the server-side state
 type Model = { SendTime : bool }
 
+/// The server messages that Elmish can receive
 type Msg =
     | Tick
     | Remote of ServerMsg
 
+/// Elmish init function with a channel for sending client messages
+/// Returns a new state and commands
 let init clientDispatch () =
     clientDispatch (GetTime System.DateTime.Now)
     { SendTime = true }, Cmd.none
 
+/// Elmish update function with a channel for sending client messages
+/// Returns a new state and commands
 let update clientDispatch msg model =
     match msg with
     | Tick ->
@@ -90,6 +96,7 @@ let update clientDispatch msg model =
     | Remote Pause ->
         { model with SendTime = false }, Cmd.none
 
+/// Elmish subscription for sending a tick every second
 let timer _ =
     let sub dispatch =
         async {
@@ -99,6 +106,7 @@ let timer _ =
         } |> Async.Start
     Cmd.ofSub sub
 
+/// Connect the Elmish functions to an endpoint for websocket connections
 let socketApi =
     Bridge.mkServer Socket.clock init update
     |> Bridge.withSubscription timer
