@@ -15,6 +15,10 @@ open Shared
 open Fable.Remoting.Server
 open Fable.Remoting.Giraffe
 #endif
+#if (bridge)
+open Elmish
+open Elmish.Bridge
+#endif
 #if (deploy == "azure")
 open Microsoft.WindowsAzure.Storage
 #endif
@@ -36,20 +40,65 @@ let port =
     |> tryGetEnv |> Option.map uint16 |> Option.defaultValue 8085us
 
 let getInitCounter () : Task<Counter> = task { return { Value = 42 } }
+#if (bridge)
+type Model = { SendTime : bool }
+
+type Msg =
+    | Tick
+    | Remote of ServerMsg
+
+let init clientDispatch () =
+    clientDispatch (GetTime System.DateTime.Now)
+    { SendTime = true }, Cmd.none
+
+let update clientDispatch msg model =
+    match msg with
+    | Tick ->
+        if model.SendTime then
+            clientDispatch (GetTime System.DateTime.Now)
+        model, Cmd.none
+    | Remote Start ->
+        { model with SendTime = true }, Cmd.none
+    | Remote Pause ->
+        { model with SendTime = false }, Cmd.none
+
+let timer _ =
+    let sub dispatch =
+        async {
+            while true do
+                do! Async.Sleep 1000
+                dispatch Tick
+        } |> Async.Start
+    Cmd.ofSub sub
+
+let socketApp =
+    Bridge.mkServer Socket.clock init update
+    |> Bridge.withSubscription timer
+    |> Bridge.run Giraffe.server
+#endif
+
+
 #if (remoting)
 
 let counterApi = {
     initialCounter = getInitCounter >> Async.AwaitTask
 }
-
+#if (bridge)
+let apiApp =
+#else
 let webApp =
+#endif
     Remoting.createApi()
     |> Remoting.withRouteBuilder Route.builder
     |> Remoting.fromValue counterApi
     |> Remoting.buildHttpHandler
 
 #else
+#if (bridge)
+let apiApp =
+#else
 let webApp =
+#endif
     route "/api/init" >=>
         fun next ctx ->
             task {
@@ -57,10 +106,15 @@ let webApp =
                 return! json counter next ctx
             }
 #endif
-
+#if (bridge)
+let webApp = choose [ apiApp; socketApp ]
+#endif
 let configureApp (app : IApplicationBuilder) =
     app.UseDefaultFiles()
        .UseStaticFiles()
+#if (bridge)
+       .UseWebSockets()
+#endif
        .UseGiraffe webApp
 
 let configureServices (services : IServiceCollection) =

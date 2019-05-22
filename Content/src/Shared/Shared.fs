@@ -13,3 +13,20 @@ module Route =
 type ICounterApi =
     { initialCounter : unit -> Async<Counter> }
 #endif
+
+#if (bridge)
+module Socket =
+    /// Defines the socket endpoint for the clock's two-way communication
+    let clock = "/socket/clock"
+
+/// A type that specifies the messages sent to the server from the client on Elmish.Bridge
+/// to learn more, read about at https://github.com/Nhowka/Elmish.Bridge#shared
+type ServerMsg =
+    | Start
+    | Pause
+
+/// A type that specifies the messages sent to the client from the server on Elmish.Bridge
+type ClientMsg =
+    | GetTime of System.DateTime
+
+#endif

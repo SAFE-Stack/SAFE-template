@@ -1,6 +1,9 @@
 module Client
 
 open Elmish
+#if (bridge)
+open Elmish.Bridge
+#endif
 open Elmish.React
 #if (reaction)
 open Elmish.Streams
@@ -27,7 +30,13 @@ open Shared
 // in this case, we are keeping track of a counter
 // we mark it as optional, because initially it will not be available from the client
 // the initial value will be requested from server
-type Model = { Counter: Counter option }
+type Model =
+    {
+        Counter: Counter option
+#if (bridge)
+        Clock: System.DateTime option
+#endif
+    }
 
 // The Msg type defines what events/actions can occur while the application is running
 // the state of the application changes *only* in reaction to these events
@@ -35,6 +44,9 @@ type Msg =
 | Increment
 | Decrement
 | InitialCountLoaded of Counter
+#if (bridge)
+| Remote of ClientMsg
+#endif
 
 #if (deploy == "iis" && server != "suave")
 module ServerPath =
@@ -97,11 +109,22 @@ let initialCounter () = Fetch.fetchAs<Counter> "/api/init"
 #if reaction
 // defines the initial state
 let init () : Model =
-    { Counter = None }
+    {
+        Counter = None
+#if (bridge)
+        Clock = None
+#endif
+    }
 #else
 // defines the initial state and initial command (= side-effect) of the application
 let init () : Model * Cmd<Msg> =
-    let initialModel = { Counter = None }
+    let initialModel =
+        {
+            Counter = None
+#if (bridge)
+            Clock = None
+#endif
+        }
     let loadCountCmd =
 #endif
 #if (!reaction && remoting)
@@ -136,30 +159,38 @@ let stream model msgs =
 #if (reaction)
 // The update function computes the next state of the application based on the current state and the incoming events/messages
 let update (msg : Msg) (currentModel : Model) : Model =
-    match currentModel.Counter, msg with
-    | Some counter, Increment ->
+    match currentModel, msg with
+    | { Counter = Some counter }, Increment ->
         { currentModel with Counter = Some { Value = counter.Value + 1 } }
-    | Some counter, Decrement ->
+    | { Counter = Some counter }, Decrement ->
         { currentModel with Counter = Some { Value = counter.Value - 1 } }
     | _, InitialCountLoaded initialCount ->
-        { Counter = Some initialCount }
+        { currentModel with Counter = Some initialCount }
+#if (bridge)
+    | _, Remote (GetTime time) ->
+        { currentModel with Clock = Some time }
+#endif
     | _ -> currentModel
 #else
 // The update function computes the next state of the application based on the current state and the incoming events/messages
 // It can also run side-effects (encoded as commands) like calling the server via Http.
 // these commands in turn, can dispatch messages to which the update function will react.
 let update (msg : Msg) (currentModel : Model) : Model * Cmd<Msg> =
-    match currentModel.Counter, msg with
-    | Some counter, Increment ->
+    match currentModel, msg with
+    | { Counter = Some counter }, Increment ->
         let nextModel = { currentModel with Counter = Some { Value = counter.Value + 1 } }
         nextModel, Cmd.none
-    | Some counter, Decrement ->
+    | { Counter = Some counter }, Decrement ->
         let nextModel = { currentModel with Counter = Some { Value = counter.Value - 1 } }
         nextModel, Cmd.none
     | _, InitialCountLoaded initialCount->
-        let nextModel = { Counter = Some initialCount }
+        let nextModel = { currentModel with Counter = Some initialCount }
         nextModel, Cmd.none
-
+#if (bridge)
+    | _, Remote (GetTime time) ->
+        let nextModel = { currentModel with Clock = Some time }
+        nextModel, Cmd.none
+#endif
     | _ -> currentModel, Cmd.none
 #endif
 
@@ -197,6 +228,10 @@ let safeComponents =
              str ", "
              a [ Href "https://zaid-ajaj.github.io/Fable.Remoting/" ] [ str "Fable.Remoting" ]
 #endif
+#if (bridge)
+             str ", "
+             a [ Href "https://github.com/Nhowka/Elmish.Bridge" ] [ str "Elmish.Bridge" ]
+#endif
            ]
 
     span [ ]
@@ -208,6 +243,12 @@ let show = function
 | { Counter = Some counter } -> string counter.Value
 | { Counter = None   } -> "Loading..."
 
+#if (bridge)
+let showTime = function
+| { Clock = Some time } -> time.ToString("HH:mm:ss")
+| { Clock = None } -> "Loading..."
+#endif
+
 #if (layout == "none")
 let view (model : Model) (dispatch : Msg -> unit) =
     div []
@@ -217,6 +258,13 @@ let view (model : Model) (dispatch : Msg -> unit) =
           button [ OnClick (fun _ -> dispatch Decrement) ] [ str "-" ]
           div [] [ str (show model) ]
           button [ OnClick (fun _ -> dispatch Increment) ] [ str "+" ]
+#if (bridge)
+          p  [] [ str "Press buttons to manipulate the clock:" ]
+          button [ OnClick (fun _ -> Bridge.Send Start) ] [ str "Start" ]
+          div [] [ str (showTime model) ]
+          button [ OnClick (fun _ -> Bridge.Send Pause) ] [ str "Pause" ]
+#endif
+
           safeComponents ]
 #elseif (layout == "fulma-basic")
 let button txt onClick =
@@ -238,7 +286,15 @@ let view (model : Model) (dispatch : Msg -> unit) =
                     [ Heading.h3 [] [ str ("Press buttons to manipulate counter: " + show model) ] ]
                 Columns.columns []
                     [ Column.column [] [ button "-" (fun _ -> dispatch Decrement) ]
-                      Column.column [] [ button "+" (fun _ -> dispatch Increment) ] ] ]
+                      Column.column [] [ button "+" (fun _ -> dispatch Increment) ] ]
+#if (bridge)
+                Content.content [ Content.Modifiers [ Modifier.TextAlignment (Screen.All, TextAlignment.Centered) ] ]
+                    [ Heading.h3 [] [ str ("Press buttons to control clock: " + showTime model) ] ]
+                Columns.columns []
+                    [ Column.column [] [ button "Start" (fun _ -> Bridge.Send Start) ]
+                      Column.column [] [ button "Pause" (fun _ -> Bridge.Send Pause) ] ]
+#endif
+              ]
 
           Footer.footer [ ]
                 [ Content.content [ Content.Modifiers [ Modifier.TextAlignment (Screen.All, TextAlignment.Centered) ] ]
@@ -370,6 +426,26 @@ let counter (model : Model) (dispatch : Msg -> unit) =
                   Button.OnClick (fun _ -> dispatch Decrement) ]
                 [ str "-" ] ] ]
 
+#if (bridge)
+let clock (model : Model) (dispatch : Msg -> unit) =
+    Field.div [ Field.IsGrouped ]
+        [ Control.p [ Control.IsExpanded ]
+            [ Input.text
+                [ Input.Disabled true
+                  Input.Value (showTime model) ] ]
+          Control.p [ ]
+            [ Button.a
+                [ Button.Color IsInfo
+                  Button.OnClick (fun _ -> Bridge.Send Start) ]
+                [ str "Start" ] ]
+          Control.p [ ]
+            [ Button.a
+                [ Button.Color IsInfo
+                  Button.OnClick (fun _ -> Bridge.Send Pause) ]
+                [ str "Pause" ] ] ]
+#endif
+
+
 let columns (model : Model) (dispatch : Msg -> unit) =
     Columns.columns [ ]
         [ Column.column [ Column.Width (Screen.All, Column.Is6) ]
@@ -434,7 +510,21 @@ let columns (model : Model) (dispatch : Msg -> unit) =
                                   [ Fa.i [Fa.Solid.AngleDown] [] ] ] ]
                       Card.content [ ]
                         [ Content.content   [ ]
-                            [ counter model dispatch ] ] ]   ] ]
+                            [ counter model dispatch ] ] ]
+#if (bridge)
+                Card.card [ ]
+                    [ Card.header [ ]
+                        [ Card.Header.title [ ]
+                              [ str "Clock" ]
+                          Card.Header.icon [ ]
+                              [ Icon.icon [ ]
+                                  [ Fa.i [Fa.Solid.AngleDown] [] ] ] ]
+                      Card.content [ ]
+                        [ Content.content   [ ]
+                            [ clock model dispatch ] ] ]
+
+#endif
+                               ] ]
 
 let view (model : Model) (dispatch : Msg -> unit) =
     div [ ]
@@ -493,6 +583,26 @@ let containerBox (model : Model) (dispatch : Msg -> unit) =
                       Button.OnClick (fun _ -> dispatch Decrement) ]
                     [ str "-" ] ] ] ]
 
+#if (bridge)
+let containerBoxClock (model : Model) (dispatch : Msg -> unit) =
+    Box.box' [ ]
+        [ Field.div [ Field.IsGrouped ]
+            [ Control.p [ Control.IsExpanded ]
+                [ Input.text
+                    [ Input.Disabled true
+                      Input.Value (showTime model) ] ]
+              Control.p [ ]
+                [ Button.a
+                    [ Button.Color IsPrimary
+                      Button.OnClick (fun _ -> Bridge.Send Start) ]
+                    [ str "Start" ] ]
+              Control.p [ ]
+                [ Button.a
+                    [ Button.Color IsPrimary
+                      Button.OnClick (fun _ -> Bridge.Send Pause) ]
+                    [ str "Pause" ] ] ] ]
+#endif
+
 let view (model : Model) (dispatch : Msg -> unit) =
     Hero.hero
         [ Hero.IsFullHeight
@@ -519,7 +629,11 @@ let view (model : Model) (dispatch : Msg -> unit) =
                            [ Heading.IsSubtitle
                              Heading.Is4 ]
                            [ safeComponents ]
-                         containerBox model dispatch ] ] ] ]
+                         containerBox model dispatch
+#if (bridge)
+                         containerBoxClock model dispatch
+#endif
+                          ] ] ] ]
           Hero.foot [ ]
             [ Container.container [ ]
                 [ Tabs.tabs [ Tabs.IsCentered ]
@@ -571,6 +685,27 @@ let buttonBox (model : Model) (dispatch : Msg -> unit) =
                     [ Button.Color IsPrimary
                       Button.OnClick (fun _ -> dispatch Decrement) ]
                     [ str "-" ] ] ] ]
+
+#if (bridge)
+let buttonBoxClock (model : Model) (dispatch : Msg -> unit) =
+    Box.box' [ CustomClass "cta" ]
+        [ Level.level [ ]
+            [ Level.item [ ]
+                [ Button.a
+                    [ Button.Color IsPrimary
+                      Button.OnClick (fun _ -> Bridge.Send Start) ]
+                    [ str "Start" ] ]
+
+              Level.item [ ]
+                [ p [ ] [ str (showTime model) ] ]
+
+              Level.item [ ]
+                [ Button.a
+                    [ Button.Color IsPrimary
+                      Button.OnClick (fun _ -> Bridge.Send Pause) ]
+                    [ str "Pause" ] ] ] ]
+#endif
+
 
 let card icon heading body =
   Column.column [ Column.Width (Screen.All, Column.Is4) ]
@@ -724,6 +859,9 @@ let view (model : Model) (dispatch : Msg -> unit) =
                           [ safeComponents ] ] ] ]
 
           buttonBox model dispatch
+#if (bridge)
+          buttonBoxClock model dispatch
+#endif
 
           Container.container [ ]
             [ features
@@ -778,6 +916,26 @@ let containerBox (model : Model) (dispatch : Msg -> unit) =
                       Button.OnClick (fun _ -> dispatch Decrement) ]
                     [ str "-" ] ] ] ]
 
+#if (bridge)
+let containerBoxClock (model : Model) (dispatch : Msg -> unit) =
+    Box.box' [ ]
+        [ Field.div [ Field.IsGrouped ]
+            [ Control.p [ Control.IsExpanded ]
+                [ Input.text
+                    [ Input.Disabled true
+                      Input.Value (showTime model) ] ]
+              Control.p [ ]
+                [ Button.a
+                    [ Button.Color IsPrimary
+                      Button.OnClick (fun _ -> Bridge.Send Start) ]
+                    [ str "Start" ] ]
+              Control.p [ ]
+                [ Button.a
+                    [ Button.Color IsPrimary
+                      Button.OnClick (fun _ -> Bridge.Send Pause) ]
+                    [ str "Pause" ] ] ] ]
+#endif
+
 let view (model : Model) (dispatch : Msg -> unit) =
     Hero.hero [ Hero.Color IsPrimary; Hero.IsFullHeight ]
         [ Hero.head [ ]
@@ -795,7 +953,11 @@ let view (model : Model) (dispatch : Msg -> unit) =
                         [ str "SAFE Template" ]
                       Heading.p [ Heading.IsSubtitle ]
                         [ safeComponents ]
-                      containerBox model dispatch ] ] ] ]
+                      containerBox model dispatch
+#if (bridge)
+                      containerBoxClock model dispatch
+#endif
+                       ] ] ] ]
 #else
 
 let counter (model : Model) (dispatch : Msg -> unit) =
@@ -814,6 +976,25 @@ let counter (model : Model) (dispatch : Msg -> unit) =
                 [ Button.Color IsInfo
                   Button.OnClick (fun _ -> dispatch Decrement) ]
                 [ str "-" ] ] ]
+
+#if (bridge)
+let clock (model : Model) (dispatch : Msg -> unit) =
+    Field.div [ Field.IsGrouped ]
+        [ Control.p [ Control.IsExpanded ]
+            [ Input.text
+                [ Input.Disabled true
+                  Input.Value (showTime model) ] ]
+          Control.p [ ]
+            [ Button.a
+                [ Button.Color IsInfo
+                  Button.OnClick (fun _ -> Bridge.Send Start) ]
+                [ str "Start" ] ]
+          Control.p [ ]
+            [ Button.a
+                [ Button.Color IsInfo
+                  Button.OnClick (fun _ -> Bridge.Send Pause) ]
+                [ str "Pause" ] ] ]
+#endif
 
 let column (model : Model) (dispatch : Msg -> unit) =
     Column.column
@@ -841,6 +1022,9 @@ let column (model : Model) (dispatch : Msg -> unit) =
                             [ Input.Size IsLarge
                               Input.Placeholder "Your Password" ] ] ]
                   counter model dispatch
+#if (bridge)
+                  clock model dispatch
+#endif
                   Field.div [ ]
                     [ Checkbox.checkbox [ ]
                         [ input [ Type "checkbox" ]
@@ -883,6 +1067,13 @@ Program.mkSimple init update view
 |> Program.withStream stream "msgs"
 #else
 Program.mkProgram init update view
+#endif
+#if (bridge)
+|> Program.withBridgeConfig
+    (
+        Bridge.endpoint Socket.clock |>
+        Bridge.withMapping Remote
+    )
 #endif
 //-:cnd:noEmit
 #if DEBUG

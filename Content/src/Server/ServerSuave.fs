@@ -22,6 +22,10 @@ open Thoth.Json.Net
 open System.Web
 
 #endif
+#if (bridge)
+open Elmish
+open Elmish.Bridge
+#endif
 #if (deploy == "azure")
 open Microsoft.WindowsAzure.Storage
 
@@ -63,6 +67,44 @@ let config =
           bindings = [ HttpBinding.create HTTP (IPAddress.Parse "0.0.0.0") port ] }
 
 let getInitCounter() : Async<Counter> = async { return { Value = 42 } }
+
+#if (bridge)
+type Model = { SendTime : bool }
+
+type Msg =
+    | Tick
+    | Remote of ServerMsg
+
+let init clientDispatch () =
+    clientDispatch (GetTime System.DateTime.Now)
+    { SendTime = true }, Cmd.none
+
+let update clientDispatch msg model =
+    match msg with
+    | Tick ->
+        if model.SendTime then
+            clientDispatch (GetTime System.DateTime.Now)
+        model, Cmd.none
+    | Remote Start ->
+        { model with SendTime = true }, Cmd.none
+    | Remote Pause ->
+        { model with SendTime = false }, Cmd.none
+
+let timer _ =
+    let sub dispatch =
+        async {
+            while true do
+                do! Async.Sleep 1000
+                dispatch Tick
+        } |> Async.Start
+    Cmd.ofSub sub
+
+let socketApi =
+    Bridge.mkServer Socket.clock init update
+    |> Bridge.withSubscription timer
+    |> Bridge.run Suave.server
+#endif
+
 #if (remoting)
 let counterApi = {
     initialCounter = getInitCounter
@@ -86,6 +128,9 @@ let webApi =
 let webApp =
     choose [
         webApi
+#if (bridge)
+        socketApi
+#endif
         path "/" >=> browseFileHome "index.html"
         browseHome
         RequestErrors.NOT_FOUND "Not found!"
