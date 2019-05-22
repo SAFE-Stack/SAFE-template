@@ -5,6 +5,8 @@
         <DefineConstants>FABLE_COMPILER</DefineConstants>
     </PropertyGroup>
     <ItemGroup>
+        <None Include="index.html" />
+        <None Include="paket.references" />
         <Compile Include="..\Shared\Shared.fs" />
         <Compile Include="Client.fs" />
     </ItemGroup>

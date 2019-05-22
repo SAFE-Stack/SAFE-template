@@ -11,6 +11,7 @@
         #endif
     </PropertyGroup>
     <ItemGroup>
+        <None Include="paket.references" />
         <Compile Include="..\Shared\Shared.fs" />
         #if (deploy == "azure" && server == "suave")
         <Compile Include="Azure.fs" />
