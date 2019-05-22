@@ -15,6 +15,7 @@
     },
     "identity": "SAFE.Template",
     "shortName": "SAFE",
+    "sourceName": "SAFE.Template",
     "symbols": {
         "server": {
             "type": "parameter",
