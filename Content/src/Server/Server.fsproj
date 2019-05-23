@@ -12,6 +12,9 @@
     </PropertyGroup>
     <ItemGroup>
         <Compile Include="..\Shared\Shared.fs" />
+        #if (bridge)
+        <Compile Include="Bridge.fs" />
+        #endif
         #if (deploy == "azure" && server == "suave")
         <Compile Include="Azure.fs" />
         #endif

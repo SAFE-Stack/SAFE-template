@@ -687,6 +687,10 @@
                     "condition": "(server != \"suave\") || (deploy != \"azure\")"
                 },
                 {
+                    "exclude": "**/Bridge.fs",
+                    "condition": "(!bridge)"
+                },
+                {
                     "rename": {
                         "SuaveAzure.fs": "Azure.fs"
                     }

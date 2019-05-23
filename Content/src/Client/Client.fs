@@ -46,6 +46,7 @@ type Msg =
 | InitialCountLoaded of Counter
 #if (bridge)
 | Remote of ClientMsg
+| Outgoing of ServerMsg
 #endif
 
 #if (deploy == "iis" && server != "suave")
@@ -169,6 +170,10 @@ let update (msg : Msg) (currentModel : Model) : Model =
 #if (bridge)
     | _, Remote (GetTime time) ->
         { currentModel with Clock = Some time }
+    | _, Outgoing msg ->
+        Bridge.Send msg
+        currentModel
+
 #endif
     | _ -> currentModel
 #else
@@ -190,6 +195,8 @@ let update (msg : Msg) (currentModel : Model) : Model * Cmd<Msg> =
     | _, Remote (GetTime time) ->
         let nextModel = { currentModel with Clock = Some time }
         nextModel, Cmd.none
+    | _, Outgoing msg ->
+        currentModel, Cmd.bridgeSend msg
 #endif
     | _ -> currentModel, Cmd.none
 #endif
@@ -260,9 +267,9 @@ let view (model : Model) (dispatch : Msg -> unit) =
           button [ OnClick (fun _ -> dispatch Increment) ] [ str "+" ]
 #if (bridge)
           p  [] [ str "Press buttons to manipulate the clock:" ]
-          button [ OnClick (fun _ -> Bridge.Send Start) ] [ str "Start" ]
+          button [ OnClick (fun _ -> dispatch (Outgoing Start)) ] [ str "Start" ]
           div [] [ str (showTime model) ]
-          button [ OnClick (fun _ -> Bridge.Send Pause) ] [ str "Pause" ]
+          button [ OnClick (fun _ -> dispatch (Outgoing Pause)) ] [ str "Pause" ]
 #endif
 
           safeComponents ]
@@ -291,8 +298,8 @@ let view (model : Model) (dispatch : Msg -> unit) =
                 Content.content [ Content.Modifiers [ Modifier.TextAlignment (Screen.All, TextAlignment.Centered) ] ]
                     [ Heading.h3 [] [ str ("Press buttons to control clock: " + showTime model) ] ]
                 Columns.columns []
-                    [ Column.column [] [ button "Start" (fun _ -> Bridge.Send Start) ]
-                      Column.column [] [ button "Pause" (fun _ -> Bridge.Send Pause) ] ]
+                    [ Column.column [] [ button "Start" (fun _ -> dispatch (Outgoing Start)) ]
+                      Column.column [] [ button "Pause" (fun _ -> dispatch (Outgoing Pause)) ] ]
 #endif
               ]
 
@@ -436,12 +443,12 @@ let clock (model : Model) (dispatch : Msg -> unit) =
           Control.p [ ]
             [ Button.a
                 [ Button.Color IsInfo
-                  Button.OnClick (fun _ -> Bridge.Send Start) ]
+                  Button.OnClick (fun _ -> dispatch (Outgoing Start)) ]
                 [ str "Start" ] ]
           Control.p [ ]
             [ Button.a
                 [ Button.Color IsInfo
-                  Button.OnClick (fun _ -> Bridge.Send Pause) ]
+                  Button.OnClick (fun _ -> dispatch (Outgoing Pause)) ]
                 [ str "Pause" ] ] ]
 #endif
 
@@ -594,12 +601,12 @@ let containerBoxClock (model : Model) (dispatch : Msg -> unit) =
               Control.p [ ]
                 [ Button.a
                     [ Button.Color IsPrimary
-                      Button.OnClick (fun _ -> Bridge.Send Start) ]
+                      Button.OnClick (fun _ -> dispatch (Outgoing Start)) ]
                     [ str "Start" ] ]
               Control.p [ ]
                 [ Button.a
                     [ Button.Color IsPrimary
-                      Button.OnClick (fun _ -> Bridge.Send Pause) ]
+                      Button.OnClick (fun _ -> dispatch (Outgoing Pause)) ]
                     [ str "Pause" ] ] ] ]
 #endif
 
@@ -693,7 +700,7 @@ let buttonBoxClock (model : Model) (dispatch : Msg -> unit) =
             [ Level.item [ ]
                 [ Button.a
                     [ Button.Color IsPrimary
-                      Button.OnClick (fun _ -> Bridge.Send Start) ]
+                      Button.OnClick (fun _ -> dispatch (Outgoing Start)) ]
                     [ str "Start" ] ]
 
               Level.item [ ]
@@ -702,7 +709,7 @@ let buttonBoxClock (model : Model) (dispatch : Msg -> unit) =
               Level.item [ ]
                 [ Button.a
                     [ Button.Color IsPrimary
-                      Button.OnClick (fun _ -> Bridge.Send Pause) ]
+                      Button.OnClick (fun _ -> dispatch (Outgoing Pause)) ]
                     [ str "Pause" ] ] ] ]
 #endif
 
@@ -927,12 +934,12 @@ let containerBoxClock (model : Model) (dispatch : Msg -> unit) =
               Control.p [ ]
                 [ Button.a
                     [ Button.Color IsPrimary
-                      Button.OnClick (fun _ -> Bridge.Send Start) ]
+                      Button.OnClick (fun _ -> dispatch (Outgoing Start)) ]
                     [ str "Start" ] ]
               Control.p [ ]
                 [ Button.a
                     [ Button.Color IsPrimary
-                      Button.OnClick (fun _ -> Bridge.Send Pause) ]
+                      Button.OnClick (fun _ -> dispatch (Outgoing Pause)) ]
                     [ str "Pause" ] ] ] ]
 #endif
 
@@ -987,12 +994,12 @@ let clock (model : Model) (dispatch : Msg -> unit) =
           Control.p [ ]
             [ Button.a
                 [ Button.Color IsInfo
-                  Button.OnClick (fun _ -> Bridge.Send Start) ]
+                  Button.OnClick (fun _ -> dispatch (Outgoing Start)) ]
                 [ str "Start" ] ]
           Control.p [ ]
             [ Button.a
                 [ Button.Color IsInfo
-                  Button.OnClick (fun _ -> Bridge.Send Pause) ]
+                  Button.OnClick (fun _ -> dispatch (Outgoing Pause)) ]
                 [ str "Pause" ] ] ]
 #endif
 

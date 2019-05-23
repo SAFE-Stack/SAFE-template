@@ -3,7 +3,7 @@ STORAGE: NONE
 RESTRICTION: == netstandard2.0
 NUGET
   remote: https://api.nuget.org/v3/index.json
-    Elmish.Bridge.Client (3.0)
+    Elmish.Bridge.Client (3.1.0)
       Fable.Browser.Dom (>= 1.0)
       Fable.Browser.Url (>= 1.0)
       Fable.Browser.WebSocket (>= 1.0)
