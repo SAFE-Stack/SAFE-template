@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk.Web">
     <PropertyGroup>
         <OutputType>Exe</OutputType>
@@ -11,6 +11,7 @@
         #endif
     </PropertyGroup>
     <ItemGroup>
+        <None Include="paket.references" />
         <Compile Include="..\Shared\Shared.fs" />
         #if (bridge)
         <Compile Include="Bridge.fs" />
