@@ -1,3 +1,9 @@
+#### 1.7.0 - 23.05.2019
+
+* Move .sln to the root directory and add files - https://github.com/SAFE-Stack/SAFE-template/pull/266
+* Fontawesome small changes - https://github.com/SAFE-Stack/SAFE-template/pull/264
+* Set Fable variable on client project - https://github.com/SAFE-Stack/SAFE-template/pull/262
+
 #### 1.6.0 - 16.05.2019
 
 * New Fable dependencies - https://github.com/SAFE-Stack/SAFE-template/pull/250
