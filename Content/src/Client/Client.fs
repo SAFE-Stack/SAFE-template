@@ -391,7 +391,7 @@ let columns (model : Model) (dispatch : Msg -> unit) =
                                           [ td [ Style [ Width "5%" ] ]
                                               [ Icon.icon
                                                   [ ]
-                                                  [ Fa.i [ Fa.Solid.Bell ] [] ] ]
+                                                  [ Fa.i [ Fa.Regular.Bell ] [] ] ]
                                             td [ ]
                                                 [ str "Lorem ipsum dolor aire" ]
                                             td [ ]
@@ -472,7 +472,7 @@ let navMenu =
                     [ Button.Size IsSmall
                       Button.Props [ Href "https://github.com/SAFE-Stack/SAFE-template" ] ]
                     [ Icon.icon [ ]
-                        [ Fa.i [Fa.Brand.Github] [] ]
+                        [ Fa.i [Fa.Brand.Github; Fa.FixedWidth] [] ]
                       span [ ] [ str "View Source" ] ] ] ] ]
 
 let containerBox (model : Model) (dispatch : Msg -> unit) =
@@ -551,7 +551,7 @@ let navMenu =
                       Button.Size IsSmall
                       Button.Props [ Href "https://github.com/SAFE-Stack/SAFE-template" ] ]
                     [ Icon.icon [ ]
-                        [ Fa.i [Fa.Brand.Github] [] ]
+                        [ Fa.i [Fa.Brand.Github; Fa.FixedWidth] [] ]
                       span [ ] [ str "View Source" ] ] ] ] ]
 
 let buttonBox (model : Model) (dispatch : Msg -> unit) =
@@ -591,7 +591,7 @@ let card icon heading body =
 let features =
     Columns.columns [ Columns.CustomClass "features" ]
         [ card Fa.Solid.Paw "Tristique senectus et netus et." "Purus semper eget duis at tellus at urna condimentum mattis. Non blandit massa enim nec. Integer enim neque volutpat ac tincidunt vitae semper quis. Accumsan tortor posuere ac ut consequat semper viverra nam."
-          card Fa.Solid.IdCard "Tempor orci dapibus ultrices in." "Ut venenatis tellus in metus vulputate. Amet consectetur adipiscing elit pellentesque. Sed arcu non odio euismod lacinia at quis risus. Faucibus turpis in eu mi bibendum neque egestas cmonsu songue. Phasellus vestibulum lorem sed risus."
+          card Fa.Regular.IdCard "Tempor orci dapibus ultrices in." "Ut venenatis tellus in metus vulputate. Amet consectetur adipiscing elit pellentesque. Sed arcu non odio euismod lacinia at quis risus. Faucibus turpis in eu mi bibendum neque egestas cmonsu songue. Phasellus vestibulum lorem sed risus."
           card Fa.Solid.Rocket "Leo integer malesuada nunc vel risus." "Imperdiet dui accumsan sit amet nulla facilisi morbi. Fusce ut placerat orci nulla pellentesque dignissim enim. Libero id faucibus nisl tincidunt eget nullam. Commodo viverra maecenas accumsan lacus vel facilisis." ]
 
 let intro =
@@ -703,7 +703,7 @@ let footerContainer =
               p [ ]
                 [ a [ Href "https://github.com/SAFE-Stack/SAFE-template" ]
                     [ Icon.icon [ ]
-                        [ Fa.i [Fa.Brand.Github] [] ] ] ] ] ]
+                        [ Fa.i [Fa.Brand.Github; Fa.FixedWidth] [] ] ] ] ] ]
 
 let view (model : Model) (dispatch : Msg -> unit) =
     div [ ]
@@ -757,7 +757,7 @@ let navMenu =
                       Button.Size IsSmall
                       Button.Props [ Href "https://github.com/SAFE-Stack/SAFE-template" ] ]
                     [ Icon.icon [ ]
-                        [ Fa.i [Fa.Brand.Github] [] ]
+                        [ Fa.i [Fa.Brand.Github; Fa.FixedWidth] [] ]
                       span [ ] [ str "View Source" ] ] ] ] ]
 
 let containerBox (model : Model) (dispatch : Msg -> unit) =
