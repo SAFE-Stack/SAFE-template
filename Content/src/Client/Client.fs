@@ -152,12 +152,14 @@ let update (msg : Msg) (currentModel : Model) : Model =
     | Some counter, Increment ->
     #if (bridge)
         Bridge.Send (ServerMsg.Increment)
+        currentModel
     #else
         { currentModel with Counter = Some { Value = counter.Value + 1 } }
     #endif
     | Some counter, Decrement ->
     #if (bridge)
         Bridge.Send (ServerMsg.Decrement)
+        currentModel
     #else
         { currentModel with Counter = Some { Value = counter.Value - 1 } }
     #endif
