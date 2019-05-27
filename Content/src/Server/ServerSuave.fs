@@ -13,6 +13,12 @@ open Suave.Successful
 open Suave.Filters
 open Suave.Operators
 
+#if (bridge)
+open Elmish
+open Elmish.Bridge
+#endif
+
+
 #if (remoting)
 open Fable.Remoting.Server
 open Fable.Remoting.Suave
@@ -62,8 +68,32 @@ let config =
           homeFolder = Some publicPath
           bindings = [ HttpBinding.create HTTP (IPAddress.Parse "0.0.0.0") port ] }
 
+#if (bridge)
+
+let init clientDispatch () =
+    let value = {Value = 42}
+    clientDispatch (SyncCounter value)
+    value, Cmd.none
+
+let update clientDispatch msg model =
+    match msg with
+    | Increment ->
+        let newModel =  {model with Value = model.Value + 1}
+        clientDispatch (SyncCounter newModel)
+        newModel, Cmd.none
+    | Decrement ->
+        let newModel =  {model with Value = model.Value - 1}
+        clientDispatch (SyncCounter newModel)
+        newModel, Cmd.none
+
+let webApi =
+    Bridge.mkServer "/socket/init" init update
+    |> Bridge.run Suave.server
+
+#elseif (remoting)
+
 let getInitCounter() : Async<Counter> = async { return { Value = 42 } }
-#if (remoting)
+
 let counterApi = {
     initialCounter = getInitCounter
 }
@@ -74,6 +104,8 @@ let webApi =
     |> Remoting.fromValue counterApi
     |> Remoting.buildWebPart
 #else
+let getInitCounter() : Async<Counter> = async { return { Value = 42 } }
+
 let webApi =
     path "/api/init" >=>
         fun ctx ->

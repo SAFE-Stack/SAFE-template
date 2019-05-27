@@ -12,6 +12,10 @@ open Shared
 open Fable.Remoting.Server
 open Fable.Remoting.Giraffe
 #endif
+#if (bridge)
+open Elmish
+open Elmish.Bridge
+#endif
 #if (deploy == "azure")
 open Microsoft.WindowsAzure.Storage
 #endif
@@ -32,10 +36,32 @@ let port =
     "SERVER_PORT"
 //#endif
     |> tryGetEnv |> Option.map uint16 |> Option.defaultValue 8085us
+#if (bridge)
+
+let init clientDispatch () =
+    let value = {Value = 42}
+    clientDispatch (SyncCounter value)
+    value, Cmd.none
+
+let update clientDispatch msg model =
+    match msg with
+    | Increment ->
+        let newModel =  {model with Value = model.Value + 1}
+        clientDispatch (SyncCounter newModel)
+        newModel, Cmd.none
+    | Decrement ->
+        let newModel =  {model with Value = model.Value - 1}
+        clientDispatch (SyncCounter newModel)
+        newModel, Cmd.none
+
+let webApp =
+    Bridge.mkServer "/socket/init" init update
+    |> Bridge.run Giraffe.server
+
+#elseif (remoting)
 
 let getInitCounter() : Task<Counter> = task { return { Value = 42 } }
 
-#if (remoting)
 let counterApi = {
     initialCounter = getInitCounter >> Async.AwaitTask
 }
@@ -47,6 +73,8 @@ let webApp =
     |> Remoting.buildHttpHandler
 
 #else
+let getInitCounter() : Task<Counter> = task { return { Value = 42 } }
+
 let webApp = router {
     get "/api/init" (fun next ctx ->
         task {
@@ -70,6 +98,9 @@ let app = application {
     use_static publicPath
     #if (!remoting)
     use_json_serializer(Thoth.Json.Giraffe.ThothSerializer())
+    #endif
+    #if (bridge)
+    app_config Giraffe.useWebSockets
     #endif
     #if (deploy == "azure")
     service_config configureAzure

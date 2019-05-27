@@ -2,6 +2,9 @@ module Client
 
 open Elmish
 open Elmish.React
+#if (bridge)
+open Elmish.Bridge
+#endif
 #if (reaction)
 open Elmish.Streams
 open FSharp.Control
@@ -34,8 +37,11 @@ type Model = { Counter: Counter option }
 type Msg =
 | Increment
 | Decrement
+#if (bridge)
+| Remote of ClientMsg
+#else
 | InitialCountLoaded of Counter
-
+#endif
 #if (deploy == "iis" && server != "suave")
 module ServerPath =
     open System
@@ -88,6 +94,9 @@ module Server =
       |> Remoting.buildProxy<ICounterApi>
     #endif
 let initialCounter = Server.api.initialCounter
+#elseif (bridge)
+
+
 #elseif (deploy == "iis" && server != "suave")
 let initialCounter () = Fetch.fetchAs<Counter> (ServerPath.normalize "/api/init")
 #else
@@ -98,19 +107,22 @@ let initialCounter () = Fetch.fetchAs<Counter> "/api/init"
 // defines the initial state
 let init () : Model =
     { Counter = None }
+#elseif (bridge)
+let init () : Model * Cmd<Msg> =
+    { Counter = None }, Cmd.none
 #else
 // defines the initial state and initial command (= side-effect) of the application
 let init () : Model * Cmd<Msg> =
     let initialModel = { Counter = None }
     let loadCountCmd =
 #endif
-#if (!reaction && remoting)
+#if (!reaction && remoting && !bridge)
         Cmd.OfAsync.perform initialCounter () InitialCountLoaded
 #endif
-#if (!reaction && !remoting)
+#if (!reaction && !remoting && !bridge)
         Cmd.OfPromise.perform initialCounter () InitialCountLoaded
 #endif
-#if (!reaction)
+#if (!reaction && !bridge)
     initialModel, loadCountCmd
 #endif
 
@@ -138,11 +150,24 @@ let stream model msgs =
 let update (msg : Msg) (currentModel : Model) : Model =
     match currentModel.Counter, msg with
     | Some counter, Increment ->
+    #if (bridge)
+        Bridge.Send (ServerMsg.Increment)
+    #else
         { currentModel with Counter = Some { Value = counter.Value + 1 } }
+    #endif
     | Some counter, Decrement ->
+    #if (bridge)
+        Bridge.Send (ServerMsg.Decrement)
+    #else
         { currentModel with Counter = Some { Value = counter.Value - 1 } }
+    #endif
+    #if (bridge)
+    | _, Remote(SyncCounter counter) ->
+        { currentModel with Counter = Some counter}
+    #else
     | _, InitialCountLoaded initialCount ->
         { Counter = Some initialCount }
+    #endif
     | _ -> currentModel
 #else
 // The update function computes the next state of the application based on the current state and the incoming events/messages
@@ -151,15 +176,29 @@ let update (msg : Msg) (currentModel : Model) : Model =
 let update (msg : Msg) (currentModel : Model) : Model * Cmd<Msg> =
     match currentModel.Counter, msg with
     | Some counter, Increment ->
+        #if (bridge)
+        let nextCounter = { counter with Value = counter.Value + 1 }
+        currentModel, Cmd.bridgeSendOr ServerMsg.Increment (Remote(SyncCounter nextCounter))
+        #else
         let nextModel = { currentModel with Counter = Some { Value = counter.Value + 1 } }
         nextModel, Cmd.none
+        #endif
     | Some counter, Decrement ->
+        #if (bridge)
+        let nextCounter = { counter with Value = counter.Value - 1 }
+        currentModel, Cmd.bridgeSendOr ServerMsg.Decrement (Remote(SyncCounter nextCounter))
+        #else
         let nextModel = { currentModel with Counter = Some { Value = counter.Value - 1 } }
         nextModel, Cmd.none
+        #endif
+    #if (bridge)
+    | _, Remote(SyncCounter counter) ->
+        { currentModel with Counter = Some counter}, Cmd.none
+    #else
     | _, InitialCountLoaded initialCount->
         let nextModel = { Counter = Some initialCount }
         nextModel, Cmd.none
-
+    #endif
     | _ -> currentModel, Cmd.none
 #endif
 
@@ -883,6 +922,13 @@ Program.mkSimple init update view
 |> Program.withStream stream "msgs"
 #else
 Program.mkProgram init update view
+#endif
+#if (bridge)
+|> Program.withBridgeConfig
+    (
+        Bridge.endpoint "/socket/init"
+        |> Bridge.withMapping Remote
+    )
 #endif
 //-:cnd:noEmit
 #if DEBUG

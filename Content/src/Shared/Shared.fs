@@ -13,3 +13,12 @@ module Route =
 type ICounterApi =
     { initialCounter : unit -> Async<Counter> }
 #endif
+
+#if (bridge)
+type ClientMsg =
+    | SyncCounter of Counter
+
+type ServerMsg =
+    | Increment
+    | Decrement
+#endif
