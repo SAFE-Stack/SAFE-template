@@ -103,37 +103,77 @@ let initialCounter () = Fetch.fetchAs<Counter> (ServerPath.normalize "/api/init"
 let initialCounter () = Fetch.fetchAs<Counter> "/api/init"
 #endif
 
-#if reaction
+#if (bridge)
+// defines the initial state and initial command (= side-effect) of the application
+let init () : Model * Cmd<Msg> =
+    { Counter = None }, Cmd.none
+
+// The update function computes the next state of the application based on the current state and the incoming events/messages
+// It can also run side-effects (encoded as commands) like calling the server via Http.
+// these commands in turn, can dispatch messages to which the update function will react.
+let update (msg : Msg) (currentModel : Model) : Model * Cmd<Msg> =
+    match currentModel.Counter, msg with
+    | Some counter, Increment ->
+        let nextCounter = { counter with Value = counter.Value + 1 }
+        currentModel, Cmd.bridgeSendOr ServerMsg.Increment (Remote(SyncCounter nextCounter))
+    | Some counter, Decrement ->
+        let nextCounter = { counter with Value = counter.Value - 1 }
+        currentModel, Cmd.bridgeSendOr ServerMsg.Decrement (Remote(SyncCounter nextCounter))
+    | _, Remote(SyncCounter counter) ->
+        { currentModel with Counter = Some counter}, Cmd.none
+    | _ -> currentModel, Cmd.none
+
+#elseif (reaction)
 // defines the initial state
 let init () : Model =
     { Counter = None }
-#elseif (bridge)
-let init () : Model * Cmd<Msg> =
-    { Counter = None }, Cmd.none
+// The update function computes the next state of the application based on the current state and the incoming events/messages
+let update (msg : Msg) (currentModel : Model) : Model =
+    match currentModel.Counter, msg with
+    | Some counter, Increment ->
+        { currentModel with Counter = Some { Value = counter.Value + 1 } }
+    | Some counter, Decrement ->
+        { currentModel with Counter = Some { Value = counter.Value - 1 } }
+    | _, InitialCountLoaded initialCount ->
+        { Counter = Some initialCount }
+    | _ -> currentModel
 #else
 // defines the initial state and initial command (= side-effect) of the application
 let init () : Model * Cmd<Msg> =
     let initialModel = { Counter = None }
     let loadCountCmd =
-#endif
-#if (!reaction && remoting && !bridge)
+#if (remoting)
         Cmd.OfAsync.perform initialCounter () InitialCountLoaded
-#endif
-#if (!reaction && !remoting && !bridge)
+#else
         Cmd.OfPromise.perform initialCounter () InitialCountLoaded
 #endif
-#if (!reaction && !bridge)
     initialModel, loadCountCmd
-#endif
 
-#if (reaction && remoting)
-let load = AsyncRx.ofAsync (initialCounter ())
-#endif
-#if (reaction && !remoting)
-let load = AsyncRx.ofPromise (initialCounter ())
+// The update function computes the next state of the application based on the current state and the incoming events/messages
+// It can also run side-effects (encoded as commands) like calling the server via Http.
+// these commands in turn, can dispatch messages to which the update function will react.
+let update (msg : Msg) (currentModel : Model) : Model * Cmd<Msg> =
+    match currentModel.Counter, msg with
+    | Some counter, Increment ->
+        let nextModel = { currentModel with Counter = Some { Value = counter.Value + 1 } }
+        nextModel, Cmd.none
+    | Some counter, Decrement ->
+        let nextModel = { currentModel with Counter = Some { Value = counter.Value - 1 } }
+        nextModel, Cmd.none
+    | _, InitialCountLoaded initialCount->
+        let nextModel = { Counter = Some initialCount }
+        nextModel, Cmd.none
+    | _ -> currentModel, Cmd.none
 #endif
 
 #if (reaction)
+
+#if (remoting)
+let load = AsyncRx.ofAsync (initialCounter ())
+#else
+let load = AsyncRx.ofPromise (initialCounter ())
+#endif
+
 let loadCount =
     load
     |> AsyncRx.map InitialCountLoaded
@@ -143,65 +183,6 @@ let stream model msgs =
     match model.Counter with
     | None -> loadCount
     | _ -> msgs
-#endif
-
-#if (reaction)
-// The update function computes the next state of the application based on the current state and the incoming events/messages
-let update (msg : Msg) (currentModel : Model) : Model =
-    match currentModel.Counter, msg with
-    | Some counter, Increment ->
-    #if (bridge)
-        Bridge.Send (ServerMsg.Increment)
-        currentModel
-    #else
-        { currentModel with Counter = Some { Value = counter.Value + 1 } }
-    #endif
-    | Some counter, Decrement ->
-    #if (bridge)
-        Bridge.Send (ServerMsg.Decrement)
-        currentModel
-    #else
-        { currentModel with Counter = Some { Value = counter.Value - 1 } }
-    #endif
-    #if (bridge)
-    | _, Remote(SyncCounter counter) ->
-        { currentModel with Counter = Some counter}
-    #else
-    | _, InitialCountLoaded initialCount ->
-        { Counter = Some initialCount }
-    #endif
-    | _ -> currentModel
-#else
-// The update function computes the next state of the application based on the current state and the incoming events/messages
-// It can also run side-effects (encoded as commands) like calling the server via Http.
-// these commands in turn, can dispatch messages to which the update function will react.
-let update (msg : Msg) (currentModel : Model) : Model * Cmd<Msg> =
-    match currentModel.Counter, msg with
-    | Some counter, Increment ->
-        #if (bridge)
-        let nextCounter = { counter with Value = counter.Value + 1 }
-        currentModel, Cmd.bridgeSendOr ServerMsg.Increment (Remote(SyncCounter nextCounter))
-        #else
-        let nextModel = { currentModel with Counter = Some { Value = counter.Value + 1 } }
-        nextModel, Cmd.none
-        #endif
-    | Some counter, Decrement ->
-        #if (bridge)
-        let nextCounter = { counter with Value = counter.Value - 1 }
-        currentModel, Cmd.bridgeSendOr ServerMsg.Decrement (Remote(SyncCounter nextCounter))
-        #else
-        let nextModel = { currentModel with Counter = Some { Value = counter.Value - 1 } }
-        nextModel, Cmd.none
-        #endif
-    #if (bridge)
-    | _, Remote(SyncCounter counter) ->
-        { currentModel with Counter = Some counter}, Cmd.none
-    #else
-    | _, InitialCountLoaded initialCount->
-        let nextModel = { Counter = Some initialCount }
-        nextModel, Cmd.none
-    #endif
-    | _ -> currentModel, Cmd.none
 #endif
 
 
@@ -238,6 +219,11 @@ let safeComponents =
              str ", "
              a [ Href "https://zaid-ajaj.github.io/Fable.Remoting/" ] [ str "Fable.Remoting" ]
 #endif
+#if (bridge)
+             str ", "
+             a [ Href "https://github.com/Nhowka/Elmish.Bridge" ] [ str "Elmish.Bridge" ]
+#endif
+
            ]
 
     span [ ]
@@ -920,7 +906,11 @@ open Elmish.HMR
 
 //+:cnd:noEmit
 #if (reaction)
+#if (bridge)
+Program.mkProgram init update view
+#else
 Program.mkSimple init update view
+#endif
 |> Program.withStream stream "msgs"
 #else
 Program.mkProgram init update view

@@ -60,10 +60,8 @@ let webApp =
 
 #elseif (remoting)
 
-let getInitCounter() : Task<Counter> = task { return { Value = 42 } }
-
 let counterApi = {
-    initialCounter = getInitCounter >> Async.AwaitTask
+    initialCounter = fun () -> async { return {Value = 42} }
 }
 
 let webApp =
@@ -73,12 +71,11 @@ let webApp =
     |> Remoting.buildHttpHandler
 
 #else
-let getInitCounter() : Task<Counter> = task { return { Value = 42 } }
 
 let webApp = router {
     get "/api/init" (fun next ctx ->
         task {
-            let! counter = getInitCounter()
+            let counter = {Value = 42}
             return! json counter next ctx
         })
 }

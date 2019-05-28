@@ -110,7 +110,6 @@ let run exe arg dir =
 type Communication =
     | Remoting
     | Bridge
-    | NoCommunication
 
 
 type BuildPaketDependencies =
@@ -120,16 +119,17 @@ type BuildPaketDependencies =
             if x.Azure then "azure" else "noazure"
 
 type ClientPaketDependencies =
-    { Communication : Communication
+    { Communication : Communication option
       Fulma : bool
       Reaction : bool }
 
     with override x.ToString () =
             let communication =
-                match x.Communication with
-                | Remoting -> "remoting"
-                | Bridge -> "bridge"
-                | NoCommunication -> "nocommunication"
+                x.Communication
+                |> Option.map (function
+                    | Remoting -> "remoting"
+                    | Bridge -> "bridge")
+                |> Option.defaultValue "nocommunication"
             let fulma = if x.Fulma then "fulma" else "nofulma"
             let reaction = if x.Reaction then "reaction" else "noreaction"
             sprintf "%s-%s-%s" communication fulma reaction
@@ -144,22 +144,23 @@ type ServerPaketDependency = Saturn | Giraffe | Suave
 
 type ServerPaketDependencies =
     { Server : ServerPaketDependency
-      Communication : Communication
+      Communication : Communication option
       Azure : bool }
 
     with override x.ToString () =
             let server = string x.Server
             let communication =
-                match x.Communication with
-                | Remoting -> "remoting"
-                | Bridge -> "bridge"
-                | NoCommunication -> "nocommunication"
+                x.Communication
+                |> Option.map (function
+                    | Remoting -> "remoting"
+                    | Bridge -> "bridge")
+                |> Option.defaultValue "nocommunication"
             let azure = if x.Azure then "azure" else "noazure"
             sprintf "%s-%s-%s" server communication azure
 
 type CombinedPaketDependencies =
     { Azure : bool
-      Communication : Communication
+      Communication : Communication option
       Fulma : bool
       Server : ServerPaketDependency
       Reaction : bool }
@@ -179,10 +180,12 @@ type CombinedPaketDependencies =
 
     override x.ToString () =
         let communication =
-            match x.Communication with
-            | Bridge -> Some "--communication bridge"
-            | Remoting -> Some "--communication remoting"
-            | NoCommunication -> None
+            x.Communication
+            |> Option.map (fun comm ->
+                sprintf "--communication %s"
+                  (match comm with
+                   | Bridge -> "bridge"
+                   | Remoting -> "remoting"))
         let azure = if x.Azure then Some "--deploy azure" else None
         let fulma = if not x.Fulma then Some "--layout none" else None
         let server = if x.Server <> Saturn then Some (sprintf "--server %O" x.Server) else None
@@ -199,7 +202,7 @@ type CombinedPaketDependencies =
 let configs =
     [ for azure in [ false; true ] do
       for fulma in [ false; true ] do
-      for communication in [ Bridge; Remoting; NoCommunication ] do
+      for communication in [ Some Bridge; Some Remoting; None ] do
       for server in [ Saturn; Giraffe; Suave ] do
       for reaction in [ false; true ] do
       yield
@@ -265,8 +268,8 @@ Target.create "GenJsonConditions" (fun _ ->
                     },"""
                  lockFileName
                  server
-                 (communication = Remoting)
-                 (communication = Bridge)
+                 (communication = Some Remoting)
+                 (communication = Some Bridge)
                  azureOperator
                  layoutOperator
                  reaction

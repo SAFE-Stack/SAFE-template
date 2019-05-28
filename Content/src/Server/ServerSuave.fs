@@ -92,10 +92,8 @@ let webApi =
 
 #elseif (remoting)
 
-let getInitCounter() : Async<Counter> = async { return { Value = 42 } }
-
 let counterApi = {
-    initialCounter = getInitCounter
+    initialCounter = fun () -> async { return {Value = 42} }
 }
 
 let webApi =
@@ -104,13 +102,12 @@ let webApi =
     |> Remoting.fromValue counterApi
     |> Remoting.buildWebPart
 #else
-let getInitCounter() : Async<Counter> = async { return { Value = 42 } }
 
 let webApi =
     path "/api/init" >=>
         fun ctx ->
             async {
-                let! counter = getInitCounter()
+                let counter = { Value = 42 }
                 return! OK (Encode.Auto.toString(4, counter)) ctx
             }
 #endif

@@ -103,6 +103,7 @@ let communicationGen =
     Gen.elements [
         None
         Some "remoting"
+        Some "bridge"
     ]
 
 let patternGen =
