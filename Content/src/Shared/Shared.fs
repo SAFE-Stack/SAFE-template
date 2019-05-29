@@ -15,10 +15,13 @@ type ICounterApi =
 #endif
 
 #if (bridge)
-type ClientMsg =
-    | SyncCounter of Counter
-
+ /// A type that specifies the messages sent to the server from the client on Elmish.Bridge
+/// to learn more, read about at https://github.com/Nhowka/Elmish.Bridge#shared
 type ServerMsg =
     | Increment
     | Decrement
+
+/// A type that specifies the messages sent to the client from the server on Elmish.Bridge
+type ClientMsg =
+    | SyncCounter of Counter
 #endif

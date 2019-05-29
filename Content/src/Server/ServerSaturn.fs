@@ -38,11 +38,15 @@ let port =
     |> tryGetEnv |> Option.map uint16 |> Option.defaultValue 8085us
 #if (bridge)
 
+/// Elmish init function with a channel for sending client messages
+/// Returns a new state and commands
 let init clientDispatch () =
     let value = {Value = 42}
     clientDispatch (SyncCounter value)
     value, Cmd.none
 
+/// Elmish update function with a channel for sending client messages
+/// Returns a new state and commands
 let update clientDispatch msg model =
     match msg with
     | Increment ->
@@ -54,6 +58,7 @@ let update clientDispatch msg model =
         clientDispatch (SyncCounter newModel)
         newModel, Cmd.none
 
+/// Connect the Elmish functions to an endpoint for websocket connections
 let webApp =
     Bridge.mkServer "/socket/init" init update
     |> Bridge.run Giraffe.server
