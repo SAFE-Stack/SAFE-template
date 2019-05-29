@@ -168,6 +168,17 @@ let update (msg : Msg) (currentModel : Model) : Model * Cmd<Msg> =
 
 #if (reaction)
 
+#if (bridge)
+
+let stream model msgs =
+    match model.Counter with
+    | None ->
+        AsyncRx.empty()
+        |> AsyncRx.toStream "loading"
+    | _ -> msgs
+
+#else
+
 #if (remoting)
 let load = AsyncRx.ofAsync (initialCounter ())
 #else
@@ -185,6 +196,7 @@ let stream model msgs =
     | _ -> msgs
 #endif
 
+#endif
 
 let safeComponents =
     let components =
