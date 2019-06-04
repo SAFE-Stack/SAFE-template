@@ -69,11 +69,10 @@ let config =
           bindings = [ HttpBinding.create HTTP (IPAddress.Parse "0.0.0.0") port ] }
 
 #if (bridge)
-
 /// Elmish init function with a channel for sending client messages
 /// Returns a new state and commands
 let init clientDispatch () =
-    let value = {Value = 42}
+    let value = { Value = 42 }
     clientDispatch (SyncCounter value)
     value, Cmd.none
 
@@ -82,11 +81,11 @@ let init clientDispatch () =
 let update clientDispatch msg model =
     match msg with
     | Increment ->
-        let newModel =  {model with Value = model.Value + 1}
+        let newModel = { model with Value = model.Value + 1 }
         clientDispatch (SyncCounter newModel)
         newModel, Cmd.none
     | Decrement ->
-        let newModel =  {model with Value = model.Value - 1}
+        let newModel = { model with Value = model.Value - 1 }
         clientDispatch (SyncCounter newModel)
         newModel, Cmd.none
 
@@ -96,7 +95,6 @@ let webApi =
     |> Bridge.run Suave.server
 
 #elseif (remoting)
-
 let counterApi = {
     initialCounter = fun () -> async { return {Value = 42} }
 }
@@ -107,7 +105,6 @@ let webApi =
     |> Remoting.fromValue counterApi
     |> Remoting.buildWebPart
 #else
-
 let webApi =
     path "/api/init" >=>
         fun ctx ->
@@ -116,7 +113,6 @@ let webApi =
                 return! OK (Encode.Auto.toString(4, counter)) ctx
             }
 #endif
-
 let webApp =
     choose [
         webApi

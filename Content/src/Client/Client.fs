@@ -68,7 +68,6 @@ module ServerPath =
     let normalize (path: string) = combine [virtualPath; path]
 #endif
 
-
 #if (remoting)
 module Server =
 
@@ -94,12 +93,9 @@ module Server =
       |> Remoting.buildProxy<ICounterApi>
     #endif
 let initialCounter = Server.api.initialCounter
-#elseif (bridge)
-
-
 #elseif (deploy == "iis" && server != "suave")
 let initialCounter () = Fetch.fetchAs<Counter> (ServerPath.normalize "/api/init")
-#else
+#elseif (!bridge)
 let initialCounter () = Fetch.fetchAs<Counter> "/api/init"
 #endif
 
@@ -167,16 +163,13 @@ let update (msg : Msg) (currentModel : Model) : Model * Cmd<Msg> =
 #endif
 
 #if (reaction)
-
 #if (bridge)
-
 let stream model msgs =
     match model.Counter with
     | None ->
         AsyncRx.empty()
         |> AsyncRx.toStream "loading"
     | _ -> msgs
-
 #else
 
 #if (remoting)
@@ -195,7 +188,6 @@ let stream model msgs =
     | None -> loadCount
     | _ -> msgs
 #endif
-
 #endif
 
 let safeComponents =

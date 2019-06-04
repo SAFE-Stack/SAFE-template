@@ -38,11 +38,12 @@ let port =
     "SERVER_PORT"
 //#endif
     |> tryGetEnv |> Option.map uint16 |> Option.defaultValue 8085us
+
 #if (bridge)
 /// Elmish init function with a channel for sending client messages
 /// Returns a new state and commands
 let init clientDispatch () =
-    let value = {Value = 42}
+    let value = { Value = 42 }
     clientDispatch (SyncCounter value)
     value, Cmd.none
 
@@ -51,11 +52,11 @@ let init clientDispatch () =
 let update clientDispatch msg model =
     match msg with
     | Increment ->
-        let newModel =  {model with Value = model.Value + 1}
+        let newModel = { model with Value = model.Value + 1 }
         clientDispatch (SyncCounter newModel)
         newModel, Cmd.none
     | Decrement ->
-        let newModel =  {model with Value = model.Value - 1}
+        let newModel = { model with Value = model.Value - 1 }
         clientDispatch (SyncCounter newModel)
         newModel, Cmd.none
 
