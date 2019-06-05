@@ -6,7 +6,7 @@ A dotnet CLI template for [SAFE-Stack](https://safe-stack.github.io/) projects.
 
 This is a basic template to get started with each of the core components of the stack:
 
-* [Saturn](https://saturnframework.github.io/docs/), [Giraffe](https://github.com/giraffe-fsharp/Giraffe) or [Suave](https://suave.io/)
+* [Saturn](https://saturnframework.github.io/docs/) or [Giraffe](https://github.com/giraffe-fsharp/Giraffe)
 * [Azure App Service](https://azure.microsoft.com/), [Google Cloud AppEngine](https://cloud.google.com/appengine/) and [Docker](https://www.docker.com/) integration.
 * [Fable](http://fable.io/)
 * [Elmish](https://elmish.github.io/elmish/)

@@ -68,7 +68,6 @@ let serverGen =
     Gen.elements [
         None
         Some "giraffe"
-        Some "suave"
     ]
 
 let deployGen =

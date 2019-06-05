@@ -119,14 +119,13 @@ type ClientPaketDependencies =
             let reaction = if x.Reaction then "reaction" else "noreaction"
             sprintf "%s-%s-%s" remoting fulma reaction
 
-type ServerPaketDependency = Saturn | Giraffe | Suave
+type ServerPaketDependency = Saturn | Giraffe
 
     with override x.ToString () =
             match x with
             | Saturn -> "saturn"
             | Giraffe -> "giraffe"
-            | Suave -> "suave"
-
+s
 type ServerPaketDependencies =
     { Server : ServerPaketDependency
       Remoting : bool
@@ -177,7 +176,7 @@ let configs =
     [ for azure in [ false; true ] do
       for fulma in [ false; true ] do
       for remoting in [ false; true ] do
-      for server in [ Saturn; Giraffe; Suave ] do
+      for server in [ Saturn; Giraffe ] do
       for reaction in [ false; true ] do
       yield
           { Azure = azure

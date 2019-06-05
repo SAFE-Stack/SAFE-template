@@ -36,7 +36,7 @@ type Msg =
 | Decrement
 | InitialCountLoaded of Counter
 
-#if (deploy == "iis" && server != "suave")
+#if (deploy == "iis")
 module ServerPath =
     open System
     open Fable.Core
@@ -69,7 +69,7 @@ module Server =
     open Shared
     open Fable.Remoting.Client
 
-    #if (deploy == "iis" && server != "suave")
+    #if (deploy == "iis")
     // normalize routes so that they work with IIS virtual path in production
     let normalizeRoutes typeName methodName =
         Route.builder typeName methodName
@@ -88,7 +88,7 @@ module Server =
       |> Remoting.buildProxy<ICounterApi>
     #endif
 let initialCounter = Server.api.initialCounter
-#elseif (deploy == "iis" && server != "suave")
+#elseif (deploy == "iis")
 let initialCounter () = Fetch.fetchAs<Counter> (ServerPath.normalize "/api/init")
 #else
 let initialCounter () = Fetch.fetchAs<Counter> "/api/init"
@@ -168,10 +168,7 @@ let safeComponents =
     let components =
         span [ ]
            [
-#if (server == "suave")
-             a [ Href "http://suave.io" ] [ str "Suave" ]
-             str ", "
-#elseif (server == "giraffe")
+#if (server == "giraffe")
              a [ Href "https://github.com/giraffe-fsharp/Giraffe" ] [ str "Giraffe" ]
              str ", "
 #elseif (server == "saturn")

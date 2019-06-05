@@ -1,8 +1,6 @@
 group Server
     FSharp.Core
-//#if     (server == "suave")
-    Suave
-//#elseif (server == "giraffe")
+//#if (server == "giraffe")
     Giraffe
     Microsoft.AspNetCore
     Microsoft.AspNetCore.StaticFiles
@@ -13,12 +11,8 @@ group Server
     Microsoft.ApplicationInsights.AspNetCore
     WindowsAzure.Storage
 //#endif
-//#if     (!remoting && server != "suave")
+//#if     (!remoting)
     Thoth.Json.Giraffe
-//#elseif (!remoting && server == "suave")
-    Thoth.Json.Net
-//#elseif (remoting && server != "suave")
+//#else
     Fable.Remoting.Giraffe
-//#elseif (remoting && server == "suave")
-    Fable.Remoting.Suave
 //#endif
