@@ -125,7 +125,7 @@ type ServerPaketDependency = Saturn | Giraffe
             match x with
             | Saturn -> "saturn"
             | Giraffe -> "giraffe"
-s
+
 type ServerPaketDependencies =
     { Server : ServerPaketDependency
       Remoting : bool
