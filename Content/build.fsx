@@ -130,7 +130,6 @@ Target.create "InstallClient" (fun _ ->
     runTool yarnTool "--version" __SOURCE_DIRECTORY__
     runTool yarnTool "install --frozen-lockfile" __SOURCE_DIRECTORY__
 //#endif
-    runDotNet "restore" clientPath
 )
 
 Target.create "Build" (fun _ ->
