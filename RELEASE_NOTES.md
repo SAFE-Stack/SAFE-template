@@ -1,3 +1,8 @@
+#### 1.8.0 - 06.06.2019
+
+* Add Elmish.Bridge as a communication option - https://github.com/SAFE-Stack/SAFE-template/pull/267
+* no need to restore client - https://github.com/SAFE-Stack/SAFE-template/pull/270
+
 #### 1.7.0 - 23.05.2019
 
 * Move .sln to the root directory and add files - https://github.com/SAFE-Stack/SAFE-template/pull/266
