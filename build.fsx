@@ -43,6 +43,11 @@ Target.create "BuildWebPackConfig" (fun _ ->
         '/api/*': {
             target: 'http://localhost:' + (process.env.SERVER_PROXY_PORT || "8085"),
                changeOrigin: true
+           },
+        // redirect websocket requests that start with /socket/* to the server on the port 8085
+        '/socket/*': {
+            target: 'http://localhost:' + (process.env.SERVER_PROXY_PORT || "8085"),
+            ws: true
            }
        }"""
 
@@ -102,6 +107,11 @@ let run exe arg dir =
     let result = Process.execWithResult (psi exe arg dir) TimeSpan.MaxValue
     if not result.OK then (failwithf "`%s %s` failed: %A" exe arg result.Errors)
 
+type Communication =
+    | Remoting
+    | Bridge
+
+
 type BuildPaketDependencies =
     { Azure : bool }
 
@@ -109,15 +119,20 @@ type BuildPaketDependencies =
             if x.Azure then "azure" else "noazure"
 
 type ClientPaketDependencies =
-    { Remoting : bool
+    { Communication : Communication option
       Fulma : bool
       Reaction : bool }
 
     with override x.ToString () =
-            let remoting = if x.Remoting then "remoting" else "noremoting"
+            let communication =
+                x.Communication
+                |> Option.map (function
+                    | Remoting -> "remoting"
+                    | Bridge -> "bridge")
+                |> Option.defaultValue "nocommunication"
             let fulma = if x.Fulma then "fulma" else "nofulma"
             let reaction = if x.Reaction then "reaction" else "noreaction"
-            sprintf "%s-%s-%s" remoting fulma reaction
+            sprintf "%s-%s-%s" communication fulma reaction
 
 type ServerPaketDependency = Saturn | Giraffe | Suave
 
@@ -129,18 +144,23 @@ type ServerPaketDependency = Saturn | Giraffe | Suave
 
 type ServerPaketDependencies =
     { Server : ServerPaketDependency
-      Remoting : bool
+      Communication : Communication option
       Azure : bool }
 
     with override x.ToString () =
             let server = string x.Server
-            let remoting = if x.Remoting then "remoting" else "noremoting"
+            let communication =
+                x.Communication
+                |> Option.map (function
+                    | Remoting -> "remoting"
+                    | Bridge -> "bridge")
+                |> Option.defaultValue "nocommunication"
             let azure = if x.Azure then "azure" else "noazure"
-            sprintf "%s-%s-%s" server remoting azure
+            sprintf "%s-%s-%s" server communication azure
 
 type CombinedPaketDependencies =
     { Azure : bool
-      Remoting : bool
+      Communication : Communication option
       Fulma : bool
       Server : ServerPaketDependency
       Reaction : bool }
@@ -149,23 +169,29 @@ type CombinedPaketDependencies =
             { Azure = x.Azure }
 
     member x.ToClient : ClientPaketDependencies =
-        { Remoting = x.Remoting
+        { Communication = x.Communication
           Fulma = x.Fulma
           Reaction = x.Reaction }
 
     member x.ToServer : ServerPaketDependencies =
         { Server = x.Server
-          Remoting = x.Remoting
+          Communication = x.Communication
           Azure = x.Azure }
 
     override x.ToString () =
-        let remoting = if x.Remoting then Some "--communication remoting" else None
+        let communication =
+            x.Communication
+            |> Option.map (fun comm ->
+                sprintf "--communication %s"
+                  (match comm with
+                   | Bridge -> "bridge"
+                   | Remoting -> "remoting"))
         let azure = if x.Azure then Some "--deploy azure" else None
         let fulma = if not x.Fulma then Some "--layout none" else None
         let server = if x.Server <> Saturn then Some (sprintf "--server %O" x.Server) else None
         let reaction = if x.Reaction then Some "--pattern reaction" else None
 
-        [ remoting
+        [ communication
           azure
           fulma
           server
@@ -176,14 +202,14 @@ type CombinedPaketDependencies =
 let configs =
     [ for azure in [ false; true ] do
       for fulma in [ false; true ] do
-      for remoting in [ false; true ] do
+      for communication in [ Some Bridge; Some Remoting; None ] do
       for server in [ Saturn; Giraffe; Suave ] do
       for reaction in [ false; true ] do
       yield
           { Azure = azure
             Fulma = fulma
             Server = server
-            Remoting = remoting
+            Communication = communication
             Reaction = reaction }
     ]
 
@@ -231,18 +257,19 @@ Target.create "GenJsonConditions" (fun _ ->
         let lockFileName = fullLockFileName config.ToBuild config.ToClient config.ToServer
         let server = string config.Server
         let azureOperator = if config.Azure then "==" else "!="
-        let remoting = config.Remoting
+        let communication = config.Communication
         let layoutOperator = if config.Fulma then "!=" else "=="
         let reaction = config.Reaction
         let template =
             sprintf """                    {
                         "include": "%s",
-                        "condition": "(server == \"%s\" && remoting == %b && deploy %s \"azure\" && layout %s \"none\" && reaction == %b)",
+                        "condition": "(server == \"%s\" && remoting == %b && bridge == %b && deploy %s \"azure\" && layout %s \"none\" && reaction == %b)",
                         "rename": { "%s": "paket.lock" }
                     },"""
                  lockFileName
                  server
-                 remoting
+                 (communication = Some Remoting)
+                 (communication = Some Bridge)
                  azureOperator
                  layoutOperator
                  reaction

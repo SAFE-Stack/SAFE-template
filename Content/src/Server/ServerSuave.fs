@@ -13,6 +13,12 @@ open Suave.Successful
 open Suave.Filters
 open Suave.Operators
 
+#if (bridge)
+open Elmish
+open Elmish.Bridge
+#endif
+
+
 #if (remoting)
 open Fable.Remoting.Server
 open Fable.Remoting.Suave
@@ -62,10 +68,35 @@ let config =
           homeFolder = Some publicPath
           bindings = [ HttpBinding.create HTTP (IPAddress.Parse "0.0.0.0") port ] }
 
-let getInitCounter() : Async<Counter> = async { return { Value = 42 } }
-#if (remoting)
+#if (bridge)
+/// Elmish init function with a channel for sending client messages
+/// Returns a new state and commands
+let init clientDispatch () =
+    let value = { Value = 42 }
+    clientDispatch (SyncCounter value)
+    value, Cmd.none
+
+/// Elmish update function with a channel for sending client messages
+/// Returns a new state and commands
+let update clientDispatch msg model =
+    match msg with
+    | Increment ->
+        let newModel = { model with Value = model.Value + 1 }
+        clientDispatch (SyncCounter newModel)
+        newModel, Cmd.none
+    | Decrement ->
+        let newModel = { model with Value = model.Value - 1 }
+        clientDispatch (SyncCounter newModel)
+        newModel, Cmd.none
+
+/// Connect the Elmish functions to an endpoint for websocket connections
+let webApi =
+    Bridge.mkServer "/socket/init" init update
+    |> Bridge.run Suave.server
+
+#elseif (remoting)
 let counterApi = {
-    initialCounter = getInitCounter
+    initialCounter = fun () -> async { return {Value = 42} }
 }
 
 let webApi =
@@ -78,11 +109,10 @@ let webApi =
     path "/api/init" >=>
         fun ctx ->
             async {
-                let! counter = getInitCounter()
+                let counter = { Value = 42 }
                 return! OK (Encode.Auto.toString(4, counter)) ctx
             }
 #endif
-
 let webApp =
     choose [
         webApi

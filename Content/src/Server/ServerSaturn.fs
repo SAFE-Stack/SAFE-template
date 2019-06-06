@@ -12,6 +12,10 @@ open Shared
 open Fable.Remoting.Server
 open Fable.Remoting.Giraffe
 #endif
+#if (bridge)
+open Elmish
+open Elmish.Bridge
+#endif
 #if (deploy == "azure")
 open Microsoft.WindowsAzure.Storage
 #endif
@@ -33,11 +37,35 @@ let port =
 //#endif
     |> tryGetEnv |> Option.map uint16 |> Option.defaultValue 8085us
 
-let getInitCounter() : Task<Counter> = task { return { Value = 42 } }
+#if (bridge)
+/// Elmish init function with a channel for sending client messages
+/// Returns a new state and commands
+let init clientDispatch () =
+    let value = { Value = 42 }
+    clientDispatch (SyncCounter value)
+    value, Cmd.none
 
-#if (remoting)
+/// Elmish update function with a channel for sending client messages
+/// Returns a new state and commands
+let update clientDispatch msg model =
+    match msg with
+    | Increment ->
+        let newModel = { model with Value = model.Value + 1 }
+        clientDispatch (SyncCounter newModel)
+        newModel, Cmd.none
+    | Decrement ->
+        let newModel = { model with Value = model.Value - 1 }
+        clientDispatch (SyncCounter newModel)
+        newModel, Cmd.none
+
+/// Connect the Elmish functions to an endpoint for websocket connections
+let webApp =
+    Bridge.mkServer "/socket/init" init update
+    |> Bridge.run Giraffe.server
+
+#elseif (remoting)
 let counterApi = {
-    initialCounter = getInitCounter >> Async.AwaitTask
+    initialCounter = fun () -> async { return { Value = 42 } }
 }
 
 let webApp =
@@ -50,7 +78,7 @@ let webApp =
 let webApp = router {
     get "/api/init" (fun next ctx ->
         task {
-            let! counter = getInitCounter()
+            let counter = {Value = 42}
             return! json counter next ctx
         })
 }
@@ -70,6 +98,9 @@ let app = application {
     use_static publicPath
     #if (!remoting)
     use_json_serializer(Thoth.Json.Giraffe.ThothSerializer())
+    #endif
+    #if (bridge)
+    app_config Giraffe.useWebSockets
     #endif
     #if (deploy == "azure")
     service_config configureAzure
