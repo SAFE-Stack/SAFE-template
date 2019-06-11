@@ -13,3 +13,15 @@ module Route =
 type ICounterApi =
     { initialCounter : unit -> Async<Counter> }
 #endif
+
+#if (bridge)
+ /// A type that specifies the messages sent to the server from the client on Elmish.Bridge
+/// to learn more, read about at https://github.com/Nhowka/Elmish.Bridge#shared
+type ServerMsg =
+    | Increment
+    | Decrement
+
+/// A type that specifies the messages sent to the client from the server on Elmish.Bridge
+type ClientMsg =
+    | SyncCounter of Counter
+#endif

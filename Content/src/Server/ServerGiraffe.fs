@@ -15,6 +15,10 @@ open Shared
 open Fable.Remoting.Server
 open Fable.Remoting.Giraffe
 #endif
+#if (bridge)
+open Elmish
+open Elmish.Bridge
+#endif
 #if (deploy == "azure")
 open Microsoft.WindowsAzure.Storage
 #endif
@@ -35,11 +39,36 @@ let port =
 //#endif
     |> tryGetEnv |> Option.map uint16 |> Option.defaultValue 8085us
 
-let getInitCounter () : Task<Counter> = task { return { Value = 42 } }
-#if (remoting)
+#if (bridge)
+/// Elmish init function with a channel for sending client messages
+/// Returns a new state and commands
+let init clientDispatch () =
+    let value = { Value = 42 }
+    clientDispatch (SyncCounter value)
+    value, Cmd.none
 
+/// Elmish update function with a channel for sending client messages
+/// Returns a new state and commands
+let update clientDispatch msg model =
+    match msg with
+    | Increment ->
+        let newModel = { model with Value = model.Value + 1 }
+        clientDispatch (SyncCounter newModel)
+        newModel, Cmd.none
+    | Decrement ->
+        let newModel = { model with Value = model.Value - 1 }
+        clientDispatch (SyncCounter newModel)
+        newModel, Cmd.none
+
+/// Connect the Elmish functions to an endpoint for websocket connections
+let webApp =
+    Bridge.mkServer "/socket/init" init update
+    |> Bridge.run Giraffe.server
+
+
+#elseif (remoting)
 let counterApi = {
-    initialCounter = getInitCounter >> Async.AwaitTask
+    initialCounter = fun () -> async { return { Value = 42 } }
 }
 
 let webApp =
@@ -53,7 +82,7 @@ let webApp =
     route "/api/init" >=>
         fun next ctx ->
             task {
-                let! counter = getInitCounter()
+                let counter = { Value = 42 }
                 return! json counter next ctx
             }
 #endif
@@ -61,6 +90,9 @@ let webApp =
 let configureApp (app : IApplicationBuilder) =
     app.UseDefaultFiles()
        .UseStaticFiles()
+#if (bridge)
+       .UseWebSockets()
+#endif
        .UseGiraffe webApp
 
 let configureServices (services : IServiceCollection) =

@@ -2,6 +2,9 @@ module Client
 
 open Elmish
 open Elmish.React
+#if (bridge)
+open Elmish.Bridge
+#endif
 #if (reaction)
 open Elmish.Streams
 open FSharp.Control
@@ -34,6 +37,9 @@ type Model = { Counter: Counter option }
 type Msg =
 | Increment
 | Decrement
+#if (bridge)
+| Remote of ClientMsg
+#else
 | InitialCountLoaded of Counter
 
 #if (deploy == "iis")
@@ -62,7 +68,6 @@ module ServerPath =
     let normalize (path: string) = combine [virtualPath; path]
 #endif
 
-
 #if (remoting)
 module Server =
 
@@ -90,50 +95,34 @@ module Server =
 let initialCounter = Server.api.initialCounter
 #elseif (deploy == "iis")
 let initialCounter () = Fetch.fetchAs<Counter> (ServerPath.normalize "/api/init")
-#else
+#elseif (!bridge)
 let initialCounter () = Fetch.fetchAs<Counter> "/api/init"
 #endif
 
-#if reaction
+#if (bridge)
+// defines the initial state and initial command (= side-effect) of the application
+let init () : Model * Cmd<Msg> =
+    { Counter = None }, Cmd.none
+
+// The update function computes the next state of the application based on the current state and the incoming events/messages
+// It can also run side-effects (encoded as commands) like calling the server via Http.
+// these commands in turn, can dispatch messages to which the update function will react.
+let update (msg : Msg) (currentModel : Model) : Model * Cmd<Msg> =
+    match currentModel.Counter, msg with
+    | Some counter, Increment ->
+        let nextCounter = { counter with Value = counter.Value + 1 }
+        currentModel, Cmd.bridgeSendOr ServerMsg.Increment (Remote(SyncCounter nextCounter))
+    | Some counter, Decrement ->
+        let nextCounter = { counter with Value = counter.Value - 1 }
+        currentModel, Cmd.bridgeSendOr ServerMsg.Decrement (Remote(SyncCounter nextCounter))
+    | _, Remote(SyncCounter counter) ->
+        { currentModel with Counter = Some counter}, Cmd.none
+    | _ -> currentModel, Cmd.none
+
+#elseif (reaction)
 // defines the initial state
 let init () : Model =
     { Counter = None }
-#else
-// defines the initial state and initial command (= side-effect) of the application
-let init () : Model * Cmd<Msg> =
-    let initialModel = { Counter = None }
-    let loadCountCmd =
-#endif
-#if (!reaction && remoting)
-        Cmd.OfAsync.perform initialCounter () InitialCountLoaded
-#endif
-#if (!reaction && !remoting)
-        Cmd.OfPromise.perform initialCounter () InitialCountLoaded
-#endif
-#if (!reaction)
-    initialModel, loadCountCmd
-#endif
-
-#if (reaction && remoting)
-let load = AsyncRx.ofAsync (initialCounter ())
-#endif
-#if (reaction && !remoting)
-let load = AsyncRx.ofPromise (initialCounter ())
-#endif
-
-#if (reaction)
-let loadCount =
-    load
-    |> AsyncRx.map InitialCountLoaded
-    |> AsyncRx.toStream "loading"
-
-let stream model msgs =
-    match model.Counter with
-    | None -> loadCount
-    | _ -> msgs
-#endif
-
-#if (reaction)
 // The update function computes the next state of the application based on the current state and the incoming events/messages
 let update (msg : Msg) (currentModel : Model) : Model =
     match currentModel.Counter, msg with
@@ -145,6 +134,17 @@ let update (msg : Msg) (currentModel : Model) : Model =
         { Counter = Some initialCount }
     | _ -> currentModel
 #else
+// defines the initial state and initial command (= side-effect) of the application
+let init () : Model * Cmd<Msg> =
+    let initialModel = { Counter = None }
+    let loadCountCmd =
+#if (remoting)
+        Cmd.OfAsync.perform initialCounter () InitialCountLoaded
+#else
+        Cmd.OfPromise.perform initialCounter () InitialCountLoaded
+#endif
+    initialModel, loadCountCmd
+
 // The update function computes the next state of the application based on the current state and the incoming events/messages
 // It can also run side-effects (encoded as commands) like calling the server via Http.
 // these commands in turn, can dispatch messages to which the update function will react.
@@ -159,10 +159,36 @@ let update (msg : Msg) (currentModel : Model) : Model * Cmd<Msg> =
     | _, InitialCountLoaded initialCount->
         let nextModel = { Counter = Some initialCount }
         nextModel, Cmd.none
-
     | _ -> currentModel, Cmd.none
 #endif
 
+#if (reaction)
+#if (bridge)
+let stream model msgs =
+    match model.Counter with
+    | None ->
+        AsyncRx.empty()
+        |> AsyncRx.toStream "loading"
+    | _ -> msgs
+#else
+
+#if (remoting)
+let load = AsyncRx.ofAsync (initialCounter ())
+#else
+let load = AsyncRx.ofPromise (initialCounter ())
+#endif
+
+let loadCount =
+    load
+    |> AsyncRx.map InitialCountLoaded
+    |> AsyncRx.toStream "loading"
+
+let stream model msgs =
+    match model.Counter with
+    | None -> loadCount
+    | _ -> msgs
+#endif
+#endif
 
 let safeComponents =
     let components =
@@ -194,6 +220,11 @@ let safeComponents =
              str ", "
              a [ Href "https://zaid-ajaj.github.io/Fable.Remoting/" ] [ str "Fable.Remoting" ]
 #endif
+#if (bridge)
+             str ", "
+             a [ Href "https://github.com/Nhowka/Elmish.Bridge" ] [ str "Elmish.Bridge" ]
+#endif
+
            ]
 
     span [ ]
@@ -876,10 +907,21 @@ open Elmish.HMR
 
 //+:cnd:noEmit
 #if (reaction)
+#if (bridge)
+Program.mkProgram init update view
+#else
 Program.mkSimple init update view
+#endif
 |> Program.withStream stream "msgs"
 #else
 Program.mkProgram init update view
+#endif
+#if (bridge)
+|> Program.withBridgeConfig
+    (
+        Bridge.endpoint "/socket/init"
+        |> Bridge.withMapping Remote
+    )
 #endif
 //-:cnd:noEmit
 #if DEBUG

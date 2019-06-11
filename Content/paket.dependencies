@@ -11,10 +11,13 @@ group Server
 //#elseif (server == "saturn")
     nuget Saturn
 //#endif
-//#if (!remoting)
-    nuget Thoth.Json.Giraffe
-//#else
+//#if (bridge)
+    nuget Elmish.Bridge.Giraffe ~> 3
+//#endif
+//#if (remoting)
     nuget Fable.Remoting.Giraffe ~> 3
+//#else
+    nuget Thoth.Json.Giraffe
 //#endif
 //#if (deploy == "azure")
     nuget Microsoft.ApplicationInsights.AspNetCore ~> 2.2
@@ -40,6 +43,9 @@ group Client
     nuget Fable.React ~> 5
 //#if (remoting)
     nuget Fable.Remoting.Client ~> 5
+//#endif
+//#if (bridge)
+    nuget Elmish.Bridge.Client ~> 3
 //#endif
 //#if (layout != "none")
     nuget Fulma ~> 2
