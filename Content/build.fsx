@@ -28,8 +28,7 @@ let clientPath = Path.getFullName "./src/Client"
 let clientDeployPath = Path.combine clientPath "deploy"
 let deployDir = Path.getFullName "./deploy"
 
-let releaseNotesData = ReleaseNotes.load "RELEASE_NOTES.md"
-let release = List.head releaseNotesData
+let releaseNotes = ReleaseNotes.load "RELEASE_NOTES.md"
 
 let platformTool tool winTool =
     let tool = if Environment.isUnix then tool else winTool
