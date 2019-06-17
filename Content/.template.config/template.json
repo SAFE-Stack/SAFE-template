@@ -17,6 +17,14 @@
     "shortName": "SAFE",
     "sourceName": "SAFE.Template",
     "symbols": {
+        "createdate": {
+            "type": "generated",
+            "generator": "now",
+            "parameters": {
+              "format": "yyyy-MM-dd"
+            },
+            "replaces":"1970-01-01"
+        },
         "server": {
             "type": "parameter",
             "dataType": "choice",
