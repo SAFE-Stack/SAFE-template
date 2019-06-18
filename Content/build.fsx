@@ -140,7 +140,7 @@ Target.create "Build" (fun _ ->
         "let app = \".+\""
        ("let app = \"" + release.NugetVersion + "\"")
         System.Text.Encoding.UTF8
-        (Path.Combine clientPath "Version.fs")
+        (Path.combine clientPath "Version.fs")
 //#if (js-deps == "npm")
     runTool npxTool "webpack-cli -p" __SOURCE_DIRECTORY__
 //#else
