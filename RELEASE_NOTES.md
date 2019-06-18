@@ -1,3 +1,7 @@
+#### 2.0.0-alpha001 - 18.06.2019
+
+* Template simplification
+
 #### 1.8.0 - 06.06.2019
 
 * Add Elmish.Bridge as a communication option - https://github.com/SAFE-Stack/SAFE-template/pull/267
