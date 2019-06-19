@@ -193,7 +193,10 @@ let stream model msgs =
 let safeComponents =
     let components =
         span [ ]
-           [
+           [ a [ Href "https://github.com/SAFE-Stack/SAFE-template" ]
+               [ str "SAFE  "
+                 str Version.template ]
+             str ", "
 #if (server == "suave")
              a [ Href "http://suave.io" ] [ str "Suave" ]
              str ", "
@@ -206,7 +209,7 @@ let safeComponents =
 #endif
              a [ Href "http://fable.io" ] [ str "Fable" ]
              str ", "
-             a [ Href "https://elmish.github.io/elmish/" ] [ str "Elmish" ]
+             a [ Href "https://elmish.github.io" ] [ str "Elmish" ]
 #if (layout != "none")
              str ", "
              a [ Href "https://fulma.github.io/Fulma" ] [ str "Fulma" ]
@@ -231,7 +234,8 @@ let safeComponents =
            ]
 
     span [ ]
-        [ strong [] [ str "SAFE Template" ]
+        [ str "Version "
+          strong [ ] [ str Version.app ]
           str " powered by: "
           components ]
 

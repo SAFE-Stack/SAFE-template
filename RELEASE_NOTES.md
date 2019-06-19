@@ -1,6 +1,6 @@
-#### 2.0.0-alpha001 - 18.06.2019
+#### 1.9.0 - 19.06.2019
 
-* Template simplification
+* Add Release Notes template to created project - https://github.com/SAFE-Stack/SAFE-template/pull/277
 
 #### 1.8.0 - 06.06.2019
 

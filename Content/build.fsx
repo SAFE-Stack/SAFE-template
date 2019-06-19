@@ -28,6 +28,8 @@ let clientPath = Path.getFullName "./src/Client"
 let clientDeployPath = Path.combine clientPath "deploy"
 let deployDir = Path.getFullName "./deploy"
 
+let release = ReleaseNotes.load "RELEASE_NOTES.md"
+
 let platformTool tool winTool =
     let tool = if Environment.isUnix then tool else winTool
     match ProcessUtils.tryFindFileOnPath tool with
@@ -134,6 +136,11 @@ Target.create "InstallClient" (fun _ ->
 
 Target.create "Build" (fun _ ->
     runDotNet "build" serverPath
+    Shell.regexReplaceInFileWithEncoding
+        "let app = \".+\""
+       ("let app = \"" + release.NugetVersion + "\"")
+        System.Text.Encoding.UTF8
+        (Path.combine clientPath "Version.fs")
 //#if (js-deps == "npm")
     runTool npxTool "webpack-cli -p" __SOURCE_DIRECTORY__
 //#else
