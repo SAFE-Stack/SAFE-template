@@ -1,3 +1,7 @@
+#### 1.9.0 - 19.06.2019
+
+* Add Release Notes template to created project - https://github.com/SAFE-Stack/SAFE-template/pull/277
+
 #### 1.8.0 - 06.06.2019
 
 * Add Elmish.Bridge as a communication option - https://github.com/SAFE-Stack/SAFE-template/pull/267
