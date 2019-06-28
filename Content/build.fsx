@@ -23,6 +23,8 @@ open Microsoft.Azure.Management.ResourceManager.Fluent.Core
 open System.Text.RegularExpressions
 //#endif
 
+Target.initEnvironment ()
+
 let serverPath = Path.getFullName "./src/Server"
 let clientPath = Path.getFullName "./src/Client"
 let clientDeployPath = Path.combine clientPath "deploy"
