@@ -1,3 +1,7 @@
+#### 1.10.0 - 28.06.2019
+
+* Update FAKE and use 'initEnvironment' to support Ionide 4 integration - https://github.com/SAFE-Stack/SAFE-template/pull/280
+
 #### 1.9.0 - 19.06.2019
 
 * Add Release Notes template to created project - https://github.com/SAFE-Stack/SAFE-template/pull/277
