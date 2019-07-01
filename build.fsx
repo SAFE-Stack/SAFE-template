@@ -98,9 +98,12 @@ Target.create "Pack" (fun _ ->
 )
 
 Target.create "Install" (fun _ ->
-    let args = sprintf "-i %s/SAFE.Template.%s.nupkg" nupkgDir release.NugetVersion
+    let args=
+      let nupkgFileName = sprintf "SAFE.Template.%s.nupkg" release.NugetVersion
+      let fullPathToNupkg = System.IO.Path.Combine(nupkgDir, nupkgFileName)
+      sprintf "-i \"%s\"" fullPathToNupkg
     let result = DotNet.exec (fun x -> { x with DotNetCliPath = "dotnet" }) "new" args
-    if not result.OK then failwithf "`dotnet %s` failed" args
+    if not result.OK then failwithf "`dotnet %s` failed with %O" args result
 )
 
 let psi exe arg dir (x: ProcStartInfo) : ProcStartInfo =
