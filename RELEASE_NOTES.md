@@ -1,3 +1,7 @@
+#### 1.11.0 - 05.07.2019
+
+* Pull Bulma FA and OpenSans from NPM repository instead of including from CDN - https://github.com/SAFE-Stack/SAFE-template/pull/286
+
 #### 1.10.0 - 28.06.2019
 
 * Update FAKE and use 'initEnvironment' to support Ionide 4 integration - https://github.com/SAFE-Stack/SAFE-template/pull/280
