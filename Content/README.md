@@ -25,6 +25,11 @@ fake build -t Run
 You can use the included `Dockerfile` and `build.fsx` script to deploy your application as Docker container. You can find more regarding this topic in the [official template documentation](https://safe-stack.github.io/docs/template-docker/).
 
 //#endif
+//#if (deploy == "docker-build")
+
+You can use the included `Dockerfile` in conjunction with `docker build` to deploy your application as Docker container.
+
+//#endif
 //#if (deploy == "azure")
 
 You can use the included `arm-template.json` file and `build.fsx` script to deploy you application as an Azure Web App. Consult the [official template documentation](https://safe-stack.github.io/docs/template-appservice/) to learn more.

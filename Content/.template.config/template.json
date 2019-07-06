@@ -162,6 +162,10 @@
                     "description": "additional FAKE targets to bundle and build Docker image"
                 },
                 {
+                    "choice": "docker-build",
+                    "description": "additional FAKE targets to build a Docker image with docker build"
+                },
+                {
                     "choice": "gcp-appengine",
                     "description": "additional FAKE targets to deploy to Google Cloud AppEngine"
                 },
@@ -611,7 +615,7 @@
                 },
                 {
                     "exclude": "Dockerfile",
-                    "condition": "(deploy != \"docker\" && deploy != \"gcp-appengine\" && deploy != \"gcp-kubernetes\" )"
+                    "condition": "(deploy != \"docker\" && deploy != \"gcp-appengine\" && deploy != \"gcp-kubernetes\" && deploy != \"docker-build\" )"
                 },
                 {
                     "exclude": "app.yaml",

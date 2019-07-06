@@ -184,7 +184,9 @@ Target.create "Run" (fun _ ->
 let buildDocker tag =
     let args = sprintf "build -t %s ." tag
     runTool "docker" args "."
+//#endif
 
+//#if (deploy == "docker" || deploy == "gcp-kubernetes" || deploy == "gcp-appengine" || deploy == "docker-build")
 Target.create "Bundle" (fun _ ->
     let serverDir = Path.combine deployDir "Server"
     let clientDir = Path.combine deployDir "Client"
@@ -195,7 +197,9 @@ Target.create "Bundle" (fun _ ->
 
     Shell.copyDir publicDir clientDeployPath FileFilter.allFiles
 )
+//#endif
 
+//#if (deploy == "docker" || deploy == "gcp-kubernetes" || deploy == "gcp-appengine")
 let dockerUser = "safe-template"
 let dockerImageName = "safe-template"
 //#endif
@@ -391,8 +395,10 @@ open Fake.Core.TargetOperators
 "Clean"
     ==> "InstallClient"
     ==> "Build"
-//#if (deploy == "docker" || deploy == "gcp-appengine")
+//#if (deploy == "docker" || deploy == "gcp-appengine" || deploy == "docker-build")
     ==> "Bundle"
+//#endif
+//#if (deploy == "docker" || deploy == "gcp-appengine")
     ==> "Docker"
 //#elseif (deploy == "azure")
     ==> "Bundle"
