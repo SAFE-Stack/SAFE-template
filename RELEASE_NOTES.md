@@ -1,3 +1,7 @@
+#### 1.11.1 - 09.07.2019
+
+* Add .ionide to gitignore - https://github.com/SAFE-Stack/SAFE-template/pull/291
+
 #### 1.11.0 - 05.07.2019
 
 * Pull Bulma FA and OpenSans from NPM repository instead of including from CDN - https://github.com/SAFE-Stack/SAFE-template/pull/286
