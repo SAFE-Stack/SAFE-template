@@ -51,7 +51,7 @@ let npxTool = platformTool "npx" "npx.cmd"
 let yarnTool = platformTool "yarn" "yarn.cmd"
 //#endif
 //#if (deploy == "gcp-kubernetes" || deploy == "gcp-appengine")
-let gcloudTool = platformTool "gcloud" "gcloud.cmd"
+let gcloudTool () = platformTool "gcloud" "gcloud.cmd"
 //#endif
 
 let runTool cmd args workingDir =
@@ -90,7 +90,7 @@ let runToolWithOutput cmd args workingDir =
 //#endif
 //#if (deploy == "gcp-kubernetes")
 let getGcloudProject() =
-    runToolWithOutput gcloudTool "config get-value project -q" "."
+    runToolWithOutput (gcloudTool ()) "config get-value project -q" "."
 
 let getDockerTag() = "v1"
 
@@ -222,7 +222,7 @@ Target.create "Publish" (fun _ ->
 Target.create "ClusterAuth" (fun _ ->
     let clusterName = Environment.environVarOrDefault "SAFE_CLUSTER" "safe-cluster"
     let authArgs = sprintf "container clusters get-credentials %s" clusterName
-    runTool gcloudTool authArgs "."
+    runTool (gcloudTool ()) authArgs "."
 )
 
 Target.create "Deploy" (fun _ ->
@@ -318,7 +318,7 @@ Target.create "AppService" (fun _ ->
 
 //#if (deploy == "gcp-appengine")
 Target.create "Deploy" (fun _ ->
-    runTool gcloudTool "app deploy --quiet" "."
+    runTool (gcloudTool ()) "app deploy --quiet" "."
 )
 //#endif
 
