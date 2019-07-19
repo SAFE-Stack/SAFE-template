@@ -3,7 +3,7 @@ group Client
     Fable.Core
     Fable.Elmish.Debugger
     Fable.Elmish.React
-//#if (reaction)
+//#if (streams)
     Fable.Elmish.Streams
 //#endif
     Fable.Elmish.HMR
