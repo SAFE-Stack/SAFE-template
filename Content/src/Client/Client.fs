@@ -5,7 +5,7 @@ open Elmish.React
 #if (bridge)
 open Elmish.Bridge
 #endif
-#if (reaction)
+#if (streams)
 open Elmish.Streams
 open FSharp.Control
 #endif
@@ -119,7 +119,7 @@ let update (msg : Msg) (currentModel : Model) : Model * Cmd<Msg> =
         { currentModel with Counter = Some counter}, Cmd.none
     | _ -> currentModel, Cmd.none
 
-#elseif (reaction)
+#elseif (streams)
 // defines the initial state
 let init () : Model =
     { Counter = None }
@@ -162,7 +162,7 @@ let update (msg : Msg) (currentModel : Model) : Model * Cmd<Msg> =
     | _ -> currentModel, Cmd.none
 #endif
 
-#if (reaction)
+#if (streams)
 #if (bridge)
 let stream model msgs =
     match model.Counter with
@@ -218,7 +218,7 @@ let safeComponents =
              str ", "
              a [ Href "https://bulmatemplates.github.io/bulma-templates/" ] [ str "Bulma\u00A0Templates" ]
 #endif
-#if (reaction)
+#if (streams)
              str ", "
              a [ Href "http://elmish-streams.rtfd.io/" ] [ str "Elmish.Streams" ]
 #endif
@@ -913,7 +913,7 @@ open Elmish.HMR
 #endif
 
 //+:cnd:noEmit
-#if (reaction)
+#if (streams)
 #if (bridge)
 Program.mkProgram init update view
 #else

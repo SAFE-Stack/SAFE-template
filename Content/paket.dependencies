@@ -42,7 +42,7 @@ group Client
     nuget Fable.Elmish.Debugger ~> 3
     nuget Fable.Elmish.HMR ~> 4
     nuget Fable.Elmish.React ~> 3
-//#if (reaction)
+//#if (streams)
     nuget Fable.Elmish.Streams ~> 3
 //#endif
 //#if (!remoting)

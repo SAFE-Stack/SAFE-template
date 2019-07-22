@@ -109,7 +109,7 @@ let communicationGen =
 let patternGen =
     Gen.elements [
         None
-        Some "reaction"
+        Some "streams"
     ]
 
 type TemplateArgsArb () =
