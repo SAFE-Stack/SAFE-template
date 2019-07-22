@@ -1,3 +1,7 @@
+#### 1.12.0 - 22.07.2019
+
+* Remove obsolete 'reaction' option and keep using 'streams' - https://github.com/SAFE-Stack/SAFE-template/pull/299
+
 #### 1.11.1 - 09.07.2019
 
 * Add .ionide to gitignore - https://github.com/SAFE-Stack/SAFE-template/pull/291
