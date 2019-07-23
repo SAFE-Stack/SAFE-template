@@ -3,6 +3,7 @@ group Tests
 
     Expecto
     Expecto.FsCheck
+    Expecto.TestResults
     Fake.Core.Process
     Fake.DotNet.Cli
     FSharp.Core
