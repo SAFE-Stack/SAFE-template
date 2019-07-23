@@ -51,7 +51,7 @@ let npxTool = platformTool "npx" "npx.cmd"
 let yarnTool = platformTool "yarn" "yarn.cmd"
 //#endif
 //#if (deploy == "gcp-kubernetes" || deploy == "gcp-appengine")
-let gcloudTool = platformTool "gcloud" "gcloud.cmd"
+let gcloudTool () = platformTool "gcloud" "gcloud.cmd"
 //#endif
 
 let runTool cmd args workingDir =
@@ -90,7 +90,7 @@ let runToolWithOutput cmd args workingDir =
 //#endif
 //#if (deploy == "gcp-kubernetes")
 let getGcloudProject() =
-    runToolWithOutput gcloudTool "config get-value project -q" "."
+    runToolWithOutput (gcloudTool ()) "config get-value project -q" __SOURCE_DIRECTORY__
 
 let getDockerTag() = "v1"
 
@@ -100,20 +100,20 @@ let createDockerImageName projectName =
     sprintf "gcr.io/%s/%s:%s" projectId projectName dockerTag
 
 let deployExists appName =
-    let result = runToolWithOutput "kubectl" "get deploy" "."
+    let result = runToolWithOutput "kubectl" "get deploy" __SOURCE_DIRECTORY__
     let pattern = "^" + appName + "\s+"
     Regex.IsMatch(result, pattern, RegexOptions.Multiline)
 
 let updateKubernetesDeploy appName dockerTag =
     let updateArgs = sprintf "set image deployment/%s %s=%s" appName appName dockerTag
-    runTool "kubectl" updateArgs "."
+    runTool "kubectl" updateArgs __SOURCE_DIRECTORY__
 
 let createAndExposeKubernetesDeploy appName dockerTag port =
     let deployArgs = sprintf "run %s --image=%s --port %i" appName dockerTag port
-    runTool "kubectl" deployArgs "."
+    runTool "kubectl" deployArgs __SOURCE_DIRECTORY__
 
     let exposeArgs = sprintf "expose deployment %s --type=LoadBalancer --port 80 --target-port %i" appName port
-    runTool "kubectl" exposeArgs "."
+    runTool "kubectl" exposeArgs __SOURCE_DIRECTORY__
 //#endif
 
 Target.create "Clean" (fun _ ->
@@ -183,7 +183,7 @@ Target.create "Run" (fun _ ->
 //#if (deploy == "docker" || deploy == "gcp-kubernetes" || deploy == "gcp-appengine")
 let buildDocker tag =
     let args = sprintf "build -t %s ." tag
-    runTool "docker" args "."
+    runTool "docker" args __SOURCE_DIRECTORY__
 
 Target.create "Bundle" (fun _ ->
     let serverDir = Path.combine deployDir "Server"
@@ -216,13 +216,13 @@ Target.create "Docker" (fun _ ->
 Target.create "Publish" (fun _ ->
     let imageName = createDockerImageName dockerImageName
     let pushArgs = sprintf "push %s" imageName
-    runTool "docker" pushArgs "."
+    runTool "docker" pushArgs __SOURCE_DIRECTORY__
 )
 
 Target.create "ClusterAuth" (fun _ ->
     let clusterName = Environment.environVarOrDefault "SAFE_CLUSTER" "safe-cluster"
     let authArgs = sprintf "container clusters get-credentials %s" clusterName
-    runTool gcloudTool authArgs "."
+    runTool (gcloudTool ()) authArgs __SOURCE_DIRECTORY__
 )
 
 Target.create "Deploy" (fun _ ->
@@ -318,7 +318,7 @@ Target.create "AppService" (fun _ ->
 
 //#if (deploy == "gcp-appengine")
 Target.create "Deploy" (fun _ ->
-    runTool gcloudTool "app deploy --quiet" "."
+    runTool (gcloudTool ()) "app deploy --quiet" __SOURCE_DIRECTORY__
 )
 //#endif
 

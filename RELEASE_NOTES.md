@@ -1,3 +1,15 @@
+#### 1.13.0 - 22.07.2019
+
+* Fix runTool working directory - https://github.com/SAFE-Stack/SAFE-template/pull/297
+
+#### 1.12.0 - 22.07.2019
+
+* Remove obsolete 'reaction' option and keep using 'streams' - https://github.com/SAFE-Stack/SAFE-template/pull/299
+
+#### 1.11.1 - 09.07.2019
+
+* Add .ionide to gitignore - https://github.com/SAFE-Stack/SAFE-template/pull/291
+
 #### 1.11.0 - 05.07.2019
 
 * Pull Bulma FA and OpenSans from NPM repository instead of including from CDN - https://github.com/SAFE-Stack/SAFE-template/pull/286
