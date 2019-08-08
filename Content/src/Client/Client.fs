@@ -35,12 +35,12 @@ type Model = { Counter: Counter option }
 // The Msg type defines what events/actions can occur while the application is running
 // the state of the application changes *only* in reaction to these events
 type Msg =
-| Increment
-| Decrement
+    | Increment
+    | Decrement
 #if (bridge)
-| Remote of ClientMsg
+    | Remote of ClientMsg
 #else
-| InitialCountLoaded of Counter
+    | InitialCountLoaded of Counter
 #endif
 #if (deploy == "iis" && server != "suave")
 module ServerPath =
@@ -240,8 +240,8 @@ let safeComponents =
           components ]
 
 let show = function
-| { Counter = Some counter } -> string counter.Value
-| { Counter = None   } -> "Loading..."
+    | { Counter = Some counter } -> string counter.Value
+    | { Counter = None   } -> "Loading..."
 
 #if (layout == "none")
 let view (model : Model) (dispatch : Msg -> unit) =
