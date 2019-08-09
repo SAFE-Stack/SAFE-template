@@ -1,3 +1,7 @@
+#### 1.15.0 - 09.08.2019
+
+* Update React to 16.9 - https://github.com/SAFE-Stack/SAFE-template/pull/304
+
 #### 1.14.0 - 23.07.2019
 
 * Update client dependencies - https://github.com/SAFE-Stack/SAFE-template/pull/300
