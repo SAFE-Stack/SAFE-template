@@ -1,3 +1,9 @@
+#### 1.16.0 - 13.08.2019
+
+* Set font by customizing a Bulma variable - https://github.com/SAFE-Stack/SAFE-template/pull/305
+* Include style.scss in Client.fsproj - https://github.com/SAFE-Stack/SAFE-template/pull/306
+* Fix indentation for DU definition and pattern match - https://github.com/SAFE-Stack/SAFE-template/pull/302
+
 #### 1.15.0 - 09.08.2019
 
 * Update React to 16.9 - https://github.com/SAFE-Stack/SAFE-template/pull/304
