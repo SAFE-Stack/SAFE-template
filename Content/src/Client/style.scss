@@ -11,9 +11,7 @@ $fa_font_path: "~@fortawesome/fontawesome-free/webfonts";
 // OpenSans
 $FontPathOpenSans: "~open-sans-fonts/open-sans";
 @import '~open-sans-fonts/open-sans';
-body {
-  font-family: 'Open Sans' !important;
-}
+$family-primary: 'Open Sans';
 
 // Bulma
 @import "~bulma/bulma";
