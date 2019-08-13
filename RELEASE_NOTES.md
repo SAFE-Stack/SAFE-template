@@ -1,3 +1,7 @@
+#### 2.0.0-alpha001 - 13.08.2019
+
+* Testing SAFE.Tool
+
 #### 1.16.0 - 13.08.2019
 
 * Set font by customizing a Bulma variable - https://github.com/SAFE-Stack/SAFE-template/pull/305

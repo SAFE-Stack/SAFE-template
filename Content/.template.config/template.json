@@ -8,7 +8,7 @@
         "Fable",
         "Elmish"
     ],
-    "name": "SAFE-Stack Web App v1.16.0",
+    "name": "SAFE-Stack Web App v2.0.0-alpha001",
     "tags": {
         "language": "F#",
         "type": "project"
@@ -178,7 +178,7 @@
     },
     "sources": [
         {
-            "exclude": [ "**/.template.config/**/*", "**/paket*.lock" ],
+            "exclude": [ "**/.template.config/**/*", "**/paket*.lock", "build.fsx" ],
             "modifiers": [
                 {
                     "include": "paket_noazure_bridge-nofulma-nostreams_saturn-bridge-noazure.lock",
