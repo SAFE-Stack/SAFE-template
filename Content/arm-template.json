@@ -2,7 +2,16 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "environment": {
+        "fullAppName": {
+            "type": "string"
+        },
+        "storageName": {
+            "type": "string"
+        },
+        "appServicePlanName": {
+            "type": "string"
+        },
+        "insightsName": {
             "type": "string"
         },
         "location": {
@@ -13,27 +22,21 @@
         }
     },
     "variables": {
-        "environment": "[toLower(parameters('environment'))]",
-        "prefix": "[concat('safe-', variables('environment'))]",
-        "appServicePlan": "[concat(variables('prefix'), '-web-host')]",
-        "web": "[concat(variables('prefix'), '-web')]",
-        "storage": "[concat('safe', variables('environment'), 'storage')]",
-        "insights": "[concat(variables('prefix'), '-insights')]"
     },
     "resources": [
         {
             "type": "Microsoft.Insights/components",
             "kind": "web",
-            "name": "[variables('insights')]",
+            "name": "[parameters('insightsName')]",
             "location": "[parameters('location')]",
             "apiVersion": "2014-04-01",
             "scale": null,
             "tags": {
-                "[concat('hidden-link:', resourceGroup().id, '/providers/Microsoft.Web/sites/', variables('web'))]": "Resource",
+                "[concat('hidden-link:', resourceGroup().id, '/providers/Microsoft.Web/sites/', parameters('fullAppName'))]": "Resource",
                 "displayName": "AppInsightsComponent"
             },
             "properties": {
-                "name": "[variables('insights')]"
+                "name": "[parameters('insightsName')]"
             }
         },
         {
@@ -43,7 +46,7 @@
                 "tier": "Standard"
             },
             "kind": "Storage",
-            "name": "[variables('storage')]",
+            "name": "[parameters('storageName')]",
             "apiVersion": "2017-10-01",
             "location": "[parameters('location')]",
             "tags": {}
@@ -53,22 +56,22 @@
             "sku": {
                 "name": "[parameters('pricingTier')]"
             },
-            "name": "[variables('appServicePlan')]",
+            "name": "[parameters('appServicePlanName')]",
             "apiVersion": "2016-09-01",
             "location": "[parameters('location')]",
             "properties": {
-                "name": "[variables('appserviceplan')]",
+                "name": "[parameters('appServicePlanName')]",
                 "perSiteScaling": false,
                 "reserved": false
             }
         },
         {
             "type": "Microsoft.Web/sites",
-            "name": "[variables('web')]",
+            "name": "[parameters('fullAppName')]",
             "apiVersion": "2016-08-01",
             "location": "[parameters('location')]",
             "properties": {
-                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlan'))]",
+                "serverFarmId": "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]",
                 "siteConfig": {
                     "appSettings": [
                         {
@@ -77,19 +80,19 @@
                         },
                         {
                             "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
-                            "value": "[reference(concat('Microsoft.Insights/components/', variables('insights'))).InstrumentationKey]"
+                            "value": "[reference(concat('Microsoft.Insights/components/', parameters('insightsName'))).InstrumentationKey]"
                         },
                         {
                             "name": "STORAGE_CONNECTIONSTRING",
-                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', variables('storage'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts/', variables('storage')), '2017-10-01').keys[0].value)]"
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=', parameters('storageName'), ';AccountKey=', listKeys(resourceId('Microsoft.Storage/storageAccounts/', parameters('storageName')), '2017-10-01').keys[0].value)]"
                         }
                     ]
                 }
             },
             "dependsOn": [
-                "[resourceId('Microsoft.Web/serverfarms', variables('appServicePlan'))]",
-                "[resourceId('Microsoft.Storage/storageAccounts/', variables('storage'))]",
-                "[resourceId('Microsoft.Insights/components/', variables('insights'))]"
+                "[resourceId('Microsoft.Web/serverfarms', parameters('appServicePlanName'))]",
+                "[resourceId('Microsoft.Storage/storageAccounts/', parameters('storageName'))]",
+                "[resourceId('Microsoft.Insights/components/', parameters('insightsName'))]"
             ],
             "resources": [
                 {
@@ -97,7 +100,7 @@
                     "name": "Microsoft.ApplicationInsights.AzureWebSites",
                     "type": "siteextensions",
                     "dependsOn": [
-                        "[resourceId('Microsoft.Web/sites/', variables('web'))]"
+                        "[resourceId('Microsoft.Web/sites/', parameters('fullAppName'))]"
                     ],
                     "properties": {}
                 }
@@ -107,11 +110,11 @@
     "outputs": {
         "webAppName": {
             "type": "string",
-            "value": "[variables('web')]"
+            "value": "[parameters('fullAppName')]"
         },
         "webAppPassword": {
             "type": "string",
-            "value": "[list(resourceId('Microsoft.Web/sites/config', variables('web'), 'publishingcredentials'), '2014-06-01').properties.publishingPassword]"
+            "value": "[list(resourceId('Microsoft.Web/sites/config', parameters('fullAppName'), 'publishingcredentials'), '2014-06-01').properties.publishingPassword]"
         }
     }
 }

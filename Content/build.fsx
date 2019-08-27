@@ -255,18 +255,44 @@ type ArmOutput =
 let mutable deploymentOutputs : ArmOutput option = None
 
 Target.create "ArmTemplate" (fun _ ->
-    let environment = Environment.environVarOrDefault "environment" (Guid.NewGuid().ToString().ToLower().Split '-' |> Array.head)
-    let armTemplate = @"arm-template.json"
-    let resourceGroupName = "safe-" + environment
+    let defaultstorageName = ("safe" + (Guid.NewGuid().ToString().ToLower().Split '-' |> Array.head) + "storage")
+    let isAlfanumeric (x: char) = (fun y ->  (y > 64 && y < 91 ) || (y > 96 && y < 123) || (y > 47 && y < 58) ) (int x)
+    let fixupstorage n (str:string): string =
+        str.ToLowerInvariant()
+        |> Seq.toList 
+        |> Seq.filter isAlfanumeric
+        |> (fun str  ->
+             if (Seq.length(str) > n) then
+                 defaultstorageName 
+             else
+                 String.Concat str )
+    let appName = Environment.environVarOrDefault "appName" ("safe-" + (Guid.NewGuid().ToString().ToLower().Split '-' |> Array.head) + "-web")
+    let environment = Environment.environVarOrDefault "environment" ""
+    let fullAppName =
+        (if (String.isNullOrEmpty(environment)) then appName else appName + "-" + environment).ToLowerInvariant()
+           |> Seq.toList 
+           |> Seq.filter (fun x -> isAlfanumeric(x) || x = '-'|| x = '_'|| x = '('|| x = ')'|| x = '.'  )
+           |> String.Concat               
+      
+    let storageName = fullAppName + "storage"
+                    |> fixupstorage 24 
+    let resourceGroupName =
+        "safe-" + fullAppName
 
+    let appServicePlanName = resourceGroupName + "-web-host"
+    let insightsName = resourceGroupName + "-insights"
+    
+    let armTemplate = @"arm-template.json"
+    
     let authCtx =
         // You can safely replace these with your own subscription and client IDs hard-coded into this script.
         let subscriptionId = try Environment.environVar "subscriptionId" |> Guid.Parse with _ -> failwith "Invalid Subscription ID. This should be your Azure Subscription ID."
-        let clientId = try Environment.environVar "clientId" |> Guid.Parse with _ -> failwith "Invalid Client ID. This should be the Client ID of a Native application registered in Azure with permission to create resources in your subscription."
+        let clientId = try Environment.environVar "clientId" |> Guid.Parse with _ -> failwith "Invalid Client ID. This should be the Client ID of an App Registration in Azure with permission to create resources in your subscription."
+        let tenantId = try Environment.environVarOrNone "tenantId" |> Option.map Guid.Parse with _ -> failwith "Invalid Tenant ID. This should be the Tenant ID of an App Registration in Azure with permission to create resources in your subscription."
 
-        Trace.tracefn "Deploying template '%s' to resource group '%s' in subscription '%O'..." armTemplate resourceGroupName subscriptionId
+        Trace.tracefn "Deploying template '%s' to resource group '%s' in subscription '%O'..." armTemplate fullAppName subscriptionId
         subscriptionId
-        |> authenticateDevice Trace.trace { ClientId = clientId; TenantId = None }
+        |> authenticateDevice Trace.trace { ClientId = clientId; TenantId = tenantId }
         |> Async.RunSynchronously
 
     let deployment =
@@ -277,7 +303,11 @@ Target.create "ArmTemplate" (fun _ ->
           ArmTemplate = IO.File.ReadAllText armTemplate
           Parameters =
               Simple
-                  [ "environment", ArmString environment
+                   
+                  [ "fullAppName", ArmString fullAppName
+                    "storageName", ArmString storageName
+                    "appServicePlanName", ArmString appServicePlanName
+                    "insightsName", ArmString insightsName
                     "location", ArmString location
                     "pricingTier", ArmString pricingTier ]
           DeploymentMode = Incremental }
