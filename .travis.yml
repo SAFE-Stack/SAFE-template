@@ -1,7 +1,7 @@
 language: csharp
 sudo: required
 dist: xenial
-dotnet: 2.2.301
+dotnet: 3.0.100
 mono: none
 
 addons:
