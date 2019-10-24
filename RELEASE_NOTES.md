@@ -2,6 +2,14 @@
 
 * Testing SAFE.Tool
 
+#### 1.18.0 - 10.09.2019
+
+* Bump up JS dependencies - https://github.com/SAFE-Stack/SAFE-template/pull/314
+
+#### 1.17.0 - 30.08.2019
+
+* Add tenantId to Azure deployment option - https://github.com/SAFE-Stack/SAFE-template/pull/310
+
 #### 1.16.0 - 13.08.2019
 
 * Set font by customizing a Bulma variable - https://github.com/SAFE-Stack/SAFE-template/pull/305
