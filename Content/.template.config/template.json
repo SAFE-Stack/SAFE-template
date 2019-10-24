@@ -178,7 +178,7 @@
     },
     "sources": [
         {
-            "exclude": [ "**/.template.config/**/*", "**/paket*.lock", "build.fsx" ],
+            "exclude": [ "**/.template.config/**/*", "**/paket*.lock"  ],
             "modifiers": [
                 {
                     "include": "paket_noazure_bridge-nofulma-nostreams_saturn-bridge-noazure.lock",
