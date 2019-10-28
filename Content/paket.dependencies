@@ -42,6 +42,7 @@ group Client
     nuget Fable.Elmish.React ~> 3
 //#if (streams)
     nuget Fable.Elmish.Streams ~> 3
+    nuget FSharp.Control.AsyncRx ~> 1.0.0
 //#endif
 //#if (!remoting)
     nuget Thoth.Fetch ~> 1
@@ -52,6 +53,7 @@ group Client
 //#endif
 //#if (bridge)
     nuget Elmish.Bridge.Client ~> 3
+    nuget Fable.SimpleJson ~> 3.5.0
 //#endif
 //#if (layout != "none")
     nuget Fulma ~> 2

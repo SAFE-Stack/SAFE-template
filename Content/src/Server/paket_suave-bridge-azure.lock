@@ -449,7 +449,7 @@ NUGET
       System.Threading (>= 4.3)
       System.Xml.ReaderWriter (>= 4.3)
       System.Xml.XmlDocument (>= 4.3)
-    Thoth.Json.Net (3.5.1)
+    Thoth.Json.Net (3.6)
       Fable.Core (>= 3.0 < 4.0)
       FSharp.Core (>= 4.6.2)
       Newtonsoft.Json (>= 11.0.2)
