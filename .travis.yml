@@ -26,6 +26,7 @@ cache:
 
 env:
   - FAKE_PATH=~/fake-cli/fake
+  - MAX_TESTS=10
 
 script:
   - dotnet tool install fake-cli --tool-path ~/fake-cli
