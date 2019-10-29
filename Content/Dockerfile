@@ -1,5 +1,5 @@
-FROM microsoft/dotnet:3.0-aspnetcore-runtime-alpine
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.0-alpine
 COPY /deploy /
 WORKDIR /Server
 EXPOSE 8085
-ENTRYPOINT [ "dotnet", "Server.dll" ]
+ENTRYPOINT [ "./Server" ]
