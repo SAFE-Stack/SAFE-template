@@ -8,7 +8,7 @@
         "@babel/runtime": "^7.6.3",
         "@fortawesome/fontawesome-free": "^5.11.2",
         "babel-loader": "^8.0.5",
-        "bulma": "^0.7.1",
+        "bulma": "^0.8.0",
         "copy-webpack-plugin": "^4.6.0",
         "core-js": "^3.3.2",
         "css-loader": "^2.0.1",

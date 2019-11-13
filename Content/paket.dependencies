@@ -53,7 +53,6 @@ group Client
 //#endif
 //#if (bridge)
     nuget Elmish.Bridge.Client ~> 3
-    nuget Fable.SimpleJson ~> 3.5.0
 //#endif
 //#if (layout != "none")
     nuget Fulma ~> 2

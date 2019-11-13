@@ -3,7 +3,7 @@ STORAGE: NONE
 RESTRICTION: == netcoreapp3.0
 NUGET
   remote: https://api.nuget.org/v3/index.json
-    Fable.Remoting.Giraffe (3.9)
+    Fable.Remoting.Giraffe (3.10)
       Fable.Remoting.Json (>= 2.5)
       Fable.Remoting.Server (>= 4.9)
       FSharp.Core (>= 4.6.2)
@@ -342,7 +342,7 @@ NUGET
       Microsoft.NETCore.Platforms (>= 3.0)
     NETStandard.Library (2.0.3)
       Microsoft.NETCore.Platforms (>= 1.1)
-    Newtonsoft.Json (12.0.2)
+    Newtonsoft.Json (12.0.3)
     Saturn (0.10)
       FSharp.Control.Websockets (>= 0.2)
       FSharp.Core (>= 4.2.3)
