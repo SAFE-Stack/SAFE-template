@@ -13,7 +13,7 @@ group Build
     nuget Fake.Tools.Git
 
 group Tests
-    framework: netcoreapp2.2
+    framework: netcoreapp3.0
     storage: none
     source https://api.nuget.org/v3/index.json
 
