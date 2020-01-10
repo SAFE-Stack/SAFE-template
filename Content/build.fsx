@@ -13,6 +13,7 @@ Target.create "Build" SAFE.Core.build
 Target.create "Bundle" SAFE.Core.bundle
 Target.create "Deploy" SAFE.Core.deploy
 Target.create "Run" SAFE.Core.run
+Target.create "PluginCommand" SAFE.Core.pluginCommand
 
 open Fake.Core.TargetOperators
 
