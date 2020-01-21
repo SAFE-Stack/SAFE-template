@@ -3,21 +3,5 @@ group Client
     Fable.Core
     Fable.Elmish.Debugger
     Fable.Elmish.React
-//#if (streams)
-    Fable.Elmish.Streams
-//#endif
-    Fable.Elmish.HMR
-//#if (remoting)
-    Fable.Remoting.Client
-//#endif
-//#if (bridge)
-    Elmish.Bridge.Client
-//#endif
-//#if (!remoting)
     Thoth.Fetch
-//#endif
-//#if (layout != "none")
-    Fulma
-    Fable.FontAwesome.Free
-//#endif
 

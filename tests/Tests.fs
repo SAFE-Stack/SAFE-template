@@ -42,8 +42,7 @@ let execParams exe arg dir : ExecParams =
 let logger = Log.create "SAFE"
 
 type TemplateArgs =
-    { Server : string option
-      Deploy : string option
+    { Deploy : string option
       Layout : string option
       JsDeps : string option
       Communication : string option
@@ -54,8 +53,7 @@ type TemplateArgs =
             value
             |> Option.map (sprintf "--%s %s" name)
 
-        [ "server", args.Server
-          "deploy", args.Deploy
+        [ "deploy", args.Deploy
           "layout", args.Layout
           "js-deps", args.JsDeps
           "communication", args.Communication

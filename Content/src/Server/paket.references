@@ -1,19 +1,4 @@
 group Server
     FSharp.Core
-//#if (server == "giraffe")
-    Giraffe
-//#elseif (server == "saturn")
     Saturn
-//#endif
-//#if (deploy == "azure")
-    Microsoft.ApplicationInsights.AspNetCore
-    WindowsAzure.Storage
-//#endif
-//#if     (remoting)
-    Fable.Remoting.Giraffe
-//#else
     Thoth.Json.Giraffe
-//#endif
-//#if (bridge)
-    Elmish.Bridge.Giraffe
-//#endif

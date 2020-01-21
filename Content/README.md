@@ -20,37 +20,13 @@ To concurrently run the server and the client components in watch mode use the f
 fake build -t Run
 ```
 
-//#if (deploy == "docker")
-
-You can use the included `Dockerfile` and `build.fsx` script to deploy your application as Docker container. You can find more regarding this topic in the [official template documentation](https://safe-stack.github.io/docs/template-docker/).
-
-//#endif
-//#if (deploy == "azure")
-
-You can use the included `arm-template.json` file and `build.fsx` script to deploy you application as an Azure Web App. Consult the [official template documentation](https://safe-stack.github.io/docs/template-appservice/) to learn more.
-
-//#endif
-
 ## SAFE Stack Documentation
 
 You will find more documentation about the used F# components at the following places:
 
-//#if (server == "giraffe")
-* [Giraffe](https://github.com/giraffe-fsharp/Giraffe/blob/master/DOCUMENTATION.md)
-//#elseif (server == "saturn")
 * [Saturn](https://saturnframework.org/docs/)
-//#endif
 * [Fable](https://fable.io/docs/)
 * [Elmish](https://elmish.github.io/elmish/)
-//#if (streams)
-* [Elmish.Streams](https://elmish-streams.readthedocs.io/)
-//#endif
-//#if (remoting)
-* [Fable.Remoting](https://zaid-ajaj.github.io/Fable.Remoting/)
-//#endif
-//#if (layout != "none")
-* [Fulma](https://fulma.github.io/Fulma/)
-//#endif
 
 If you want to know more about the full Azure Stack and all of it's components (including Azure) visit the official [SAFE documentation](https://safe-stack.github.io/docs/).
 

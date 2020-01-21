@@ -4,23 +4,8 @@ group Server
     storage: none
 
     nuget FSharp.Core
-//#if (server == "giraffe")
-    nuget Giraffe
-//#elseif (server == "saturn")
     nuget Saturn
-//#endif
-//#if (bridge)
-    nuget Elmish.Bridge.Giraffe ~> 3
-//#endif
-//#if (remoting)
-    nuget Fable.Remoting.Giraffe ~> 3
-//#else
     nuget Thoth.Json.Giraffe
-//#endif
-//#if (deploy == "azure")
-    nuget Microsoft.ApplicationInsights.AspNetCore
-    nuget WindowsAzure.Storage
-//#endif
 
 group Client
     source https://api.nuget.org/v3/index.json
@@ -32,24 +17,6 @@ group Client
     nuget Fable.Elmish.Debugger ~> 3
     nuget Fable.Elmish.HMR ~> 4
     nuget Fable.Elmish.React ~> 3
-//#if (streams)
-    nuget Fable.Elmish.Streams ~> 3
-    nuget FSharp.Control.AsyncRx ~> 1.0.0
-//#endif
-//#if (!remoting)
-    nuget Thoth.Fetch ~> 1
-//#endif
-    nuget Fable.React ~> 5
-//#if (remoting)
-    nuget Fable.Remoting.Client ~> 5
-//#endif
-//#if (bridge)
-    nuget Elmish.Bridge.Client ~> 3
-//#endif
-//#if (layout != "none")
-    nuget Fulma ~> 2
-    nuget Fable.FontAwesome.Free ~> 2
-//#endif
 
 group Build
     source https://api.nuget.org/v3/index.json
@@ -57,10 +24,3 @@ group Build
     framework: netstandard2.0
 
     nuget SAFE
-//#if (deploy == "azure")
-    nuget Fake.Core.Environment
-    nuget Fake.Core.Trace
-    nuget Fake.IO.Zip
-    github CompositionalIT/fshelpers src/FsHelpers/ArmHelper/ArmHelper.fs
-//#endif
-
