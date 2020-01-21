@@ -2,6 +2,11 @@
 
 * Testing SAFE.Tool
 
+#### 1.19.0 - 14.11.2019
+
+* Update to .NET Core 3.0 - https://github.com/SAFE-Stack/SAFE-template/pull/318
+* Fulma Admin template small position fix - https://github.com/SAFE-Stack/SAFE-template/pull/322
+
 #### 1.18.0 - 10.09.2019
 
 * Bump up JS dependencies - https://github.com/SAFE-Stack/SAFE-template/pull/314

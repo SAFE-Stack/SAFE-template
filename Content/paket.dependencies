@@ -1,34 +1,24 @@
 group Server
     source https://api.nuget.org/v3/index.json
-    framework: netcoreapp2.2
+    framework: netcoreapp3.0
     storage: none
 
     nuget FSharp.Core
-//#if (server == "suave")
-    nuget Suave
-//#elseif (server == "giraffe")
+//#if (server == "giraffe")
     nuget Giraffe
-    nuget Microsoft.AspNetCore
-    nuget Microsoft.AspNetCore.StaticFiles
 //#elseif (server == "saturn")
     nuget Saturn
 //#endif
-//#if (bridge && server == "suave")
-    nuget Elmish.Bridge.Suave ~> 3
-//#elseif (bridge && server != "suave")
+//#if (bridge)
     nuget Elmish.Bridge.Giraffe ~> 3
 //#endif
-//#if (!remoting && server != "suave")
-    nuget Thoth.Json.Giraffe
-//#elseif (!remoting && server == "suave")
-    nuget Thoth.Json.Net
-//#elseif (remoting && server == "suave")
-    nuget Fable.Remoting.Suave ~> 3
-//#elseif (remoting && server != "suave")
+//#if (remoting)
     nuget Fable.Remoting.Giraffe ~> 3
+//#else
+    nuget Thoth.Json.Giraffe
 //#endif
 //#if (deploy == "azure")
-    nuget Microsoft.ApplicationInsights.AspNetCore ~> 2.2
+    nuget Microsoft.ApplicationInsights.AspNetCore
     nuget WindowsAzure.Storage
 //#endif
 
@@ -44,6 +34,7 @@ group Client
     nuget Fable.Elmish.React ~> 3
 //#if (streams)
     nuget Fable.Elmish.Streams ~> 3
+    nuget FSharp.Control.AsyncRx ~> 1.0.0
 //#endif
 //#if (!remoting)
     nuget Thoth.Fetch ~> 1

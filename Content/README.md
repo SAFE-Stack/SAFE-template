@@ -8,7 +8,7 @@ You'll need to install the following pre-requisites in order to build SAFE appli
 
 * The [.NET Core SDK](https://www.microsoft.com/net/download)
 * [FAKE 5](https://fake.build/) installed as a [global tool](https://fake.build/fake-gettingstarted.html#Install-FAKE)
-* The [Yarn](https://yarnpkg.com/lang/en/docs/install/) package manager (you an also use `npm` but the usage of `yarn` is encouraged).
+* The [Yarn](https://yarnpkg.com/lang/en/docs/install/) package manager (you can also use `npm` but the usage of `yarn` is encouraged).
 * [Node LTS](https://nodejs.org/en/download/) installed for the front end components.
 * If you're running on OSX or Linux, you'll also need to install [Mono](https://www.mono-project.com/docs/getting-started/install/).
 
@@ -35,9 +35,7 @@ You can use the included `arm-template.json` file and `build.fsx` script to depl
 
 You will find more documentation about the used F# components at the following places:
 
-//#if (server == "suave")
-* [Suave](https://suave.io/index.html)
-//#elseif (server == "giraffe")
+//#if (server == "giraffe")
 * [Giraffe](https://github.com/giraffe-fsharp/Giraffe/blob/master/DOCUMENTATION.md)
 //#elseif (server == "saturn")
 * [Saturn](https://saturnframework.org/docs/)
