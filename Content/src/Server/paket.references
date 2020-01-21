@@ -4,8 +4,6 @@ group Server
     Suave
 //#elseif (server == "giraffe")
     Giraffe
-    Microsoft.AspNetCore
-    Microsoft.AspNetCore.StaticFiles
 //#elseif (server == "saturn")
     Saturn
 //#endif

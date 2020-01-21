@@ -1,12 +1,15 @@
-﻿GROUP Server
+GROUP Server
 STORAGE: NONE
-RESTRICTION: == netcoreapp2.2
+RESTRICTION: == netcoreapp3.0
 NUGET
   remote: https://api.nuget.org/v3/index.json
-    FSharp.Core (4.6.2)
-    Newtonsoft.Json (12.0.2)
-    Suave (2.5.4)
-      FSharp.Core (>= 4.3.4 < 5.0)
-    Thoth.Json.Net (3.2)
-      FSharp.Core
+    Fable.Core (3.1.3)
+      FSharp.Core (>= 4.7)
+    FSharp.Core (4.7)
+    Newtonsoft.Json (12.0.3)
+    Suave (2.5.6)
+      FSharp.Core (>= 4.3.4)
+    Thoth.Json.Net (3.6)
+      Fable.Core (>= 3.0 < 4.0)
+      FSharp.Core (>= 4.6.2)
       Newtonsoft.Json (>= 11.0.2)
