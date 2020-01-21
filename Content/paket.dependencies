@@ -4,26 +4,18 @@ group Server
     storage: none
 
     nuget FSharp.Core
-//#if (server == "suave")
-    nuget Suave
-//#elseif (server == "giraffe")
+//#if (server == "giraffe")
     nuget Giraffe
 //#elseif (server == "saturn")
     nuget Saturn
 //#endif
-//#if (bridge && server == "suave")
-    nuget Elmish.Bridge.Suave ~> 3
-//#elseif (bridge && server != "suave")
+//#if (bridge)
     nuget Elmish.Bridge.Giraffe ~> 3
 //#endif
-//#if (!remoting && server != "suave")
-    nuget Thoth.Json.Giraffe
-//#elseif (!remoting && server == "suave")
-    nuget Thoth.Json.Net
-//#elseif (remoting && server == "suave")
-    nuget Fable.Remoting.Suave ~> 3
-//#elseif (remoting && server != "suave")
+//#if (remoting)
     nuget Fable.Remoting.Giraffe ~> 3
+//#else
+    nuget Thoth.Json.Giraffe
 //#endif
 //#if (deploy == "azure")
     nuget Microsoft.ApplicationInsights.AspNetCore

@@ -143,13 +143,12 @@ type ClientPaketDependencies =
             let streams = if x.Streams then "streams" else "nostreams"
             sprintf "%s-%s-%s" communication fulma streams
 
-type ServerPaketDependency = Saturn | Giraffe | Suave
+type ServerPaketDependency = Saturn | Giraffe
 
     with override x.ToString () =
             match x with
             | Saturn -> "saturn"
             | Giraffe -> "giraffe"
-            | Suave -> "suave"
 
 type ServerPaketDependencies =
     { Server : ServerPaketDependency
@@ -212,7 +211,7 @@ let configs =
     [ for azure in [ false; true ] do
       for fulma in [ false; true ] do
       for communication in [ Some Bridge; Some Remoting; None ] do
-      for server in [ Saturn; Giraffe; Suave ] do
+      for server in [ Saturn; Giraffe ] do
       for streams in [ false; true ] do
       yield
           { Azure = azure
