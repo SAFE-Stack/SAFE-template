@@ -35,9 +35,7 @@ You can use the included `arm-template.json` file and `build.fsx` script to depl
 
 You will find more documentation about the used F# components at the following places:
 
-//#if (server == "suave")
-* [Suave](https://suave.io/index.html)
-//#elseif (server == "giraffe")
+//#if (server == "giraffe")
 * [Giraffe](https://github.com/giraffe-fsharp/Giraffe/blob/master/DOCUMENTATION.md)
 //#elseif (server == "saturn")
 * [Saturn](https://saturnframework.org/docs/)
