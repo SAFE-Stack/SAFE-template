@@ -1,4 +1,4 @@
-#r "paket: groupref build //"
+#r "paket: groupref main //"
 #load "./.fake/build.fsx/intellisense.fsx"
 
 #r "netstandard"

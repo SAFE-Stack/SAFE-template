@@ -1,28 +1,6 @@
-group Server
-    source https://api.nuget.org/v3/index.json
-    framework: netcoreapp3.1
-    storage: none
-
-    nuget FSharp.Core
-    nuget Saturn
-    nuget Thoth.Json.Giraffe
-
-group Client
-    source https://api.nuget.org/v3/index.json
-    framework: netstandard2.0
-    storage: none
-
-    nuget Fable.Core ~> 3
-    nuget Fable.Elmish ~> 3
-    nuget Fable.Elmish.Debugger ~> 3
-    nuget Fable.Elmish.HMR ~> 4
-    nuget Fable.Elmish.React ~> 3
-    nuget Thoth.Fetch ~> 1
-    nuget Fable.React ~> 5
-
-group Build
-    source https://api.nuget.org/v3/index.json
-    source ~/oss/safe/nupkg
-    framework: netstandard2.0
-
-    nuget SAFE
+source ~/oss/safe/nupkg
+source https://api.nuget.org/v3/index.json
+framework: netcoreapp3.1, netstandard2.0
+nuget SAFE
+nuget SAFE.Client
+nuget SAFE.Server

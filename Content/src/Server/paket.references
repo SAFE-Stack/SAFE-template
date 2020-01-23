@@ -1,4 +1,1 @@
-group Server
-    FSharp.Core
-    Saturn
-    Thoth.Json.Giraffe
+SAFE.Server
