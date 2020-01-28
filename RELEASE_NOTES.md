@@ -1,3 +1,7 @@
+#### 1.19.1 - 28.01.2020
+
+* Fix program launch to correct netcoreapp - https://github.com/SAFE-Stack/SAFE-template/pull/331
+
 #### 1.19.0 - 14.11.2019
 
 * Update to .NET Core 3.0 - https://github.com/SAFE-Stack/SAFE-template/pull/318
