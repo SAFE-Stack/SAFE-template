@@ -1,3 +1,7 @@
+#### 1.20.0 - 04.02.2020
+
+* Update Saturn to 0.11 - https://github.com/SAFE-Stack/SAFE-template/pull/334
+
 #### 1.19.1 - 28.01.2020
 
 * Fix program launch to correct netcoreapp - https://github.com/SAFE-Stack/SAFE-template/pull/331
