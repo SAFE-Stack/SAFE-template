@@ -10,6 +10,7 @@ group Server
     nuget Giraffe
 //#elseif (server == "saturn")
     nuget Saturn
+    nuget Microsoft.AspNetCore.Authentication.JwtBearer 3.0.2 // pin for netcoreapp30
 //#endif
 //#if (bridge && server == "suave")
     nuget Elmish.Bridge.Suave ~> 3
