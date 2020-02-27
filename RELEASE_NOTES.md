@@ -1,3 +1,7 @@
+#### 1.21.0 - 27.02.2020
+
+* Update NPM and Yarn dependencies - https://github.com/SAFE-Stack/SAFE-template/pull/338
+
 #### 1.20.0 - 04.02.2020
 
 * Update Saturn to 0.11 - https://github.com/SAFE-Stack/SAFE-template/pull/334
