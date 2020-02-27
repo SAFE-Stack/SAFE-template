@@ -7,5 +7,3 @@ bin/
 gen-paket-lock-files/
 /.vs
 .ionide/
-# webpack config comes from https://github.com/fable-compiler/webpack-config-template, see build script
-Content/webpack.config.js

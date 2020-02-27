@@ -29,7 +29,6 @@ let formattedRN =
 
 Target.create "Clean" (fun _ ->
     Shell.cleanDirs [ nupkgDir ]
-    Git.CommandHelper.directRunGitCommandAndFail "./Content" "clean -fxd"
 )
 
 Target.create "BuildWebPackConfig" (fun _ ->
@@ -192,7 +191,6 @@ Target.create "Release" ignore
 open Fake.Core.TargetOperators
 
 "Clean"
-    ==> "BuildWebPackConfig"
     ==> "Pack"
     ==> "Install"
     ==> "Tests"
