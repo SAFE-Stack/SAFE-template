@@ -45,7 +45,7 @@ You will find more documentation about the used F# components at the following p
 * [Fable](https://fable.io/docs/)
 * [Elmish](https://elmish.github.io/elmish/)
 //#if (streams)
-* [Elmish.Streams](https://elmish-streams.readthedocs.io/)
+* [Elmish.Streams](https://fablereaction.readthedocs.io/en/latest/fable.reaction)
 //#endif
 //#if (remoting)
 * [Fable.Remoting](https://zaid-ajaj.github.io/Fable.Remoting/)

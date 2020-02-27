@@ -117,7 +117,7 @@
                 },
                 {
                     "choice": "streams",
-                    "description": "use simple Elmish architecture without Commands + Elmish.Streams (https://elmish-streams.readthedocs.io/) for reactive pattern"
+                    "description": "use simple Elmish architecture without Commands + Elmish.Streams (https://fablereaction.readthedocs.io/en/latest/fable.reaction) for reactive pattern"
                 }
             ]
         },
