@@ -1,3 +1,8 @@
+#### 1.22.0 - 10.03.2020
+
+* Use FAKE and Paket local tools in template output - https://github.com/SAFE-Stack/SAFE-template/pull/339
+* Update publisher for vscode csharp extension - https://github.com/SAFE-Stack/SAFE-template/pull/340
+
 #### 1.21.0 - 27.02.2020
 
 * Update NPM and Yarn dependencies - https://github.com/SAFE-Stack/SAFE-template/pull/338
