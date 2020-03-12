@@ -1,3 +1,7 @@
+#### 1.22.1 - 12.03.2020
+
+* Fix devServerProxy context paths - https://github.com/SAFE-Stack/SAFE-template/pull/341
+
 #### 1.22.0 - 10.03.2020
 
 * Use FAKE and Paket local tools in template output - https://github.com/SAFE-Stack/SAFE-template/pull/339
