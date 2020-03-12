@@ -1,5 +1,5 @@
 #r "paket: groupref main //"
-#load "./.fake/build.fsx/intellisense.fsx"
+#load "./.fake/safe.fsx/intellisense.fsx"
 
 #r "netstandard"
 
