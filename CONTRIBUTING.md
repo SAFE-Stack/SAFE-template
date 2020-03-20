@@ -2,8 +2,8 @@
 
 ## Building the template
 
-1. install FAKE 5 as global tool
-1. `fake build` - default target is `Install`, which will build the template and invoke `dotnet new -i <<repo-path>>/nupkg/SAFE.Template.<<version>>.nupkg`
+1. `dotnet tool restore` - Only needed the first time you use a particular FAKE version as a local tool.
+1. `dotnet fake build` - default target is `Install`, which will build the template and invoke `dotnet new -i <<repo-path>>/nupkg/SAFE.Template.<<version>>.nupkg`
 1. you can now test current code with `dotnet new SAFE`
 
 ## Updating Paket dependencies
