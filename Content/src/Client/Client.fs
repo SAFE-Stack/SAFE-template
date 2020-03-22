@@ -1,6 +1,7 @@
 module Client
 
 open Elmish
+open Elmish.React
 open Fable.React
 open Fable.React.Props
 open Thoth.Fetch
