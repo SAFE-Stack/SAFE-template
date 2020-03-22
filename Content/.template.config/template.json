@@ -59,23 +59,23 @@
                 },
                 {
                     "choice": "fulma-admin",
-                    "description": "add Fulma with 'Admin' Bulma template from https://dansup.github.io/bulma-templates/"
+                    "description": "add Fulma with 'Admin' Bulma template from https://bulmatemplates.github.io/bulma-templates/"
                 },
                 {
                     "choice": "fulma-cover",
-                    "description": "add Fulma with 'Cover' Bulma template from https://dansup.github.io/bulma-templates/"
+                    "description": "add Fulma with 'Cover' Bulma template from https://bulmatemplates.github.io/bulma-templates/"
                 },
                 {
                     "choice": "fulma-hero",
-                    "description": "add Fulma with 'Hero' Bulma template from https://dansup.github.io/bulma-templates/"
+                    "description": "add Fulma with 'Hero' Bulma template from https://bulmatemplates.github.io/bulma-templates/"
                 },
                 {
                     "choice": "fulma-landing",
-                    "description": "add Fulma with 'Landing' Bulma template from https://dansup.github.io/bulma-templates/"
+                    "description": "add Fulma with 'Landing' Bulma template from https://bulmatemplates.github.io/bulma-templates/"
                 },
                 {
                     "choice": "fulma-login",
-                    "description": "add Fulma with 'Login' Bulma template from https://dansup.github.io/bulma-templates/"
+                    "description": "add Fulma with 'Login' Bulma template from https://bulmatemplates.github.io/bulma-templates/"
                 }
             ]
         },
