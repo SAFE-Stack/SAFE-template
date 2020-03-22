@@ -61,21 +61,21 @@
                 },
                 {
                     "exclude": [
-                        "webpack.config.js",
+                        "src/Client/webpack.config.js",
                         "src/Client/View.fs"
                     ],
                     "condition": "(minimal)"
                 },
                 {
                     "exclude": [
-                        "webpack.minimal.config.js",
+                        "src/Client/webpack.minimal.config.js",
                         "src/Client/View.Minimal.fs"
                     ],
                     "condition": "(!minimal)"
                 },
                 {
                     "rename": {
-                        "webpack.minimal.config.js": "webpack.config.js",
+                        "src/Client/webpack.minimal.config.js": "src/Client/webpack.config.js",
                         "src/Client/View.Minimal.fs": "src/Client/View.fs"
                     }
                 }

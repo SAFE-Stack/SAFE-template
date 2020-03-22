@@ -1,4 +1,4 @@
-﻿// Template for webpack.config.js in Fable projects
+// Template for webpack.config.js in Fable projects
 // Find latest version in https://github.com/fable-compiler/webpack-config-template
 
 // In most cases, you'll only need to edit the CONFIG object (after dependencies)
@@ -10,49 +10,33 @@ var path = require('path');
 var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
-var MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 var CONFIG = {
     // The tags to include the generated JS and CSS will be automatically injected in the HTML template
     // See https://github.com/jantimon/html-webpack-plugin
-    indexHtmlTemplate: './src/Client/index.html',
-    fsharpEntry: './src/Client/Client.fsproj',
-    cssEntry: './src/Client/style.scss',
-    outputDir: './src/Client/deploy',
-    assetsDir: './src/Client/public',
+    indexHtmlTemplate: './index.html',
+    fsharpEntry: './Client.fsproj',
+    outputDir: './deploy',
+    assetsDir: './public',
     devServerPort: 8080,
     // When using webpack-dev-server, you may need to redirect some calls
     // to a external API server. See https://webpack.js.org/configuration/dev-server/#devserver-proxy
     devServerProxy: {
-        // redirect requests that start with /api/* to the server on port 8085
-        '/api/*': {
+        // redirect requests that start with /api/ to the server on port 8085
+        '/api/**': {
             target: 'http://localhost:' + (process.env.SERVER_PROXY_PORT || "8085"),
                changeOrigin: true
            },
-        // redirect websocket requests that start with /socket/* to the server on the port 8085
-        '/socket/*': {
+        // redirect websocket requests that start with /socket/ to the server on the port 8085
+        '/socket/**': {
             target: 'http://localhost:' + (process.env.SERVER_PROXY_PORT || "8085"),
             ws: true
            }
-       },
-    // Use babel-preset-env to generate JS compatible with most-used browsers.
-    // More info at https://babeljs.io/docs/en/next/babel-preset-env.html
-    babel: {
-        presets: [
-            ['@babel/preset-env', {
-                modules: false,
-                // This adds polyfills when needed. Requires core-js dependency.
-                // See https://babeljs.io/docs/en/babel-preset-env#usebuiltins
-                // Note that you still need to add custom polyfills if necessary (e.g. whatwg-fetch)
-                useBuiltIns: 'usage',
-                corejs: 3
-            }]
-        ],
-    }
+       }
 }
 
 // If we're running the webpack-dev-server, assume we're in development mode
-var isProduction = !process.argv.find(v => v.indexOf('webpack-dev-server') !== -1);
+var isProduction = true; //!process.argv.find(v => v.indexOf('webpack-dev-server') !== -1);
 console.log('Bundling for ' + (isProduction ? 'production' : 'development') + '...');
 
 // The HtmlWebpackPlugin allows us to use a template for the index.html page
@@ -70,10 +54,9 @@ module.exports = {
     // with the code because the MiniCssExtractPlugin will extract the
     // CSS in a separate files.
     entry: isProduction ? {
-        app: [resolve(CONFIG.fsharpEntry), resolve(CONFIG.cssEntry)]
+        app: [resolve(CONFIG.fsharpEntry)]
     } : {
-            app: [resolve(CONFIG.fsharpEntry)],
-            style: [resolve(CONFIG.cssEntry)]
+            app: [resolve(CONFIG.fsharpEntry)]
         },
     // Add a hash to the output file name in production
     // to prevent browser caching if code changes
@@ -82,7 +65,6 @@ module.exports = {
         filename: isProduction ? '[name].[hash].js' : '[name].js'
     },
     mode: isProduction ? 'production' : 'development',
-    devtool: isProduction ? 'source-map' : 'eval-source-map',
     optimization: {
         splitChunks: {
             chunks: 'all'
@@ -91,13 +73,12 @@ module.exports = {
     // Besides the HtmlPlugin, we use the following plugins:
     // PRODUCTION
     //      - MiniCssExtractPlugin: Extracts CSS from bundle to a different file
-    //          To minify CSS, see https://github.com/webpack-contrib/mini-css-extract-plugin#minimizing-for-production    
+    //          To minify CSS, see https://github.com/webpack-contrib/mini-css-extract-plugin#minimizing-for-production
     //      - CopyWebpackPlugin: Copies static assets to output directory
     // DEVELOPMENT
     //      - HotModuleReplacementPlugin: Enables hot reloading when code changes without refreshing
     plugins: isProduction ?
         commonPlugins.concat([
-            new MiniCssExtractPlugin({ filename: 'style.[hash].css' }),
             new CopyWebpackPlugin([{ from: resolve(CONFIG.assetsDir) }]),
         ])
         : commonPlugins.concat([
@@ -139,22 +120,6 @@ module.exports = {
                     loader: 'babel-loader',
                     options: CONFIG.babel
                 },
-            },
-            {
-                test: /\.(sass|scss|css)$/,
-                use: [
-                    isProduction
-                        ? MiniCssExtractPlugin.loader
-                        : 'style-loader',
-                    'css-loader',
-                    {
-                        loader: 'resolve-url-loader',
-                    },
-                    {
-                      loader: 'sass-loader',
-                      options: { implementation: require('sass') }
-                    }
-                ],
             },
             {
                 test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)(\?.*)?$/,

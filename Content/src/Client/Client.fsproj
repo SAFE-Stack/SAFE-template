@@ -6,6 +6,9 @@
     </PropertyGroup>
     <ItemGroup>
         <None Include="index.html" />
+        <None Include="package.json" />
+        <None Include="package-lock.json" />
+        <None Include="webpack.config.js" />
 <!--#if (minimal)-->
 <!--#else
         <None Include="paket.references" />

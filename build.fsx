@@ -33,7 +33,7 @@ Target.create "Clean" (fun _ ->
 
 Target.create "BuildWebPackConfig" (fun _ ->
     let srcDir = "paket-files/fable-compiler/webpack-config-template/webpack.config.js"
-    let destDir = "Content/webpack.config.js"
+    let destDir = "Content/src/Client/webpack.config.js"
     Shell.copyFile destDir srcDir
 
     let devServerProxy =
@@ -54,11 +54,9 @@ Target.create "BuildWebPackConfig" (fun _ ->
 
     let replacements =
         [
-            "indexHtmlTemplate", quote "./src/Client/index.html"
-            "fsharpEntry", quote "./src/Client/Client.fsproj"
-            "cssEntry", quote "./src/Client/style.scss"
-            "outputDir", quote "./src/Client/deploy"
-            "assetsDir", quote "./src/Client/public"
+            "indexHtmlTemplate", quote "./index.html"
+            "fsharpEntry", quote "./Client.fsproj"
+            "cssEntry", quote "./style.scss"
             "devServerProxy", devServerProxy
         ]
 
