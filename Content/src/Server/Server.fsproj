@@ -5,11 +5,20 @@
         <TargetFramework>netcoreapp3.1</TargetFramework>
     </PropertyGroup>
     <ItemGroup>
+#if (!minimal)
         <None Include="paket.references" />
+#endif
         <Compile Include="Server.fs" />
     </ItemGroup>
     <ItemGroup>
-      <ProjectReference Include="..\Shared\Shared.fsproj" />
+        <ProjectReference Include="..\Shared\Shared.fsproj" />
     </ItemGroup>
+#if (minimal)
+    <ItemGroup>
+        <PackageReference Include="saturn" Version="0.12.1" />
+        <PackageReference Include="thoth.json.giraffe" Version="4.0.0" />
+    </ItemGroup>
+#else
     <Import Project="..\..\.paket\Paket.Restore.targets" />
+#endif
 </Project>

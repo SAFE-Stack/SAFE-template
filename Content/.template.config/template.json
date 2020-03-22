@@ -21,17 +21,49 @@
             "type": "generated",
             "generator": "now",
             "parameters": {
-              "format": "yyyy-MM-dd"
+                "format": "yyyy-MM-dd"
             },
-            "replaces":"1970-01-01"
+            "replaces": "1970-01-01"
+        },
+        "minimal": {
+            "type": "parameter",
+            "dataType": "bool",
+            "defaultValue": "false"
         }
     },
     "sources": [
         {
-            "exclude": [
-                "**/.template.config/**/*"
-            ],
-            "modifiers": []
+            "modifiers": [
+                {
+                    "exclude": [
+                        "**/[Bb]in/**",
+                        "**/[Oo]bj/**",
+                        ".template.config/**/*",
+                        "**/*.filelist",
+                        "**/*.user",
+                        "**/*.lock.json"
+                    ]
+                },
+                {
+                    "exclude": [
+                        "**/.config/**",
+                        "**/.devcontainer/**",
+                        "**/.paket/**",
+                        "**/.vscode/**",
+                        "**/.editorconfig",
+                        "**/RELEASE_NOTES.md",
+                        "**/paket.*",
+                        "**/*.fsx",
+                        "**/*.scss"
+                    ],
+                    "condition": "(minimal)"
+                },
+                {
+                    "exclude": [
+                    ],
+                    "condition": "(!minimal)"
+                }
+            ]
         }
     ],
     "SpecialCustomOperations": {
