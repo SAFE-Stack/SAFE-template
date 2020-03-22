@@ -6,10 +6,15 @@ open Saturn
 
 open Shared
 
-open SAFE.Server
+let getEnvVar (name: string) (defaultValue: string) =
+    System.Environment.GetEnvironmentVariable name
+    |> function
+    | null
+    | "" -> defaultValue
+    | x -> x
 
-let publicPath = Environment.getEnvVar "public_path" "../Client/public" |> Path.GetFullPath
-let port = Environment.getEnvVar "PORT" "8085" |> uint16
+let publicPath = getEnvVar "public_path" "../Client/public" |> Path.GetFullPath
+let port = getEnvVar "PORT" "8085" |> uint16
 
 let webApp =
     router {

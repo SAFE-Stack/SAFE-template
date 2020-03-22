@@ -54,14 +54,21 @@
                         "**/RELEASE_NOTES.md",
                         "**/paket.*",
                         "**/*.fsx",
-                        "**/*.scss"
+                        "**/*.scss",
+                        "webpack.config.js"
                     ],
                     "condition": "(minimal)"
                 },
                 {
                     "exclude": [
+                        "webpack.minimal.config.js"
                     ],
                     "condition": "(!minimal)"
+                },
+                {
+                    "rename": {
+                        "webpack.minimal.config.js": "webpack.config.js"
+                    }
                 }
             ]
         }

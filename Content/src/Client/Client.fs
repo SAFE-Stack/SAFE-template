@@ -23,7 +23,7 @@ type Msg =
     | Decrement
     | InitialCountLoaded of Counter
 
-let initialCounter () = Fetch.fetchAs<Counter> "/api/init"
+let initialCounter () = Fetch.fetchAs<_, Counter> "/api/init"
 
 // defines the initial state and initial command (= side-effect) of the application
 let init () : Model * Cmd<Msg> =
