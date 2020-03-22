@@ -62,7 +62,8 @@ let safeComponents =
              a [ Href "https://elmish.github.io" ] [ str "Elmish" ]
            ]
 
-    span [ ]
+    footer
+        [ Style [ Margin 30 ] ]
         [ str "Version "
           strong [ ] [ str Version.app ]
           str " powered by: "
@@ -73,13 +74,20 @@ let show = function
     | { Counter = None   } -> "Loading..."
 
 let view (model : Model) (dispatch : Msg -> unit) =
-    div []
-        [ h1 [] [ str "SAFE Template" ]
-          p  [] [ str "The initial counter is fetched from server" ]
-          p  [] [ str "Press buttons to manipulate counter:" ]
-          button [ OnClick (fun _ -> dispatch Decrement) ] [ str "-" ]
-          div [] [ str (show model) ]
-          button [ OnClick (fun _ -> dispatch Increment) ] [ str "+" ]
+    div [ Style
+            [ TextAlign TextAlignOptions.Center
+              Padding 40 ] ]
+        [ img [ Src "favicon.png" ]
+          h1 [] [ str "SAFE Template" ]
+          h2 [] [ str (show model) ]
+          button
+            [ Style [ Margin 5; Padding 10 ]
+              OnClick (fun _ -> dispatch Decrement) ]
+            [ str "-" ]
+          button
+            [ Style [ Margin 5; Padding 10 ]
+              OnClick (fun _ -> dispatch Increment) ]
+            [ str "+" ]
           safeComponents ]
 
 //-:cnd:noEmit
