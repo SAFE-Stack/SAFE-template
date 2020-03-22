@@ -5,10 +5,11 @@
         <DefineConstants>FABLE_COMPILER</DefineConstants>
     </PropertyGroup>
     <ItemGroup>
-#if (!minimal)
+<!--#if (minimal)-->
+<!--#else
         <None Include="paket.references" />
         <None Include="style.scss" />
-#endif
+#endif-->
         <None Include="index.html" />
         <Compile Include="Version.fs" />
         <Compile Include="Client.fs" />
@@ -16,16 +17,18 @@
     <ItemGroup>
         <ProjectReference Include="..\Shared\Shared.fsproj" />
     </ItemGroup>
-#if (minimal)
+<!--#if (minimal)-->
     <ItemGroup>
         <PackageReference Include="fable.core" Version="3.1.5" />
         <PackageReference Include="fable.elmish" Version="3.0.6" />
         <PackageReference Include="fable.elmish.react" Version="3.0.1" />
+        <PackageReference Include="fable.elmish.debugger" Version="3.0.3" />
+        <PackageReference Include="fable.elmish.hmr" Version="4.0.1" />
         <PackageReference Include="fable.react" Version="5.3.6" />
         <PackageReference Include="fulma" Version="2.7.0" />
         <PackageReference Include="thoth.fetch" Version="2.0.0" />
     </ItemGroup>
-#else
+<!--#else
     <Import Project="..\..\.paket\Paket.Restore.targets" />
-#endif
+#endif-->
 </Project>

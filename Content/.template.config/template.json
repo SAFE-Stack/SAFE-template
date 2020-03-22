@@ -97,7 +97,29 @@
                 }
             ]
         },
-        "**/*.fs*": {
+        "**/*.fsproj": {
+            "operations": [
+                {
+                    "type": "conditional",
+                    "configuration": {
+                        "if": [
+                            "<!--#if"
+                        ],
+                        "else": [
+                            "<!--#else",
+                            "#else-->"
+                        ],
+                        "endif": [
+                            "<!--#endif",
+                            "#endif-->"
+                        ],
+                        "trim": "true",
+                        "wholeLine": "true"
+                    }
+                }
+            ]
+        },
+        "**/*.fs": {
             "operations": [
                 {
                     "type": "conditional",
