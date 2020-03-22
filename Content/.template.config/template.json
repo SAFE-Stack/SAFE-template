@@ -61,22 +61,19 @@
                 },
                 {
                     "exclude": [
-                        "src/Client/webpack.config.js",
-                        "src/Client/View.fs"
+                        "src/Client/webpack.config.js"
                     ],
                     "condition": "(minimal)"
                 },
                 {
                     "exclude": [
-                        "src/Client/webpack.minimal.config.js",
-                        "src/Client/View.Minimal.fs"
+                        "src/Client/webpack.minimal.config.js"
                     ],
                     "condition": "(!minimal)"
                 },
                 {
                     "rename": {
-                        "src/Client/webpack.minimal.config.js": "src/Client/webpack.config.js",
-                        "src/Client/View.Minimal.fs": "src/Client/View.fs"
+                        "src/Client/webpack.minimal.config.js": "src/Client/webpack.config.js"
                     }
                 }
             ]
@@ -134,16 +131,20 @@
                     "type": "conditional",
                     "configuration": {
                         "if": [
-                            "#if"
+                            "#if",
+                            "//#if",
+                            "(*#else"
                         ],
                         "else": [
-                            "#else"
-                        ],
-                        "elseif": [
-                            "#elseif"
+                            "#else",
+                            "//#else",
+                            "(*#else",
+                            "#else*)"
                         ],
                         "endif": [
-                            "#endif"
+                            "#endif",
+                            "//#endif",
+                            "#endif*)"
                         ],
                         "trim": "true",
                         "wholeLine": "true"

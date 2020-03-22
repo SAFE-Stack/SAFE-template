@@ -15,12 +15,6 @@
         <None Include="style.scss" />
         <Compile Include="Version.fs" />
 #endif-->
-        <Compile Include="State.fs" />
-<!--#if (minimal)-->
-        <Compile Include="View.Minimal.fs" />
-<!--#else
-        <Compile Include="View.fs" />
-#endif-->
         <Compile Include="Client.fs" />
     </ItemGroup>
     <ItemGroup>
