@@ -46,28 +46,37 @@
                 },
                 {
                     "exclude": [
-                        "**/.config/**",
-                        "**/.devcontainer/**",
-                        "**/.paket/**",
-                        "**/.vscode/**",
-                        "**/.editorconfig",
-                        "**/RELEASE_NOTES.md",
+                        ".config/**",
+                        ".devcontainer/**",
+                        ".paket/**",
+                        ".vscode/**",
+                        ".editorconfig",
+                        "RELEASE_NOTES.md",
                         "**/paket.*",
-                        "**/*.fsx",
-                        "**/*.scss",
-                        "webpack.config.js"
+                        "*.fsx",
+                        "src/Client/style.scss",
+                        "src/Client/Version.fs"
                     ],
                     "condition": "(minimal)"
                 },
                 {
                     "exclude": [
-                        "webpack.minimal.config.js"
+                        "webpack.config.js",
+                        "src/Client/View.fs"
+                    ],
+                    "condition": "(minimal)"
+                },
+                {
+                    "exclude": [
+                        "webpack.minimal.config.js",
+                        "src/Client/View.Minimal.fs"
                     ],
                     "condition": "(!minimal)"
                 },
                 {
                     "rename": {
-                        "webpack.minimal.config.js": "webpack.config.js"
+                        "webpack.minimal.config.js": "webpack.config.js",
+                        "src/Client/View.Minimal.fs": "src/Client/View.fs"
                     }
                 }
             ]
