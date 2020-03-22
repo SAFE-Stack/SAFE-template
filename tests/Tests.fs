@@ -20,11 +20,6 @@ let dotnet =
     | null -> "dotnet"
     | x -> x
 
-let fake =
-    match Environment.GetEnvironmentVariable "FAKE_PATH" with
-    | null -> "fake"
-    | x -> x
-
 let maxTests =
     match Environment.GetEnvironmentVariable "MAX_TESTS" with
     | null -> 15
@@ -267,14 +262,15 @@ let tests =
             Expect.isTrue (File.exists (dir </> "paket.lock"))
                 (sprintf "paket.lock not present for '%s'" newSAFEArgs)
 
-            // see if `fake build` succeeds
-            run fake "build" dir
+            run dotnet "tool restore" dir
+            // see if `dotnet fake build` succeeds
+            run dotnet ("fake build") dir
 
-            // see if `fake build -t run` succeeds and webpack serves the index page
+            // see if `dotnet fake build -t run` succeeds and webpack serves the index page
             let stdOutPhrase = ": Compiled successfully."
             let htmlSearchPhrase = """<title>SAFE Template</title>"""
             let timeout = TimeSpan.FromMinutes 5.
-            let proc = start fake "build -t run" dir
+            let proc = start dotnet "fake build -t run" dir
             try
                 let waitResult = waitForStdOut proc stdOutPhrase timeout
                 if waitResult then
@@ -282,7 +278,7 @@ let tests =
                     Expect.stringContains response htmlSearchPhrase
                         (sprintf "html fragment not found for '%s'" newSAFEArgs)
                 else
-                    raise (Expecto.FailedException (sprintf "`fake build -t run` timeout for '%s'" newSAFEArgs))
+                    raise (Expecto.FailedException (sprintf "`dotnet fake build -t run` timeout for '%s'" newSAFEArgs))
             finally
                 killProcessTree proc.Id
 

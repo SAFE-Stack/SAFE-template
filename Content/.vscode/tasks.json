@@ -14,8 +14,8 @@
         },
         {
             "label": "Watch Client and Server",
-            "command": "fake",
-            "args": [ "build", "-t", "Run" ],
+            "command": "dotnet",
+            "args": [ "fake", "build", "-t", "Run" ],
             "type": "shell",
             "options": {
                 "cwd": "${workspaceFolder}",
@@ -46,8 +46,8 @@
         },
         {
             "label": "Watch Client",
-            "command": "fake",
-            "args": [ "build", "-t", "Run" ],
+            "command": "dotnet",
+            "args": [ "fake", "build", "-t", "Run" ],
             "type": "shell",
             "options": {
                 "cwd": "${workspaceFolder}",

@@ -2,6 +2,35 @@
 
 * Testing SAFE.Tool
 
+#### 1.22.3 - 22.03.2020
+
+* Fix Bulma template links - https://github.com/SAFE-Stack/SAFE-template/pull/345
+
+#### 1.22.2 - 16.03.2020
+
+* Bump acorn from 6.3.0 to 6.4.1 - https://github.com/SAFE-Stack/SAFE-template/pull/342
+
+#### 1.22.1 - 12.03.2020
+
+* Fix devServerProxy context paths - https://github.com/SAFE-Stack/SAFE-template/pull/341
+
+#### 1.22.0 - 10.03.2020
+
+* Use FAKE and Paket local tools in template output - https://github.com/SAFE-Stack/SAFE-template/pull/339
+* Update publisher for vscode csharp extension - https://github.com/SAFE-Stack/SAFE-template/pull/340
+
+#### 1.21.0 - 27.02.2020
+
+* Update NPM and Yarn dependencies - https://github.com/SAFE-Stack/SAFE-template/pull/338
+
+#### 1.20.0 - 04.02.2020
+
+* Update Saturn to 0.11 - https://github.com/SAFE-Stack/SAFE-template/pull/334
+
+#### 1.19.1 - 28.01.2020
+
+* Fix program launch to correct netcoreapp - https://github.com/SAFE-Stack/SAFE-template/pull/331
+
 #### 1.19.0 - 14.11.2019
 
 * Update to .NET Core 3.0 - https://github.com/SAFE-Stack/SAFE-template/pull/318
