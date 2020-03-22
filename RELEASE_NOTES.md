@@ -1,3 +1,7 @@
+#### 1.22.3 - 22.03.2020
+
+* Fix Bulma template links - https://github.com/SAFE-Stack/SAFE-template/pull/345
+
 #### 1.22.2 - 16.03.2020
 
 * Bump acorn from 6.3.0 to 6.4.1 - https://github.com/SAFE-Stack/SAFE-template/pull/342
