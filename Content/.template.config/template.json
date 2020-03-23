@@ -133,7 +133,7 @@
                         "if": [
                             "#if",
                             "//#if",
-                            "(*#else"
+                            "(*#if"
                         ],
                         "else": [
                             "#else",
@@ -144,6 +144,7 @@
                         "endif": [
                             "#endif",
                             "//#endif",
+                            "(*#endif",
                             "#endif*)"
                         ],
                         "trim": "true",
