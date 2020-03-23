@@ -54,7 +54,6 @@
                         "RELEASE_NOTES.md",
                         "**/paket.*",
                         "*.fsx",
-                        "src/Client/style.scss",
                         "src/Client/Version.fs"
                     ],
                     "condition": "(minimal)"

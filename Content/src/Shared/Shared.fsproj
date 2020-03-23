@@ -7,7 +7,7 @@
         <Compile Include="Shared.fs" />
     </ItemGroup>
 <!--#if (minimal)-->
-<!--#else
+<!--#else-->
     <Import Project="..\..\.paket\Paket.Restore.targets" />
-#endif-->
+<!--#endif-->
 </Project>

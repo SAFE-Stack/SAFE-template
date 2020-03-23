@@ -46,7 +46,7 @@ let update (msg: Msg) (currentModel: Model): Model * Cmd<Msg> =
         nextModel, Cmd.none
     | _ -> currentModel, Cmd.none
 
-//#if minimal
+(*//#if minimal
 let show =
     function
     | { Counter = Some counter } -> string counter.Value
@@ -70,7 +70,7 @@ let view (model: Model) (dispatch: Msg -> unit) =
                   [ Margin 5
                     Padding 10 ]
                 OnClick(fun _ -> dispatch Increment) ] [ str "+" ] ]
-(*#else
+#else*)
 let safeComponents =
     let components =
         span []
@@ -98,7 +98,7 @@ let view (model: Model) (dispatch: Msg -> unit) =
         [ img [ Src "favicon.png" ]
           h1 [] [ str "SAFE Template" ]
           safeComponents ]
-#endif*)
+(*#endif*)
 
 //-:cnd:noEmit
 #if DEBUG

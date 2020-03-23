@@ -1,6 +1,26 @@
-source ~/oss/safe/nupkg
 source https://api.nuget.org/v3/index.json
 framework: netcoreapp3.1, netstandard2.0
-nuget SAFE
-nuget SAFE.Client
-nuget SAFE.Server
+storage: none
+
+nuget Saturn
+nuget Thoth.Json.Giraffe
+
+nuget Fable.Core
+nuget Thoth.Fetch
+nuget Fable.Elmish
+nuget Fable.Elmish.React
+nuget Fable.Elmish.Debugger
+nuget Fable.Elmish.HMR
+nuget Fable.React
+nuget Fulma
+
+group Build
+    source https://api.nuget.org/v3/index.json
+    framework: netstandard2.0
+    storage: none
+
+    nuget FSharp.Core
+    nuget Fake.Core.ReleaseNotes
+    nuget Fake.Core.Target
+    nuget Fake.DotNet.Cli
+    nuget Fake.IO.FileSystem

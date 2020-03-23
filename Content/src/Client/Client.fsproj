@@ -10,17 +10,16 @@
         <None Include="package-lock.json" />
         <None Include="webpack.config.js" />
 <!--#if (minimal)-->
-<!--#else
+<!--#else-->
         <None Include="paket.references" />
-        <None Include="style.scss" />
         <Compile Include="Version.fs" />
-#endif-->
+<!--#endif-->
         <Compile Include="Client.fs" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Shared\Shared.fsproj" />
     </ItemGroup>
-<!--#if (minimal)-->
+<!--#if (minimal)
     <ItemGroup>
         <PackageReference Include="fable.core" Version="3.1.5" />
         <PackageReference Include="fable.elmish" Version="3.0.6" />
@@ -30,7 +29,7 @@
         <PackageReference Include="fable.react" Version="5.3.6" />
         <PackageReference Include="thoth.fetch" Version="2.0.0" />
     </ItemGroup>
-<!--#else
+#else-->
     <Import Project="..\..\.paket\Paket.Restore.targets" />
-#endif-->
+<!--#endif-->
 </Project>
