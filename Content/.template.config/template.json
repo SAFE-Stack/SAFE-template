@@ -60,7 +60,7 @@
                 },
                 {
                     "exclude": [
-                        "src/Client/webpack.config.js"
+                        "src/Client/webpack.default.config.js"
                     ],
                     "condition": "(minimal)"
                 },
@@ -72,6 +72,7 @@
                 },
                 {
                     "rename": {
+                        "src/Client/webpack.default.config.js": "src/Client/webpack.config.js",
                         "src/Client/webpack.minimal.config.js": "src/Client/webpack.config.js"
                     }
                 }
