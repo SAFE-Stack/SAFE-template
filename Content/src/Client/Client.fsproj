@@ -1,35 +1,35 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <TargetFramework>netstandard2.0</TargetFramework>
-        <DefineConstants>FABLE_COMPILER</DefineConstants>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <DefineConstants>FABLE_COMPILER</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="index.html" />
+    <None Include="package.json" />
+    <None Include="package-lock.json" />
+    <None Include="webpack.config.js" />
+    <!--#if (minimal)-->
+    <!--#else-->
+    <None Include="paket.references" />
+    <Compile Include="Version.fs" />
+    <!--#endif-->
+    <Compile Include="Client.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Shared\Shared.fsproj" />
+  </ItemGroup>
+  <!--#if (minimal)
     <ItemGroup>
-        <None Include="index.html" />
-        <None Include="package.json" />
-        <None Include="package-lock.json" />
-        <None Include="webpack.config.js" />
-<!--#if (minimal)-->
-<!--#else-->
-        <None Include="paket.references" />
-        <Compile Include="Version.fs" />
-<!--#endif-->
-        <Compile Include="Client.fs" />
-    </ItemGroup>
-    <ItemGroup>
-        <ProjectReference Include="..\Shared\Shared.fsproj" />
-    </ItemGroup>
-<!--#if (minimal)
-    <ItemGroup>
-        <PackageReference Include="fable.core" Version="3.1.5" />
-        <PackageReference Include="fable.elmish" Version="3.0.6" />
-        <PackageReference Include="fable.elmish.react" Version="3.0.1" />
-        <PackageReference Include="fable.elmish.debugger" Version="3.0.3" />
-        <PackageReference Include="fable.elmish.hmr" Version="4.0.1" />
-        <PackageReference Include="fable.react" Version="5.3.6" />
-        <PackageReference Include="thoth.fetch" Version="2.0.0" />
+        <PackageReference Include="Fable.Core" Version="3.1.5" />
+        <PackageReference Include="Fable.Elmish" Version="3.0.6" />
+        <PackageReference Include="Fable.Elmish.React" Version="3.0.1" />
+        <PackageReference Include="Fable.Elmish.Debugger" Version="3.0.3" />
+        <PackageReference Include="Fable.Elmish.Hmr" Version="4.0.1" />
+        <PackageReference Include="Fable.React" Version="5.3.6" />
+        <PackageReference Include="Thoth.Fetch" Version="2.0.0" />
     </ItemGroup>
 #else-->
-    <Import Project="..\..\.paket\Paket.Restore.targets" />
-<!--#endif-->
+  <!--#endif-->
+  <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

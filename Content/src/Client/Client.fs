@@ -46,12 +46,12 @@ let update (msg: Msg) (currentModel: Model): Model * Cmd<Msg> =
         nextModel, Cmd.none
     | _ -> currentModel, Cmd.none
 
-(*//#if minimal
 let show =
     function
     | { Counter = Some counter } -> string counter.Value
     | { Counter = None } -> "Loading..."
 
+(*//#if minimal
 let view (model: Model) (dispatch: Msg -> unit) =
     div
         [ Style
@@ -71,6 +71,8 @@ let view (model: Model) (dispatch: Msg -> unit) =
                     Padding 10 ]
                 OnClick(fun _ -> dispatch Increment) ] [ str "+" ] ]
 #else*)
+open Fulma
+
 let safeComponents =
     let components =
         span []
@@ -84,20 +86,61 @@ let safeComponents =
               str ", "
               a [ Href "https://elmish.github.io" ] [ str "Elmish" ] ]
 
-    footer [ Style [ Margin 30 ] ]
+    footer [ ]
         [ str "Version "
           strong [] [ str Version.app ]
           str " powered by: "
           components ]
 
-let view (model: Model) (dispatch: Msg -> unit) =
-    div
-        [ Style
-            [ TextAlign TextAlignOptions.Center
-              Padding 40 ] ]
-        [ img [ Src "favicon.png" ]
-          h1 [] [ str "SAFE Template" ]
-          safeComponents ]
+let navBrand =
+    Navbar.Brand.div [ ]
+        [ Navbar.Item.a
+            [ Navbar.Item.Props [ Href "https://safe-stack.github.io/" ]
+              Navbar.Item.IsActive true ]
+            [ img [ Src "https://safe-stack.github.io/images/safe_top.png"
+                    Alt "Logo" ] ] ]
+
+let containerBox (model : Model) (dispatch : Msg -> unit) =
+    Box.box' [ ]
+        [ Field.div [ Field.IsGrouped ]
+            [ Control.p [ Control.IsExpanded ]
+                [ Input.text
+                    [ Input.Disabled true
+                      Input.Value (show model) ] ]
+              Control.p [ ]
+                [ Button.a
+                    [ Button.Color IsPrimary
+                      Button.OnClick (fun _ -> dispatch Increment) ]
+                    [ str "+" ] ]
+              Control.p [ ]
+                [ Button.a
+                    [ Button.Color IsPrimary
+                      Button.OnClick (fun _ -> dispatch Decrement) ]
+                    [ str "-" ] ] ] ]
+
+let view (model : Model) (dispatch : Msg -> unit) =
+    Hero.hero
+        [ Hero.Color IsPrimary
+          Hero.IsFullHeight
+          Hero.Props
+            [ Style
+                [ Background """linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("https://unsplash.it/1200/900?random") no-repeat center center fixed"""
+                  BackgroundSize "cover" ] ] ]
+        [ Hero.head [ ]
+            [ Navbar.navbar [ ]
+                [ Container.container [ ]
+                    [ navBrand ] ] ]
+
+          Hero.body [ ]
+            [ Container.container [ Container.Modifiers [ Modifier.TextAlignment (Screen.All, TextAlignment.Centered) ] ]
+                [ Column.column
+                    [ Column.Width (Screen.All, Column.Is6)
+                      Column.Offset (Screen.All, Column.Is3) ]
+                    [ Heading.p [ ]
+                        [ str "SAFE Template" ]
+                      Heading.p [ Heading.IsSubtitle ]
+                        [ safeComponents ]
+                      containerBox model dispatch ] ] ] ]
 (*#endif*)
 
 //-:cnd:noEmit

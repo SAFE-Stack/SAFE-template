@@ -7,3 +7,6 @@ bin/
 gen-paket-lock-files/
 /.vs
 .ionide/
+
+.fake
+.ionide

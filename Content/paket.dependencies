@@ -6,13 +6,13 @@ nuget Saturn
 nuget Thoth.Json.Giraffe
 
 nuget Fable.Core
-nuget Thoth.Fetch
 nuget Fable.Elmish
 nuget Fable.Elmish.React
 nuget Fable.Elmish.Debugger
 nuget Fable.Elmish.HMR
 nuget Fable.React
 nuget Fulma
+nuget Thoth.Fetch
 
 group Build
     source https://api.nuget.org/v3/index.json
