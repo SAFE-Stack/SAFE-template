@@ -15,18 +15,18 @@
     </PropertyGroup>
     <PropertyGroup>
         <ExcludeFromPackage>
-**/.fable/**/*;
-**/.fake/**/*;
-**/obj/**/*;
-**/bin/**/*;
-**/packages/**/*;
-**/paket-files/**/*;
-**/node_modules/**/*;
-**/src/Client/public/js/**/*;
+Content/.fake/**/*;
+Content/src/**/obj/**/*;
+Content/src/**/bin/**/*;
+Content/packages/**/*;
+Content/paket-files/**/*;
+Content/src/Client/.fable/**/*;
+Content/src/Client/node_modules/**/*;
+Content/src/Client/deploy/**/*;
         </ExcludeFromPackage>
 </PropertyGroup>
     <ItemGroup>
-        <Content Include="Content/**/*" Exclude="$(ExcludeFromPackage)" >
+        <Content Include="Content/**/*.*" Exclude="$(ExcludeFromPackage)" >
                 <PackagePath>Content\</PackagePath>
         </Content>
     </ItemGroup>

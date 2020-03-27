@@ -36,12 +36,7 @@
             "modifiers": [
                 {
                     "exclude": [
-                        "**/[Bb]in/**",
-                        "**/[Oo]bj/**",
-                        ".template.config/**/*",
-                        "**/*.filelist",
-                        "**/*.user",
-                        "**/*.lock.json"
+                        ".template.config/**/*"
                     ]
                 },
                 {
