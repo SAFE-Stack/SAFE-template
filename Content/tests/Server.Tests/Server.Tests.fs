@@ -8,5 +8,7 @@ let serverTests = testList "Server" [
     }
 ]
 
+let allTest = testList "All" [ Shared.Tests.sharedTests; serverTests ]
+
 [<EntryPoint>]
 let main argv = runTests defaultConfig serverTests

@@ -7,12 +7,8 @@
   <ItemGroup>
     <Compile Include="Server.Tests.fs" />
   </ItemGroup>
-  <!--#if (minimal)
-    <ItemGroup>
-        <PackageReference Include="Saturn" Version="0.12.1" />
-        <PackageReference Include="Thoth.Json.Giraffe" Version="4.0.0" />
-    </ItemGroup>
-#else-->
-  <!--#endif-->
+  <ItemGroup>
+    <ProjectReference Include="..\Shared.Tests\Shared.Tests.fsproj" />
+  </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>
