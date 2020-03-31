@@ -14,6 +14,8 @@ nuget Fable.React
 nuget Fulma
 nuget Thoth.Fetch
 
+nuget Expecto
+
 group Build
     source https://api.nuget.org/v3/index.json
     framework: netstandard2.0
