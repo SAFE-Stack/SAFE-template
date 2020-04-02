@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:2.2
+FROM mcr.microsoft.com/dotnet/core/sdk:3.0
 
 # Add keys and sources lists
 RUN curl -sL https://deb.nodesource.com/setup_11.x | bash

@@ -1,3 +1,7 @@
+#### 1.22.4 - 02.04.2020
+
+* Update devcontainer .net sdk to 3 and use new "ms-dotnettools.csharp" extension name - https://github.com/SAFE-Stack/SAFE-template/issues/344
+
 #### 1.22.3 - 22.03.2020
 
 * Fix Bulma template links - https://github.com/SAFE-Stack/SAFE-template/pull/345
