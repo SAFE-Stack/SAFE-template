@@ -1,6 +1,7 @@
 open System.IO
 open System.Threading.Tasks
 
+open System
 open Microsoft.AspNetCore.Builder
 open Microsoft.Extensions.DependencyInjection
 open FSharp.Control.Tasks.V2
@@ -20,7 +21,10 @@ open Elmish.Bridge
 open Microsoft.WindowsAzure.Storage
 #endif
 
-let tryGetEnv = System.Environment.GetEnvironmentVariable >> function null | "" -> None | x -> Some x
+let tryGetEnv key = 
+    match Environment.GetEnvironmentVariable key with
+    | x when String.IsNullOrWhiteSpace x -> None 
+    | x -> Some x
 
 //#if (deploy == "azure")
 let publicPath = tryGetEnv "public_path" |> Option.defaultValue "../Client/public" |> Path.GetFullPath
