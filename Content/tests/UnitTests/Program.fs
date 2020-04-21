@@ -2,26 +2,11 @@
 
 #if FABLE_COMPILER
 open Fable.Mocha
+let all = testList "All" [ Shared.Tests.sharedTests; Client.Tests.clientTests ]
+[<EntryPoint>] let main args = Mocha.runTests all
 #else
 open Expecto
-#endif
-
-let allTests =
-    testList "All"
-        [
-            Shared.Tests.sharedTests
-#if FABLE_COMPILER
-            Client.Tests.clientTests
-#else
-            Server.Tests.serverTests
-#endif
-        ]
-
-[<EntryPoint>]
-let main (args: string[]) =
-#if FABLE_COMPILER
-    Mocha.runTests allTests
-#else
-    let config = { defaultConfig with verbosity = Logging.LogLevel.Debug }
-    runTests config allTests
+let all = testList "All" [ Shared.Tests.sharedTests; Server.Tests.serverTests ]
+let config = { defaultConfig with verbosity = Logging.LogLevel.Debug }
+[<EntryPoint>] let main args = runTests config all
 #endif

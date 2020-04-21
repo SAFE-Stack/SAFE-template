@@ -1,9 +1,9 @@
 module Shared.Tests
 
-#if !FABLE_COMPILER
-open Expecto
-#else
+#if FABLE_COMPILER
 open Fable.Mocha
+#else
+open Expecto
 #endif
 
 let sharedTests = testList "Shared tests" [
