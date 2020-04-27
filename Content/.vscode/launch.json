@@ -12,6 +12,7 @@
                 "moduleLoad": false
             },
             "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/src/Server",
             "console": "internalConsole",
         },
         {
