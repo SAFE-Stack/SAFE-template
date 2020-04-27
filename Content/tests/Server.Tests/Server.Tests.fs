@@ -10,5 +10,7 @@ let serverTests = testList "Server" [
 
 let allTest = testList "All" [ Shared.Tests.sharedTests; serverTests ]
 
+let config = { defaultConfig with verbosity = Logging.LogLevel.Debug }
+
 [<EntryPoint>]
-let main argv = runTests defaultConfig serverTests
+let main argv = runTests config allTest

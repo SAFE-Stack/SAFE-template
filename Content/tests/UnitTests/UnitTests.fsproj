@@ -2,12 +2,18 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+    <Expecto Condition="$(DefineConstants.Contains('EXPECTO'))">true</Expecto>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Shared.Tests.fs" />
     <Compile Include="Server.Tests.fs" />
-    <Compile Include="Client.Tests.fs" />
+    <Compile Include="Client.Tests.fs" Condition="'$(Expecto)' == 'false'" />
     <Compile Include="Program.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Shared\Shared.fsproj" />
+    <ProjectReference Include="..\..\src\Client\Client.fsproj" Condition="'$(Expecto)' == 'false'" />
+    <ProjectReference Include="..\..\src\Server\Server.fsproj" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

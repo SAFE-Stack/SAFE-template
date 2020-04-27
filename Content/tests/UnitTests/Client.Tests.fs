@@ -2,7 +2,8 @@ module Client.Tests
 
 open Fable.Mocha
 
-let clientTests = testList "App tests" [
-    testCase "Increment and Decrement work" <| fun _ ->
-        Expect.equal 1 1 "One is one"
+let clientTests = testList "Client" [
+    testCase "Counter is none" <| fun _ ->
+        let model, msg = Client.init ()
+        Expect.equal true model.Counter.IsSome "Counter is some"
 ]

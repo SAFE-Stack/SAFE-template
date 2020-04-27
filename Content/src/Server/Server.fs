@@ -1,3 +1,5 @@
+module Server
+
 open System.IO
 
 open FSharp.Control.Tasks.V2

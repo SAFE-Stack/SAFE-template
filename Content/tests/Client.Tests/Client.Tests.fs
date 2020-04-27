@@ -7,7 +7,14 @@ let clientTests = testList "App tests" [
         Expect.equal 1 1 "One is one"
 ]
 
-let allTest = testList "All" [ Shared.Tests.sharedTests; clientTests ]
+let allTest =
+    testList "All"
+        [
+#if FABLE_COMPILER
+            Shared.Tests.sharedTests
+#endif
+            clientTests
+        ]
 
 [<EntryPoint>]
 let main (args: string[]) = Mocha.runTests allTest

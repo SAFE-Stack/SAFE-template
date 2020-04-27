@@ -26,9 +26,9 @@ let initialCounter() = Fetch.fetchAs<_, Counter> "/api/init"
 
 // defines the initial state and initial command (= side-effect) of the application
 let init(): Model * Cmd<Msg> =
-    let initialModel = { Counter = None }
-    let loadCountCmd = Cmd.OfPromise.perform initialCounter () InitialCountLoaded
-    initialModel, loadCountCmd
+    let initialModel = { Counter = Some { Value = 42 } }
+    // let loadCountCmd = Cmd.OfPromise.perform initialCounter () InitialCountLoaded
+    initialModel, Cmd.none
 
 // The update function computes the next state of the application based on the current state and the incoming events/messages
 // It can also run side-effects (encoded as commands) like calling the server via Http.
