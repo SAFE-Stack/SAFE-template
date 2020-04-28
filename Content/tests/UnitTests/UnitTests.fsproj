@@ -2,17 +2,17 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <Expecto Condition="$(DefineConstants.Contains('EXPECTO'))">true</Expecto>
+    <DefineConstants Condition="'$(DesignTimeBuild)' == 'true'">FABLE_COMPILER</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Shared.Tests.fs" />
     <Compile Include="Server.Tests.fs" />
-    <Compile Include="Client.Tests.fs" Condition="'$(Expecto)' == 'false'" />
+    <Compile Include="Client.Tests.fs" Condition="$(DefineConstants.Contains('FABLE_COMPILER'))" />
     <Compile Include="Program.fs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Shared\Shared.fsproj" />
-    <ProjectReference Include="..\..\src\Client\Client.fsproj" Condition="'$(Expecto)' == 'false'" />
+    <ProjectReference Include="..\..\src\Client\Client.fsproj" Condition="$(DefineConstants.Contains('FABLE_COMPILER'))" />
     <ProjectReference Include="..\..\src\Server\Server.fsproj" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />

@@ -7,6 +7,5 @@ let all = testList "All" [ Tests.Shared.sharedTests; Client.Tests.clientTests ]
 #else
 open Expecto
 let all = testList "All" [ Tests.Shared.sharedTests; Server.Tests.serverTests ]
-let config = { defaultConfig with verbosity = Logging.LogLevel.Debug }
-[<EntryPoint>] let main args = runTests config all
+[<EntryPoint>] let main args = runTests defaultConfig all
 #endif

@@ -2,19 +2,20 @@
 
 open Fable.Mocha
 
-let clientTests = testList "App tests" [
-    testCase "Increment and Decrement work" <| fun _ ->
-        Expect.equal 1 1 "One is one"
+let client = testList "Client" [
+    testCase "Initially counter is some" <| fun _ ->
+        let model, _ = Client.init ()
+        Expect.equal true model.Counter.IsSome "Counter is some"
 ]
 
-let allTest =
+let all =
     testList "All"
         [
-#if FABLE_COMPILER
-            Shared.Tests.sharedTests
+#if FABLE_COMPILER // The preprocessor directive makes editor happy
+            Shared.Tests.shared
 #endif
-            clientTests
+            client
         ]
 
 [<EntryPoint>]
-let main (args: string[]) = Mocha.runTests allTest
+let main _ = Mocha.runTests all
