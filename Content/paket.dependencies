@@ -46,7 +46,7 @@ group Client
     nuget FSharp.Control.AsyncRx ~> 1.0.0
 //#endif
 //#if (!remoting)
-    nuget Thoth.Fetch ~> 1
+    nuget Thoth.Fetch ~> 2
 //#endif
     nuget Fable.React ~> 5
 //#if (remoting)
