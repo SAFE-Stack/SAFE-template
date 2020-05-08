@@ -29,8 +29,6 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Client.Tests", "tests\Clien
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Shared.Tests", "tests\Shared.Tests\Shared.Tests.fsproj", "{77A048DA-D1B5-45C8-AE2C-AFB6231E06AB}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "UnitTests", "tests\UnitTests\UnitTests.fsproj", "{A5B3C767-48CB-4D5F-BC12-37D2C05DDC67}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,10 +59,6 @@ Global
 		{77A048DA-D1B5-45C8-AE2C-AFB6231E06AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{77A048DA-D1B5-45C8-AE2C-AFB6231E06AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{77A048DA-D1B5-45C8-AE2C-AFB6231E06AB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A5B3C767-48CB-4D5F-BC12-37D2C05DDC67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A5B3C767-48CB-4D5F-BC12-37D2C05DDC67}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A5B3C767-48CB-4D5F-BC12-37D2C05DDC67}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A5B3C767-48CB-4D5F-BC12-37D2C05DDC67}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -79,6 +73,5 @@ Global
 		{6257615B-2E3E-4CE8-A516-0B44EE49FCBC} = {B27D31AA-9DEE-4DE4-B4BF-939C232AE7D4}
 		{0FBA6676-3B8F-4D40-BD3C-97AC44DB6469} = {174542BE-4A84-4058-93BA-FE504E0459D5}
 		{77A048DA-D1B5-45C8-AE2C-AFB6231E06AB} = {174542BE-4A84-4058-93BA-FE504E0459D5}
-		{A5B3C767-48CB-4D5F-BC12-37D2C05DDC67} = {174542BE-4A84-4058-93BA-FE504E0459D5}
 	EndGlobalSection
 EndGlobal
