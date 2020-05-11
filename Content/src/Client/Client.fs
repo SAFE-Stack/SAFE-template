@@ -94,9 +94,9 @@ module Server =
     #endif
 let initialCounter = Server.api.initialCounter
 #elseif (deploy == "iis" && server != "suave")
-let initialCounter () = Fetch.fetchAs<Counter> (ServerPath.normalize "/api/init")
+let initialCounter () = Fetch.fetchAs<unit, Counter> (ServerPath.normalize "/api/init")
 #elseif (!bridge)
-let initialCounter () = Fetch.fetchAs<Counter> "/api/init"
+let initialCounter () = Fetch.fetchAs<unit, Counter> "/api/init"
 #endif
 
 #if (bridge)
