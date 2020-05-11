@@ -2,5 +2,6 @@ namespace Shared
 
 type Counter = { Value : int }
 
-module Calculator =
-    let add x y = x + y
+module Counter =
+    let initial: Counter =
+        { Value = 42 }

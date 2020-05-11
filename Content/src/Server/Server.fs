@@ -24,7 +24,7 @@ let webApp =
     router {
         get "/api/init" (fun next ctx ->
             task {
-                let counter = { Value = 42 }
+                let counter = Counter.initial
                 return! json counter next ctx
             }) }
 

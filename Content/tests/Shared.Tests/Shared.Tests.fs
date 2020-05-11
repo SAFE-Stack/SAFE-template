@@ -6,9 +6,11 @@ open Fable.Mocha
 open Expecto
 #endif
 
+open Shared
+
 let shared = testList "Shared" [
-    testCase "Add" <| fun _ ->
-        Expect.equal (Shared.Calculator.add 1 1) 2 "Two is two"
-    testCase "Add2" <| fun _ ->
-        Expect.equal (Shared.Calculator.add 1 2) 3 "Two is two"
+    testCase "Initial counter value is 42" <| fun _ ->
+        let expected = 42
+        let actual = Counter.initial.Value
+        Expect.equal actual expected "Should be 42"
 ]
