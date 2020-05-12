@@ -1,7 +1,15 @@
 namespace Shared
 
-type Counter = { Value : int }
+open System
 
-module Counter =
-    let initial: Counter =
-        { Value = 42 }
+type Todo =
+    { Id : Guid
+      Description : string }
+
+module Todo =
+    let isValid (description: string) =
+        String.IsNullOrWhiteSpace description |> not
+
+    let create (description: string) =
+        { Id = Guid.NewGuid()
+          Description = description }

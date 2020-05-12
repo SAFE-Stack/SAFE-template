@@ -20,12 +20,29 @@ let getEnvVar (name: string) (defaultValue: string) =
 let publicPath = getEnvVar "public_path" "../Client/public" |> Path.GetFullPath
 let port = getEnvVar "PORT" "8085" |> uint16
 
+let todos =
+    [ Todo.create "hello"
+      Todo.create "ok" ]
+    |> ResizeArray
+
+let addTodo (todo: Todo) =
+    if Todo.isValid todo.Description then
+        todos.Add todo
+        Ok ()
+    else Error "Invalid todo"
+
 let webApp =
     router {
         get "/api/init" (fun next ctx ->
             task {
-                let counter = Counter.initial
-                return! json counter next ctx
+                return! json (Seq.toList todos) next ctx
+            })
+        post "/api/init" (fun next ctx ->
+            task {
+                let! todo = ctx.BindModelAsync<_>()
+                match addTodo todo with
+                | Ok () -> return! Successful.OK "" next ctx
+                | Error e -> return! RequestErrors.BAD_REQUEST e next ctx
             }) }
 
 let app =

@@ -13,43 +13,54 @@ open Shared
 // we mark it as optional, because initially it will not be available from the client
 // the initial value will be requested from server
 type Model =
-    { Counter: Counter option }
+    { Todos : Todo list
+      Input : string }
 
 // The Msg type defines what events/actions can occur while the application is running
 // the state of the application changes *only* in reaction to these events
 type Msg =
-    | Increment
-    | Decrement
-    | InitialCountLoaded of Counter
+    | InitialCountLoaded of Todo list
+    | SetInput of string
+    | Add
+    | TodoAdded of unit
 
-let initialCounter() = Fetch.fetchAs<_, Counter> "/api/init"
+let initialCounter() = Fetch.fetchAs<_, Todo list> "/api/init"
+let addTodo(todo) = Fetch.post<Todo, unit> ("/api/init", todo)
 
 // defines the initial state and initial command (= side-effect) of the application
 let init(): Model * Cmd<Msg> =
-    let initialModel = { Counter = Some { Value = 42 } }
-    // let loadCountCmd = Cmd.OfPromise.perform initialCounter () InitialCountLoaded
-    initialModel, Cmd.none
+    let initialModel =
+        { Todos = []
+          Input = "" }
+    let loadCountCmd = Cmd.OfPromise.perform initialCounter () InitialCountLoaded
+    initialModel, loadCountCmd
 
 // The update function computes the next state of the application based on the current state and the incoming events/messages
 // It can also run side-effects (encoded as commands) like calling the server via Http.
 // these commands in turn, can dispatch messages to which the update function will react.
-let update (msg: Msg) (currentModel: Model): Model * Cmd<Msg> =
-    match currentModel.Counter, msg with
-    | Some counter, Increment ->
-        let nextModel = { currentModel with Counter = Some { Value = counter.Value + 1 } }
+let update (msg: Msg) (model: Model): Model * Cmd<Msg> =
+    match msg with
+    | InitialCountLoaded initialCount ->
+        let nextModel = { model with Todos = initialCount }
         nextModel, Cmd.none
-    | Some counter, Decrement ->
-        let nextModel = { currentModel with Counter = Some { Value = counter.Value - 1 } }
-        nextModel, Cmd.none
-    | _, InitialCountLoaded initialCount ->
-        let nextModel = { Counter = Some initialCount }
-        nextModel, Cmd.none
-    | _ -> currentModel, Cmd.none
+    | SetInput value ->
+        { model with Input = value }, Cmd.none
+    | Add ->
+        let todo = Todo.create model.Input
+        { model with
+            Todos = model.Todos @ [ todo ]
+            Input = "" },
+        Cmd.OfPromise.perform addTodo todo TodoAdded
+    | TodoAdded _ ->
+        model, Cmd.none
 
 let show =
     function
-    | { Counter = Some counter } -> string counter.Value
-    | { Counter = None } -> "Loading..."
+    | [ ] -> str "Loading ..."
+    | todos ->
+        ol [ ]
+            [ for todo in todos ->
+                li [ ] [ str todo.Description ] ]
 
 (*//#if minimal
 let view (model: Model) (dispatch: Msg -> unit) =
@@ -86,7 +97,7 @@ let safeComponents =
               str ", "
               a [ Href "https://elmish.github.io" ] [ str "Elmish" ] ]
 
-    footer [ ]
+    span [ ]
         [ str "Version "
           strong [] [ str Version.app ]
           str " powered by: "
@@ -102,21 +113,19 @@ let navBrand =
 
 let containerBox (model : Model) (dispatch : Msg -> unit) =
     Box.box' [ ]
-        [ Field.div [ Field.IsGrouped ]
+        [ Content.content [ ]
+            [ show model.Todos ]
+          Field.div [ Field.IsGrouped ]
             [ Control.p [ Control.IsExpanded ]
                 [ Input.text
-                    [ Input.Disabled true
-                      Input.Value (show model) ] ]
+                    [ Input.Value model.Input
+                      Input.OnChange (fun x -> SetInput x.Value |> dispatch) ] ]
               Control.p [ ]
                 [ Button.a
                     [ Button.Color IsPrimary
-                      Button.OnClick (fun _ -> dispatch Increment) ]
-                    [ str "+" ] ]
-              Control.p [ ]
-                [ Button.a
-                    [ Button.Color IsPrimary
-                      Button.OnClick (fun _ -> dispatch Decrement) ]
-                    [ str "-" ] ] ] ]
+                      Button.Disabled (Todo.isValid model.Input |> not)
+                      Button.OnClick (fun _ -> dispatch Add) ]
+                    [ str "Add" ] ] ] ]
 
 let view (model : Model) (dispatch : Msg -> unit) =
     Hero.hero
@@ -137,9 +146,7 @@ let view (model : Model) (dispatch : Msg -> unit) =
                     [ Column.Width (Screen.All, Column.Is6)
                       Column.Offset (Screen.All, Column.Is3) ]
                     [ Heading.p [ ]
-                        [ str "SAFE Template" ]
-                      Heading.p [ Heading.IsSubtitle ]
-                        [ safeComponents ]
+                        [ str "TODO List" ]
                       containerBox model dispatch ] ] ] ]
 (*#endif*)
 
