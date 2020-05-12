@@ -9,8 +9,12 @@ open Expecto
 open Shared
 
 let shared = testList "Shared" [
-    testCase "Initial counter value is 42" <| fun _ ->
-        let expected = 42
-        let actual = Counter.initial.Value
-        Expect.equal actual expected "Should be 42"
+    testCase "Empty string is not a valid description" <| fun _ ->
+        let expected = false
+        let actual = Todo.isValid ""
+        Expect.equal actual expected "Should be false"
+    testCase "Non-empty string is a valid description" <| fun _ ->
+        let expected = true
+        let actual = Todo.isValid "TODO"
+        Expect.equal actual expected "Should be true"
 ]

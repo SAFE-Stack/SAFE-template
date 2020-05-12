@@ -8,8 +8,6 @@ open Saturn
 
 open Shared
 
-let serverAdd x y = x + y
-
 let getEnvVar (name: string) (defaultValue: string) =
     System.Environment.GetEnvironmentVariable name
     |> function
