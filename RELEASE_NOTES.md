@@ -1,3 +1,7 @@
+#### 1.24.0 - 12.05.2020
+
+* Update thoth to v2 - https://github.com/SAFE-Stack/SAFE-template/pull/356
+
 #### 1.23.0 - 27.04.2020
 
 * Set working directory for debugging server - https://github.com/SAFE-Stack/SAFE-template/pull/352
