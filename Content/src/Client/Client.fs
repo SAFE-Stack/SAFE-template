@@ -8,26 +8,28 @@ open Thoth.Fetch
 
 open Shared
 
-// The model holds data that you want to keep track of while the application is running
-// in this case, we are keeping track of a counter
-// we mark it as optional, because initially it will not be available from the client
-// the initial value will be requested from server
+// The model holds state that you want to keep track of while the application is running
+// In this case, we are keeping track of list of Todos and Input value
+// The Input denotes value for a new todo to be added
 type Model =
     { Todos : Todo list
       Input : string }
 
 // The Msg type defines what events/actions can occur while the application is running
-// the state of the application changes *only* in reaction to these events
+// The state of the application changes only in reaction to these events
 type Msg =
     | GotTodos of Todo list
     | SetInput of string
     | AddTodo
     | AddedTodo of Todo
 
+// Below functions send HTTP requests to server
 let getTodos() = Fetch.get<unit, Todo list> Routes.todos
 let addTodo(todo) = Fetch.post<Todo, Todo> (Routes.todos, todo)
 
-// defines the initial state and initial command (= side-effect) of the application
+// Init function defines initial state (model) and command (side effect) of the application
+// Todos are empty - they will be fetched from server using `Cmd` over promise
+// Input is also empty
 let init(): Model * Cmd<Msg> =
     let model =
         { Todos = []
@@ -35,9 +37,10 @@ let init(): Model * Cmd<Msg> =
     let cmd = Cmd.OfPromise.perform getTodos () GotTodos
     model, cmd
 
-// The update function computes the next state of the application based on the current state and the incoming events/messages
-// It can also run side-effects (encoded as commands) like calling the server via Http.
-// these commands in turn, can dispatch messages to which the update function will react.
+// The update function computes the next state of the application
+// It does so based on the current state and the incoming message
+// It can also run side-effects (encoded as commands) like calling the server via HTTP
+// These commands in turn, can dispatch messages to which the update function will react
 let update (msg: Msg) (model: Model): Model * Cmd<Msg> =
     match msg with
     | GotTodos todos ->
@@ -50,6 +53,8 @@ let update (msg: Msg) (model: Model): Model * Cmd<Msg> =
     | AddedTodo todo ->
         { model with Todos = model.Todos @ [ todo ] }, Cmd.none
 
+// View takes current model and generates React elements
+// It can also use `dispatch` to trigger Msg from UI elements
 (*//#if minimal
 let view (model: Model) (dispatch: Msg -> unit) =
     div
@@ -90,6 +95,7 @@ let containerBox (model : Model) (dispatch : Msg -> unit) =
             [ Control.p [ Control.IsExpanded ]
                 [ Input.text
                     [ Input.Value model.Input
+                      Input.Placeholder "What needs to be done?"
                       Input.OnChange (fun x -> SetInput x.Value |> dispatch) ] ]
               Control.p [ ]
                 [ Button.a
@@ -121,11 +127,15 @@ let view (model : Model) (dispatch : Msg -> unit) =
                       containerBox model dispatch ] ] ] ]
 (*#endif*)
 
+// In development mode open namepaces for debugging and hot-module replacement
+
 //-:cnd:noEmit
 #if DEBUG
 open Elmish.Debug
 open Elmish.HMR
 #endif
+
+// Following is the entry point for the application - in F# we don't need `main`
 
 //+:cnd:noEmit
 Program.mkProgram init update view
