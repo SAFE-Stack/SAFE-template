@@ -15,19 +15,19 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B27D31AA-9DEE-4DE4-B4BF-939C232AE7D4}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Server", "src\Server\Server.fsproj", "{F49D968D-D418-4C5E-978D-2082583F97A8}"
-EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Shared", "src\Shared\Shared.fsproj", "{CBCBD8B2-DFEF-4917-92F6-EF1EA04004BD}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Server", "src\Server\Server.fsproj", "{F49D968D-D418-4C5E-978D-2082583F97A8}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Client", "src\Client\Client.fsproj", "{6257615B-2E3E-4CE8-A516-0B44EE49FCBC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{174542BE-4A84-4058-93BA-FE504E0459D5}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Shared.Tests", "tests\Shared.Tests\Shared.Tests.fsproj", "{77A048DA-D1B5-45C8-AE2C-AFB6231E06AB}"
+EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Server.Tests", "tests\Server.Tests\Server.Tests.fsproj", "{FEAB3F67-BD05-4754-AE26-CB6570C06EF7}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Client.Tests", "tests\Client.Tests\Client.Tests.fsproj", "{0FBA6676-3B8F-4D40-BD3C-97AC44DB6469}"
-EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Shared.Tests", "tests\Shared.Tests\Shared.Tests.fsproj", "{77A048DA-D1B5-45C8-AE2C-AFB6231E06AB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
