@@ -32,9 +32,9 @@ type Storage () =
 
 let storage = Storage()
 
-storage.AddTodo(Todo.create "A") |> ignore
-storage.AddTodo(Todo.create "B") |> ignore
-storage.AddTodo(Todo.create "C") |> ignore
+storage.AddTodo(Todo.create "Create new project from SAFE template") |> ignore
+storage.AddTodo(Todo.create "Customize to your own needs") |> ignore
+storage.AddTodo(Todo.create "Profit !!!") |> ignore
 
 let webApp =
     router {

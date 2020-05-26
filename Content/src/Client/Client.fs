@@ -50,14 +50,6 @@ let update (msg: Msg) (model: Model): Model * Cmd<Msg> =
     | AddedTodo todo ->
         { model with Todos = model.Todos @ [ todo ] }, Cmd.none
 
-let show =
-    function
-    | [ ] -> str "Loading ..."
-    | todos ->
-        ol [ ]
-            [ for todo in todos ->
-                li [ ] [ str todo.Description ] ]
-
 (*//#if minimal
 let view (model: Model) (dispatch: Msg -> unit) =
     div
@@ -80,25 +72,6 @@ let view (model: Model) (dispatch: Msg -> unit) =
 #else*)
 open Fulma
 
-let safeComponents =
-    let components =
-        span []
-            [ a [ Href "https://github.com/SAFE-Stack/SAFE-template" ]
-                  [ str "SAFE  "
-                    str Version.template ]
-              str ", "
-              a [ Href "https://saturnframework.github.io" ] [ str "Saturn" ]
-              str ", "
-              a [ Href "http://fable.io" ] [ str "Fable" ]
-              str ", "
-              a [ Href "https://elmish.github.io" ] [ str "Elmish" ] ]
-
-    span [ ]
-        [ str "Version "
-          strong [] [ str Version.app ]
-          str " powered by: "
-          components ]
-
 let navBrand =
     Navbar.Brand.div [ ]
         [ Navbar.Item.a
@@ -110,7 +83,9 @@ let navBrand =
 let containerBox (model : Model) (dispatch : Msg -> unit) =
     Box.box' [ ]
         [ Content.content [ ]
-            [ show model.Todos ]
+            [ Content.Ol.ol [ ]
+                [ for todo in model.Todos ->
+                    li [ ] [ str todo.Description ] ] ]
           Field.div [ Field.IsGrouped ]
             [ Control.p [ Control.IsExpanded ]
                 [ Input.text
@@ -137,11 +112,11 @@ let view (model : Model) (dispatch : Msg -> unit) =
                     [ navBrand ] ] ]
 
           Hero.body [ ]
-            [ Container.container [ Container.Modifiers [ Modifier.TextAlignment (Screen.All, TextAlignment.Centered) ] ]
+            [ Container.container []
                 [ Column.column
                     [ Column.Width (Screen.All, Column.Is6)
                       Column.Offset (Screen.All, Column.Is3) ]
-                    [ Heading.p [ ]
+                    [ Heading.p [ Heading.Modifiers [ Modifier.TextAlignment (Screen.All, TextAlignment.Centered) ] ]
                         [ str "TODO List" ]
                       containerBox model dispatch ] ] ] ]
 (*#endif*)

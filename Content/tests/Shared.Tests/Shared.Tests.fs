@@ -13,6 +13,7 @@ let shared = testList "Shared" [
         let expected = false
         let actual = Todo.isValid ""
         Expect.equal actual expected "Should be false"
+
     testCase "Non-empty string is a valid description" <| fun _ ->
         let expected = true
         let actual = Todo.isValid "TODO"
