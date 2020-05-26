@@ -5,19 +5,27 @@ open Expecto
 open Shared
 
 let server = testList "Server" [
+
     testCase "Adding invalid Todo" <| fun _ ->
-        let initialList = Server.todos
-        let result = Server.addTodo (Todo.create "")
+        let storage = Storage()
+        let invalidTodo = Todo.create ""
         let expectedResult = Error "Invalid todo"
-        Expect.equal Server.todos initialList "Todos shouldn't change"
+
+        let result = storage.AddTodo invalidTodo
+
         Expect.equal result expectedResult "Result should be error"
+        Expect.isEmpty (storage.GetTodos()) "Storage should be empty"
+
     testCase "Adding valid Todo" <| fun _ ->
-        let initialList = Server.todos
-        let newTodo = Todo.create "TODO"
-        let result = Server.addTodo newTodo
+        let storage = Storage()
+        let validTodo = Todo.create "TODO"
         let expectedResult = Ok ()
-        Expect.contains Server.todos newTodo "Todos should contain new todo"
+
+        let result = storage.AddTodo validTodo
+
         Expect.equal result expectedResult "Result should be ok"
+        Expect.contains (storage.GetTodos()) validTodo "Storage should contain new todo"
+
 ]
 
 let all =

@@ -2,16 +2,23 @@
 
 open Fable.Mocha
 
+open Shared
+
 let client = testList "Client" [
-    testCase "Initially counter is some" <| fun _ ->
-        let model, _ = Client.init ()
-        Expect.equal true model.Counter.IsSome "Counter is some"
+    testCase "Added todo" <| fun _ ->
+        let newTodo = Todo.create "new todo"
+        let model, _ = init ()
+
+        let model, _ = update (AddedTodo newTodo) model
+
+        Expect.equal 1 model.Todos.Length "There should be 1 todo"
+        Expect.equal newTodo model.Todos.[0] "Todo should equal new todo"
 ]
 
 let all =
     testList "All"
         [
-#if FABLE_COMPILER // The preprocessor directive makes editor happy
+#if FABLE_COMPILER // This preprocessor directive makes editor happy
             Shared.Tests.shared
 #endif
             client

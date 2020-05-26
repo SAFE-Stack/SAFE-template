@@ -13,3 +13,6 @@ module Todo =
     let create (description: string) =
         { Id = Guid.NewGuid()
           Description = description }
+
+module Routes =
+    let todos = "/api/todos"

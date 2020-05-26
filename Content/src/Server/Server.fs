@@ -18,28 +18,36 @@ let getEnvVar (name: string) (defaultValue: string) =
 let publicPath = getEnvVar "public_path" "../Client/public" |> Path.GetFullPath
 let port = getEnvVar "PORT" "8085" |> uint16
 
-let todos =
-    [ Todo.create "hello"
-      Todo.create "ok" ]
-    |> ResizeArray
+type Storage () =
+    let todos = ResizeArray<_>()
 
-let addTodo (todo: Todo) =
-    if Todo.isValid todo.Description then
-        todos.Add todo
-        Ok ()
-    else Error "Invalid todo"
+    member __.GetTodos () =
+        List.ofSeq todos
+
+    member __.AddTodo (todo: Todo) =
+        if Todo.isValid todo.Description then
+            todos.Add todo
+            Ok ()
+        else Error "Invalid todo"
+
+let storage = Storage()
+
+storage.AddTodo(Todo.create "A") |> ignore
+storage.AddTodo(Todo.create "B") |> ignore
+storage.AddTodo(Todo.create "C") |> ignore
 
 let webApp =
     router {
-        get "/api/init" (fun next ctx ->
+        get Routes.todos (fun next ctx ->
             task {
-                return! json (Seq.toList todos) next ctx
+                let todos = storage.GetTodos()
+                return! json todos next ctx
             })
-        post "/api/init" (fun next ctx ->
+        post Routes.todos (fun next ctx ->
             task {
                 let! todo = ctx.BindModelAsync<_>()
-                match addTodo todo with
-                | Ok () -> return! Successful.OK "" next ctx
+                match storage.AddTodo todo with
+                | Ok () -> return! json todo next ctx
                 | Error e -> return! RequestErrors.BAD_REQUEST e next ctx
             }) }
 

@@ -19,40 +19,36 @@ type Model =
 // The Msg type defines what events/actions can occur while the application is running
 // the state of the application changes *only* in reaction to these events
 type Msg =
-    | InitialCountLoaded of Todo list
+    | GotTodos of Todo list
     | SetInput of string
-    | Add
-    | TodoAdded of unit
+    | AddTodo
+    | AddedTodo of Todo
 
-let initialCounter() = Fetch.fetchAs<_, Todo list> "/api/init"
-let addTodo(todo) = Fetch.post<Todo, unit> ("/api/init", todo)
+let getTodos() = Fetch.get<unit, Todo list> Routes.todos
+let addTodo(todo) = Fetch.post<Todo, Todo> (Routes.todos, todo)
 
 // defines the initial state and initial command (= side-effect) of the application
 let init(): Model * Cmd<Msg> =
-    let initialModel =
+    let model =
         { Todos = []
           Input = "" }
-    let loadCountCmd = Cmd.OfPromise.perform initialCounter () InitialCountLoaded
-    initialModel, loadCountCmd
+    let cmd = Cmd.OfPromise.perform getTodos () GotTodos
+    model, cmd
 
 // The update function computes the next state of the application based on the current state and the incoming events/messages
 // It can also run side-effects (encoded as commands) like calling the server via Http.
 // these commands in turn, can dispatch messages to which the update function will react.
 let update (msg: Msg) (model: Model): Model * Cmd<Msg> =
     match msg with
-    | InitialCountLoaded initialCount ->
-        let nextModel = { model with Todos = initialCount }
-        nextModel, Cmd.none
+    | GotTodos todos ->
+        { model with Todos = todos }, Cmd.none
     | SetInput value ->
         { model with Input = value }, Cmd.none
-    | Add ->
+    | AddTodo ->
         let todo = Todo.create model.Input
-        { model with
-            Todos = model.Todos @ [ todo ]
-            Input = "" },
-        Cmd.OfPromise.perform addTodo todo TodoAdded
-    | TodoAdded _ ->
-        model, Cmd.none
+        { model with Input = "" }, Cmd.OfPromise.perform addTodo todo AddedTodo
+    | AddedTodo todo ->
+        { model with Todos = model.Todos @ [ todo ] }, Cmd.none
 
 let show =
     function
@@ -124,7 +120,7 @@ let containerBox (model : Model) (dispatch : Msg -> unit) =
                 [ Button.a
                     [ Button.Color IsPrimary
                       Button.Disabled (Todo.isValid model.Input |> not)
-                      Button.OnClick (fun _ -> dispatch Add) ]
+                      Button.OnClick (fun _ -> dispatch AddTodo) ]
                     [ str "Add" ] ] ] ]
 
 let view (model : Model) (dispatch : Msg -> unit) =
