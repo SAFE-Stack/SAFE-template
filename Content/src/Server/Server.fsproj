@@ -5,8 +5,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-<!--#if (minimal)-->
-<!--#else-->
+<!--#if (!minimal)-->
     <None Include="paket.references" />
 <!--#endif-->
     <Compile Include="Server.fs" />

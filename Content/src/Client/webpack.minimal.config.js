@@ -33,8 +33,6 @@ var devServer = {
     port: 8080,
     hot: true,
     inline: true,
-    // When using webpack-dev-server, redirect calls to Saturn server
-    // See https://webpack.js.org/configuration/dev-server/#devserver-proxy
     proxy: {
         // Redirect requests that start with /api/ to the server on port 8085
         '/api/**': {
@@ -56,7 +54,7 @@ console.log('Bundling for ' + (isProduction ? 'production' : 'development') + '.
 
 module.exports = {
     entry: { app: resolve('./Client.fsproj') },
-    output: { path: resolve('./deploy') },
+    output: { path: resolve('./deploy/public') },
     resolve: { symlinks: false }, // See https://github.com/fable-compiler/Fable/issues/1490
     mode: isProduction ? 'production' : 'development',
     plugins: isProduction ? [htmlPlugin, copyPlugin] : [htmlPlugin, hmrPlugin],
