@@ -1,12 +1,6 @@
 runtime: custom
 env: flex
 
-# Depends on the app
-# For more information, see:
-# https://cloud.google.com/appengine/docs/flexible/nodejs/reference/app-yaml#health_checks
-health_check:
-    enable_health_check: False
-
 # This sample incurs costs to run on the App Engine flexible environment.
 # The settings below are to reduce costs during testing and are not appropriate
 # for production use. For more information, see:
