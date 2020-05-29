@@ -9,7 +9,8 @@
     <None Include="package.json" />
     <None Include="package-lock.json" />
     <None Include="webpack.config.js" />
-<!--#if (!minimal)-->
+<!--#if (minimal)-->
+<!--#else-->
     <None Include="paket.references" />
     <Compile Include="Version.fs" />
 <!--#endif-->
