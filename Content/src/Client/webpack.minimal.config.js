@@ -54,7 +54,7 @@ console.log('Bundling for ' + (isProduction ? 'production' : 'development') + '.
 
 module.exports = {
     entry: { app: resolve('./Client.fsproj') },
-    output: { path: resolve('./deploy/public') },
+    output: { path: resolve('./../../deploy/public') },
     resolve: { symlinks: false }, // See https://github.com/fable-compiler/Fable/issues/1490
     mode: isProduction ? 'production' : 'development',
     plugins: isProduction ? [htmlPlugin, copyPlugin] : [htmlPlugin, hmrPlugin],
