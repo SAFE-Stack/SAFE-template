@@ -49,6 +49,8 @@
                         "RELEASE_NOTES.md",
                         "**/paket.*",
                         "*.fsx",
+                        "src/Client/package.default.json",
+                        "src/Client/package-lock.default.json",
                         "src/Client/webpack.default.config.js",
                         "README.md"
                     ],
@@ -56,8 +58,9 @@
                 },
                 {
                     "exclude": [
+                        "src/Client/package.minimal.json",
+                        "src/Client/package-lock.minimal.json",
                         "src/Client/webpack.minimal.config.js",
-                        "src/Client/client-minimal.fs",
                         "README-minimal.md"
                     ],
                     "condition": "(!minimal)"
@@ -66,6 +69,10 @@
                     "rename": {
                         "src/Client/webpack.default.config.js": "src/Client/webpack.config.js",
                         "src/Client/webpack.minimal.config.js": "src/Client/webpack.config.js",
+                        "src/Client/package.minimal.json": "src/Client/package.json",
+                        "src/Client/package.default.json": "src/Client/package.json",
+                        "src/Client/package-lock.minimal.json": "src/Client/package-lock.json",
+                        "src/Client/package-lock.default.json": "src/Client/package-lock.json",
                         "README-minimal.md": "README.md"
                     }
                 }

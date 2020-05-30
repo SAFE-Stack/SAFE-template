@@ -33,7 +33,19 @@ var CONFIG = {
             target: 'http://localhost:' + (process.env.SERVER_PROXY_PORT || "8085"),
             ws: true
            }
-       }
+       },
+    babel: {
+        presets: [
+            ['@babel/preset-env', {
+                modules: false,
+                // This adds polyfills when needed. Requires core-js dependency.
+                // See https://babeljs.io/docs/en/babel-preset-env#usebuiltins
+                // Note that you still need to add custom polyfills if necessary (e.g. whatwg-fetch)
+                useBuiltIns: 'usage',
+                corejs: 3
+            }]
+        ],
+    }
 }
 
 // If we're running the webpack-dev-server, assume we're in development mode
