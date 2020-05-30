@@ -5,7 +5,11 @@ open Elmish.React
 open Fable.React
 open Fable.React.Props
 open Shared
+(*#if (minimal)
 open Thoth.Fetch
+#else*)
+open Fable.Remoting.Client
+//#endif
 
 type Model = Counter option
 
@@ -14,13 +18,25 @@ type Msg =
     | Decrement
     | InitialCountLoaded of Counter
 
+(*#if (minimal)
 let initialCounter() = Fetch.fetchAs<_, Counter> "/api/init"
 
 let init() =
     let initialModel = None
     let loadCountCmd = Cmd.OfPromise.perform initialCounter () InitialCountLoaded
     initialModel, loadCountCmd
-
+#else*)
+module Server =
+    let counterApi =
+        Remoting.createApi()
+        |> Remoting.withRouteBuilder Route.builder
+        |> Remoting.buildProxy<ICounterApi>
+    let getCounter() = counterApi.getInitialCounter
+let init() =
+    let initialModel = None
+    let loadCountCmd = Cmd.OfAsync.perform Server.getCounter () InitialCountLoaded
+    initialModel, loadCountCmd
+//#endif
 let update msg model =
     match msg, model with
     | Increment, Some counter ->

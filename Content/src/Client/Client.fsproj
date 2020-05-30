@@ -27,8 +27,8 @@
         <PackageReference Include="Fable.Elmish.Hmr" Version="4.0.1" />
         <PackageReference Include="Fable.React" Version="5.3.6" />
         <PackageReference Include="Thoth.Fetch" Version="2.0.0" />
-    </ItemGroup>
+</ItemGroup>
 #else-->
-  <Import Project="..\..\.paket\Paket.Restore.targets" />
 <!--#endif-->
+  <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

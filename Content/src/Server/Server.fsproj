@@ -20,6 +20,6 @@
         <PackageReference Include="Thoth.Json.Giraffe" Version="4.0.0" />
     </ItemGroup>
 #else-->
-  <Import Project="..\..\.paket\Paket.Restore.targets" />
 <!--#endif-->
+  <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>
