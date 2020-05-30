@@ -12,7 +12,6 @@
 <!--#if (minimal)-->
 <!--#else-->
     <None Include="paket.references" />
-    <Compile Include="Version.fs" />
 <!--#endif-->
     <Compile Include="Client.fs" />
   </ItemGroup>

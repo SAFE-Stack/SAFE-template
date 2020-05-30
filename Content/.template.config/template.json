@@ -49,7 +49,6 @@
                         "RELEASE_NOTES.md",
                         "**/paket.*",
                         "*.fsx",
-                        "src/Client/Version.fs",
                         "src/Client/webpack.default.config.js",
                         "README.md"
                     ],

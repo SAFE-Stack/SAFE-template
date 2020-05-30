@@ -2,12 +2,6 @@
   "version": 1,
   "isRoot": true,
   "tools": {
-    "safe.tool": {
-      "version": "0.0.6",
-      "commands": [
-        "safe"
-      ]
-    },
     "paket": {
       "version": "6.0.0-alpha014",
       "commands": [
