@@ -16,7 +16,7 @@
     <Compile Include="Client.fs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Shared\Shared.fsproj" />
+    <ProjectReference Include="..\SAFE.App.Shared\SAFE.App.Shared.fsproj" />
   </ItemGroup>
 <!--#if (minimal)
     <ItemGroup>
@@ -29,6 +29,6 @@
         <PackageReference Include="Thoth.Fetch" Version="2.0.0" />
 </ItemGroup>
 #else-->
-<!--#endif-->
   <Import Project="..\..\.paket\Paket.Restore.targets" />
+<!--#endif-->
 </Project>

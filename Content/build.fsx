@@ -5,11 +5,13 @@
 open Fake.Core
 open Fake.DotNet
 open Fake.IO
+open Farmer
+open Farmer.Builders
 
 Target.initEnvironment ()
 
-let serverPath = Path.getFullName "./src/Server"
-let clientPath = Path.getFullName "./src/Client"
+let serverPath = Path.getFullName "./src/SAFE.App.Server"
+let clientPath = Path.getFullName "./src/SAFE.App.Client"
 let deployDir = Path.getFullName "./deploy"
 
 let npm args workingDir =
@@ -48,6 +50,21 @@ Target.create "Bundle" (fun _ ->
     npm "run build" clientPath
 )
 
+Target.create "Azure" (fun _ ->
+    let web = webApp {
+        name "SAFE.App"
+        zip_deploy "deploy"
+    }
+    let deployment = arm {
+        location Location.WestEurope
+        add_resource web
+    }
+
+    deployment
+    |> Deploy.execute "SAFE.App" Deploy.NoParameters
+    |> ignore
+)
+
 Target.create "Run" (fun _ ->
     [ async { dotnet "watch run" serverPath }
       async { npm "run start" clientPath } ]
@@ -61,6 +78,7 @@ open Fake.Core.TargetOperators
 "Clean"
     ==> "InstallClient"
     ==> "Bundle"
+    ==> "Azure"
 
 "Clean"
     ==> "InstallClient"

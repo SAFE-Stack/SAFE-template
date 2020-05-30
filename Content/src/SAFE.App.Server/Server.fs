@@ -1,3 +1,5 @@
+module SAFE.App.Server
+
 (*#if (minimal)
 open FSharp.Control.Tasks.V2
 open Giraffe
@@ -6,7 +8,7 @@ open Fable.Remoting.Server
 open Fable.Remoting.Giraffe
 //#endif
 open Saturn
-open Shared
+open SAFE.App.Shared
 
 (*#if (minimal)
 let webApp =

@@ -1,10 +1,10 @@
-module Client
+module SAFE.App.Client
 
 open Elmish
 open Elmish.React
 open Fable.React
 open Fable.React.Props
-open Shared
+open SAFE.App.Shared
 (*#if (minimal)
 open Thoth.Fetch
 #else*)
@@ -60,7 +60,7 @@ let show =
 let view model dispatch =
     div [ Style [ TextAlign TextAlignOptions.Center; Padding 40 ] ] [
         img [ Src "favicon.png" ]
-        h1 [] [ str "SAFE Template" ]
+        h1 [] [ str "SAFE.App" ]
         h2 [] [ str (show model) ]
         button [ Style [ Margin 5; Padding 10 ]; OnClick(fun _ -> dispatch Decrement) ] [
             str "-"
@@ -85,8 +85,7 @@ let safeComponents =
         ]
 
     footer [ ] [
-        str "Version "
-        str " powered by: "
+        str "Powered by: "
         components
     ]
 
@@ -151,7 +150,7 @@ let view (model : Model) (dispatch : Msg -> unit) =
                     Column.Width (Screen.All, Column.Is6)
                     Column.Offset (Screen.All, Column.Is3)
                 ] [
-                    Heading.p [ ] [ str "SAFE Template" ]
+                    Heading.p [ ] [ str "SAFE.App" ]
                     Heading.p [ Heading.IsSubtitle ] [ safeComponents ]
                     containerBox model dispatch
                 ]

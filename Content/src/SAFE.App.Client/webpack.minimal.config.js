@@ -53,7 +53,7 @@ var isProduction = !process.argv.find(v => v.indexOf('webpack-dev-server') !== -
 console.log('Bundling for ' + (isProduction ? 'production' : 'development') + '...');
 
 module.exports = {
-    entry: { app: resolve('./Client.fsproj') },
+    entry: { app: resolve('./SAFE.App.Client.fsproj') },
     output: { path: resolve('./../../deploy/public') },
     resolve: { symlinks: false }, // See https://github.com/fable-compiler/Fable/issues/1490
     mode: isProduction ? 'production' : 'development',

@@ -1,4 +1,4 @@
-namespace Shared
+namespace SAFE.App.Shared
 
 type Counter = { Value : int }
 //#if (!minimal)
