@@ -30,7 +30,6 @@ let platformTool tool winTool =
         failwith errorMsg
 
 let nodeTool = platformTool "node" "node.exe"
-//#if (js-deps == "npm")
 let npmTool = platformTool "npm" "npm.cmd"
 let npxTool = platformTool "npx" "npx.cmd"
 let runTool cmd args workingDir =

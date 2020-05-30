@@ -49,26 +49,25 @@
                         "RELEASE_NOTES.md",
                         "**/paket.*",
                         "*.fsx",
-                        "src/Client/Version.fs"
+                        "src/Client/Version.fs",
+                        "src/Client/webpack.default.config.js",
+                        "README.md"
                     ],
                     "condition": "(minimal)"
                 },
                 {
                     "exclude": [
-                        "src/Client/webpack.default.config.js"
-                    ],
-                    "condition": "(minimal)"
-                },
-                {
-                    "exclude": [
-                        "src/Client/webpack.minimal.config.js"
+                        "src/Client/webpack.minimal.config.js",
+                        "src/Client/client-minimal.fs",
+                        "README-minimal.md"
                     ],
                     "condition": "(!minimal)"
                 },
                 {
                     "rename": {
                         "src/Client/webpack.default.config.js": "src/Client/webpack.config.js",
-                        "src/Client/webpack.minimal.config.js": "src/Client/webpack.config.js"
+                        "src/Client/webpack.minimal.config.js": "src/Client/webpack.config.js",
+                        "README-minimal.md": "README.md"
                     }
                 }
             ]
