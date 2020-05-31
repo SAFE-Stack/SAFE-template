@@ -12,7 +12,7 @@
     <Compile Include="Server.fs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SAFE.App.Shared\SAFE.App.Shared.fsproj" />
+    <ProjectReference Include="..\Shared\SAFE.App.Shared.fsproj" />
   </ItemGroup>
 <!--#if (minimal)
     <ItemGroup>

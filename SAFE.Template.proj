@@ -20,9 +20,9 @@ Content/src/**/obj/**/*;
 Content/src/**/bin/**/*;
 Content/packages/**/*;
 Content/paket-files/**/*;
-Content/src/SAFE.App.Client/.fable/**/*;
-Content/src/SAFE.App.Client/node_modules/**/*;
-Content/src/SAFE.App.Client/deploy/**/*;
+Content/src/Client/.fable/**/*;
+Content/src/Client/node_modules/**/*;
+Content/src/Client/deploy/**/*;
         </ExcludeFromPackage>
 </PropertyGroup>
     <ItemGroup>

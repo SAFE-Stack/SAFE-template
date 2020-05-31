@@ -38,33 +38,32 @@
                         ".paket/**",
                         ".vscode/**",
                         ".editorconfig",
-                        "RELEASE_NOTES.md",
                         "**/paket.*",
                         "*.fsx",
-                        "src/SAFE.App.Client/package.default.json",
-                        "src/SAFE.App.Client/package-lock.default.json",
-                        "src/SAFE.App.Client/webpack.default.config.js",
+                        "src/Client/package.default.json",
+                        "src/Client/package-lock.default.json",
+                        "src/Client/webpack.default.config.js",
                         "README.md"
                     ],
                     "condition": "(minimal)"
                 },
                 {
                     "exclude": [
-                        "src/SAFE.App.Client/package.minimal.json",
-                        "src/SAFE.App.Client/package-lock.minimal.json",
-                        "src/SAFE.App.Client/webpack.minimal.config.js",
+                        "src/Client/package.minimal.json",
+                        "src/Client/package-lock.minimal.json",
+                        "src/Client/webpack.minimal.config.js",
                         "README-minimal.md"
                     ],
                     "condition": "(!minimal)"
                 },
                 {
                     "rename": {
-                        "src/SAFE.App.Client/webpack.default.config.js": "src/SAFE.App.Client/webpack.config.js",
-                        "src/SAFE.App.Client/webpack.minimal.config.js": "src/SAFE.App.Client/webpack.config.js",
-                        "src/SAFE.App.Client/package.minimal.json": "src/SAFE.App.Client/package.json",
-                        "src/SAFE.App.Client/package.default.json": "src/SAFE.App.Client/package.json",
-                        "src/SAFE.App.Client/package-lock.minimal.json": "src/SAFE.App.Client/package-lock.json",
-                        "src/SAFE.App.Client/package-lock.default.json": "src/SAFE.App.Client/package-lock.json",
+                        "src/Client/webpack.default.config.js": "src/Client/webpack.config.js",
+                        "src/Client/webpack.minimal.config.js": "src/Client/webpack.config.js",
+                        "src/Client/package.minimal.json": "src/Client/package.json",
+                        "src/Client/package.default.json": "src/Client/package.json",
+                        "src/Client/package-lock.minimal.json": "src/Client/package-lock.json",
+                        "src/Client/package-lock.default.json": "src/Client/package-lock.json",
                         "README-minimal.md": "README.md"
                     }
                 }

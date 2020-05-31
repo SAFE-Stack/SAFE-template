@@ -10,8 +10,8 @@ open Farmer.Builders
 
 Target.initEnvironment ()
 
-let serverPath = Path.getFullName "./src/SAFE.App.Server"
-let clientPath = Path.getFullName "./src/SAFE.App.Client"
+let serverPath = Path.getFullName "./src/Server"
+let clientPath = Path.getFullName "./src/Client"
 let deployDir = Path.getFullName "./deploy"
 
 let npm args workingDir =
