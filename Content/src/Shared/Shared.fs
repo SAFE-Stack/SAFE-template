@@ -14,10 +14,10 @@ module Todo =
         { Id = Guid.NewGuid()
           Description = description }
 
-//#if (minimal)
+(*#if (minimal)
 module Routes =
     let todos = "/api/todos"
-//#endif
+#endif*)
 //#if (!minimal)
 module Route =
     /// Defines how routes are generated on server and mapped from client

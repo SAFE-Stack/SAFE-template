@@ -43,7 +43,12 @@ let webApp =
 #else*)
 let todosApi =
     { getTodos = async { return storage.GetTodos() }
-      addTodo = fun todo -> async { storage.AddTodo todo } }
+      addTodo =
+        fun todo -> async {
+            match storage.AddTodo todo with
+            | Ok () -> return todo
+            | Error e -> return failwith e
+        } }
 
 let webApp =
     Remoting.createApi()

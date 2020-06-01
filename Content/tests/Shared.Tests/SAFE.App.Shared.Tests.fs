@@ -1,4 +1,4 @@
-module Shared.Tests
+module SAFE.App.Shared.Tests
 
 #if FABLE_COMPILER
 open Fable.Mocha
@@ -6,7 +6,7 @@ open Fable.Mocha
 open Expecto
 #endif
 
-open Shared
+open SAFE.App.Shared
 
 let shared = testList "Shared" [
     testCase "Empty string is not a valid description" <| fun _ ->
