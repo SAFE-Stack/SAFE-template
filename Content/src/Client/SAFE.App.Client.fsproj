@@ -9,26 +9,26 @@
     <None Include="package.json" />
     <None Include="package-lock.json" />
     <None Include="webpack.config.js" />
-<!--#if (minimal)-->
-<!--#else-->
+    <!--#if (minimal)-->
+    <!--#else-->
     <None Include="paket.references" />
-<!--#endif-->
+    <!--#endif-->
     <Compile Include="Client.fs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Shared\SAFE.App.Shared.fsproj" />
   </ItemGroup>
-<!--#if (minimal)
-    <ItemGroup>
-        <PackageReference Include="Fable.Core" Version="3.1.5" />
-        <PackageReference Include="Fable.Elmish" Version="3.0.6" />
-        <PackageReference Include="Fable.Elmish.React" Version="3.0.1" />
-        <PackageReference Include="Fable.Elmish.Debugger" Version="3.2.0" />
-        <PackageReference Include="Fable.Elmish.Hmr" Version="4.0.1" />
-        <PackageReference Include="Fable.React" Version="5.3.6" />
-        <PackageReference Include="Thoth.Fetch" Version="2.0.0" />
-</ItemGroup>
-#else-->
+  <!--#if (minimal)
+  <ItemGroup>
+    <PackageReference Include="Fable.Core" Version="3.1.5" />
+    <PackageReference Include="Fable.Elmish" Version="3.0.6" />
+    <PackageReference Include="Fable.Elmish.React" Version="3.0.1" />
+    <PackageReference Include="Fable.Elmish.Debugger" Version="3.2.0" />
+    <PackageReference Include="Fable.Elmish.Hmr" Version="4.0.1" />
+    <PackageReference Include="Fable.React" Version="5.3.6" />
+    <PackageReference Include="Thoth.Fetch" Version="2.0.0" />
+  </ItemGroup>
+  #else-->
   <Import Project="..\..\.paket\Paket.Restore.targets" />
-<!--#endif-->
+  <!--#endif-->
 </Project>

@@ -2,6 +2,9 @@ STORAGE: NONE
 RESTRICTION: || (== netcoreapp3.1) (== netstandard2.0)
 NUGET
   remote: https://api.nuget.org/v3/index.json
+    Expecto (9.0)
+      FSharp.Core (>= 4.6)
+      Mono.Cecil (>= 0.11.2)
     Fable.Browser.Blob (1.1)
       Fable.Core (>= 3.0)
       FSharp.Core (>= 4.6.2)
@@ -55,6 +58,9 @@ NUGET
       Fable.Core (>= 3.0)
       Fable.FontAwesome (>= 2.0)
       Fable.React (>= 5.1)
+    Fable.Mocha (2.9.1)
+      Fable.Core (>= 3.0)
+      FSharp.Core (>= 4.7)
     Fable.Parsimmon (4.1)
       Fable.Core (>= 3.0)
       FSharp.Core (>= 4.6.2)
@@ -439,6 +445,7 @@ NUGET
       System.Memory (>= 4.5.3) - restriction: || (&& (== netcoreapp3.1) (< netcoreapp2.0)) (&& (== netcoreapp3.1) (< netcoreapp2.1)) (&& (== netcoreapp3.1) (>= uap10.1)) (== netstandard2.0)
       System.Security.AccessControl (>= 4.7)
       System.Security.Principal.Windows (>= 4.7)
+    Mono.Cecil (0.11.2)
     NETStandard.Library (2.0.3)
       Microsoft.NETCore.Platforms (>= 1.1)
     Newtonsoft.Json (12.0.3)

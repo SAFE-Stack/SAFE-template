@@ -10,19 +10,45 @@ open Fable.Remoting.Giraffe
 open Saturn
 open SAFE.App.Shared
 
+type Storage () =
+    let todos = ResizeArray<_>()
+
+    member __.GetTodos () =
+        List.ofSeq todos
+
+    member __.AddTodo (todo: Todo) =
+        if Todo.isValid todo.Description then
+            todos.Add todo
+            Ok ()
+        else Error "Invalid todo"
+
+let storage = Storage()
+
+storage.AddTodo(Todo.create "Create new project from SAFE template") |> ignore
+storage.AddTodo(Todo.create "Customize to your own needs") |> ignore
+storage.AddTodo(Todo.create "Profit !!!") |> ignore
+
 (*#if (minimal)
 let webApp =
     router {
-        get "/api/init" (json { Value = 42 })
+        get Routes.todos (json (storage.GetTodos()))
+        post Routes.todos (fun next ctx ->
+            task {
+                let! todo = ctx.BindModelAsync<_>()
+                match storage.AddTodo todo with
+                | Ok () -> return! json todo next ctx
+                | Error e -> return! RequestErrors.BAD_REQUEST e next ctx
+            })
     }
 #else*)
-let counterApi =
-    { getInitialCounter = async { return { Value = 42 } } }
+let todosApi =
+    { getTodos = async { return storage.GetTodos() }
+      addTodo = fun todo -> async { storage.AddTodo todo } }
 
 let webApp =
     Remoting.createApi()
     |> Remoting.withRouteBuilder Route.builder
-    |> Remoting.fromValue counterApi
+    |> Remoting.fromValue todosApi
     |> Remoting.buildHttpHandler
 //#endif
 
