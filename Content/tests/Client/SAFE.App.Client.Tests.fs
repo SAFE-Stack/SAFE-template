@@ -1,8 +1,9 @@
-module Client.Tests
+module SAFE.App.Client.Tests
 
 open Fable.Mocha
 
-open Shared
+open SAFE.App.Client
+open SAFE.App.Shared
 
 let client = testList "Client" [
     testCase "Added todo" <| fun _ ->
@@ -19,7 +20,7 @@ let all =
     testList "All"
         [
 #if FABLE_COMPILER // This preprocessor directive makes editor happy
-            Shared.Tests.shared
+            SAFE.App.Shared.Tests.shared
 #endif
             client
         ]

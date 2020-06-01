@@ -9,7 +9,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Server\SAFE.App.Server.fsproj" />
-    <ProjectReference Include="..\Shared.Tests\SAFE.App.Shared.Tests.fsproj" />
+    <ProjectReference Include="..\Shared\SAFE.App.Shared.Tests.fsproj" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

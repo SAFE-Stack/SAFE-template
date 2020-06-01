@@ -47,7 +47,7 @@ let init(): Model * Cmd<Msg> =
 (*if (minimal)
     let cmd = Cmd.OfPromise.perform getTodos () GotTodos
 #else*)
-    let cmd = Cmd.OfAsync.perform todosApi.getTodos () GotTodos
+    let cmd = Cmd.OfAsync.perform (fun _ -> todosApi.getTodos) () GotTodos
 //#endif
     model, cmd
 
@@ -63,7 +63,12 @@ let update (msg: Msg) (model: Model): Model * Cmd<Msg> =
         { model with Input = value }, Cmd.none
     | AddTodo ->
         let todo = Todo.create model.Input
-        { model with Input = "" }, Cmd.OfPromise.perform addTodo todo AddedTodo
+(*if (minimal)
+        let cmd = Cmd.OfPromise.perform addTodo todo AddedTodo
+#else*)
+        let cmd = Cmd.OfAsync.perform todosApi.addTodo todo AddedTodo
+//#endif
+        { model with Input = "" }, cmd
     | AddedTodo todo ->
         { model with Todos = model.Todos @ [ todo ] }, Cmd.none
 
@@ -98,24 +103,23 @@ let navBrand =
     ]
 
 let containerBox (model : Model) (dispatch : Msg -> unit) =
-    Box.box' [ ] [
-          Content.content [ ]
+    Box.box' [ ]
+        [ Content.content [ ]
             [ Content.Ol.ol [ ]
                 [ for todo in model.Todos ->
                     li [ ] [ str todo.Description ] ] ]
           Field.div [ Field.IsGrouped ]
-            Control.p [ Control.IsExpanded ] [
-                Input.text
+            [ Control.p [ Control.IsExpanded ]
+                [ Input.text
                     [ Input.Value model.Input
                       Input.Placeholder "What needs to be done?"
-                      Input.OnChange (fun x -> SetInput x.Value |> dispatch) ]
-            ]
-            Control.p [ ] [
+                      Input.OnChange (fun x -> SetInput x.Value |> dispatch) ] ]
+              Control.p [ ] [
                 Button.a [
                     Button.Color IsPrimary
                     Button.Disabled (Todo.isValid model.Input |> not)
                     Button.OnClick (fun _ -> dispatch AddTodo) ]
-                  [ str "Add" ] ] ]
+                  [ str "Add" ] ] ] ]
 
 let view (model : Model) (dispatch : Msg -> unit) =
     Hero.hero [
@@ -140,8 +144,7 @@ let view (model : Model) (dispatch : Msg -> unit) =
                     Column.Width (Screen.All, Column.Is6)
                     Column.Offset (Screen.All, Column.Is3)
                 ] [
-                    Heading.p [ ] [ str "SAFE.App" ]
-                    Heading.p [ Heading.IsSubtitle ] [ safeComponents ]
+                    Heading.p [ Heading.Modifiers [ Modifier.TextAlignment (Screen.All, TextAlignment.Centered) ] ] [ str "SAFE.App" ]
                     containerBox model dispatch
                 ]
             ]

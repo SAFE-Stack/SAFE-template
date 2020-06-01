@@ -13,6 +13,7 @@ Target.initEnvironment ()
 let serverPath = Path.getFullName "./src/Server"
 let clientPath = Path.getFullName "./src/Client"
 let deployDir = Path.getFullName "./deploy"
+let serverTestsPath = Path.getFullName "./tests/Server"
 
 let npm args workingDir =
     let npmPath =
@@ -68,6 +69,14 @@ Target.create "Azure" (fun _ ->
 Target.create "Run" (fun _ ->
     [ async { dotnet "watch run" serverPath }
       async { npm "run start" clientPath } ]
+    |> Async.Parallel
+    |> Async.RunSynchronously
+    |> ignore
+)
+
+Target.create "RunTests" (fun _ ->
+    [ async { dotnet "watch run" serverTestsPath }
+      async { npm "test" clientPath } ]
     |> Async.Parallel
     |> Async.RunSynchronously
     |> ignore
