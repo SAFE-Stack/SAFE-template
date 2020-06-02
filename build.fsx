@@ -30,6 +30,8 @@ Target.create "Clean" (fun _ ->
     Shell.cleanDirs [ nupkgDir ]
 )
 
+let msBuildParams msBuildParameter: Fake.DotNet.MSBuild.CliArguments = { msBuildParameter with DisableInternalBinLog = true }
+
 Target.create "BuildWebPackConfig" (fun _ ->
     let srcDir = "paket-files/fable-compiler/webpack-config-template/webpack.config.js"
     let destDir = "Content/src/Client/webpack.config.js"
@@ -77,6 +79,7 @@ Target.create "Pack" (fun _ ->
         (fun args ->
             { args with
                     OutputPath = Some nupkgDir
+                    MSBuildParams = msBuildParams args.MSBuildParams
                     Common =
                         { args.Common with
                             CustomParams =
