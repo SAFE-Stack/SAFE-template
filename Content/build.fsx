@@ -93,4 +93,8 @@ open Fake.Core.TargetOperators
     ==> "InstallClient"
     ==> "Run"
 
+"Clean"
+    ==> "InstallClient"
+    ==> "RunTests"
+
 Target.runOrDefaultWithArguments "Bundle"
