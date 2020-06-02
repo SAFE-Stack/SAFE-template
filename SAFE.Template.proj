@@ -18,6 +18,8 @@
 Content/.fake/**/*;
 Content/src/**/obj/**/*;
 Content/src/**/bin/**/*;
+Content/tests/**/obj/**/*;
+Content/tests/**/bin/**/*;
 Content/packages/**/*;
 Content/paket-files/**/*;
 Content/src/Client/.fable/**/*;
