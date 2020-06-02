@@ -15,9 +15,9 @@ var CONFIG = {
     // The tags to include the generated JS and CSS will be automatically injected in the HTML template
     // See https://github.com/jantimon/html-webpack-plugin
     indexHtmlTemplate: './index.html',
-    fsharpEntry: './Client.fsproj',
+    fsharpEntry: './SAFE.App.Client.fsproj',
     cssEntry: './style.scss',
-    outputDir: './deploy',
+    outputDir: './../../deploy/public',
     assetsDir: './public',
     devServerPort: 8080,
     // When using webpack-dev-server, you may need to redirect some calls
@@ -33,7 +33,19 @@ var CONFIG = {
             target: 'http://localhost:' + (process.env.SERVER_PROXY_PORT || "8085"),
             ws: true
            }
-       }
+       },
+    babel: {
+        presets: [
+            ['@babel/preset-env', {
+                modules: false,
+                // This adds polyfills when needed. Requires core-js dependency.
+                // See https://babeljs.io/docs/en/babel-preset-env#usebuiltins
+                // Note that you still need to add custom polyfills if necessary (e.g. whatwg-fetch)
+                useBuiltIns: 'usage',
+                corejs: 3
+            }]
+        ],
+    }
 }
 
 // If we're running the webpack-dev-server, assume we're in development mode

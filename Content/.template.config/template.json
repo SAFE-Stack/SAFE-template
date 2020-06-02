@@ -15,16 +15,8 @@
     },
     "identity": "SAFE.Template",
     "shortName": "SAFE",
-    "sourceName": "SAFE.Template",
+    "sourceName": "SAFE.App",
     "symbols": {
-        "createdate": {
-            "type": "generated",
-            "generator": "now",
-            "parameters": {
-                "format": "yyyy-MM-dd"
-            },
-            "replaces": "1970-01-01"
-        },
         "minimal": {
             "type": "parameter",
             "dataType": "bool",
@@ -46,10 +38,10 @@
                         ".paket/**",
                         ".vscode/**",
                         ".editorconfig",
-                        "RELEASE_NOTES.md",
                         "**/paket.*",
                         "*.fsx",
-                        "src/Client/Version.fs",
+                        "src/Client/package.default.json",
+                        "src/Client/package-lock.default.json",
                         "src/Client/webpack.default.config.js",
                         "README.md"
                     ],
@@ -57,8 +49,9 @@
                 },
                 {
                     "exclude": [
+                        "src/Client/package.minimal.json",
+                        "src/Client/package-lock.minimal.json",
                         "src/Client/webpack.minimal.config.js",
-                        "src/Client/client-minimal.fs",
                         "README-minimal.md"
                     ],
                     "condition": "(!minimal)"
@@ -67,6 +60,10 @@
                     "rename": {
                         "src/Client/webpack.default.config.js": "src/Client/webpack.config.js",
                         "src/Client/webpack.minimal.config.js": "src/Client/webpack.config.js",
+                        "src/Client/package.minimal.json": "src/Client/package.json",
+                        "src/Client/package.default.json": "src/Client/package.json",
+                        "src/Client/package-lock.minimal.json": "src/Client/package-lock.json",
+                        "src/Client/package-lock.default.json": "src/Client/package-lock.json",
                         "README-minimal.md": "README.md"
                     }
                 }

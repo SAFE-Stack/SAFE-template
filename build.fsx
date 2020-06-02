@@ -15,7 +15,6 @@ open Fake.IO.Globbing.Operators
 open Fake.Tools
 
 let templatePath = "./Content/.template.config/template.json"
-let versionFilePath = "./Content/src/Client/Version.fs"
 let templateProj = "SAFE.Template.proj"
 let templateName = "SAFE-Stack Web App"
 let nupkgDir = Path.getFullName "./nupkg"
@@ -55,7 +54,7 @@ Target.create "BuildWebPackConfig" (fun _ ->
     let replacements =
         [
             "indexHtmlTemplate", quote "./index.html"
-            "fsharpEntry", quote "./Client.fsproj"
+            "fsharpEntry", quote "./SAFE.App.Client.fsproj"
             "cssEntry", quote "./style.scss"
             "devServerProxy", devServerProxy
         ]
@@ -74,11 +73,6 @@ Target.create "Pack" (fun _ ->
        ("  \"name\": \"" + templateName + " v" + release.NugetVersion + "\",")
         System.Text.Encoding.UTF8
         templatePath
-    Shell.regexReplaceInFileWithEncoding
-        "let template = \".+\""
-       ("let template = \"" + release.NugetVersion + "\"")
-        System.Text.Encoding.UTF8
-        versionFilePath
     DotNet.pack
         (fun args ->
             { args with

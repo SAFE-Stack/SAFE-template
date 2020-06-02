@@ -11,13 +11,13 @@ You'll need to install the following pre-requisites in order to build SAFE appli
 ## Starting the application
 Start the server:
 ```bash
-cd src\server
+cd src\Server\
 dotnet run
 ```
 
 Start the client:
 ```bash
-cd src\client
+cd src\Client\
 npm install
 npm run start
 ```
