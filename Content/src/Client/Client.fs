@@ -44,7 +44,7 @@ let init(): Model * Cmd<Msg> =
     let model =
         { Todos = []
           Input = "" }
-(*if (minimal)
+(*#if (minimal)
     let cmd = Cmd.OfPromise.perform getTodos () GotTodos
 #else*)
     let cmd = Cmd.OfAsync.perform (fun _ -> todosApi.getTodos) () GotTodos
@@ -63,7 +63,7 @@ let update (msg: Msg) (model: Model): Model * Cmd<Msg> =
         { model with Input = value }, Cmd.none
     | AddTodo ->
         let todo = Todo.create model.Input
-(*if (minimal)
+(*#if (minimal)
         let cmd = Cmd.OfPromise.perform addTodo todo AddedTodo
 #else*)
         let cmd = Cmd.OfAsync.perform todosApi.addTodo todo AddedTodo
@@ -75,17 +75,24 @@ let update (msg: Msg) (model: Model): Model * Cmd<Msg> =
 // View takes current model and generates React elements
 // It can also use `dispatch` to trigger Msg from UI elements
 
-(*//#if minimal
+(*#if minimal
 let view model dispatch =
     div [ Style [ TextAlign TextAlignOptions.Center; Padding 40 ] ] [
-        img [ Src "favicon.png" ]
-        h1 [] [ str "SAFE.App" ]
-        h2 [] [ str (show model) ]
-        button [ Style [ Margin 5; Padding 10 ]; OnClick(fun _ -> dispatch Decrement) ] [
-            str "-"
-        ]
-        button [ Style [ Margin 5; Padding 10 ]; OnClick(fun _ -> dispatch Increment) ] [
-            str "+"
+        div [ Style [ Display DisplayOptions.InlineBlock ] ] [
+            img [ Src "favicon.png" ]
+            h1 [] [ str "minimal" ]
+            ol [ Style [ MarginRight 20 ] ] [
+                for todo in model.Todos ->
+                    li [] [ str todo.Description ]
+            ]
+            input
+                [ Value model.Input
+                  Placeholder "What needs to be done?"
+                  OnChange (fun e -> SetInput e.Value |> dispatch) ]
+            button
+                [ Disabled (Todo.isValid model.Input |> not)
+                  OnClick (fun _ -> dispatch AddTodo) ]
+                [ str "Add" ]
         ]
     ]
 #else*)

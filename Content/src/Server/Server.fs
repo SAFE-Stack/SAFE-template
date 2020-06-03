@@ -24,14 +24,14 @@ type Storage () =
 
 let storage = Storage()
 
-storage.AddTodo(Todo.create "Create new project from SAFE template") |> ignore
-storage.AddTodo(Todo.create "Customize to your own needs") |> ignore
-storage.AddTodo(Todo.create "Profit !!!") |> ignore
+storage.AddTodo(Todo.create "Create new SAFE project") |> ignore
+storage.AddTodo(Todo.create "Write your app") |> ignore
+storage.AddTodo(Todo.create "Ship it !!!") |> ignore
 
 (*#if (minimal)
 let webApp =
     router {
-        get Routes.todos (json (storage.GetTodos()))
+        get Routes.todos (fun next ctx -> json (storage.GetTodos()) next ctx)
         post Routes.todos (fun next ctx ->
             task {
                 let! todo = ctx.BindModelAsync<_>()

@@ -43,7 +43,9 @@
                         "src/Client/package.default.json",
                         "src/Client/package-lock.default.json",
                         "src/Client/webpack.default.config.js",
-                        "README.md"
+                        "src/Client/webpack.tests.config.js",
+                        "README.md",
+                        "tests/**/*.*"
                     ],
                     "condition": "(minimal)"
                 },
