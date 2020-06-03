@@ -1,10 +1,12 @@
 module SAFE.App.Shared.Tests
 
+//-:cnd:noEmit
 #if FABLE_COMPILER
 open Fable.Mocha
 #else
 open Expecto
 #endif
+//+:cnd:noEmit
 
 open SAFE.App.Shared
 
