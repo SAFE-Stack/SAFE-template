@@ -36,7 +36,6 @@ let view (model: Model) dispatch =
             h2 [] [ str model.Hello ]
         ]
     ]
-
 (*#else
 open Elmish
 open Elmish.React
