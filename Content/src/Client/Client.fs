@@ -62,7 +62,7 @@ let init(): Model * Cmd<Msg> =
     let model =
         { Todos = []
           Input = "" }
-    let cmd = Cmd.OfAsync.perform (fun _ -> todosApi.getTodos) () GotTodos
+    let cmd = Cmd.OfAsync.perform todosApi.getTodos () GotTodos
     model, cmd
 
 let update (msg: Msg) (model: Model): Model * Cmd<Msg> =
@@ -88,7 +88,7 @@ let navBrand =
             Navbar.Item.Props [ Href "https://safe-stack.github.io/" ]
             Navbar.Item.IsActive true
         ] [
-            img [ Src "https://safe-stack.github.io/images/safe_top.png"
+            img [ Src "/favicon.png"
                   Alt "Logo" ]
         ]
     ]

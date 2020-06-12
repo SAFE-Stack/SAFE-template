@@ -48,7 +48,7 @@ storage.AddTodo(Todo.create "Write your app") |> ignore
 storage.AddTodo(Todo.create "Ship it !!!") |> ignore
 
 let todosApi =
-    { getTodos = async { return storage.GetTodos() }
+    { getTodos = fun () -> async { return storage.GetTodos() }
       addTodo =
         fun todo -> async {
             match storage.AddTodo todo with
