@@ -5,7 +5,7 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="SAFE.App.Server.Tests.fs" />
+    <Compile Include="Server.Tests.fs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Server\SAFE.App.Server.fsproj" />

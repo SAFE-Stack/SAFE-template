@@ -3,7 +3,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="SAFE.App.Shared.Tests.fs" />
+    <Compile Include="Shared.Tests.fs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Shared\SAFE.App.Shared.fsproj" />

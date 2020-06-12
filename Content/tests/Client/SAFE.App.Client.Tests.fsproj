@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="SAFE.App.Client.Tests.fs" />
+    <Compile Include="Client.Tests.fs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Client\SAFE.App.Client.fsproj" />
