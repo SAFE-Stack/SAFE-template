@@ -1,13 +1,32 @@
 module Server
 
-(*#if (minimal)
-open FSharp.Control.Tasks.V2
+(*#if (minimal)*)
 open Giraffe
-#else*)
+open Saturn
+
+open Shared
+
+let webApp =
+    router {
+        get Route.hello (json "Hello from SAFE!")
+    }
+
+let app =
+    application {
+        url "http://0.0.0.0:8085"
+        use_router webApp
+        memory_cache
+        use_static "public"
+        use_json_serializer (Thoth.Json.Giraffe.ThothSerializer())
+        use_gzip
+    }
+
+run app
+(*#else
 open Fable.Remoting.Server
 open Fable.Remoting.Giraffe
-//#endif
 open Saturn
+
 open Shared
 
 type Storage () =
@@ -28,19 +47,6 @@ storage.AddTodo(Todo.create "Create new SAFE project") |> ignore
 storage.AddTodo(Todo.create "Write your app") |> ignore
 storage.AddTodo(Todo.create "Ship it !!!") |> ignore
 
-(*#if (minimal)
-let webApp =
-    router {
-        get Routes.todos (fun next ctx -> json (storage.GetTodos()) next ctx)
-        post Routes.todos (fun next ctx ->
-            task {
-                let! todo = ctx.BindModelAsync<_>()
-                match storage.AddTodo todo with
-                | Ok () -> return! json todo next ctx
-                | Error e -> return! RequestErrors.BAD_REQUEST e next ctx
-            })
-    }
-#else*)
 let todosApi =
     { getTodos = async { return storage.GetTodos() }
       addTodo =
@@ -55,7 +61,6 @@ let webApp =
     |> Remoting.withRouteBuilder Route.builder
     |> Remoting.fromValue todosApi
     |> Remoting.buildHttpHandler
-//#endif
 
 let app =
     application {
@@ -63,11 +68,8 @@ let app =
         use_router webApp
         memory_cache
         use_static "public"
-(*#if (minimal)
-        use_json_serializer (Thoth.Json.Giraffe.ThothSerializer())
-#else
-#endif*)
         use_gzip
     }
 
 run app
+#endif*)

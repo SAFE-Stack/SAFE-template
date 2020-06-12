@@ -1,15 +1,48 @@
 module Client
 
+(*#if (minimal)*)
 open Elmish
 open Elmish.React
+open Thoth.Fetch
+
+open Shared
+
+type Model =
+    { Hello: string }
+
+type Msg =
+    | GotHello of string
+
+let init(): Model * Cmd<Msg> =
+    let model : Model =
+        { Hello = "" }
+    let getHello() = Fetch.get<unit, string> Route.hello
+    let cmd = Cmd.OfPromise.perform getHello () GotHello
+    model, cmd
+
+let update (msg: Msg) (model: Model): Model * Cmd<Msg> =
+    match msg with
+    | GotHello hello ->
+        { model with Hello = hello }, Cmd.none
+
 open Fable.React
 open Fable.React.Props
-open Shared
-(*#if (minimal)
-open Thoth.Fetch
-#else*)
+
+let view (model: Model) dispatch =
+    div [ Style [ TextAlign TextAlignOptions.Center; Padding 40 ] ] [
+        div [] [
+            img [ Src "favicon.png" ]
+            h1 [] [ str "SAFE.App" ]
+            h2 [] [ str model.Hello ]
+        ]
+    ]
+
+(*#else
+open Elmish
+open Elmish.React
 open Fable.Remoting.Client
-//#endif
+
+open Shared
 
 type Model =
     { Todos: Todo list
@@ -21,25 +54,16 @@ type Msg =
     | AddTodo
     | AddedTodo of Todo
 
-(*#if (minimal)
-let getTodos() = Fetch.get<unit, Todo list> Routes.todos
-let addTodo(todo) = Fetch.post<Todo, Todo> (Routes.todos, todo)
-#else*)
 let todosApi =
     Remoting.createApi()
     |> Remoting.withRouteBuilder Route.builder
     |> Remoting.buildProxy<ITodosApi>
-//#endif
 
 let init(): Model * Cmd<Msg> =
     let model =
         { Todos = []
           Input = "" }
-(*#if (minimal)
-    let cmd = Cmd.OfPromise.perform getTodos () GotTodos
-#else*)
     let cmd = Cmd.OfAsync.perform (fun _ -> todosApi.getTodos) () GotTodos
-//#endif
     model, cmd
 
 let update (msg: Msg) (model: Model): Model * Cmd<Msg> =
@@ -50,36 +74,13 @@ let update (msg: Msg) (model: Model): Model * Cmd<Msg> =
         { model with Input = value }, Cmd.none
     | AddTodo ->
         let todo = Todo.create model.Input
-(*#if (minimal)
-        let cmd = Cmd.OfPromise.perform addTodo todo AddedTodo
-#else*)
         let cmd = Cmd.OfAsync.perform todosApi.addTodo todo AddedTodo
-//#endif
         { model with Input = "" }, cmd
     | AddedTodo todo ->
         { model with Todos = model.Todos @ [ todo ] }, Cmd.none
 
-(*#if minimal
-let view model dispatch =
-    div [ Style [ TextAlign TextAlignOptions.Center; Padding 40 ] ] [
-        div [ Style [ Display DisplayOptions.InlineBlock ] ] [
-            img [ Src "favicon.png" ]
-            h1 [] [ str "minimal" ]
-            ol [ Style [ MarginRight 20 ] ] [
-                for todo in model.Todos ->
-                    li [] [ str todo.Description ]
-            ]
-            input
-                [ Value model.Input
-                  Placeholder "What needs to be done?"
-                  OnChange (fun e -> SetInput e.Value |> dispatch) ]
-            button
-                [ Disabled (Todo.isValid model.Input |> not)
-                  OnClick (fun _ -> dispatch AddTodo) ]
-                [ str "Add" ]
-        ]
-    ]
-#else*)
+open Fable.React
+open Fable.React.Props
 open Fulma
 
 let navBrand =
@@ -141,7 +142,7 @@ let view (model : Model) (dispatch : Msg -> unit) =
             ]
         ]
     ]
-(*#endif*)
+#endif*)
 
 //-:cnd:noEmit
 #if DEBUG
