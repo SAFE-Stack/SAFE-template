@@ -1,10 +1,10 @@
 var path = require('path')
 
 module.exports = {
-    entry: "../../tests/Client/SAFE.App.Client.Tests.fsproj",
+    entry: "../../tests/Client/Client.Tests.fsproj",
     output: {
         path: path.join(__dirname, "../../tests/Client"),
-        filename: "SAFE.App.Client.Tests.js",
+        filename: "Client.Tests.js",
     },
     devServer: {
         contentBase: "../../tests/Client",
