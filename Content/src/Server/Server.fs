@@ -1,4 +1,4 @@
-module SAFE.App.Server
+module Server
 
 (*#if (minimal)
 open FSharp.Control.Tasks.V2
@@ -8,7 +8,7 @@ open Fable.Remoting.Server
 open Fable.Remoting.Giraffe
 //#endif
 open Saturn
-open SAFE.App.Shared
+open Shared
 
 type Storage () =
     let todos = ResizeArray<_>()

@@ -1,10 +1,10 @@
-module SAFE.App.Client
+module Client
 
 open Elmish
 open Elmish.React
 open Fable.React
 open Fable.React.Props
-open SAFE.App.Shared
+open Shared
 (*#if (minimal)
 open Thoth.Fetch
 #else*)

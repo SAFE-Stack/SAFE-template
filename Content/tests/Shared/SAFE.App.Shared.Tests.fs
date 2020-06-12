@@ -1,4 +1,4 @@
-module SAFE.App.Shared.Tests
+module Shared.Tests
 
 //-:cnd:noEmit
 #if FABLE_COMPILER
@@ -8,7 +8,7 @@ open Expecto
 #endif
 //+:cnd:noEmit
 
-open SAFE.App.Shared
+open Shared
 
 let shared = testList "Shared" [
     testCase "Empty string is not a valid description" <| fun _ ->

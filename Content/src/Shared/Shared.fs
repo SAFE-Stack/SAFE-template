@@ -1,4 +1,4 @@
-namespace SAFE.App.Shared
+namespace Shared
 
 open System
 

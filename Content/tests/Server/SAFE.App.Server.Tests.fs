@@ -1,9 +1,9 @@
-module SAFE.APP.Server.Tests
+module Server.Tests
 
 open Expecto
 
-open SAFE.App.Shared
-open SAFE.App.Server
+open Shared
+open Server
 
 let server = testList "Server" [
     testCase "Adding valid Todo" <| fun _ ->
@@ -20,7 +20,7 @@ let server = testList "Server" [
 let all =
     testList "All"
         [
-            SAFE.App.Shared.Tests.shared
+            Shared.Tests.shared
             server
         ]
 
