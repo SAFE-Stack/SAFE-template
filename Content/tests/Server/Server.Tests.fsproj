@@ -8,8 +8,8 @@
     <Compile Include="Server.Tests.fs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\Server\SAFE.App.Server.fsproj" />
-    <ProjectReference Include="..\Shared\SAFE.App.Shared.Tests.fsproj" />
+    <ProjectReference Include="..\..\src\Server\Server.fsproj" />
+    <ProjectReference Include="..\Shared\Shared.Tests.fsproj" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>
