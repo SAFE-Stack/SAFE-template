@@ -3,7 +3,7 @@
     "scripts": {
         "start": "webpack-dev-server",
         "build": "webpack -p",
-        "test": "webpack-dev-server --config webpack.tests.config.js"
+        "test:live": "webpack-dev-server --config webpack.tests.config.js"
     },
     "devDependencies": {
         "@babel/core": "^7.6.4",

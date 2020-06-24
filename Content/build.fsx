@@ -76,7 +76,7 @@ Target.create "Run" (fun _ ->
 
 Target.create "RunTests" (fun _ ->
     [ async { dotnet "watch run" serverTestsPath }
-      async { npm "test" clientPath } ]
+      async { npm "run test:live" clientPath } ]
     |> Async.Parallel
     |> Async.RunSynchronously
     |> ignore
