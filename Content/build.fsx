@@ -10,9 +10,11 @@ open Farmer.Builders
 
 Target.initEnvironment ()
 
+let sharedPath = Path.getFullName "./src/Shared"
 let serverPath = Path.getFullName "./src/Server"
 let clientPath = Path.getFullName "./src/Client"
 let deployDir = Path.getFullName "./deploy"
+let sharedTestsPath = Path.getFullName "./tests/Shared"
 let serverTestsPath = Path.getFullName "./tests/Server"
 
 let npm args workingDir =
@@ -67,6 +69,7 @@ Target.create "Azure" (fun _ ->
 )
 
 Target.create "Run" (fun _ ->
+    dotnet "build" sharedPath
     [ async { dotnet "watch run" serverPath }
       async { npm "run start" clientPath } ]
     |> Async.Parallel
@@ -75,6 +78,7 @@ Target.create "Run" (fun _ ->
 )
 
 Target.create "RunTests" (fun _ ->
+    dotnet "build" sharedTestsPath
     [ async { dotnet "watch run" serverTestsPath }
       async { npm "run test:live" clientPath } ]
     |> Async.Parallel
