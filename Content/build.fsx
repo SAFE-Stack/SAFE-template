@@ -19,17 +19,12 @@ let serverTestsPath = Path.getFullName "./tests/Server"
 
 let npm args workingDir =
     let npmPath =
-        let npmPath = if Environment.isUnix then "npm" else "npm.cmd"
-
-        npmPath
-        |> ProcessUtils.tryFindFileOnPath
-        |> Option.defaultWith(fun () ->
-            let errorMsg =
-                npmPath +
-                " was not found in path. " +
-                "Please install it and make sure it's available from your path. " +
-                "See https://safe-stack.github.io/docs/quickstart/#install-pre-requisites for more info"
-            failwith errorMsg)
+        match ProcessUtils.tryFindFileOnPath "npm" with
+        | Some path -> path
+        | None ->
+            "npm was not found in path. Please install it and make sure it's available from your path. " +
+            "See https://safe-stack.github.io/docs/quickstart/#install-pre-requisites for more info"
+            |> failwith
 
     let arguments = args |> String.split ' ' |> Arguments.OfArgs
 
