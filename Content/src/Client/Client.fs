@@ -1,93 +1,86 @@
-module SAFE.App.Client
+module Client
 
+(*#if (minimal)*)
 open Elmish
 open Elmish.React
-open Fable.React
-open Fable.React.Props
-open SAFE.App.Shared
-(*#if (minimal)
 open Thoth.Fetch
-#else*)
-open Fable.Remoting.Client
-//#endif
 
-type Model = Counter option
+open Shared
+
+type Model =
+    { Hello: string }
 
 type Msg =
-    | Increment
-    | Decrement
-    | InitialCountLoaded of Counter
+    | GotHello of string
 
-(*#if (minimal)
-let initialCounter() = Fetch.fetchAs<_, Counter> "/api/init"
+let init(): Model * Cmd<Msg> =
+    let model : Model =
+        { Hello = "" }
+    let getHello() = Fetch.get<unit, string> Route.hello
+    let cmd = Cmd.OfPromise.perform getHello () GotHello
+    model, cmd
 
-let init() =
-    let initialModel = None
-    let loadCountCmd = Cmd.OfPromise.perform initialCounter () InitialCountLoaded
-    initialModel, loadCountCmd
-#else*)
-module Server =
-    let counterApi =
-        Remoting.createApi()
-        |> Remoting.withRouteBuilder Route.builder
-        |> Remoting.buildProxy<ICounterApi>
-    let getCounter() = counterApi.getInitialCounter
-let init() =
-    let initialModel = None
-    let loadCountCmd = Cmd.OfAsync.perform Server.getCounter () InitialCountLoaded
-    initialModel, loadCountCmd
-//#endif
-let update msg model =
-    match msg, model with
-    | Increment, Some counter ->
-        let nextModel = Some { Value = counter.Value + 1 }
-        nextModel, Cmd.none
-    | Decrement, Some counter ->
-        let nextModel = Some { counter with Value = counter.Value - 1 }
-        nextModel, Cmd.none
-    | InitialCountLoaded initialCount, _ ->
-        let nextModel = Some initialCount
-        nextModel, Cmd.none
-    | _ ->
-        model, Cmd.none
+let update (msg: Msg) (model: Model): Model * Cmd<Msg> =
+    match msg with
+    | GotHello hello ->
+        { model with Hello = hello }, Cmd.none
 
-let show =
-    function
-    | Some counter -> string counter.Value
-    | None -> "Loading..."
+open Fable.React
+open Fable.React.Props
 
-(*//#if minimal
-let view model dispatch =
+let view (model: Model) dispatch =
     div [ Style [ TextAlign TextAlignOptions.Center; Padding 40 ] ] [
-        img [ Src "favicon.png" ]
-        h1 [] [ str "SAFE.App" ]
-        h2 [] [ str (show model) ]
-        button [ Style [ Margin 5; Padding 10 ]; OnClick(fun _ -> dispatch Decrement) ] [
-            str "-"
-        ]
-        button [ Style [ Margin 5; Padding 10 ]; OnClick(fun _ -> dispatch Increment) ] [
-            str "+"
+        div [] [
+            img [ Src "favicon.png" ]
+            h1 [] [ str "SAFE.App" ]
+            h2 [] [ str model.Hello ]
         ]
     ]
-#else*)
+(*#else
+open Elmish
+open Elmish.React
+open Fable.Remoting.Client
+
+open Shared
+
+type Model =
+    { Todos: Todo list
+      Input: string }
+
+type Msg =
+    | GotTodos of Todo list
+    | SetInput of string
+    | AddTodo
+    | AddedTodo of Todo
+
+let todosApi =
+    Remoting.createApi()
+    |> Remoting.withRouteBuilder Route.builder
+    |> Remoting.buildProxy<ITodosApi>
+
+let init(): Model * Cmd<Msg> =
+    let model =
+        { Todos = []
+          Input = "" }
+    let cmd = Cmd.OfAsync.perform todosApi.getTodos () GotTodos
+    model, cmd
+
+let update (msg: Msg) (model: Model): Model * Cmd<Msg> =
+    match msg with
+    | GotTodos todos ->
+        { model with Todos = todos }, Cmd.none
+    | SetInput value ->
+        { model with Input = value }, Cmd.none
+    | AddTodo ->
+        let todo = Todo.create model.Input
+        let cmd = Cmd.OfAsync.perform todosApi.addTodo todo AddedTodo
+        { model with Input = "" }, cmd
+    | AddedTodo todo ->
+        { model with Todos = model.Todos @ [ todo ] }, Cmd.none
+
+open Fable.React
+open Fable.React.Props
 open Fulma
-
-let safeComponents =
-    let components =
-        span [] [
-            a [ Href "https://github.com/SAFE-Stack/SAFE-template" ] [ str "SAFE" ]
-            str ", "
-            a [ Href "https://saturnframework.github.io" ] [ str "Saturn" ]
-            str ", "
-            a [ Href "http://fable.io" ] [ str "Fable" ]
-            str ", "
-            a [ Href "https://elmish.github.io" ] [ str "Elmish" ]
-        ]
-
-    footer [ ] [
-        str "Powered by: "
-        components
-    ]
 
 let navBrand =
     Navbar.Brand.div [ ] [
@@ -95,35 +88,29 @@ let navBrand =
             Navbar.Item.Props [ Href "https://safe-stack.github.io/" ]
             Navbar.Item.IsActive true
         ] [
-            img [ Src "https://safe-stack.github.io/images/safe_top.png"
+            img [ Src "/favicon.png"
                   Alt "Logo" ]
         ]
     ]
 
 let containerBox (model : Model) (dispatch : Msg -> unit) =
-    Box.box' [ ] [
-        Field.div [ Field.IsGrouped ] [
-            Control.p [ Control.IsExpanded ] [
-                Input.text [ Input.Disabled true; Input.Value (show model) ]
-            ]
-            Control.p [ ] [
+    Box.box' [ ]
+        [ Content.content [ ]
+            [ Content.Ol.ol [ ]
+                [ for todo in model.Todos ->
+                    li [ ] [ str todo.Description ] ] ]
+          Field.div [ Field.IsGrouped ]
+            [ Control.p [ Control.IsExpanded ]
+                [ Input.text
+                    [ Input.Value model.Input
+                      Input.Placeholder "What needs to be done?"
+                      Input.OnChange (fun x -> SetInput x.Value |> dispatch) ] ]
+              Control.p [ ] [
                 Button.a [
                     Button.Color IsPrimary
-                    Button.OnClick (fun _ -> dispatch Increment)
-                ] [
-                    str "+"
-                ]
-            ]
-            Control.p [ ] [
-                Button.a [
-                    Button.Color IsPrimary
-                    Button.OnClick (fun _ -> dispatch Decrement)
-                ] [
-                    str "-"
-                ]
-            ]
-        ]
-    ]
+                    Button.Disabled (Todo.isValid model.Input |> not)
+                    Button.OnClick (fun _ -> dispatch AddTodo) ]
+                  [ str "Add" ] ] ] ]
 
 let view (model : Model) (dispatch : Msg -> unit) =
     Hero.hero [
@@ -143,21 +130,18 @@ let view (model : Model) (dispatch : Msg -> unit) =
         ]
 
         Hero.body [ ] [
-            Container.container [
-                Container.Modifiers [ Modifier.TextAlignment (Screen.All, TextAlignment.Centered) ]
-            ] [
+            Container.container [ ] [
                 Column.column [
                     Column.Width (Screen.All, Column.Is6)
                     Column.Offset (Screen.All, Column.Is3)
                 ] [
-                    Heading.p [ ] [ str "SAFE.App" ]
-                    Heading.p [ Heading.IsSubtitle ] [ safeComponents ]
+                    Heading.p [ Heading.Modifiers [ Modifier.TextAlignment (Screen.All, TextAlignment.Centered) ] ] [ str "SAFE.App" ]
                     containerBox model dispatch
                 ]
             ]
         ]
     ]
-(*#endif*)
+#endif*)
 
 //-:cnd:noEmit
 #if DEBUG

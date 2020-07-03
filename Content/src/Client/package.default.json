@@ -2,7 +2,8 @@
     "private": true,
     "scripts": {
         "start": "webpack-dev-server",
-        "build": "webpack -p"
+        "build": "webpack -p",
+        "test:live": "webpack-dev-server --config webpack.tests.config.js"
     },
     "devDependencies": {
         "@babel/core": "^7.6.4",

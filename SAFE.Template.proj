@@ -12,12 +12,17 @@
         <NoBuild>true</NoBuild>
         <IncludeBuildOutput>false</IncludeBuildOutput>
         <TargetFramework>netstandard2.0</TargetFramework>
+        <!-- https://github.com/dotnet/templating/issues/2350#issuecomment-610431461 -->
+        <NoDefaultExcludes>true</NoDefaultExcludes>
     </PropertyGroup>
     <PropertyGroup>
         <ExcludeFromPackage>
 Content/.fake/**/*;
+Content/.ionide/**/*;
 Content/src/**/obj/**/*;
 Content/src/**/bin/**/*;
+Content/tests/**/obj/**/*;
+Content/tests/**/bin/**/*;
 Content/packages/**/*;
 Content/paket-files/**/*;
 Content/src/Client/.fable/**/*;

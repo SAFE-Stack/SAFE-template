@@ -22,7 +22,17 @@ To concurrently run the server and the client components in watch mode use the f
 
 ```bash
 dotnet fake build -t run
+``
+
+Then open `http://localhost:8080` in your browser.
+
+To run concurrently server and client tests in watch mode (run in a new terminal):
+
+```bash
+dotnet fake build -t runtests
 ```
+
+Client tests are available under `http://localhost:8081` in your browser and server tests are running in watch mode in console.
 
 ## SAFE Stack Documentation
 

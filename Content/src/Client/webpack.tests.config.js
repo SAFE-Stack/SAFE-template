@@ -1,4 +1,4 @@
-﻿// Template for webpack.config.js in Fable projects
+// Template for webpack.config.js in Fable projects
 // Find latest version in https://github.com/fable-compiler/webpack-config-template
 
 // In most cases, you'll only need to edit the CONFIG object (after dependencies)
@@ -14,38 +14,16 @@ var CopyWebpackPlugin = require('copy-webpack-plugin');
 var CONFIG = {
     // The tags to include the generated JS and CSS will be automatically injected in the HTML template
     // See https://github.com/jantimon/html-webpack-plugin
-    indexHtmlTemplate: './index.html',
-    fsharpEntry: './Client.fsproj',
+    indexHtmlTemplate: '../../tests/Client/index.html',
+    fsharpEntry: '../../tests/Client/Client.Tests.fsproj',
     cssEntry: './style.scss',
-    outputDir: './../../deploy/public',
+    outputDir: '../../tests/Client',
     assetsDir: './public',
-    devServerPort: 8080,
+    devServerPort: 8081,
     // When using webpack-dev-server, you may need to redirect some calls
     // to a external API server. See https://webpack.js.org/configuration/dev-server/#devserver-proxy
-    devServerProxy: {
-        // redirect requests that start with /api/ to the server on port 8085
-        '/api/**': {
-            target: 'http://localhost:' + (process.env.SERVER_PROXY_PORT || "8085"),
-               changeOrigin: true
-           },
-        // redirect websocket requests that start with /socket/ to the server on the port 8085
-        '/socket/**': {
-            target: 'http://localhost:' + (process.env.SERVER_PROXY_PORT || "8085"),
-            ws: true
-           }
-       },
-    babel: {
-        presets: [
-            ['@babel/preset-env', {
-                modules: false,
-                // This adds polyfills when needed. Requires core-js dependency.
-                // See https://babeljs.io/docs/en/babel-preset-env#usebuiltins
-                // Note that you still need to add custom polyfills if necessary (e.g. whatwg-fetch)
-                useBuiltIns: 'usage',
-                corejs: 3
-            }]
-        ],
-    }
+    devServerProxy: undefined,
+    babel: undefined
 }
 
 // If we're running the webpack-dev-server, assume we're in development mode
