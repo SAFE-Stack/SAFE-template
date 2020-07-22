@@ -13,14 +13,14 @@ type Model =
 type Msg =
     | GotHello of string
 
-let init(): Model * Cmd<Msg> =
+let init() =
     let model : Model =
         { Hello = "" }
     let getHello() = Fetch.get<unit, string> Route.hello
     let cmd = Cmd.OfPromise.perform getHello () GotHello
     model, cmd
 
-let update (msg: Msg) (model: Model): Model * Cmd<Msg> =
+let update msg model =
     match msg with
     | GotHello hello ->
         { model with Hello = hello }, Cmd.none
@@ -28,7 +28,7 @@ let update (msg: Msg) (model: Model): Model * Cmd<Msg> =
 open Fable.React
 open Fable.React.Props
 
-let view (model: Model) dispatch =
+let view model dispatch =
     div [ Style [ TextAlign TextAlignOptions.Center; Padding 40 ] ] [
         div [] [
             img [ Src "favicon.png" ]
@@ -40,7 +40,6 @@ let view (model: Model) dispatch =
 open Elmish
 open Elmish.React
 open Fable.Remoting.Client
-
 open Shared
 
 type Model =
@@ -88,29 +87,39 @@ let navBrand =
             Navbar.Item.Props [ Href "https://safe-stack.github.io/" ]
             Navbar.Item.IsActive true
         ] [
-            img [ Src "/favicon.png"
-                  Alt "Logo" ]
+            img [
+                Src "/favicon.png"
+                Alt "Logo"
+            ]
         ]
     ]
 
 let containerBox (model : Model) (dispatch : Msg -> unit) =
-    Box.box' [ ]
-        [ Content.content [ ]
-            [ Content.Ol.ol [ ]
-                [ for todo in model.Todos ->
-                    li [ ] [ str todo.Description ] ] ]
-          Field.div [ Field.IsGrouped ]
-            [ Control.p [ Control.IsExpanded ]
-                [ Input.text
-                    [ Input.Value model.Input
-                      Input.Placeholder "What needs to be done?"
-                      Input.OnChange (fun x -> SetInput x.Value |> dispatch) ] ]
-              Control.p [ ] [
+    Box.box' [ ] [
+        Content.content [ ] [
+            Content.Ol.ol [ ] [
+                for todo in model.Todos ->
+                    li [ ] [ str todo.Description ]
+            ]
+        ]
+        Field.div [ Field.IsGrouped ] [
+            Control.p [ Control.IsExpanded ] [
+                Input.text [
+                  Input.Value model.Input
+                  Input.Placeholder "What needs to be done?"
+                  Input.OnChange (fun x -> SetInput x.Value |> dispatch) ]
+            ]
+            Control.p [ ] [
                 Button.a [
                     Button.Color IsPrimary
                     Button.Disabled (Todo.isValid model.Input |> not)
-                    Button.OnClick (fun _ -> dispatch AddTodo) ]
-                  [ str "Add" ] ] ] ]
+                    Button.OnClick (fun _ -> dispatch AddTodo)
+                ] [
+                    str "Add"
+                ]
+            ]
+        ]
+    ]
 
 let view (model : Model) (dispatch : Msg -> unit) =
     Hero.hero [
