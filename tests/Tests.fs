@@ -9,8 +9,6 @@ open Expecto
 open Expecto.Logging
 open Expecto.Logging.Message
 
-open FsCheck
-
 open Fake.Core
 open Fake.IO
 open Fake.IO.FileSystemOperators
@@ -35,119 +33,6 @@ let execParams exe arg dir : ExecParams =
       Args = [] }
 
 let logger = Log.create "SAFE"
-
-type TemplateArgs =
-    { Deploy : string option
-      Layout : string option
-      JsDeps : string option
-      Communication : string option
-      Pattern : string option }
-
-    override args.ToString () =
-        let optArg (name, value) =
-            value
-            |> Option.map (sprintf "--%s %s" name)
-
-        [ "deploy", args.Deploy
-          "layout", args.Layout
-          "js-deps", args.JsDeps
-          "communication", args.Communication
-          "pattern", args.Pattern ]
-        |> List.map optArg
-        |> List.choose id
-        |> String.concat " "
-
-let serverGen =
-    Gen.elements [
-        None
-        Some "giraffe"
-    ]
-
-let deployGen =
-    Gen.elements [
-        None
-        Some "docker"
-        Some "azure"
-        Some "gcp-appengine"
-        Some "gcp-kubernetes"
-        Some "iis"
-        Some "heroku"
-    ]
-
-let layoutGen =
-    Gen.elements [
-        None
-        Some "fulma-basic"
-        Some "fulma-admin"
-        Some "fulma-cover"
-        Some "fulma-hero"
-        Some "fulma-landing"
-        Some "fulma-login"
-    ]
-
-let jsDepsGen =
-    Gen.elements [
-        None
-        Some "npm"
-    ]
-
-let communicationGen =
-    Gen.elements [
-        None
-        Some "remoting"
-        Some "bridge"
-    ]
-
-let patternGen =
-    Gen.elements [
-        None
-        Some "streams"
-    ]
-
-type TemplateArgsArb () =
-    static member Arb () : Arbitrary<TemplateArgs> =
-        let generator : Gen<TemplateArgs> =
-            gen {
-                let! server = serverGen
-                let! deploy = deployGen
-                let! layout = layoutGen
-                let! jsDeps = jsDepsGen
-                let! communication = communicationGen
-                let! pattern = patternGen
-                return
-                    { Server = server
-                      Deploy = deploy
-                      Layout = layout
-                      JsDeps = jsDeps
-                      Communication = communication
-                      Pattern = pattern }
-            }
-
-        let shrinker (x : TemplateArgs) : seq<TemplateArgs> =
-            seq {
-                match x.Server with
-                | Some _ -> yield { x with Server = None }
-                | _ -> ()
-                match x.Deploy with
-                | Some _ -> yield { x with Deploy = None }
-                | _ -> ()
-                match x.Layout with
-                | Some _ -> yield { x with Layout = None }
-                | _ -> ()
-                match x.JsDeps with
-                | Some _ -> yield { x with JsDeps = None }
-                | _ -> ()
-                match x.Communication with
-                | Some _ -> yield { x with Communication = None }
-                | _ -> ()
-                match x.Pattern with
-                | Some _ -> yield { x with Pattern = None }
-                | _ -> ()
-            }
-
-        Arb.fromGenShrink (generator, shrinker)
-
-
 let run exe arg dir =
     logger.info(
         eventX "Running `{exe} {arg}` in `{dir}`"
@@ -182,7 +67,6 @@ let start exe arg dir =
     Process.Start psi
 
 let waitForStdOut (proc : Process) (stdOutPhrase : string) (timeout : TimeSpan) =
-
     let readTask =
         Task.Factory.StartNew (Func<_>(fun _ ->
             let mutable line = ""
@@ -215,7 +99,7 @@ let killProcessTree (pid: int) =
     let rec getProcessTree (pid: int) =
         [ for childPid in childrenPids pid do
             yield! getProcessTree childPid
-          yield pid ]
+          pid ]
 
     for pid in getProcessTree pid do
         let proc =
@@ -243,49 +127,47 @@ let killProcessTree (pid: int) =
         | _ ->
             ()
 
-let fsCheckConfig =
-    { FsCheckConfig.defaultConfig with
-        arbitrary = [typeof<TemplateArgsArb>]
-        maxTest = maxTests }
+type TemplateType = Normal | Minimal
 
+let testTemplateBuild templateType =
+    let args = match templateType with Normal -> "" | Minimal -> " -m"
+    let uid = Guid.NewGuid().ToString("n")
+    let dir = Path.GetTempPath() </> uid
+    Directory.create dir
+
+    run dotnet (sprintf "new SAFE %s" args) dir
+
+    Expect.isTrue (File.exists (dir </> "paket.lock"))
+        (sprintf "paket.lock not present for '%s'" args)
+
+    run dotnet "tool restore" dir
+    // see if `dotnet fake build` succeeds
+    run dotnet ("fake build") dir
+
+    // see if `dotnet fake build -t run` succeeds and webpack serves the index page
+    let stdOutPhrase = ": Compiled successfully."
+    let htmlSearchPhrase = """<title>SAFE Template</title>"""
+    let timeout = TimeSpan.FromMinutes 5.
+    let proc = start dotnet "fake build -t run" dir
+    try
+        let waitResult = waitForStdOut proc stdOutPhrase timeout
+        if waitResult then
+            let response = get "http://localhost:8080"
+            Expect.stringContains response htmlSearchPhrase
+                (sprintf "html fragment not found for '%s'" args)
+        else
+            raise (Expecto.FailedException (sprintf "`dotnet fake build -t run` timeout for '%s'" args))
+    finally
+        killProcessTree proc.Id
+
+
+    logger.info(
+        eventX "Deleting `{dir}`"
+        >> setField "dir" dir)
+    Directory.delete dir
 [<Tests>]
 let tests =
     testList "Project created from template" [
-        testPropertyWithConfig fsCheckConfig "Project should build properly" (fun (x : TemplateArgs) ->
-            let newSAFEArgs = x.ToString()
-            let uid = Guid.NewGuid().ToString("n")
-            let dir = Path.GetTempPath() </> uid
-            Directory.create dir
-
-            run dotnet (sprintf "new SAFE %s" newSAFEArgs) dir
-
-            Expect.isTrue (File.exists (dir </> "paket.lock"))
-                (sprintf "paket.lock not present for '%s'" newSAFEArgs)
-
-            run dotnet "tool restore" dir
-            // see if `dotnet fake build` succeeds
-            run dotnet ("fake build") dir
-
-            // see if `dotnet fake build -t run` succeeds and webpack serves the index page
-            let stdOutPhrase = ": Compiled successfully."
-            let htmlSearchPhrase = """<title>SAFE Template</title>"""
-            let timeout = TimeSpan.FromMinutes 5.
-            let proc = start dotnet "fake build -t run" dir
-            try
-                let waitResult = waitForStdOut proc stdOutPhrase timeout
-                if waitResult then
-                    let response = get "http://localhost:8080"
-                    Expect.stringContains response htmlSearchPhrase
-                        (sprintf "html fragment not found for '%s'" newSAFEArgs)
-                else
-                    raise (Expecto.FailedException (sprintf "`dotnet fake build -t run` timeout for '%s'" newSAFEArgs))
-            finally
-                killProcessTree proc.Id
-
-
-            logger.info(
-                eventX "Deleting `{dir}`"
-                >> setField "dir" dir)
-            Directory.delete dir
-        )
+        for build in [ Normal; Minimal ] do
+            test (sprintf "%O template should build properly" build) { testTemplateBuild build }
     ]
