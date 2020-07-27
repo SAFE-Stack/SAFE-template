@@ -137,9 +137,6 @@ let testTemplateBuild templateType =
 
     run dotnet (sprintf "new SAFE %s" args) dir
 
-    Expect.isTrue (File.exists (dir </> "paket.lock"))
-        (sprintf "paket.lock not present for '%s'" args)
-
     run dotnet "tool restore" dir
     // see if `dotnet fake build` succeeds
     run dotnet ("fake build") dir
