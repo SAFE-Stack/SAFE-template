@@ -1,8 +1,7 @@
-module Client
+module Index
 
 (*#if (minimal)*)
 open Elmish
-open Elmish.React
 open Thoth.Fetch
 
 open Shared
@@ -38,7 +37,6 @@ let view model dispatch =
     ]
 (*#else
 open Elmish
-open Elmish.React
 open Fable.Remoting.Client
 open Shared
 
@@ -152,21 +150,3 @@ let view (model : Model) (dispatch : Msg -> unit) =
     ]
 #endif*)
 
-//-:cnd:noEmit
-#if DEBUG
-open Elmish.Debug
-open Elmish.HMR
-#endif
-
-//+:cnd:noEmit
-Program.mkProgram init update view
-//-:cnd:noEmit
-#if DEBUG
-|> Program.withConsoleTrace
-#endif
-|> Program.withReactSynchronous "elmish-app"
-#if DEBUG
-|> Program.withDebugger
-#endif
-//+:cnd:noEmit
-|> Program.run
