@@ -19,7 +19,7 @@ To concurrently run the server and the client components in watch mode use the f
 
 ```bash
 dotnet fake build -t run
-``
+```
 
 Then open `http://localhost:8080` in your browser.
 
