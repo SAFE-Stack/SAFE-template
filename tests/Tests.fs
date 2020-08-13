@@ -137,15 +137,24 @@ let testTemplateBuild templateType =
 
     run dotnet (sprintf "new SAFE %s" args) dir
 
-    run dotnet "tool restore" dir
-    // see if `dotnet fake build` succeeds
-    run dotnet ("fake build") dir
+    let proc =
+        if templateType = Normal then
+            run dotnet "tool restore" dir
+            // see if `dotnet fake build` succeeds
+            run dotnet ("fake build") dir
+            start dotnet "fake build -t run" dir
+        else
+            run "npm" "install" (dir </> "src" </> "Client")
+            start "npm" "run start" (dir </> "src" </> "Client")
+
+    let extraProc =
+        if templateType = Normal then None
+        else start dotnet "run" (dir </> "src" </> "Server") |> Some
 
     // see if `dotnet fake build -t run` succeeds and webpack serves the index page
     let stdOutPhrase = ": Compiled successfully."
     let htmlSearchPhrase = """<title>SAFE Template</title>"""
     let timeout = TimeSpan.FromMinutes 5.
-    let proc = start dotnet "fake build -t run" dir
     try
         let waitResult = waitForStdOut proc stdOutPhrase timeout
         if waitResult then
@@ -156,6 +165,7 @@ let testTemplateBuild templateType =
             raise (Expecto.FailedException (sprintf "`dotnet fake build -t run` timeout for '%s'" args))
     finally
         killProcessTree proc.Id
+        extraProc |> Option.map (fun p -> p.Id) |> Option.iter killProcessTree
 
 
     logger.info(
