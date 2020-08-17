@@ -10,13 +10,14 @@ var path = require('path');
 var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
+var MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 var CONFIG = {
     // The tags to include the generated JS and CSS will be automatically injected in the HTML template
     // See https://github.com/jantimon/html-webpack-plugin
     indexHtmlTemplate: '../../tests/Client/index.html',
     fsharpEntry: '../../tests/Client/Client.Tests.fsproj',
-    cssEntry: './style.scss',
+    cssEntry: '',
     outputDir: '../../tests/Client',
     assetsDir: '../../tests/Client',
     devServerPort: 8081,
@@ -69,6 +70,7 @@ module.exports = {
     //      - HotModuleReplacementPlugin: Enables hot reloading when code changes without refreshing
     plugins: isProduction ?
         commonPlugins.concat([
+            new MiniCssExtractPlugin({ filename: 'style.[name].[hash].css' }),
             new CopyWebpackPlugin([{ from: resolve(CONFIG.assetsDir) }]),
         ])
         : commonPlugins.concat([
@@ -110,6 +112,19 @@ module.exports = {
                     loader: 'babel-loader',
                     options: CONFIG.babel
                 },
+            },
+            {
+                test: /\.(sass|scss|css)$/,
+                use: [
+                    isProduction
+                        ? MiniCssExtractPlugin.loader
+                        : 'style-loader',
+                    'css-loader',
+                    {
+                        loader: 'sass-loader',
+                        options: { implementation: require('sass') }
+                    }
+                ],
             },
             {
                 test: /\.(png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot)(\?.*)?$/,
