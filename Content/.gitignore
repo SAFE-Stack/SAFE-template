@@ -1,5 +1,6 @@
 .fable/
 .fake/
+.farmer/
 .idea/
 .ionide/
 .vs/
