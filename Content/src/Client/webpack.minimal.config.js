@@ -72,7 +72,11 @@ module.exports = {
                 test: /\.js$/,
                 exclude: /node_modules/,
                 use: { loader: 'babel-loader' },
-            }
+            },
+            {
+                test: /\.(sass|scss|css)$/,
+                use: ['style-loader', 'css-loader', 'sass-loader'],
+            },
         ]
     }
 };
