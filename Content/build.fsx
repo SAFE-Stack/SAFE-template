@@ -63,23 +63,16 @@ Target.create "Azure" (fun _ ->
     |> ignore
 )
 
-Target.create "Run" (fun _ ->
+let run clientCommand sharedPath serverPath _ =
     dotnet "build" sharedPath
-    [ async { dotnet "watch run" serverPath }
-      async { npm "run start" clientPath } ]
+    [ async { dotnet "watch run --no-restore" serverPath }
+      async { npm ("run " + clientCommand) clientPath } ]
     |> Async.Parallel
     |> Async.RunSynchronously
     |> ignore
-)
 
-Target.create "RunTests" (fun _ ->
-    dotnet "build" sharedTestsPath
-    [ async { dotnet "watch run" serverTestsPath }
-      async { npm "run test:live" clientPath } ]
-    |> Async.Parallel
-    |> Async.RunSynchronously
-    |> ignore
-)
+Target.create "Run" (run "start" sharedPath serverPath)
+Target.create "RunTests" (run "test:live" sharedTestsPath serverTestsPath )
 
 open Fake.Core.TargetOperators
 
