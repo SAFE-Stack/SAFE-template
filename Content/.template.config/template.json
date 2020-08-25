@@ -40,10 +40,10 @@
                         ".editorconfig",
                         "**/paket.*",
                         "*.fsx",
-                        "src/Client/package.default.json",
-                        "src/Client/package-lock.default.json",
-                        "src/Client/webpack.default.config.js",
-                        "src/Client/webpack.tests.config.js",
+                        "package.default.json",
+                        "package-lock.default.json",
+                        "webpack.default.config.js",
+                        "webpack.tests.config.js",
                         "README.md",
                         "tests/**/*.*"
                     ],
@@ -51,21 +51,21 @@
                 },
                 {
                     "exclude": [
-                        "src/Client/package.minimal.json",
-                        "src/Client/package-lock.minimal.json",
-                        "src/Client/webpack.minimal.config.js",
+                        "package.minimal.json",
+                        "package-lock.minimal.json",
+                        "webpack.minimal.config.js",
                         "README-minimal.md"
                     ],
                     "condition": "(!minimal)"
                 },
                 {
                     "rename": {
-                        "src/Client/webpack.default.config.js": "src/Client/webpack.config.js",
-                        "src/Client/webpack.minimal.config.js": "src/Client/webpack.config.js",
-                        "src/Client/package.minimal.json": "src/Client/package.json",
-                        "src/Client/package.default.json": "src/Client/package.json",
-                        "src/Client/package-lock.minimal.json": "src/Client/package-lock.json",
-                        "src/Client/package-lock.default.json": "src/Client/package-lock.json",
+                        "webpack.default.config.js": "webpack.config.js",
+                        "webpack.minimal.config.js": "webpack.config.js",
+                        "package.minimal.json": "package.json",
+                        "package.default.json": "package.json",
+                        "package-lock.minimal.json": "package-lock.json",
+                        "package-lock.default.json": "package-lock.json",
                         "README-minimal.md": "README.md"
                     }
                 }

@@ -17,7 +17,6 @@ dotnet run
 
 Start the client:
 ```bash
-cd src\Client\
 npm install
 npm run start
 ```

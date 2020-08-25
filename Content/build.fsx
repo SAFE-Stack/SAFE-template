@@ -12,7 +12,6 @@ Target.initEnvironment ()
 
 let sharedPath = Path.getFullName "./src/Shared"
 let serverPath = Path.getFullName "./src/Server"
-let clientPath = Path.getFullName "./src/Client"
 let deployDir = Path.getFullName "./deploy"
 let sharedTestsPath = Path.getFullName "./tests/Shared"
 let serverTestsPath = Path.getFullName "./tests/Server"
@@ -41,11 +40,11 @@ let dotnet cmd workingDir =
 
 Target.create "Clean" (fun _ -> Shell.cleanDir deployDir)
 
-Target.create "InstallClient" (fun _ -> npm "install" clientPath)
+Target.create "InstallClient" (fun _ -> npm "install" ".")
 
 Target.create "Bundle" (fun _ ->
     dotnet (sprintf "publish -c Release -o \"%s\"" deployDir) serverPath
-    npm "run build" clientPath
+    npm "run build" "."
 )
 
 Target.create "Azure" (fun _ ->
@@ -66,7 +65,7 @@ Target.create "Azure" (fun _ ->
 Target.create "Run" (fun _ ->
     dotnet "build" sharedPath
     [ async { dotnet "watch run" serverPath }
-      async { npm "run start" clientPath } ]
+      async { npm "run start" "." } ]
     |> Async.Parallel
     |> Async.RunSynchronously
     |> ignore
@@ -75,7 +74,7 @@ Target.create "Run" (fun _ ->
 Target.create "RunTests" (fun _ ->
     dotnet "build" sharedTestsPath
     [ async { dotnet "watch run" serverTestsPath }
-      async { npm "run test:live" clientPath } ]
+      async { npm "run test:live" "." } ]
     |> Async.Parallel
     |> Async.RunSynchronously
     |> ignore
