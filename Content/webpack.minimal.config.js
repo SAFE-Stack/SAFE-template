@@ -12,13 +12,13 @@ function resolve(filePath) {
 var htmlPlugin =
     new HtmlWebpackPlugin({
         filename: 'index.html',
-        template: resolve('./index.html')
+        template: resolve('./src/Client/index.html')
     });
 
 // Copies static assets to output directory
 var copyPlugin =
     new CopyWebpackPlugin([{
-        from: resolve('./public')
+        from: resolve('./src/Client/public')
     }]);
 
 // Enables hot reloading when code changes without refreshing
@@ -28,7 +28,7 @@ var hmrPlugin =
 // Configuration for webpack-dev-server
 var devServer = {
     publicPath: '/',
-    contentBase: resolve('./public'),
+    contentBase: resolve('./src/Client/public'),
     host: '0.0.0.0',
     port: 8080,
     hot: true,
@@ -53,8 +53,8 @@ var isProduction = !process.argv.find(v => v.indexOf('webpack-dev-server') !== -
 console.log('Bundling for ' + (isProduction ? 'production' : 'development') + '...');
 
 module.exports = {
-    entry: { app: resolve('./Client.fsproj') },
-    output: { path: resolve('./../../deploy/public') },
+    entry: { app: resolve('./src/Client/Client.fsproj') },
+    output: { path: resolve('./deploy/public') },
     resolve: { symlinks: false }, // See https://github.com/fable-compiler/Fable/issues/1490
     mode: isProduction ? 'production' : 'development',
     plugins: isProduction ? [htmlPlugin, copyPlugin] : [htmlPlugin, hmrPlugin],
