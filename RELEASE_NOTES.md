@@ -1,10 +1,10 @@
 #### 2.0.0 - 27.08.2020
 
-* Version 2 (v2) is partially a re-write of the original SAFE Template
+* Version 2 is partially a rewrite of the original SAFE Template
 * All template options from v1 have been removed
-* New option "--minimal" for advanced users allows to create a bare-bone project and have full control
-* Shared is now a project, not a referenced file
-* Unit tests for Shared, Client and Server have been added to default template
+* New minimal option for advanced users allows to create a bare bone project and have full control
+* Shared is now a project not a referenced file
+* Unit tests for Shared Client and Server have been added to default template
 * Counter sample has been replaced with Todo List in default template
 * Other changes have been described in latest docs
 
