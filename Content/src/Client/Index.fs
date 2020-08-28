@@ -96,7 +96,7 @@ let containerBox (model : Model) (dispatch : Msg -> unit) =
     Box.box' [ ] [
         Content.content [ ] [
             Content.Ol.ol [ ] [
-                for todo in model.Todos ->
+                for todo in model.Todos do
                     li [ ] [ str todo.Description ]
             ]
         ]
