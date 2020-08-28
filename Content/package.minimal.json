@@ -2,7 +2,7 @@
     "private": true,
     "scripts": {
         "start": "webpack-dev-server",
-        "build": "webpack -p"
+        "build": "cross-env NODE_ENV=production webpack -p"
     },
     "devDependencies": {
         "@babel/core": "^7.6.4",
@@ -27,5 +27,8 @@
         "webpack": "^4.41.2",
         "webpack-cli": "^3.3.9",
         "webpack-dev-server": "^3.11.0"
+    },
+    "dependencies": {
+        "cross-env": "^7.0.2"
     }
 }
