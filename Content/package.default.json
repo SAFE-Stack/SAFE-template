@@ -2,7 +2,7 @@
     "private": true,
     "scripts": {
         "start": "webpack-dev-server",
-        "build": "cross-env NODE_ENV=production webpack -p",
+        "build": "webpack -p",
         "test:live": "webpack-dev-server --config webpack.tests.config.js"
     },
     "devDependencies": {
@@ -13,7 +13,6 @@
         "babel-loader": "^8.0.5",
         "copy-webpack-plugin": "^5.1.1",
         "core-js": "^3.3.2",
-        "cross-env": "^7.0.2",
         "css-loader": "^4.2.1",
         "fable-compiler": "^2.10.2",
         "fable-loader": "^2.1.8",
