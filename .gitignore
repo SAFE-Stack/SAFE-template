@@ -10,3 +10,4 @@ gen-paket-lock-files/
 
 .fake
 .ionide
+TestResults.xml
