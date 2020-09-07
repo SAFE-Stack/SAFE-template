@@ -19,7 +19,7 @@ var htmlPlugin =
 var copyPlugin =
     new CopyWebpackPlugin({
         patterns: [{
-            from: resolve(CONFIG.assetsDir)
+            from: resolve('./src/Client/public')
         }]
     });
 
