@@ -50,7 +50,9 @@ var devServer = {
 
 // If we're running the webpack-dev-server, assume we're in development mode
 var isProduction = !process.argv.find(v => v.indexOf('webpack-dev-server') !== -1);
-console.log('Bundling for ' + (isProduction ? 'production' : 'development') + '...');
+var environment = isProduction ? 'production' : 'development';
+process.env.NODE_ENV = environment;
+console.log('Bundling for ' + environment + '...');
 
 module.exports = {
     entry: { app: resolve('./src/Client/Client.fsproj') },

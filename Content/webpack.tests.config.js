@@ -28,7 +28,9 @@ var CONFIG = {
 
 // If we're running the webpack-dev-server, assume we're in development mode
 var isProduction = !process.argv.find(v => v.indexOf('webpack-dev-server') !== -1);
-console.log('Bundling for ' + (isProduction ? 'production' : 'development') + '...');
+var environment = isProduction ? 'production' : 'development';
+process.env.NODE_ENV = environment;
+console.log('Bundling for ' + environment + '...');
 
 // The HtmlWebpackPlugin allows us to use a template for the index.html page
 // and automatically injects <script> or <link> tags for generated bundles.
