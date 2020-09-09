@@ -42,6 +42,7 @@ open Shared
 
 type Model =
     { Todos: Todo list
+      IsLoading : bool
       Input: string }
 
 type Msg =
@@ -58,6 +59,7 @@ let todosApi =
 let init(): Model * Cmd<Msg> =
     let model =
         { Todos = []
+          IsLoading = false
           Input = "" }
     let cmd = Cmd.OfAsync.perform todosApi.getTodos () GotTodos
     model, cmd
@@ -71,9 +73,9 @@ let update (msg: Msg) (model: Model): Model * Cmd<Msg> =
     | AddTodo ->
         let todo = Todo.create model.Input
         let cmd = Cmd.OfAsync.perform todosApi.addTodo todo AddedTodo
-        { model with Input = "" }, cmd
+        { model with Input = ""; IsLoading = true }, cmd
     | AddedTodo todo ->
-        { model with Todos = model.Todos @ [ todo ] }, Cmd.none
+        { model with Todos = model.Todos @ [ todo ]; IsLoading = false }, Cmd.none
 
 open Fable.React
 open Fable.React.Props
@@ -111,6 +113,7 @@ let containerBox (model : Model) (dispatch : Msg -> unit) =
                 Button.a [
                     Button.Color IsPrimary
                     Button.Disabled (Todo.isValid model.Input |> not)
+                    Button.IsLoading model.IsLoading
                     Button.OnClick (fun _ -> dispatch AddTodo)
                 ] [
                     str "Add"
