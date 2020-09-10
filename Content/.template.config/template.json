@@ -25,51 +25,14 @@
     },
     "sources": [
         {
-            "modifiers": [
-                {
-                    "exclude": [
-                        ".template.config/**/*"
-                    ]
-                },
-                {
-                    "exclude": [
-                        ".config/**",
-                        ".devcontainer/**",
-                        ".paket/**",
-                        ".vscode/**",
-                        ".editorconfig",
-                        "**/paket.*",
-                        "*.fsx",
-                        "package.default.json",
-                        "package-lock.default.json",
-                        "webpack.default.config.js",
-                        "webpack.tests.config.js",
-                        "README.md",
-                        "tests/**/*.*"
-                    ],
-                    "condition": "(minimal)"
-                },
-                {
-                    "exclude": [
-                        "package.minimal.json",
-                        "package-lock.minimal.json",
-                        "webpack.minimal.config.js",
-                        "README-minimal.md"
-                    ],
-                    "condition": "(!minimal)"
-                },
-                {
-                    "rename": {
-                        "webpack.default.config.js": "webpack.config.js",
-                        "webpack.minimal.config.js": "webpack.config.js",
-                        "package.minimal.json": "package.json",
-                        "package.default.json": "package.json",
-                        "package-lock.minimal.json": "package-lock.json",
-                        "package-lock.default.json": "package-lock.json",
-                        "README-minimal.md": "README.md"
-                    }
-                }
-            ]
+            "condition": "(!minimal)",
+            "source": "./default",
+            "exclude": "./minimal"
+        },
+        {
+            "condition": "(minimal)",
+            "source": "./minimal",
+            "exclude": "./default"
         }
     ],
     "SpecialCustomOperations": {

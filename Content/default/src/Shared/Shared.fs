@@ -1,9 +1,5 @@
 namespace Shared
 
-(*#if (minimal)*)
-module Route =
-    let hello = "/api/hello"
-(*#else
 open System
 
 type Todo =
@@ -25,4 +21,3 @@ module Route =
 type ITodosApi =
     { getTodos : unit -> Async<Todo list>
       addTodo : Todo -> Async<Todo> }
-#endif*)
