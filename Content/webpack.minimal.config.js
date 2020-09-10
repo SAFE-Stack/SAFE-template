@@ -17,9 +17,11 @@ var htmlPlugin =
 
 // Copies static assets to output directory
 var copyPlugin =
-    new CopyWebpackPlugin([{
-        from: resolve('./src/Client/public')
-    }]);
+    new CopyWebpackPlugin({
+        patterns: [{
+            from: resolve('./src/Client/public')
+        }]
+    });
 
 // Enables hot reloading when code changes without refreshing
 var hmrPlugin =

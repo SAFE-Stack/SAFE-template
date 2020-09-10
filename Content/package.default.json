@@ -11,7 +11,7 @@
         "@babel/preset-env": "^7.9.6",
         "@babel/runtime": "^7.6.3",
         "babel-loader": "^8.0.5",
-        "copy-webpack-plugin": "^5.1.1",
+        "copy-webpack-plugin": "^6.1.0",
         "core-js": "^3.3.2",
         "css-loader": "^4.2.1",
         "fable-compiler": "^2.10.2",

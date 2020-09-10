@@ -19,6 +19,7 @@
         <ExcludeFromPackage>
 Content/.fake/**/*;
 Content/.ionide/**/*;
+Content/node_modules/**/*;
 Content/src/**/obj/**/*;
 Content/src/**/bin/**/*;
 Content/tests/**/obj/**/*;
@@ -26,7 +27,6 @@ Content/tests/**/bin/**/*;
 Content/packages/**/*;
 Content/paket-files/**/*;
 Content/src/Client/.fable/**/*;
-Content/src/Client/node_modules/**/*;
 Content/src/Client/deploy/**/*;
         </ExcludeFromPackage>
 </PropertyGroup>
