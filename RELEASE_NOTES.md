@@ -1,3 +1,9 @@
+#### 2.1.0 - 10.09.2020
+
+* Update dependencies - https://github.com/SAFE-Stack/SAFE-template/pull/398
+* Use do when yielding todos - https://github.com/SAFE-Stack/SAFE-template/pull/394
+* set NODE_ENV to production - https://github.com/SAFE-Stack/SAFE-template/pull/393
+
 #### 2.0.0 - 27.08.2020
 
 * Version 2 is partially a rewrite of the original SAFE Template
