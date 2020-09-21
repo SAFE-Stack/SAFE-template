@@ -1,3 +1,8 @@
+#### 2.2.0 - 21.09.2020
+
+* Replace netstandard2.0 with netcoreapp3.1 - https://github.com/SAFE-Stack/SAFE-template/pull/407
+* CVE-2020-7720 Prototype Pollution in node-forge - https://github.com/SAFE-Stack/SAFE-template/issues/406
+
 #### 2.1.0 - 10.09.2020
 
 * Update dependencies - https://github.com/SAFE-Stack/SAFE-template/pull/398
