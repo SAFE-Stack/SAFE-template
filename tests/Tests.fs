@@ -129,6 +129,7 @@ let killProcessTree (pid: int) =
 
 type TemplateType = Normal | Minimal
 
+
 let testTemplateBuild templateType =
     let args = match templateType with Normal -> "" | Minimal -> " -m"
     let uid = Guid.NewGuid().ToString("n")
@@ -136,6 +137,10 @@ let testTemplateBuild templateType =
     Directory.create dir
 
     run dotnet (sprintf "new SAFE %s" args) dir
+
+    if templateType = Minimal then
+        // run build on Shared to avoid race condition between Client and Server
+        run dotnet "build" (dir </> "src" </> "Shared")
 
     let proc =
         if templateType = Normal then
@@ -172,6 +177,7 @@ let testTemplateBuild templateType =
         eventX "Deleting `{dir}`"
         >> setField "dir" dir)
     Directory.delete dir
+
 [<Tests>]
 let tests =
     testList "Project created from template" [
