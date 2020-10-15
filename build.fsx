@@ -32,43 +32,6 @@ Target.create "Clean" (fun _ ->
 
 let msBuildParams msBuildParameter: Fake.DotNet.MSBuild.CliArguments = { msBuildParameter with DisableInternalBinLog = true }
 
-Target.create "BuildWebPackConfig" (fun _ ->
-    let srcDir = "paket-files/fable-compiler/webpack-config-template/webpack.config.js"
-    let destDir = "Content/src/Client/webpack.config.js"
-    Shell.copyFile destDir srcDir
-
-    let devServerProxy =
-        """{
-        // redirect requests that start with /api/ to the server on port 8085
-        '/api/**': {
-            target: 'http://localhost:' + (process.env.SERVER_PROXY_PORT || "8085"),
-               changeOrigin: true
-           },
-        // redirect websocket requests that start with /socket/ to the server on the port 8085
-        '/socket/**': {
-            target: 'http://localhost:' + (process.env.SERVER_PROXY_PORT || "8085"),
-            ws: true
-           }
-       }"""
-
-    let quote = sprintf "'%s'"
-
-    let replacements =
-        [
-            "indexHtmlTemplate", quote "./index.html"
-            "fsharpEntry", quote "./SAFE.App.Client.fsproj"
-            "cssEntry", quote "./style.scss"
-            "devServerProxy", devServerProxy
-        ]
-
-    for (key, value) in replacements do
-        Shell.regexReplaceInFileWithEncoding
-           (sprintf "    %s: .+," key)
-           (sprintf "    %s: %s," key value)
-            System.Text.Encoding.UTF8
-            destDir
-)
-
 Target.create "Pack" (fun _ ->
     Shell.regexReplaceInFileWithEncoding
         "  \"name\": .+,"
@@ -108,47 +71,6 @@ let psi exe arg dir (x: ProcStartInfo) : ProcStartInfo =
 let run exe arg dir =
     let result = Process.execWithResult (psi exe arg dir) TimeSpan.MaxValue
     if not result.OK then (failwithf "`%s %s` failed: %A" exe arg result.Errors)
-
-type Communication =
-    | Remoting
-    | Bridge
-
-
-type BuildPaketDependencies =
-    { Azure : bool }
-
-    with override x.ToString () =
-            if x.Azure then "azure" else "noazure"
-
-type ClientPaketDependencies =
-    { Communication : Communication option
-      Fulma : bool
-      Streams : bool }
-
-    with override x.ToString () =
-            let communication =
-                x.Communication
-                |> Option.map (function
-                    | Remoting -> "remoting"
-                    | Bridge -> "bridge")
-                |> Option.defaultValue "nocommunication"
-            let fulma = if x.Fulma then "fulma" else "nofulma"
-            let streams = if x.Streams then "streams" else "nostreams"
-            sprintf "%s-%s-%s" communication fulma streams
-
-type ServerPaketDependencies =
-    { Communication : Communication option
-      Azure : bool }
-
-    with override x.ToString () =
-            let communication =
-                x.Communication
-                |> Option.map (function
-                    | Remoting -> "remoting"
-                    | Bridge -> "bridge")
-                |> Option.defaultValue "nocommunication"
-            let azure = if x.Azure then "azure" else "noazure"
-            sprintf "%s-%s" communication azure
 
 Target.create "Tests" (fun _ ->
     let cmd = "run"
