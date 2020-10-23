@@ -57,7 +57,7 @@ process.env.NODE_ENV = environment;
 console.log('Bundling for ' + environment + '...');
 
 module.exports = {
-    entry: { app: resolve('./src/Client/Client.fsproj') },
+    entry: { app: resolve('./src/Client/App.fs.js') },
     output: { path: resolve('./deploy/public') },
     resolve: { symlinks: false }, // See https://github.com/fable-compiler/Fable/issues/1490
     mode: isProduction ? 'production' : 'development',
@@ -66,11 +66,6 @@ module.exports = {
     devServer: devServer,
     module: {
         rules: [
-            {
-                // transform F# into JS
-                test: /\.fs(x|proj)?$/,
-                use: { loader: 'fable-loader' }
-            },
             {
                 // transform JS to old syntax (compatible with old browsers)
                 test: /\.js$/,
