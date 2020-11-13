@@ -1,6 +1,8 @@
-#r "paket: groupref build //"
-#load "./.fake/build.fsx/intellisense.fsx"
-#r "netstandard"
+#r "nuget: System.Reactive"
+#r "nuget: Fake.Core.Target,5.20.3"
+#r "nuget: Fake.DotNet.Cli"
+#r "nuget: Fake.IO.FileSystem"
+#r "nuget: Farmer"
 
 open Fake.Core
 open Fake.DotNet
@@ -8,7 +10,8 @@ open Fake.IO
 open Farmer
 open Farmer.Builders
 
-Target.initEnvironment ()
+let execContext = Context.FakeExecutionContext.Create false "build.fsx" [ ]
+Context.setExecutionContext (Context.RuntimeContext.Fake execContext)
 
 let sharedPath = Path.getFullName "./src/Shared"
 let serverPath = Path.getFullName "./src/Server"
@@ -95,4 +98,9 @@ open Fake.Core.TargetOperators
     ==> "InstallClient"
     ==> "RunTests"
 
-Target.runOrDefaultWithArguments "Bundle"
+match fsi.CommandLineArgs |> Array.skip 1 with
+| [|"-t"; target|] -> target
+| [||] -> "Bundle"
+| args -> failwithf "Invalid arguments %A" args
+|> Target.runOrDefaultWithArguments
+

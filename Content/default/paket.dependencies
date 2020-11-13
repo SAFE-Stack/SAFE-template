@@ -1,5 +1,5 @@
 source https://api.nuget.org/v3/index.json
-framework: netcoreapp3.1
+framework: net5.0
 storage: none
 
 nuget Fable.Remoting.Giraffe
@@ -19,7 +19,7 @@ nuget Fulma
 
 group Build
     source https://api.nuget.org/v3/index.json
-    framework: netstandard2.0
+    framework: net5.0
     storage: none
 
     nuget FSharp.Core
