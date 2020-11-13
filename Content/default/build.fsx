@@ -41,13 +41,16 @@ let dotnet cmd workingDir =
     let result = DotNet.exec (DotNet.Options.withWorkingDirectory workingDir) cmd ""
     if result.ExitCode <> 0 then failwithf "'dotnet %s' failed in %s" cmd workingDir
 
+
+Target.create "ToolRestore" (fun _ -> dotnet "tool restore" ".")
+
 Target.create "Clean" (fun _ -> Shell.cleanDir deployDir)
 
 Target.create "InstallClient" (fun _ -> npm "install" ".")
 
 Target.create "Bundle" (fun _ ->
     dotnet (sprintf "publish -c Release -o \"%s\"" deployDir) serverPath
-    npm "run build" "."
+    dotnet "fable --run webpack -p" "src/Client"
 )
 
 Target.create "Azure" (fun _ ->
@@ -68,7 +71,7 @@ Target.create "Azure" (fun _ ->
 Target.create "Run" (fun _ ->
     dotnet "build" sharedPath
     [ async { dotnet "watch run" serverPath }
-      async { npm "run start" "." } ]
+      async { dotnet "fable watch --run webpack-dev-server" "src/Client" } ]
     |> Async.Parallel
     |> Async.RunSynchronously
     |> ignore
@@ -77,7 +80,7 @@ Target.create "Run" (fun _ ->
 Target.create "RunTests" (fun _ ->
     dotnet "build" sharedTestsPath
     [ async { dotnet "watch run" serverTestsPath }
-      async { npm "run test:live" "." } ]
+      async { dotnet "fable watch --run webpack-dev-server --config ../../webpack.tests.config.js" "tests/Client" } ]
     |> Async.Parallel
     |> Async.RunSynchronously
     |> ignore
@@ -85,7 +88,8 @@ Target.create "RunTests" (fun _ ->
 
 open Fake.Core.TargetOperators
 
-"Clean"
+"ToolRestore"
+    ==> "Clean"
     ==> "InstallClient"
     ==> "Bundle"
     ==> "Azure"
