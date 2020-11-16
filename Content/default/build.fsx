@@ -10,8 +10,14 @@ open Fake.IO
 open Farmer
 open Farmer.Builders
 
-let execContext = Context.FakeExecutionContext.Create false "build.fsx" [ ]
-Context.setExecutionContext (Context.RuntimeContext.Fake execContext)
+match fsi.CommandLineArgs |> Array.toList with
+| scriptPath :: args -> scriptPath, args
+| args -> "", args
+|> fun (scriptPath, args) ->
+    args
+    |> Context.FakeExecutionContext.Create false (System.IO.Path.GetFileName scriptPath)
+    |> Context.RuntimeContext.Fake
+    |> Context.setExecutionContext
 
 let sharedPath = Path.getFullName "./src/Shared"
 let serverPath = Path.getFullName "./src/Server"
@@ -102,9 +108,5 @@ open Fake.Core.TargetOperators
     ==> "InstallClient"
     ==> "RunTests"
 
-match fsi.CommandLineArgs |> Array.skip 1 with
-| [|"-t"; target|] -> target
-| [||] -> "Bundle"
-| args -> failwithf "Invalid arguments %A" args
-|> Target.runOrDefaultWithArguments
+Target.runOrDefaultWithArguments "Bundle"
 
