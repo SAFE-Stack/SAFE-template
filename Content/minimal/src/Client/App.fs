@@ -1,23 +1,9 @@
 module App
 
-open Elmish
-open Elmish.React
+open Browser
+open Thoth.Fetch
 
-//-:cnd:noEmit
-#if DEBUG
-open Elmish.Debug
-open Elmish.HMR
-#endif
-
-//+:cnd:noEmit
-Program.mkProgram Index.init Index.update Index.view
-//-:cnd:noEmit
-#if DEBUG
-|> Program.withConsoleTrace
-#endif
-|> Program.withReactSynchronous "elmish-app"
-#if DEBUG
-|> Program.withDebugger
-#endif
-//+:cnd:noEmit
-|> Program.run
+promise {
+    let! msg = Fetch.get Shared.Route.hello
+    document.getElementById("header").innerText <- msg
+} |> Promise.start
