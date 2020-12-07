@@ -30,7 +30,7 @@ let view model dispatch =
     div [ Style [ TextAlign TextAlignOptions.Center; Padding 40 ] ] [
         div [] [
             img [ Src "favicon.png" ]
-            h1 [] [ str "SAFE.App" ]
+            h1 [] [ str "SAFE.Apps" ]
             h2 [] [ str model.Hello ]
         ]
     ]
