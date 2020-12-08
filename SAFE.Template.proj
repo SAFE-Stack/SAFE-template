@@ -19,10 +19,14 @@
         <ExcludeFromPackage>
 Content/*/.fake/**/*;
 Content/*/.ionide/**/*;
+Content/*/.cache/**/*;
 Content/*/.fable/**/*;
 Content/*/node_modules/**/*;
 Content/*/src/**/obj/**/*;
 Content/*/src/**/bin/**/*;
+Content/*/src/Client/.fable/**/*;
+Content/*/**/*.fs.js;
+Content/*/deploy/**/*;
 Content/*/tests/**/obj/**/*;
 Content/*/tests/**/bin/**/*;
 Content/*/packages/**/*;

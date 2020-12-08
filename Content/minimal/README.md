@@ -16,7 +16,7 @@ Start the server:
 
 ```bash
 cd src\Server\
-dotnet run
+dotnet watch run
 ```
 
 Start the client:
