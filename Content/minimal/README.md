@@ -22,6 +22,7 @@ dotnet watch run
 Start the client:
 
 ```bash
+npm install
 dotnet tool restore
 dotnet fable watch src/Client --run webpack-dev-server
 ```
