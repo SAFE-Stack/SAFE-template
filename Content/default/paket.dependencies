@@ -3,6 +3,7 @@ framework: net5.0
 storage: none
 
 nuget Fable.Remoting.Giraffe
+nuget Giraffe < 5 // https://github.com/Zaid-Ajaj/Fable.Remoting/issues/201
 nuget Saturn
 nuget Expecto
 
@@ -16,15 +17,3 @@ nuget Fable.Mocha
 nuget Fable.React
 nuget Fable.Remoting.Client
 nuget Fulma
-
-group Build
-    source https://api.nuget.org/v3/index.json
-    framework: net5.0
-    storage: none
-
-    nuget FSharp.Core
-    nuget Fake.Core.ReleaseNotes
-    nuget Fake.Core.Target
-    nuget Fake.DotNet.Cli
-    nuget Fake.IO.FileSystem
-    nuget Farmer
