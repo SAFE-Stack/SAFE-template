@@ -18,7 +18,8 @@ dotnet tool restore
 To concurrently run the server and the client components in watch mode use the following command:
 
 ```bash
-dotnet fsi build.fsx -t run
+cd build/Build
+dotnet run -- run
 ```
 
 Then open `http://localhost:8080` in your browser.
@@ -26,7 +27,8 @@ Then open `http://localhost:8080` in your browser.
 To run concurrently server and client tests in watch mode (run in a new terminal):
 
 ```bash
-dotnet fsi build.fsx -t runtests
+cd build/Build
+dotnet run -- runtests
 ```
 
 Client tests are available under `http://localhost:8081` in your browser and server tests are running in watch mode in console.

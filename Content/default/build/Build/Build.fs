@@ -1,29 +1,18 @@
-#r "nuget: System.Reactive"
-#r "nuget: Fake.Core.Target,5.20.3"
-#r "nuget: Fake.DotNet.Cli"
-#r "nuget: Fake.IO.FileSystem"
-#r "nuget: Farmer"
-
 open Fake.Core
 open Fake.DotNet
 open Fake.IO
 open Farmer
 open Farmer.Builders
 
-match fsi.CommandLineArgs |> Array.toList with
-| scriptPath :: args -> scriptPath, args
-| args -> "", args
-|> fun (scriptPath, args) ->
-    args
-    |> Context.FakeExecutionContext.Create false (System.IO.Path.GetFileName scriptPath)
-    |> Context.RuntimeContext.Fake
-    |> Context.setExecutionContext
+let execContext = Context.FakeExecutionContext.Create false "build.fsx" [ ]
+Context.setExecutionContext (Context.RuntimeContext.Fake execContext)
 
-let sharedPath = Path.getFullName "./src/Shared"
-let serverPath = Path.getFullName "./src/Server"
-let deployDir = Path.getFullName "./deploy"
-let sharedTestsPath = Path.getFullName "./tests/Shared"
-let serverTestsPath = Path.getFullName "./tests/Server"
+let sharedPath = Path.getFullName "../../src/Shared"
+let serverPath = Path.getFullName "../../src/Server"
+let clientPath = Path.getFullName "../../src/Client"
+let deployDir = Path.getFullName "../../deploy"
+let sharedTestsPath = Path.getFullName "../../tests/Shared"
+let serverTestsPath = Path.getFullName "../../tests/Server"
 
 let npm args workingDir =
     let npmPath =
@@ -56,7 +45,7 @@ Target.create "InstallClient" (fun _ -> npm "install" ".")
 
 Target.create "Bundle" (fun _ ->
     dotnet (sprintf "publish -c Release -o \"%s\"" deployDir) serverPath
-    dotnet "fable --run webpack -p" "src/Client"
+    dotnet "fable --run webpack -p" clientPath
 )
 
 Target.create "Azure" (fun _ ->
@@ -77,7 +66,7 @@ Target.create "Azure" (fun _ ->
 Target.create "Run" (fun _ ->
     dotnet "build" sharedPath
     [ async { dotnet "watch run" serverPath }
-      async { dotnet "fable watch --run webpack-dev-server" "src/Client" } ]
+      async { dotnet "fable watch --run webpack-dev-server" clientPath } ]
     |> Async.Parallel
     |> Async.RunSynchronously
     |> ignore
@@ -94,19 +83,23 @@ Target.create "RunTests" (fun _ ->
 
 open Fake.Core.TargetOperators
 
-"ToolRestore"
-    ==> "Clean"
-    ==> "InstallClient"
-    ==> "Bundle"
-    ==> "Azure"
+let dependencies = [
+    "ToolRestore"
+        ==> "Clean"
+        ==> "InstallClient"
+        ==> "Bundle"
+        ==> "Azure"
 
-"Clean"
-    ==> "InstallClient"
-    ==> "Run"
+    "Clean"
+        ==> "InstallClient"
+        ==> "Run"
 
-"Clean"
-    ==> "InstallClient"
-    ==> "RunTests"
+    "Clean"
+        ==> "InstallClient"
+        ==> "RunTests"
+]
 
-Target.runOrDefaultWithArguments "Bundle"
-
+let commandLineArgs = System.Environment.GetCommandLineArgs()
+match commandLineArgs with
+| [| target |] -> Target.runOrDefault target
+| _ -> Target.runOrDefault "Bundle"
