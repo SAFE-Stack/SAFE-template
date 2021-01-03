@@ -22,7 +22,7 @@
         "react": "^16.10.2",
         "react-dom": "^16.10.2",
         "remotedev": "^0.2.9",
-        "resolve-url-loader": "^3.1.0",
+        "resolve-url-loader": "^3.1.2",
         "sass": "^1.26.10",
         "sass-loader": "^9.0.3",
         "selfsigned": "^1.10.8",
