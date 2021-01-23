@@ -16,7 +16,6 @@ let app =
         use_router webApp
         memory_cache
         use_static "public"
-        use_json_serializer (Thoth.Json.Giraffe.ThothSerializer())
         use_gzip
     }
 

@@ -145,9 +145,7 @@ let testTemplateBuild templateType =
     let proc =
         if templateType = Normal then
             run dotnet "tool restore" dir
-            // see if `dotnet fake build` succeeds
-            run dotnet ("fake build") dir
-            start dotnet "fake build -t run" dir
+            start dotnet "run" dir
         else
             run "npm" "install" (dir </> "src" </> "Client")
             start "npm" "run start" (dir </> "src" </> "Client")
