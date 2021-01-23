@@ -19,6 +19,7 @@ let templateProj = "SAFE.Template.proj"
 let templateName = "SAFE-Stack Web App"
 let nupkgDir = Path.getFullName "./nupkg"
 
+let skipTests = Environment.hasEnvironVar "yolo"
 let release = ReleaseNotes.load "RELEASE_NOTES.md"
 
 let formattedRN =
@@ -110,7 +111,7 @@ open Fake.Core.TargetOperators
 "Clean"
     ==> "Pack"
     ==> "Install"
-    ==> "Tests"
+    =?> ("Tests", not skipTests)
     ==> "Push"
     ==> "Release"
 

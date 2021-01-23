@@ -1,3 +1,11 @@
+#### 2.2.2 - 22.01.2021
+
+* Fix corrupted package - https://github.com/SAFE-Stack/SAFE-template/issues/421
+
+#### 2.2.1 - 21.01.2021
+
+* Fix NPM vulnerabilities - https://github.com/SAFE-Stack/SAFE-template/pull/418
+
 #### 2.2.0 - 21.09.2020
 
 * Replace netstandard2.0 with netcoreapp3.1 - https://github.com/SAFE-Stack/SAFE-template/pull/407
