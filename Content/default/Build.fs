@@ -7,12 +7,12 @@ open Farmer.Builders
 let execContext = Context.FakeExecutionContext.Create false "build.fsx" [ ]
 Context.setExecutionContext (Context.RuntimeContext.Fake execContext)
 
-let sharedPath = Path.getFullName "../../src/Shared"
-let serverPath = Path.getFullName "../../src/Server"
-let clientPath = Path.getFullName "../../src/Client"
-let deployDir = Path.getFullName "../../deploy"
-let sharedTestsPath = Path.getFullName "../../tests/Shared"
-let serverTestsPath = Path.getFullName "../../tests/Server"
+let sharedPath = Path.getFullName "src/Shared"
+let serverPath = Path.getFullName "src/Server"
+let clientPath = Path.getFullName "src/Client"
+let deployDir = Path.getFullName "deploy"
+let sharedTestsPath = Path.getFullName "tests/Shared"
+let serverTestsPath = Path.getFullName "tests/Server"
 
 let npm args workingDir =
     let npmPath =
@@ -103,5 +103,5 @@ let dependencies = [
 let main args =
     match args with
     | [| target |] -> Target.runOrDefault target
-    | _ -> Target.runOrDefault "Bundle"
+    | _ -> Target.runOrDefault "Run"
     0
