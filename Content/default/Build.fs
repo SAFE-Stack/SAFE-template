@@ -37,8 +37,6 @@ let dotnet cmd workingDir =
     if result.ExitCode <> 0 then failwithf "'dotnet %s' failed in %s" cmd workingDir
 
 
-Target.create "ToolRestore" (fun _ -> dotnet "tool restore" ".")
-
 Target.create "Clean" (fun _ -> Shell.cleanDir deployDir)
 
 Target.create "InstallClient" (fun _ -> npm "install" ".")
@@ -84,8 +82,7 @@ Target.create "RunTests" (fun _ ->
 open Fake.Core.TargetOperators
 
 let dependencies = [
-    "ToolRestore"
-        ==> "Clean"
+    "Clean"
         ==> "InstallClient"
         ==> "Bundle"
         ==> "Azure"
