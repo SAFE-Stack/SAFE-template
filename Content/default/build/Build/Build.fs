@@ -99,7 +99,9 @@ let dependencies = [
         ==> "RunTests"
 ]
 
-let commandLineArgs = System.Environment.GetCommandLineArgs()
-match commandLineArgs with
-| [| target |] -> Target.runOrDefault target
-| _ -> Target.runOrDefault "Bundle"
+[<EntryPoint>]
+let main args =
+    match args with
+    | [| target |] -> Target.runOrDefault target
+    | _ -> Target.runOrDefault "Bundle"
+    0

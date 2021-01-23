@@ -2,9 +2,8 @@ source https://api.nuget.org/v3/index.json
 framework: net5.0
 storage: none
 
-nuget Fable.Remoting.Giraffe
-nuget Giraffe < 5 // https://github.com/Zaid-Ajaj/Fable.Remoting/issues/201
-nuget Saturn
+nuget Fable.Remoting.Giraffe prerelease
+nuget Saturn prerelease
 nuget Expecto
 
 nuget Fable.Core
