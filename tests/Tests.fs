@@ -17,15 +17,6 @@ let dotnet =
     match Environment.GetEnvironmentVariable "DOTNET_PATH" with
     | null -> "dotnet"
     | x -> x
-
-let maxTests =
-    match Environment.GetEnvironmentVariable "MAX_TESTS" with
-    | null -> 15
-    | x ->
-        match System.Int32.TryParse x with
-        | true, n -> n
-        | _ -> 15
-
 let execParams exe arg dir : ExecParams =
     { Program = exe
       WorkingDir = dir
@@ -142,19 +133,18 @@ let testTemplateBuild templateType =
         // run build on Shared to avoid race condition between Client and Server
         run dotnet "build" (dir </> "src" </> "Shared")
 
+    run dotnet "tool restore" dir
     let proc =
         if templateType = Normal then
-            run dotnet "tool restore" dir
             start dotnet "run" dir
         else
-            run "npm" "install" (dir </> "src" </> "Client")
-            start "npm" "run start" (dir </> "src" </> "Client")
+            run "npm" "install" dir
+            start dotnet "fable watch src/Client --run webpack-dev-server" dir
 
     let extraProc =
         if templateType = Normal then None
         else start dotnet "run" (dir </> "src" </> "Server") |> Some
 
-    // see if `dotnet fake build -t run` succeeds and webpack serves the index page
     let stdOutPhrase = ": Compiled successfully."
     let htmlSearchPhrase = """<title>SAFE Template</title>"""
     let timeout = TimeSpan.FromMinutes 5.
@@ -179,6 +169,6 @@ let testTemplateBuild templateType =
 [<Tests>]
 let tests =
     testList "Project created from template" [
-        for build in [ Normal; Minimal ] do
+        for build in [ Minimal; Normal ] do
             test (sprintf "%O template should build properly" build) { testTemplateBuild build }
     ]
