@@ -39,75 +39,86 @@ let update (msg: Msg) (model: Model): Model * Cmd<Msg> =
     | AddedTodo todo ->
         { model with Todos = model.Todos @ [ todo ] }, Cmd.none
 
-open Fable.React
-open Fable.React.Props
-open Fulma
+open Feliz
+open Feliz.Bulma
 
 let navBrand =
-    Navbar.Brand.div [ ] [
-        Navbar.Item.a [
-            Navbar.Item.Props [ Href "https://safe-stack.github.io/" ]
-            Navbar.Item.IsActive true
-        ] [
-            img [
-                Src "/favicon.png"
-                Alt "Logo"
+    Bulma.navbarBrand.div [
+        Bulma.navbarItem.a [
+            prop.href "https://safe-stack.github.io/"
+            navbarItem.isActive
+            prop.children [
+                Html.img [
+                    prop.src "/favicon.png"
+                    prop.alt "Logo"
+                ]
             ]
         ]
     ]
 
 let containerBox (model : Model) (dispatch : Msg -> unit) =
-    Box.box' [ ] [
-        Content.content [ ] [
-            Content.Ol.ol [ ] [
+    Bulma.box [
+        Bulma.content [
+            Html.ol [
                 for todo in model.Todos do
-                    li [ ] [ str todo.Description ]
+                    Html.li [ prop.text todo.Description ]
             ]
         ]
-        Field.div [ Field.IsGrouped ] [
-            Control.p [ Control.IsExpanded ] [
-                Input.text [
-                  Input.Value model.Input
-                  Input.Placeholder "What needs to be done?"
-                  Input.OnChange (fun x -> SetInput x.Value |> dispatch) ]
-            ]
-            Control.p [ ] [
-                Button.a [
-                    Button.Color IsPrimary
-                    Button.Disabled (Todo.isValid model.Input |> not)
-                    Button.OnClick (fun _ -> dispatch AddTodo)
-                ] [
-                    str "Add"
+        Bulma.field.div [
+            field.isGrouped
+            prop.children [
+                Bulma.control.p [
+                    control.isExpanded
+                    prop.children [
+                        Bulma.input.text [
+                            prop.value model.Input
+                            prop.placeholder "What needs to be done?"
+                            prop.onChange (fun x -> SetInput x |> dispatch)
+                        ]
+                    ]
+                ]
+                Bulma.control.p [
+                    Bulma.button.a [
+                        color.isPrimary
+                        prop.disabled (Todo.isValid model.Input |> not)
+                        prop.onClick (fun _ -> dispatch AddTodo)
+                        prop.text "Add"
+                    ]
                 ]
             ]
         ]
     ]
 
 let view (model : Model) (dispatch : Msg -> unit) =
-    Hero.hero [
-        Hero.Color IsPrimary
-        Hero.IsFullHeight
-        Hero.Props [
-            Style [
-                Background """linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("https://unsplash.it/1200/900?random") no-repeat center center fixed"""
-                BackgroundSize "cover"
-            ]
+    Bulma.hero [
+        hero.isFullHeight
+        color.isPrimary
+        prop.style [
+            style.backgroundSize "cover"
+            style.backgroundImageUrl "https://unsplash.it/1200/900?random"
+            style.backgroundPosition "no-repeat center center fixed"
         ]
-    ] [
-        Hero.head [ ] [
-            Navbar.navbar [ ] [
-                Container.container [ ] [ navBrand ]
+        prop.children [
+            Bulma.heroHead [
+                Bulma.navbar [
+                    Bulma.container [
+                        navBrand
+                    ]
+                ]
             ]
-        ]
-
-        Hero.body [ ] [
-            Container.container [ ] [
-                Column.column [
-                    Column.Width (Screen.All, Column.Is6)
-                    Column.Offset (Screen.All, Column.Is3)
-                ] [
-                    Heading.p [ Heading.Modifiers [ Modifier.TextAlignment (Screen.All, TextAlignment.Centered) ] ] [ str "SAFE.App" ]
-                    containerBox model dispatch
+            Bulma.heroBody [
+                Bulma.container [
+                    Bulma.column [
+                        column.is6
+                        column.isOffset3
+                        prop.children [
+                            Bulma.title [
+                                text.hasTextCentered
+                                prop.text "SAFE.App"
+                            ]
+                            containerBox model dispatch
+                        ]
+                    ]
                 ]
             ]
         ]

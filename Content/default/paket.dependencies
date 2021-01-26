@@ -15,6 +15,8 @@ nuget Fable.FontAwesome.Free
 nuget Fable.Mocha
 nuget Fable.React
 nuget Fable.Remoting.Client
+nuget Feliz
+nuget Feliz.Bulma
 nuget Fulma
 
 nuget Fake.Core.Target
