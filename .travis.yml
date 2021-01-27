@@ -27,4 +27,4 @@ cache:
 script:
   - dotnet tool restore
   - dotnet paket restore
-  - dotnet fake build -t tests
+  - dotnet run --project Build.fsproj -- tests

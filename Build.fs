@@ -1,10 +1,3 @@
-#r "paket: groupref build //"
-#load "./.fake/build.fsx/intellisense.fsx"
-
-#if !FAKE
-#r "netstandard"
-#endif
-
 open System
 
 open Fake.Core
@@ -13,6 +6,9 @@ open Fake.IO
 open Fake.IO.FileSystemOperators
 open Fake.IO.Globbing.Operators
 open Fake.Tools
+
+let execContext = Context.FakeExecutionContext.Create false "build.fsx" [ ]
+Context.setExecutionContext (Context.RuntimeContext.Fake execContext)
 
 let templatePath = "./Content/.template.config/template.json"
 let templateProj = "SAFE.Template.proj"
@@ -115,4 +111,13 @@ open Fake.Core.TargetOperators
     ==> "Push"
     ==> "Release"
 
-Target.runOrDefaultWithArguments "Install"
+[<EntryPoint>]
+let main args =
+    try
+        match args with
+        | [| target |] -> Target.runOrDefault target
+        | _ -> Target.runOrDefault "Install"
+        0
+    with e ->
+        printfn "%A" e
+        1

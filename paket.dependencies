@@ -1,27 +1,15 @@
 github fable-compiler/webpack-config-template webpack.config.js
 
-group Build
-    storage: none
-    source https://api.nuget.org/v3/index.json
+framework: net5.0
+storage: none
+source https://api.nuget.org/v3/index.json
 
-    nuget FSharp.Core
-    nuget Fake.Core.ReleaseNotes
-    nuget Fake.Core.Target
-    nuget Fake.DotNet.Cli
-    nuget Fake.DotNet.Paket
-    nuget Fake.IO.FileSystem
-    nuget Fake.Tools.Git
+nuget System.Net.Http
 
-group Tests
-    framework: netcoreapp3.0
-    storage: none
-    source https://api.nuget.org/v3/index.json
+nuget Fake.Core.ReleaseNotes
+nuget Fake.Core.Target
+nuget Fake.DotNet.Paket
+nuget Fake.Tools.Git
 
-    nuget System.Net.Http
-
-    nuget Expecto
-    nuget Expecto.FsCheck
-    nuget Expecto.TestResults
-    nuget Fake.Core.Process
-    nuget Fake.DotNet.Cli
-    nuget FSharp.Core
+nuget Expecto.FsCheck
+nuget Expecto.TestResults
