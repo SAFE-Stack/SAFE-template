@@ -1,8 +1,10 @@
 language: csharp
-sudo: required
-dist: focal
 dotnet: 5.0.100
 mono: none
+os:
+  - linux
+  - osx
+  - windows
 
 before_install:
   - nvm install 10.12.0
