@@ -11,6 +11,6 @@
     <ProjectReference Include="..\Shared\Shared.fsproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Saturn" Version="0.15.0-preview02" />
+    <PackageReference Include="Saturn" Version="0.15.0-preview03" />
   </ItemGroup>
 </Project>
