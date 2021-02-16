@@ -67,12 +67,17 @@ let waitForStdOut (proc : Process) (stdOutPhrase : string) timeout =
     async {
         let mutable line = ""
         while line <> null && line.Contains stdOutPhrase |> not do
-            let! l =
-                proc.StandardOutput.ReadLineAsync()
-                |> Async.AwaitTask
-            line <- l
-            printfn "--> %s" line
+            try
+                let! l =
+                    proc.StandardOutput.ReadLineAsync()
+                    |> Async.AwaitTask
+                    |> asyncWithTimeout (TimeSpan.FromSeconds 30.)
+                line <- l
+                printfn "--> %s" line
+            with :? TimeoutException ->
+                printfn "--> (line timed out)"
     } |> asyncWithTimeout timeout
+
 
 let get (url: string) =
     use client = new HttpClient ()
