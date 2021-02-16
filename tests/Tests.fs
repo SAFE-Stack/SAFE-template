@@ -57,16 +57,22 @@ let start exe arg dir =
 
     Process.Start psi
 
-let waitForStdOut (proc : Process) (stdOutPhrase : string) (timeout : TimeSpan) =
-    let readTask =
-        Task.Factory.StartNew (Func<_>(fun _ ->
-            let mutable line = ""
-            while line <> null && line.Contains stdOutPhrase |> not do
-                line <- proc.StandardOutput.ReadLine()
-                printfn "--> %s" line
-        ))
+let asyncWithTimeout (timeout: TimeSpan) action =
+  async {
+    let! child = Async.StartChild( action, int timeout.TotalMilliseconds )
+    return! child
+  }
 
-    readTask.Wait timeout
+let waitForStdOut (proc : Process) (stdOutPhrase : string) timeout =
+    async {
+        let mutable line = ""
+        while line <> null && line.Contains stdOutPhrase |> not do
+            let! l =
+                proc.StandardOutput.ReadLineAsync()
+                |> Async.AwaitTask
+            line <- l
+            printfn "--> %s" line
+    } |> asyncWithTimeout timeout
 
 let get (url: string) =
     use client = new HttpClient ()
@@ -147,15 +153,12 @@ let testTemplateBuild templateType =
 
     let stdOutPhrase = ": Compiled successfully."
     let htmlSearchPhrase = """<title>SAFE Template</title>"""
-    let timeout = TimeSpan.FromMinutes 5.
     try
-        let waitResult = waitForStdOut proc stdOutPhrase timeout
-        if waitResult then
-            let response = get "http://localhost:8080"
-            Expect.stringContains response htmlSearchPhrase
-                (sprintf "html fragment not found for '%s'" args)
-        else
-            raise (Expecto.FailedException (sprintf "`dotnet fake build -t run` timeout for '%s'" args))
+        let timeout = TimeSpan.FromMinutes 5.
+        waitForStdOut proc stdOutPhrase timeout |> Async.RunSynchronously
+        let response = get "http://localhost:8080"
+        Expect.stringContains response htmlSearchPhrase
+            (sprintf "html fragment not found for '%s'" args)
     finally
         killProcessTree proc.Id
         extraProc |> Option.map (fun p -> p.Id) |> Option.iter killProcessTree
@@ -166,9 +169,11 @@ let testTemplateBuild templateType =
         >> setField "dir" dir)
     Directory.delete dir
 
-[<Tests>]
 let tests =
     testList "Project created from template" [
         for build in [ Minimal; Normal ] do
-            test (sprintf "%O template should build properly" build) { testTemplateBuild build }
+            test (sprintf "%O template should build properly" build) {
+                testTemplateBuild build
+            }
     ]
+

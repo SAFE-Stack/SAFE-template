@@ -9,4 +9,4 @@ let config =
 
 [<EntryPoint>]
 let main argv =
-    Tests.runTestsInAssembly config argv
+    Tests.runTests config SAFE.Tests.tests
