@@ -1,12 +1,13 @@
 module ExpectoTemplate
 
-open Expecto
-
-let config =
-    { defaultConfig with
-          // Disabling parallel run to avoid port conflicts
-          runInParallel = false }
+open SAFE.Tests
 
 [<EntryPoint>]
 let main argv =
-    Tests.runTests config SAFE.Tests.tests
+    try
+        for build in [ Normal; Minimal ] do
+            testTemplateBuild build
+        0
+    with e ->
+        printfn "%O" e
+        1

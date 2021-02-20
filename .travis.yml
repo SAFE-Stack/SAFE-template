@@ -12,4 +12,4 @@ before_install:
 script:
   - dotnet tool restore
   - dotnet paket restore
-  - dotnet run --project Build.fsproj -- tests
+  - dotnet run --project tests/tests.fsproj

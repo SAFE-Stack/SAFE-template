@@ -132,13 +132,10 @@ let killProcessTree (pid: int) =
 type TemplateType = Normal | Minimal
 
 
-let testTemplateBuild templateType =
-    let args = match templateType with Normal -> "" | Minimal -> " -m"
-    let uid = Guid.NewGuid().ToString("n")
-    let dir = Path.GetTempPath() </> uid
-    Directory.create dir
+let path = __SOURCE_DIRECTORY__ </> ".." </> "Content"
 
-    run dotnet (sprintf "new SAFE %s" args) dir
+let testTemplateBuild templateType =
+    let dir = if templateType = Normal then path </> "default" else path </> "minimal"
 
     if templateType = Minimal then
         // run build on Shared to avoid race condition between Client and Server
@@ -163,22 +160,11 @@ let testTemplateBuild templateType =
         waitForStdOut proc stdOutPhrase timeout |> Async.RunSynchronously
         let response = get "http://localhost:8080"
         Expect.stringContains response htmlSearchPhrase
-            (sprintf "html fragment not found for '%s'" args)
+            (sprintf "html fragment not found for %A" templateType)
     finally
         killProcessTree proc.Id
         extraProc |> Option.map (fun p -> p.Id) |> Option.iter killProcessTree
 
-
     logger.info(
         eventX "Deleting `{dir}`"
         >> setField "dir" dir)
-    Directory.delete dir
-
-let tests =
-    testList "Project created from template" [
-        for build in [ Minimal; Normal ] do
-            test (sprintf "%O template should build properly" build) {
-                testTemplateBuild build
-            }
-    ]
-
