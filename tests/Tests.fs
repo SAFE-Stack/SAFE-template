@@ -161,10 +161,10 @@ let testTemplateBuild templateType =
         let response = get "http://localhost:8080"
         Expect.stringContains response htmlSearchPhrase
             (sprintf "html fragment not found for %A" templateType)
+        logger.info(
+            eventX "Template type `{type}` run successfully"
+            >> setField "type" templateType)
     finally
         killProcessTree proc.Id
         extraProc |> Option.map (fun p -> p.Id) |> Option.iter killProcessTree
 
-    logger.info(
-        eventX "Deleting `{dir}`"
-        >> setField "dir" dir)
