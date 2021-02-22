@@ -17,6 +17,17 @@ let dotnet =
     match Environment.GetEnvironmentVariable "DOTNET_PATH" with
     | null -> "dotnet"
     | x -> x
+
+let npm =
+    // copied from Fake.JavaScript.Npm
+    ProcessUtils.tryFindFileOnPath "npm"
+    |> function
+        | Some npm when File.Exists npm -> npm
+        | _ ->
+            match Environment.isWindows with
+            | true -> "./packages/Npm.js/tools/npm.cmd"
+            | _ -> "/usr/bin/npm"
+
 let execParams exe arg dir : ExecParams =
     { Program = exe
       WorkingDir = dir
@@ -83,10 +94,12 @@ let get (url: string) =
     use client = new HttpClient ()
     client.GetStringAsync url |> Async.AwaitTask |> Async.RunSynchronously
 
-// works just on unix (`pgrep`) for now
 let childrenPids pid =
     let pgrep =
-        CreateProcess.fromRawCommand "pgrep" ["-P"; string pid]
+        if Environment.isWindows then
+            CreateProcess.fromRawCommand "wmic" ["process"; "where"; sprintf "(ParentProcessId=%i)" pid; "get"; "ProcessId" ]
+        else
+            CreateProcess.fromRawCommand "pgrep" ["-P"; string pid]
         |> CreateProcess.redirectOutput
         |> Proc.run
 
@@ -146,7 +159,7 @@ let testTemplateBuild templateType =
         if templateType = Normal then
             start dotnet "run" dir
         else
-            run "npm" "install" dir
+            run npm "install" dir
             start dotnet "fable watch src/Client --run webpack-dev-server" dir
 
     let extraProc =
