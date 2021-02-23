@@ -7,6 +7,6 @@ promise {
     header.innerText <- "loading..."
     do! Promise.sleep 1000
     let! response = Fetch.fetch Shared.Route.hello []
-    let! text = response.json<string>()
+    let! text = response.text()
     header.innerText <- text
 } |> Promise.start
