@@ -3,7 +3,6 @@ module Client.Tests
 open Fable.Mocha
 
 open Index
-open Shared
 
 let client = testList "Client" [
     testCase "Added todo" <| fun _ ->
@@ -21,7 +20,7 @@ let all =
         [
 //-:cnd:noEmit
 #if FABLE_COMPILER // This preprocessor directive makes editor happy
-            Shared.Tests.shared
+            Tests.shared
 #endif
 //+:cnd:noEmit
             client

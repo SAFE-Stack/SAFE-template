@@ -1,4 +1,4 @@
-namespace Shared
+namespace global
 
 open System
 
