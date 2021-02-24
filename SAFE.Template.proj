@@ -24,7 +24,7 @@ Content/*/.fable/**/*;
 Content/*/node_modules/**/*;
 Content/*/**/obj/**/*;
 Content/*/**/bin/**/*;
-Content/*/src/Client/.fable/**/*;
+Content/*/**/.fable/**/*;
 Content/*/**/*.fs.js;
 Content/*/deploy/**/*;
 Content/*/tests/**/obj/**/*;
