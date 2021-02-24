@@ -1,3 +1,7 @@
+#### 3.0.0-beta001 - 24.02.2021
+
+* .NET 5 and Fable 3 - https://github.com/SAFE-Stack/SAFE-template/pull/415
+
 #### 2.2.2 - 22.01.2021
 
 * Fix corrupted package - https://github.com/SAFE-Stack/SAFE-template/issues/421
