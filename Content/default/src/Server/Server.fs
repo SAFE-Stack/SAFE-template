@@ -4,6 +4,8 @@ open Fable.Remoting.Server
 open Fable.Remoting.Giraffe
 open Saturn
 
+open Shared
+
 type Storage () =
     let todos = ResizeArray<_>()
 
