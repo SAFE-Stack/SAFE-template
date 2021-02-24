@@ -1,4 +1,4 @@
-module App
+module Client
 
 open Browser
 

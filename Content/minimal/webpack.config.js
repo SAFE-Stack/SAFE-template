@@ -46,7 +46,7 @@ process.env.NODE_ENV = environment;
 console.log('Bundling for ' + environment + '...');
 
 module.exports = {
-    entry: { app: resolve('./src/Client/App.fs.js') },
+    entry: { app: resolve('./src/Client/Client.fs.js') },
     output: { path: resolve('./deploy/public') },
     resolve: { symlinks: false }, // See https://github.com/fable-compiler/Fable/issues/1490
     mode: isProduction ? 'production' : 'development',
