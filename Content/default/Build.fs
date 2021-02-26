@@ -34,8 +34,9 @@ let npm args workingDir =
 
 let dotnet cmd workingDir =
     let result = DotNet.exec (DotNet.Options.withWorkingDirectory workingDir) cmd ""
-    if result.ExitCode <> 0 then failwithf "'dotnet %s' failed in %s" cmd workingDir
-
+    if not result.OK then
+        Trace.traceErrorfn "Errors while executing 'dotnet %s': %A" cmd result.Messages
+        failwithf "'dotnet %s' failed in %s" cmd workingDir
 
 Target.create "Clean" (fun _ -> Shell.cleanDir deployDir)
 
@@ -80,10 +81,7 @@ Target.create "RunTests" (fun _ ->
 )
 
 Target.create "Format" (fun _ ->
-    let result = DotNet.exec id "fantomas" "src -r"
-
-    if not result.OK then
-        printfn "Errors while formatting all files: %A" result.Messages
+    dotnet "fantomas . -r" "src"
 )
 
 open Fake.Core.TargetOperators
