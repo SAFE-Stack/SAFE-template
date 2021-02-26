@@ -4,9 +4,7 @@ open Elmish
 open Fable.Remoting.Client
 open Shared
 
-type Model =
-    { Todos: Todo list
-      Input: string }
+type Model = { Todos: Todo list; Input: string }
 
 type Msg =
     | GotTodos of Todo list
@@ -15,29 +13,33 @@ type Msg =
     | AddedTodo of Todo
 
 let todosApi =
-    Remoting.createApi()
+    Remoting.createApi ()
     |> Remoting.withRouteBuilder Route.builder
     |> Remoting.buildProxy<ITodosApi>
 
-let init(): Model * Cmd<Msg> =
-    let model =
-        { Todos = []
-          Input = "" }
-    let cmd = Cmd.OfAsync.perform todosApi.getTodos () GotTodos
+let init () : Model * Cmd<Msg> =
+    let model = { Todos = []; Input = "" }
+
+    let cmd =
+        Cmd.OfAsync.perform todosApi.getTodos () GotTodos
+
     model, cmd
 
-let update (msg: Msg) (model: Model): Model * Cmd<Msg> =
+let update (msg: Msg) (model: Model) : Model * Cmd<Msg> =
     match msg with
-    | GotTodos todos ->
-        { model with Todos = todos }, Cmd.none
-    | SetInput value ->
-        { model with Input = value }, Cmd.none
+    | GotTodos todos -> { model with Todos = todos }, Cmd.none
+    | SetInput value -> { model with Input = value }, Cmd.none
     | AddTodo ->
         let todo = Todo.create model.Input
-        let cmd = Cmd.OfAsync.perform todosApi.addTodo todo AddedTodo
+
+        let cmd =
+            Cmd.OfAsync.perform todosApi.addTodo todo AddedTodo
+
         { model with Input = "" }, cmd
     | AddedTodo todo ->
-        { model with Todos = model.Todos @ [ todo ] }, Cmd.none
+        { model with
+              Todos = model.Todos @ [ todo ] },
+        Cmd.none
 
 open Feliz
 open Feliz.Bulma
@@ -56,7 +58,7 @@ let navBrand =
         ]
     ]
 
-let containerBox (model : Model) (dispatch : Msg -> unit) =
+let containerBox (model: Model) (dispatch: Msg -> unit) =
     Bulma.box [
         Bulma.content [
             Html.ol [
@@ -89,7 +91,7 @@ let containerBox (model : Model) (dispatch : Msg -> unit) =
         ]
     ]
 
-let view (model : Model) (dispatch : Msg -> unit) =
+let view (model: Model) (dispatch: Msg -> unit) =
     Bulma.hero [
         hero.isFullHeight
         color.isPrimary
@@ -101,9 +103,7 @@ let view (model : Model) (dispatch : Msg -> unit) =
         prop.children [
             Bulma.heroHead [
                 Bulma.navbar [
-                    Bulma.container [
-                        navBrand
-                    ]
+                    Bulma.container [ navBrand ]
                 ]
             ]
             Bulma.heroBody [

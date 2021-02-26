@@ -79,6 +79,13 @@ Target.create "RunTests" (fun _ ->
     |> ignore
 )
 
+Target.create "Format" (fun _ ->
+    let result = DotNet.exec id "fantomas" "src -r"
+
+    if not result.OK then
+        printfn "Errors while formatting all files: %A" result.Messages
+)
+
 open Fake.Core.TargetOperators
 
 let dependencies = [
