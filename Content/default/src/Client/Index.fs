@@ -4,7 +4,7 @@ open Elmish
 open Fable.Remoting.Client
 open Shared
 
-type Model = { Todos : Todo list; Input : string }
+type Model = { Todos: Todo list; Input: string }
 
 type Msg =
     | GotTodos of Todo list
@@ -25,7 +25,7 @@ let init () : Model * Cmd<Msg> =
 
     model, cmd
 
-let update (msg : Msg) (model : Model) : Model * Cmd<Msg> =
+let update (msg: Msg) (model: Model) : Model * Cmd<Msg> =
     match msg with
     | GotTodos todos -> { model with Todos = todos }, Cmd.none
     | SetInput value -> { model with Input = value }, Cmd.none
@@ -58,7 +58,7 @@ let navBrand =
         ]
     ]
 
-let containerBox (model : Model) (dispatch : Msg -> unit) =
+let containerBox (model: Model) (dispatch: Msg -> unit) =
     Bulma.box [
         Bulma.content [
             Html.ol [
@@ -91,7 +91,7 @@ let containerBox (model : Model) (dispatch : Msg -> unit) =
         ]
     ]
 
-let view (model : Model) (dispatch : Msg -> unit) =
+let view (model: Model) (dispatch: Msg -> unit) =
     Bulma.hero [
         hero.isFullHeight
         color.isPrimary
