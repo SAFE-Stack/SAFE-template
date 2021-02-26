@@ -22,4 +22,5 @@ nuget Fulma
 nuget Fake.Core.Target
 nuget Fake.DotNet.Cli
 nuget Fake.IO.FileSystem
+nuget Fake.Tools.Git
 nuget Farmer
