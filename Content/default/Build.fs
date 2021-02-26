@@ -102,43 +102,6 @@ Target.create
         if not result.OK then
             printfn "Errors while formatting all files: %A" result.Messages)
 
-Target.create
-    "FormatChanged"
-    (fun _ ->
-        Fake.Tools.Git.FileStatus.getChangedFilesInWorkingCopy "." "HEAD"
-        |> Seq.choose
-            (fun (_, file) ->
-                let ext = System.IO.Path.GetExtension(file)
-
-                if file.StartsWith("src")
-                   && (ext = ".fs" || ext = ".fsi") then
-                    Some file
-                else
-                    None)
-        |> Seq.map
-            (fun file ->
-                async {
-                    let result = DotNet.exec id "fantomas" file
-
-                    if not result.OK then
-                        printfn "Problem when formatting %s:\n%A" file result.Errors
-                })
-        |> Async.Parallel
-        |> Async.RunSynchronously
-        |> ignore)
-
-Target.create
-    "CheckFormat"
-    (fun _ ->
-        let result = DotNet.exec id "fantomas" ". -r --check"
-
-        if result.ExitCode = 0 then
-            Trace.log "No files need formatting"
-        elif result.ExitCode = 99 then
-            failwith "Some files need formatting, check output for more info"
-        else
-            Trace.logf "Errors while formatting: %A" result.Errors)
-
 open Fake.Core.TargetOperators
 
 let dependencies =
