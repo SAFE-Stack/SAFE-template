@@ -6,6 +6,7 @@ nuget Fable.Remoting.Giraffe prerelease
 nuget Saturn prerelease
 nuget Expecto
 
+nuget TypeShape = 8.0.1
 nuget Fable.Core
 nuget Fable.Elmish
 nuget Fable.Elmish.React
