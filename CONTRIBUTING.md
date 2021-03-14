@@ -8,7 +8,7 @@ To test your changes simply navigate to `Content\minimal` or `Content\default` a
 
 ## Testing template bundle
 
-To build whole template invoke `dotnet fake build` - default target is `Install`, which will build the template and invoke `dotnet new -i <<repo-path>>/nupkg/SAFE.Template.<<version>>.nupkg`
+To build whole template invoke `dotnet run -p Build.fsproj` - default target is `Install`, which will build the template and invoke `dotnet new -i <<repo-path>>/nupkg/SAFE.Template.<<version>>.nupkg`
 
 You can now test the local build of template using `dotnet new SAFE`
 
