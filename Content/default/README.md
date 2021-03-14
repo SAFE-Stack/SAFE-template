@@ -36,6 +36,6 @@ If you want to know more about the full Azure Stack and all of it's components (
 
 You will find more documentation about the used F# components at the following places:
 
-* [Saturn](https://saturnframework.org/explanations/overview.html)
+* [Saturn](https://saturnframework.org/)
 * [Fable](https://fable.io/docs/)
 * [Elmish](https://elmish.github.io/elmish/)
