@@ -7,7 +7,7 @@ let initializeContext () =
     Context.setExecutionContext (Context.RuntimeContext.Fake execContext)
 
 module Proc =
-    module Parrallel =
+    module Parallel =
         open System
 
         let locker = obj()
@@ -81,7 +81,7 @@ let run proc arg dir =
 
 let runParallel processes =
     processes
-    |> Proc.Parrallel.run
+    |> Proc.Parallel.run
     |> ignore
 
 let runOrDefault args =
