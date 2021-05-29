@@ -17,7 +17,7 @@ let clientTestsPath = Path.getFullName "tests/Client"
 
 Target.create "Clean" (fun _ ->
     Shell.cleanDir deployPath
-    run dotnet "fable clean --yes" "." // Delete *.fs.js files created by Fable
+    run dotnet "fable clean --yes" clientPath // Delete *.fs.js files created by Fable
 )
 
 Target.create "InstallClient" (fun _ -> run npm "install" ".")
@@ -73,8 +73,7 @@ let dependencies = [
         ==> "InstallClient"
         ==> "Run"
 
-    "Clean"
-        ==> "InstallClient"
+    "InstallClient"
         ==> "RunTests"
 ]
 
