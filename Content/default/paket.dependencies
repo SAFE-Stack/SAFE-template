@@ -2,7 +2,7 @@ source https://api.nuget.org/v3/index.json
 framework: net5.0
 storage: none
 
-nuget Fable.Remoting.Giraffe prerelease
+nuget Fable.Remoting.Giraffe
 nuget Saturn prerelease
 nuget Expecto
 
