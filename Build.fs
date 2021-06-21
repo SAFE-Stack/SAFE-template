@@ -3,8 +3,6 @@ open System
 open Fake.Core
 open Fake.DotNet
 open Fake.IO
-open Fake.IO.FileSystemOperators
-open Fake.IO.Globbing.Operators
 open Fake.Tools
 
 let execContext = Context.FakeExecutionContext.Create false "build.fsx" [ ]
@@ -27,13 +25,13 @@ Target.create "Clean" (fun _ ->
     Shell.cleanDirs [ nupkgDir ]
 )
 
-let msBuildParams msBuildParameter: Fake.DotNet.MSBuild.CliArguments = { msBuildParameter with DisableInternalBinLog = true }
+let msBuildParams msBuildParameter: MSBuild.CliArguments = { msBuildParameter with DisableInternalBinLog = true }
 
 Target.create "Pack" (fun _ ->
     Shell.regexReplaceInFileWithEncoding
         "  \"name\": .+,"
        ("  \"name\": \"" + templateName + " v" + release.NugetVersion + "\",")
-        System.Text.Encoding.UTF8
+        Text.Encoding.UTF8
         templatePath
     DotNet.pack
         (fun args ->
