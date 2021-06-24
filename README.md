@@ -1,6 +1,6 @@
 # SAFE template
 
-[![Build Status](https://travis-ci.org/SAFE-Stack/SAFE-template.svg?branch=master)](https://travis-ci.org/SAFE-Stack/SAFE-template)
+[![Build Status](https://www.travis-ci.com/SAFE-Stack/SAFE-template.svg?branch=master)](https://travis-ci.com/SAFE-Stack/SAFE-template)
 [![Build Status](https://compositional-it.visualstudio.com/SAFE%20Template/_apis/build/status/SAFE-Stack.SAFE-template?branchName=net5.0-fable3)](https://compositional-it.visualstudio.com/SAFE%20Template/_build/latest?definitionId=37&branchName=net5.0-fable3)
 
 A dotnet CLI template for [SAFE-Stack](https://safe-stack.github.io/) projects.
