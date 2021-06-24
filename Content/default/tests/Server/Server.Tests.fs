@@ -25,4 +25,4 @@ let all =
         ]
 
 [<EntryPoint>]
-let main _ = runTests defaultConfig all
+let main _ = runTestsWithCLIArgs [] [||] all
