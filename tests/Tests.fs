@@ -18,13 +18,15 @@ let dotnet =
     | null -> "dotnet"
     | x -> x
 
-let maxTests =
-    match Environment.GetEnvironmentVariable "MAX_TESTS" with
-    | null -> 15
-    | x ->
-        match System.Int32.TryParse x with
-        | true, n -> n
-        | _ -> 15
+let npm =
+    // copied from Fake.JavaScript.Npm
+    ProcessUtils.tryFindFileOnPath "npm"
+    |> function
+        | Some npm when File.Exists npm -> npm
+        | _ ->
+            match Environment.isWindows with
+            | true -> "./packages/Npm.js/tools/npm.cmd"
+            | _ -> "/usr/bin/npm"
 
 let execParams exe arg dir : ExecParams =
     { Program = exe
@@ -66,25 +68,38 @@ let start exe arg dir =
 
     Process.Start psi
 
-let waitForStdOut (proc : Process) (stdOutPhrase : string) (timeout : TimeSpan) =
-    let readTask =
-        Task.Factory.StartNew (Func<_>(fun _ ->
-            let mutable line = ""
-            while line <> null && line.Contains stdOutPhrase |> not do
-                line <- proc.StandardOutput.ReadLine()
-                printfn "--> %s" line
-        ))
+let asyncWithTimeout (timeout: TimeSpan) action =
+  async {
+    let! child = Async.StartChild( action, int timeout.TotalMilliseconds )
+    return! child
+  }
 
-    readTask.Wait timeout
+let waitForStdOut (proc : Process) (stdOutPhrase : string) timeout =
+    async {
+        let mutable line = ""
+        while line <> null && line.Contains stdOutPhrase |> not do
+            try
+                let! l =
+                    proc.StandardOutput.ReadLineAsync()
+                    |> Async.AwaitTask
+                    |> asyncWithTimeout (TimeSpan.FromSeconds 30.)
+                line <- l
+                printfn "--> %s" line
+            with :? TimeoutException ->
+                printfn "--> (line timed out)"
+    } |> asyncWithTimeout timeout
+
 
 let get (url: string) =
     use client = new HttpClient ()
     client.GetStringAsync url |> Async.AwaitTask |> Async.RunSynchronously
 
-// works just on unix (`pgrep`) for now
 let childrenPids pid =
     let pgrep =
-        CreateProcess.fromRawCommand "pgrep" ["-P"; string pid]
+        if Environment.isWindows then
+            CreateProcess.fromRawCommand "wmic" ["process"; "where"; sprintf "(ParentProcessId=%i)" pid; "get"; "ProcessId" ]
+        else
+            CreateProcess.fromRawCommand "pgrep" ["-P"; string pid]
         |> CreateProcess.redirectOutput
         |> Proc.run
 
@@ -130,57 +145,39 @@ let killProcessTree (pid: int) =
 type TemplateType = Normal | Minimal
 
 
-let testTemplateBuild templateType =
-    let args = match templateType with Normal -> "" | Minimal -> " -m"
-    let uid = Guid.NewGuid().ToString("n")
-    let dir = Path.GetTempPath() </> uid
-    Directory.create dir
+let path = __SOURCE_DIRECTORY__ </> ".." </> "Content"
 
-    run dotnet (sprintf "new SAFE %s" args) dir
+let testTemplateBuild templateType =
+    let dir = if templateType = Normal then path </> "default" else path </> "minimal"
 
     if templateType = Minimal then
         // run build on Shared to avoid race condition between Client and Server
         run dotnet "build" (dir </> "src" </> "Shared")
 
+    run dotnet "tool restore" dir
     let proc =
         if templateType = Normal then
-            run dotnet "tool restore" dir
-            // see if `dotnet fake build` succeeds
-            run dotnet ("fake build") dir
-            start dotnet "fake build -t run" dir
+            start dotnet "run" dir
         else
-            run "npm" "install" (dir </> "src" </> "Client")
-            start "npm" "run start" (dir </> "src" </> "Client")
+            run npm "install" dir
+            start dotnet "fable watch src/Client --run webpack-dev-server" dir
 
     let extraProc =
         if templateType = Normal then None
         else start dotnet "run" (dir </> "src" </> "Server") |> Some
 
-    // see if `dotnet fake build -t run` succeeds and webpack serves the index page
     let stdOutPhrase = ": Compiled successfully."
     let htmlSearchPhrase = """<title>SAFE Template</title>"""
-    let timeout = TimeSpan.FromMinutes 5.
     try
-        let waitResult = waitForStdOut proc stdOutPhrase timeout
-        if waitResult then
-            let response = get "http://localhost:8080"
-            Expect.stringContains response htmlSearchPhrase
-                (sprintf "html fragment not found for '%s'" args)
-        else
-            raise (Expecto.FailedException (sprintf "`dotnet fake build -t run` timeout for '%s'" args))
+        let timeout = TimeSpan.FromMinutes 5.
+        waitForStdOut proc stdOutPhrase timeout |> Async.RunSynchronously
+        let response = get "http://localhost:8080"
+        Expect.stringContains response htmlSearchPhrase
+            (sprintf "html fragment not found for %A" templateType)
+        logger.info(
+            eventX "Template type `{type}` run successfully"
+            >> setField "type" templateType)
     finally
         killProcessTree proc.Id
         extraProc |> Option.map (fun p -> p.Id) |> Option.iter killProcessTree
 
-
-    logger.info(
-        eventX "Deleting `{dir}`"
-        >> setField "dir" dir)
-    Directory.delete dir
-
-[<Tests>]
-let tests =
-    testList "Project created from template" [
-        for build in [ Normal; Minimal ] do
-            test (sprintf "%O template should build properly" build) { testTemplateBuild build }
-    ]

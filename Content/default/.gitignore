@@ -1,4 +1,5 @@
 .fable/
+*.fs.js
 .fake/
 .farmer/
 .idea/

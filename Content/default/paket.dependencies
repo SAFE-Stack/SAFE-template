@@ -1,5 +1,5 @@
 source https://api.nuget.org/v3/index.json
-framework: netcoreapp3.1
+framework: net5.0
 storage: none
 
 nuget Fable.Remoting.Giraffe
@@ -15,16 +15,10 @@ nuget Fable.FontAwesome.Free
 nuget Fable.Mocha
 nuget Fable.React
 nuget Fable.Remoting.Client
+nuget Feliz
+nuget Feliz.Bulma
 nuget Fulma
 
-group Build
-    source https://api.nuget.org/v3/index.json
-    framework: netstandard2.0
-    storage: none
-
-    nuget FSharp.Core
-    nuget Fake.Core.ReleaseNotes
-    nuget Fake.Core.Target
-    nuget Fake.DotNet.Cli
-    nuget Fake.IO.FileSystem
-    nuget Farmer
+nuget Fake.Core.Target
+nuget Fake.IO.FileSystem
+nuget Farmer

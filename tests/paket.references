@@ -1,9 +1,4 @@
-group Tests
-    System.Net.Http
-
-    Expecto
-    Expecto.FsCheck
-    Expecto.TestResults
-    Fake.Core.Process
-    Fake.DotNet.Cli
-    FSharp.Core
+System.Net.Http
+Expecto.FsCheck
+Expecto.TestResults
+Fake.DotNet.Cli

@@ -1,24 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
-        <DefineConstants>FABLE_COMPILER</DefineConstants>
-    </PropertyGroup>
-    <ItemGroup>
-        <None Include="index.html" />
-        <Compile Include="Index.fs" />
-        <Compile Include="App.fs" />
-    </ItemGroup>
-    <ItemGroup>
-        <ProjectReference Include="..\Shared\Shared.fsproj" />
-    </ItemGroup>
-    <ItemGroup>
-        <PackageReference Include="Fable.Core" Version="3.1.5" />
-        <PackageReference Include="Fable.Elmish" Version="3.0.6" />
-        <PackageReference Include="Fable.Elmish.React" Version="3.0.1" />
-        <PackageReference Include="Fable.Elmish.Debugger" Version="3.2.0" />
-        <PackageReference Include="Fable.Elmish.Hmr" Version="4.0.1" />
-        <PackageReference Include="Fable.React" Version="5.3.6" />
-        <PackageReference Include="Thoth.Fetch" Version="2.0.0" />
-    </ItemGroup>
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+    <DefineConstants>FABLE_COMPILER</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="index.html" />
+    <Compile Include="Client.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Shared\Shared.fsproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Fable.Browser.DOM" Version="2.4.4" />
+    <PackageReference Include="Fable.Core" Version="3.2.7" />
+    <PackageReference Include="Fable.Fetch" Version="2.3.1" />
+  </ItemGroup>
 </Project>

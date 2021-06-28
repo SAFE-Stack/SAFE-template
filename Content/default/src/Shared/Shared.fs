@@ -2,9 +2,7 @@ namespace Shared
 
 open System
 
-type Todo =
-    { Id : Guid
-      Description : string }
+type Todo = { Id: Guid; Description: string }
 
 module Todo =
     let isValid (description: string) =
@@ -19,5 +17,5 @@ module Route =
         sprintf "/api/%s/%s" typeName methodName
 
 type ITodosApi =
-    { getTodos : unit -> Async<Todo list>
-      addTodo : Todo -> Async<Todo> }
+    { getTodos: unit -> Async<Todo list>
+      addTodo: Todo -> Async<Todo> }
