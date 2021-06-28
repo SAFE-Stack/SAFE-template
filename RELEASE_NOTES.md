@@ -1,4 +1,4 @@
-#### 3.0.0-beta004 - 15.04.2021
+#### 3.0.0-beta005 - 28.06.2021
 
 * .NET 5 and Fable 3 - https://github.com/SAFE-Stack/SAFE-template/pull/415
 
