@@ -1,3 +1,7 @@
+#### 3.0.1 - 29.06.2021
+
+* Remove unwanted directory from the template package - https://github.com/SAFE-Stack/SAFE-template/pull/415
+
 #### 3.0.0 - 28.06.2021
 
 * .NET 5 and Fable 3 - https://github.com/SAFE-Stack/SAFE-template/pull/415
