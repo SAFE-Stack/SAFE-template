@@ -1,3 +1,7 @@
+#### 3.0.2 - 09.07.2021
+
+* Added meta tag for viewport to help with mobile responsiveness - https://github.com/SAFE-Stack/SAFE-template/pull/457
+
 #### 3.0.1 - 29.06.2021
 
 * Remove unwanted directory from the template package - https://github.com/SAFE-Stack/SAFE-template/pull/415
