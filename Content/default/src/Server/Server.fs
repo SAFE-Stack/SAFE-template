@@ -15,14 +15,15 @@ module Storage =
         else
             Error "Invalid todo"
 
-Storage.addTodo (Todo.create "Create new SAFE project") |> ignore
-Storage.addTodo (Todo.create "Write your app") |> ignore
-Storage.addTodo (Todo.create "Ship it !!!") |> ignore
+    do
+        addTodo (Todo.create "Create new SAFE project") |> ignore
+        addTodo (Todo.create "Write your app") |> ignore
+        addTodo (Todo.create "Ship it !!!") |> ignore
 
 let todosApi =
     {
         getTodos = fun () -> async {
-            return List.ofSeq Storage.todos
+            return Storage.todos |> List.ofSeq
         }
         addTodo = fun todo -> async {
             return
