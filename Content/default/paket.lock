@@ -126,7 +126,7 @@ NUGET
     Fake.IO.FileSystem (5.20.4)
       Fake.Core.String (>= 5.20.4)
       FSharp.Core (>= 4.7.2)
-    Farmer (1.6.1)
+    Farmer (1.6.12)
       FSharp.Core (>= 5.0)
     Feliz (1.47)
       Fable.Core (>= 3.1.5)
