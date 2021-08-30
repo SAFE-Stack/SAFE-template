@@ -1,3 +1,11 @@
+#### 3.1.0 - 30.08.2021
+
+* Update Farmer to 1.6.12 - https://github.com/SAFE-Stack/SAFE-template/pull/468
+* Add Femto tool - https://github.com/SAFE-Stack/SAFE-template/pull/469
+* Fable outputs to "output" folder - https://github.com/SAFE-Stack/SAFE-template/pull/470
+* Remove font awesome from paket - https://github.com/SAFE-Stack/SAFE-template/pull/471
+* Basic support for source maps - https://github.com/SAFE-Stack/SAFE-template/pull/474
+
 #### 3.0.2 - 09.07.2021
 
 * Added meta tag for viewport to help with mobile responsiveness - https://github.com/SAFE-Stack/SAFE-template/pull/457
