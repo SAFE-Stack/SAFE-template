@@ -8,6 +8,7 @@
 deploy/
 obj/
 bin/
+output/
 packages/
 paket-files/
 node_modules/
