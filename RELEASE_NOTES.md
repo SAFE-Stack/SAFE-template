@@ -1,3 +1,7 @@
+#### 3.1.1 - 31.08.2021
+
+* Fix flags for fable in bundle target - https://github.com/SAFE-Stack/SAFE-template/pull/476
+
 #### 3.1.0 - 30.08.2021
 
 * Update Farmer to 1.6.12 - https://github.com/SAFE-Stack/SAFE-template/pull/468
