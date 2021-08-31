@@ -175,8 +175,13 @@ let testTemplateBuild templateType =
         Expect.stringContains response htmlSearchPhrase
             (sprintf "html fragment not found for %A" templateType)
         logger.info(
-            eventX "Template type `{type}` run successfully"
+            eventX "Run target for `{type}` run successfully"
             >> setField "type" templateType)
+        if templateType = Normal then
+            run dotnet "run -- bundle" dir
+            logger.info(
+                eventX "Bundle target for `{type}` run successfully"
+                >> setField "type" templateType)
     finally
         killProcessTree proc.Id
         extraProc |> Option.map (fun p -> p.Id) |> Option.iter killProcessTree
