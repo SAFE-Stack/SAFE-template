@@ -73,15 +73,8 @@ module.exports = {
         // Split the code coming from npm packages into a different file.
         // 3rd party dependencies change less often, let the browser cache them.
         splitChunks: {
-            cacheGroups: {
-                commons: {
-                    test: /node_modules/,
-                    name: "vendors",
-                    chunks: "all",
-                    enforce: true
-                }
-            }
-        },
+            chunks: 'all'
+        }
     },
     // Besides the HtmlPlugin, we use the following plugins:
     // PRODUCTION
