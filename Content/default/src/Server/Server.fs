@@ -6,38 +6,32 @@ open Saturn
 
 open Shared
 
-type Storage() =
-    let todos = ResizeArray<_>()
-
-    member __.GetTodos() = List.ofSeq todos
-
-    member __.AddTodo(todo: Todo) =
+module Storage =
+    let todos = ResizeArray ()
+    let addTodo (todo: Todo) =
         if Todo.isValid todo.Description then
             todos.Add todo
             Ok()
         else
             Error "Invalid todo"
 
-let storage = Storage()
-
-storage.AddTodo(Todo.create "Create new SAFE project")
-|> ignore
-
-storage.AddTodo(Todo.create "Write your app")
-|> ignore
-
-storage.AddTodo(Todo.create "Ship it !!!")
-|> ignore
+    do
+        addTodo (Todo.create "Create new SAFE project") |> ignore
+        addTodo (Todo.create "Write your app") |> ignore
+        addTodo (Todo.create "Ship it !!!") |> ignore
 
 let todosApi =
-    { getTodos = fun () -> async { return storage.GetTodos() }
-      addTodo =
-          fun todo ->
-              async {
-                  match storage.AddTodo todo with
-                  | Ok () -> return todo
-                  | Error e -> return failwith e
-              } }
+    {
+        getTodos = fun () -> async {
+            return Storage.todos |> List.ofSeq
+        }
+        addTodo = fun todo -> async {
+            return
+                match Storage.addTodo todo with
+                | Ok () -> todo
+                | Error e -> failwith e
+        }
+    }
 
 let webApp =
     Remoting.createApi ()
