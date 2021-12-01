@@ -88,9 +88,7 @@ module.exports = {
             new MiniCssExtractPlugin({ filename: 'style.[name].[hash].css' }),
             new CopyWebpackPlugin({ patterns: [{ from: resolve(CONFIG.assetsDir) }] }),
         ])
-        : commonPlugins.concat([
-            new webpack.HotModuleReplacementPlugin(),
-        ]),
+        : commonPlugins,
     resolve: {
         // See https://github.com/fable-compiler/Fable/issues/1490
         symlinks: false
