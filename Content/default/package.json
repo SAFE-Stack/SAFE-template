@@ -1,5 +1,9 @@
 {
     "private": true,
+    "engines": {
+        "node": "~16",
+        "npm": "~8"
+    },
     "scripts": {
         "start": "webpack-dev-server",
         "build": "webpack -p",
