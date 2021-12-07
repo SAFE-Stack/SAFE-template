@@ -24,7 +24,7 @@ Target.create "InstallClient" (fun _ -> run npm "install" ".")
 
 Target.create "Bundle" (fun _ ->
     [ "server", dotnet $"publish -c Release -o \"{deployPath}\"" serverPath
-      "client", dotnet "fable -o output -s --run webpack -p" clientPath ]
+      "client", dotnet "fable -o output -s --run webpack --config ../../webpack.config.js" clientPath ]
     |> runParallel
 )
 
@@ -46,7 +46,7 @@ Target.create "Azure" (fun _ ->
 Target.create "Run" (fun _ ->
     run dotnet "build" sharedPath
     [ "server", dotnet "watch run" serverPath
-      "client", dotnet "fable watch -o output -s --run webpack-dev-server" clientPath ]
+      "client", dotnet "fable watch -o output -s --run webpack-dev-server --config ../../webpack.config.js" clientPath ]
     |> runParallel
 )
 

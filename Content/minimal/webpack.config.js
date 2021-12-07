@@ -2,6 +2,11 @@ var path = require('path');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
 
+// If we're running the webpack-dev-server, assume we're in development mode
+var isProduction = !process.argv.find(v => v.indexOf('webpack-dev-server') !== -1);
+var mode = isProduction ? 'production' : 'development';
+process.env.NODE_ENV = mode;
+
 function resolve(filePath) {
     return path.join(__dirname, filePath);
 }
@@ -25,32 +30,39 @@ var copyPlugin =
 
 // Configuration for webpack-dev-server
 var devServer = {
-    publicPath: '/',
-    contentBase: resolve('./src/Client/public'),
+    static: {
+        directory: resolve('./src/Client/public'),
+        publicPath: '/'
+    },
     host: '0.0.0.0',
     port: 8080,
-    inline: true,
     proxy: {
         // Redirect requests that start with /api/ to the server on port 8085
         '/api/**': {
             target: 'http://localhost:8085',
             changeOrigin: true
         }
-    }
+    },
+    hot: true,
+    historyApiFallback: true
 };
 
-// If we're running the webpack-dev-server, assume we're in development mode
-var isProduction = !process.argv.find(v => v.indexOf('webpack-dev-server') !== -1);
-var environment = isProduction ? 'production' : 'development';
-process.env.NODE_ENV = environment;
-console.log('Bundling for ' + environment + '...');
+console.log('Bundling for ' + mode + '...');
 
 module.exports = {
     entry: { app: resolve('./src/Client/Client.fs.js') },
     output: { path: resolve('./deploy/public') },
     resolve: { symlinks: false }, // See https://github.com/fable-compiler/Fable/issues/1490
-    mode: isProduction ? 'production' : 'development',
+    mode: mode,
     plugins: isProduction ? [htmlPlugin, copyPlugin] : [htmlPlugin],
-    optimization: { splitChunks: { chunks: 'all' } },
-    devServer: devServer,
+    optimization: {
+        runtimeChunk: "single",
+        moduleIds: 'deterministic',
+        // Split the code coming from npm packages into a different file.
+        // 3rd party dependencies change less often, let the browser cache them.
+        splitChunks: {
+            chunks: 'all'
+        }
+    },
+    devServer: devServer
 };
