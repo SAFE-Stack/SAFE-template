@@ -9,10 +9,11 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
-// If we're running the webpack-dev-server, assume we're in development mode
-const isProduction = !process.argv.find(v => v.indexOf('webpack-dev-server') !== -1);
-const mode = isProduction ? 'production' : 'development';
-process.env.NODE_ENV = mode;
+// The NODE_ENV is passed to npm as an argument from the command line
+// for example: npm run start --node-env=development
+process.env.NODE_ENV = process.env.NODE_ENV ?? "development";
+const mode = process.env.NODE_ENV;
+const isProduction = mode === 'production';
 
 const CONFIG = {
     // The tags to include the generated JS and CSS will be automatically injected in the HTML template
