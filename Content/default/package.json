@@ -1,9 +1,9 @@
 {
     "private": true,
     "scripts": {
-        "start": "webpack-dev-server",
-        "build": "webpack --node-env=production",
-        "test:live": "webpack-dev-server --config webpack.tests.config.js"
+        "start": "webpack-dev-server --mode development",
+        "build": "webpack --mode production",
+        "test:live": "webpack-dev-server --mode development --env test"
     },
     "dependencies": {
         "react": "^17.0.2",
