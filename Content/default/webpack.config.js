@@ -42,10 +42,10 @@ const TEST_CONFIG = {
 }
 
 module.exports = function(env, arg) {
+    // Mode is passed as a flag to npm run. see the docs for more details on flags https://webpack.js.org/api/cli/#flags
+    const mode = arg.mode ?? 'development';
     // environment variables docs: https://webpack.js.org/api/cli/#environment-options
     const config = env.test ? TEST_CONFIG : CONFIG;
-    // Flags docs: https://webpack.js.org/api/cli/#flags
-    const mode = arg.mode ?? 'development';
 
     console.log(`Bundling for ${env.test ? 'test' : 'run'} - ${mode} ...`);
 
