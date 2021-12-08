@@ -4,18 +4,17 @@
 // In most cases, you'll only need to edit the CONFIG object (after dependencies)
 // See below if you need better fine-tuning of Webpack options
 
-var path = require('path');
-var webpack = require('webpack');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
-var CopyWebpackPlugin = require('copy-webpack-plugin');
-var MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 // If we're running the webpack-dev-server, assume we're in development mode
-var isProduction = !process.argv.find(v => v.indexOf('webpack-dev-server') !== -1);
-var mode = isProduction ? 'production' : 'development';
+const isProduction = !process.argv.find(v => v.indexOf('webpack-dev-server') !== -1);
+const mode = isProduction ? 'production' : 'development';
 process.env.NODE_ENV = mode;
 
-var CONFIG = {
+const CONFIG = {
     // The tags to include the generated JS and CSS will be automatically injected in the HTML template
     // See https://github.com/jantimon/html-webpack-plugin
     indexHtmlTemplate: './src/Client/index.html',
@@ -28,12 +27,12 @@ var CONFIG = {
     devServerProxy: {
         // redirect requests that start with /api/ to the server on port 8085
         '/api/**': {
-            target: 'http://localhost:' + (process.env.SERVER_PROXY_PORT || "8085"),
+            target: 'http://localhost:' + (process.env.SERVER_PROXY_PORT || '8085'),
             changeOrigin: true
         },
         // redirect websocket requests that start with /socket/ to the server on the port 8085
         '/socket/**': {
-            target: 'http://localhost:' + (process.env.SERVER_PROXY_PORT || "8085"),
+            target: 'http://localhost:' + (process.env.SERVER_PROXY_PORT || '8085'),
             ws: true
         }
     }
@@ -43,7 +42,7 @@ console.log('Bundling for ' + mode + '...');
 
 // The HtmlWebpackPlugin allows us to use a template for the index.html page
 // and automatically injects <script> or <link> tags for generated bundles.
-var commonPlugins = [
+const commonPlugins = [
     new HtmlWebpackPlugin({
         filename: 'index.html',
         template: resolve(CONFIG.indexHtmlTemplate)
@@ -63,12 +62,12 @@ module.exports = {
     output: {
         path: resolve(CONFIG.outputDir),
         publicPath: '/',
-        filename: isProduction ? '[name].[hash].js' : '[name].js'
+        filename: isProduction ? '[name].[contenthash].js' : '[name].js'
     },
     mode: mode,
     devtool: isProduction ? 'source-map' : 'eval-source-map',
     optimization: {
-        runtimeChunk: "single",
+        runtimeChunk: 'single',
         moduleIds: 'deterministic',
         // Split the code coming from npm packages into a different file.
         // 3rd party dependencies change less often, let the browser cache them.
@@ -85,7 +84,7 @@ module.exports = {
     //      - HotModuleReplacementPlugin: Enables hot reloading when code changes without refreshing
     plugins: isProduction ?
         commonPlugins.concat([
-            new MiniCssExtractPlugin({ filename: 'style.[name].[hash].css' }),
+            new MiniCssExtractPlugin({ filename: 'style.[name].[contenthash].css' }),
             new CopyWebpackPlugin({ patterns: [{ from: resolve(CONFIG.assetsDir) }] }),
         ])
         : commonPlugins,
@@ -128,7 +127,7 @@ module.exports = {
             },
             {
                 test: /\.js$/,
-                enforce: "pre",
+                enforce: 'pre',
                 use: ['source-map-loader'],
             }
         ]
