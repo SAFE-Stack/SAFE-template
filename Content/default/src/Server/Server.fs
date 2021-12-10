@@ -48,4 +48,7 @@ let app =
         use_gzip
     }
 
-run app
+[<EntryPoint>]
+let main _ =
+    run app
+    0
