@@ -154,6 +154,9 @@ let testTemplateBuild templateType =
         // run build on Shared to avoid race condition between Client and Server
         run dotnet "build" (dir </> "src" </> "Shared")
 
+    if templateType = Normal then
+        run dotnet "run" (dir </> "tests" </> "Server")
+
     run dotnet "tool restore" dir
     let proc =
         if templateType = Normal then
