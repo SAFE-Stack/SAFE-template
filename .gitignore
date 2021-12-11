@@ -7,7 +7,7 @@ bin/
 gen-paket-lock-files/
 /.vs
 .ionide/
-
+.idea/
 .fake
 .ionide
 TestResults.xml
