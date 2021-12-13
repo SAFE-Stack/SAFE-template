@@ -39,24 +39,20 @@ const TEST_CONFIG = {
     devServerProxy: undefined,
 };
 
-module.exports = function(env, arg) {
-    // Mode is passed as a flag to npm run. see the docs for more details on flags https://webpack.js.org/api/cli/#flags
-    const mode = arg.mode ?? 'development';
-    // environment variables docs: https://webpack.js.org/api/cli/#environment-options
-    const config = env.test ? TEST_CONFIG : CONFIG;
-
-    console.log(`Bundling for ${env.test ? 'test' : 'run'} - ${mode} ...`);
-
-    return buildConfig(config, mode);
-};
 
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
-function buildConfig(config, mode) {
+module.exports = function(env, arg) {
+    // Mode is passed as a flag to npm run. see the docs for more details on flags https://webpack.js.org/api/cli/#flags
+    const mode = arg.mode ?? 'development';
+    // environment variables docs: https://webpack.js.org/api/cli/#environment-options
+    const config = env.test ? TEST_CONFIG : CONFIG;
     const isProduction = mode === 'production';
+
+    console.log(`Bundling for ${env.test ? 'test' : 'run'} - ${mode} ...`);
 
     // The HtmlWebpackPlugin allows us to use a template for the index.html page
     // and automatically injects <script> or <link> tags for generated bundles.
@@ -151,7 +147,7 @@ function buildConfig(config, mode) {
             ]
         }
     };
-}
+};
 
 function resolve(filePath) {
     return path.isAbsolute(filePath) ? filePath : path.join(__dirname, filePath);
