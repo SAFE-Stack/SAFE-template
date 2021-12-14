@@ -12,8 +12,8 @@ let client = testList "Client" [
 
         let model, _ = update (AddedTodo newTodo) model
 
-        Expect.equal 1 model.Todos.Length "There should be 1 todo"
-        Expect.equal newTodo model.Todos.[0] "Todo should equal new todo"
+        Expect.equal model.Todos.Length 1 "There should be 1 todo"
+        Expect.equal model.Todos.[0] newTodo "Todo should equal new todo"
 ]
 
 let all =
