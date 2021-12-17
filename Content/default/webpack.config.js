@@ -53,15 +53,6 @@ module.exports = function(env, arg) {
 
     console.log(`Bundling for ${env.test ? 'test' : 'run'} - ${mode} ...`);
 
-    // The HtmlWebpackPlugin allows us to use a template for the index.html page
-    // and automatically injects <script> or <link> tags for generated bundles.
-    const commonPlugins = [
-        new HtmlWebpackPlugin({
-            filename: 'index.html',
-            template: resolve(config.indexHtmlTemplate)
-        })
-    ];
-
     return {
         // In development, split the JavaScript and CSS files in order to
         // have a faster HMR support. In production bundle styles together
@@ -88,23 +79,19 @@ module.exports = function(env, arg) {
                 chunks: 'all'
             }
         },
-        // Besides the HtmlPlugin, we use the following plugins:
-        // PRODUCTION
-        //      - MiniCssExtractPlugin: Extracts CSS from bundle to a different file
-        //          To minify CSS, see https://github.com/webpack-contrib/mini-css-extract-plugin#minimizing-for-production
-        //      - CopyWebpackPlugin: Copies static assets to output directory
-        // DEVELOPMENT
-        //      - HotModuleReplacementPlugin: Enables hot reloading when code changes without refreshing
-        plugins: isProduction ?
-            commonPlugins.concat([
-                new MiniCssExtractPlugin({ filename: 'style.[name].[contenthash].css' }),
-                new CopyWebpackPlugin({ patterns: [{ from: resolve(config.assetsDir) }] }),
-            ])
-            : commonPlugins,
-        resolve: {
-            // See https://github.com/fable-compiler/Fable/issues/1490
-            symlinks: false
-        },
+        plugins: [
+            // ONLY PRODUCTION
+            // MiniCssExtractPlugin: Extracts CSS from bundle to a different file
+            // To minify CSS, see https://github.com/webpack-contrib/mini-css-extract-plugin#minimizing-for-production
+            isProduction && new MiniCssExtractPlugin({ filename: 'style.[name].[contenthash].css' }),
+            // CopyWebpackPlugin: Copies static assets to output directory
+            isProduction && new CopyWebpackPlugin({ patterns: [{ from: resolve(config.assetsDir) }] }),
+
+            // PRODUCTION AND DEVELOPMENT
+            // HtmlWebpackPlugin allows us to use a template for the index.html page
+            // and automatically injects <script> or <link> tags for generated bundles.
+            new HtmlWebpackPlugin({ filename: 'index.html', template: resolve(config.indexHtmlTemplate)})
+        ].filter(Boolean),
         // Configuration for webpack-dev-server
         devServer: {
             static: {
