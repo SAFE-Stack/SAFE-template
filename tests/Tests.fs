@@ -169,7 +169,7 @@ let testTemplateBuild templateType =
         if templateType = Normal then None
         else start dotnet "run" (dir </> "src" </> "Server") |> Some
 
-    let stdOutPhrase = ": Compiled successfully."
+    let stdOutPhrase = "compiled successfully"
     let htmlSearchPhrase = """<title>SAFE Template</title>"""
     try
         let timeout = TimeSpan.FromMinutes 5.
