@@ -6,9 +6,8 @@ This template can be used to generate a full-stack web application using the [SA
 
 You'll need to install the following pre-requisites in order to build SAFE applications
 
-* The [.NET Core SDK](https://www.microsoft.com/net/download) 3.1 or higher.
-* [npm](https://nodejs.org/en/download/) package manager.
-* [Node LTS](https://nodejs.org/en/download/).
+* [.NET Core SDK](https://www.microsoft.com/net/download) 5.0 or higher
+* [Node 16](https://nodejs.org/en/download/)
 
 ## Starting the application
 
