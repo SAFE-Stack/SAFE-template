@@ -23,7 +23,7 @@ Start the client:
 ```bash
 npm install
 dotnet tool restore
-dotnet fable watch src/Client --run webpack-dev-server
+dotnet fable watch src/Client --run npm run start
 ```
 
 Open a browser to `http://localhost:8080` to view the site.
