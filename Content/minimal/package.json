@@ -1,7 +1,10 @@
 {
     "private": true,
+    "scripts": {
+        "start": "webpack-dev-server --mode development"
+    },
     "devDependencies": {
-        "copy-webpack-plugin": "^9.1.0",
+        "copy-webpack-plugin": "^10.0.0",
         "html-webpack-plugin": "^5.5.0",
         "webpack": "^5.64.2",
         "webpack-cli": "^4.9.1",
