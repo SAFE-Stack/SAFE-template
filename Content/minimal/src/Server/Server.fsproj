@@ -11,7 +11,7 @@
     <ProjectReference Include="..\Shared\Shared.fsproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Saturn" Version="0.15.0" />
-    <PackageReference Update="FSharp.Core" Version="6.0.1" />
+    <PackageReference Include="Saturn" Version="0.16.0-preview03" />
+    <PackageReference Update="FSharp.Core" Version="6.0.3" />
   </ItemGroup>
 </Project>
