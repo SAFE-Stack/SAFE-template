@@ -3,7 +3,7 @@ framework: net6.0
 storage: none
 
 nuget Fable.Remoting.Giraffe
-nuget Saturn
+nuget Saturn prerelease
 nuget Expecto
 
 nuget Fable.Core
