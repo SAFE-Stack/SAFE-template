@@ -1,22 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <Description>SAFE Stack Template</Description>
-        <Authors>Tomasz Heimowski</Authors>
-        <PackageProjectUrl>https://github.com/SAFE-Stack/SAFE-template</PackageProjectUrl>
-        <PackageLicenseUrl>https://github.com/SAFE-Stack/SAFE-template/blob/master/LICENSE</PackageLicenseUrl>
-        <PackageIconUrl>https://raw.githubusercontent.com/SAFE-Stack/SAFE-template/master/safe-logo.png</PackageIconUrl>
-        <RepositoryUrl>https://github.com/SAFE-Stack/SAFE-template.git</RepositoryUrl>
-        <PackageTags>template;fsharp;saturn;azure;fable;elmish</PackageTags>
-        <NeutralLanguage>en-US</NeutralLanguage>
-        <PackageType>Template</PackageType>
-        <NoBuild>true</NoBuild>
-        <IncludeBuildOutput>false</IncludeBuildOutput>
-        <TargetFramework>netstandard2.0</TargetFramework>
-        <!-- https://github.com/dotnet/templating/issues/2350#issuecomment-610431461 -->
-        <NoDefaultExcludes>true</NoDefaultExcludes>
-    </PropertyGroup>
-    <PropertyGroup>
-        <ExcludeFromPackage>
+  <PropertyGroup>
+    <Description>SAFE Stack Template</Description>
+    <Authors>Tomasz Heimowski</Authors>
+    <PackageProjectUrl>https://github.com/SAFE-Stack/SAFE-template</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/SAFE-Stack/SAFE-template/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/SAFE-Stack/SAFE-template/master/safe-logo.png</PackageIconUrl>
+    <RepositoryUrl>https://github.com/SAFE-Stack/SAFE-template.git</RepositoryUrl>
+    <PackageTags>template;fsharp;saturn;azure;fable;elmish</PackageTags>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <PackageType>Template</PackageType>
+    <NoBuild>true</NoBuild>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <!-- https://github.com/dotnet/templating/issues/2350#issuecomment-610431461 -->
+    <NoDefaultExcludes>true</NoDefaultExcludes>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ExcludeFromPackage>
 Content/*/.fake/**/*;
 Content/*/.ionide/**/*;
 Content/*/.cache/**/*;
@@ -33,10 +34,11 @@ Content/*/packages/**/*;
 Content/*/paket-files/**/*;
 Content/*/src/Client/deploy/**/*;
         </ExcludeFromPackage>
-</PropertyGroup>
-    <ItemGroup>
-        <Content Include="Content/**/*.*" Exclude="$(ExcludeFromPackage)" >
-                <PackagePath>Content\</PackagePath>
-        </Content>
-    </ItemGroup>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="Content/**/*.*" Exclude="$(ExcludeFromPackage)">
+      <PackagePath>Content\</PackagePath>
+    </Content>
+  </ItemGroup>
+  <Import Project=".paket\Paket.Restore.targets" />
 </Project>

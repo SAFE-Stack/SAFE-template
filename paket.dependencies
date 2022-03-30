@@ -1,6 +1,6 @@
 github fable-compiler/webpack-config-template webpack.config.js
 
-framework: net5.0
+framework: net6.0
 storage: none
 source https://api.nuget.org/v3/index.json
 
