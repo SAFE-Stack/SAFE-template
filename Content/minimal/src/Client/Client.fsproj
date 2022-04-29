@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -12,8 +12,8 @@
     <ProjectReference Include="..\Shared\Shared.fsproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Fable.Browser.DOM" Version="2.9.0" />
-    <PackageReference Include="Fable.Core" Version="3.6.2" />
+    <PackageReference Include="Fable.Browser.DOM" Version="2.10.0" />
+    <PackageReference Include="Fable.Core" Version="3.7.0" />
     <PackageReference Include="Fable.Fetch" Version="2.4.0" />
     <PackageReference Update="FSharp.Core" Version="6.0.3" />
   </ItemGroup>
