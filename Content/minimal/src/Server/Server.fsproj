@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -11,7 +11,7 @@
     <ProjectReference Include="..\Shared\Shared.fsproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Saturn" Version="0.16.0-preview03" />
+    <PackageReference Include="Saturn" Version="0.16.1" />
     <PackageReference Update="FSharp.Core" Version="6.0.3" />
   </ItemGroup>
 </Project>
