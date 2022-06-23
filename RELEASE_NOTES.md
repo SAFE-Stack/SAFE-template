@@ -1,3 +1,14 @@
+#### 4.0.0 - 23.06.2022
+
+* .NET 6.0 - https://github.com/SAFE-Stack/SAFE-template/pull/506
+* Update Fantomas to 4.6 - https://github.com/SAFE-Stack/SAFE-template/pull/499
+* Add server unit tests to CI - https://github.com/SAFE-Stack/SAFE-template/pull/493
+* Webpack improvements - https://github.com/SAFE-Stack/SAFE-template/pull/491
+* Listen on all interfaces including ipv6 - https://github.com/SAFE-Stack/SAFE-template/pull/490
+* Force node v16 and npm v8 - https://github.com/SAFE-Stack/SAFE-template/pull/489
+* Update Server tests to use module that replaced class - https://github.com/SAFE-Stack/SAFE-template/pull/484
+* Include a correctly configured VS launch settings file. - https://github.com/SAFE-Stack/SAFE-template/pull/482
+
 #### 3.1.1 - 31.08.2021
 
 * Fix flags for fable in bundle target - https://github.com/SAFE-Stack/SAFE-template/pull/476
