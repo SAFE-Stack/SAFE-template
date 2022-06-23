@@ -150,6 +150,8 @@ let path = __SOURCE_DIRECTORY__ </> ".." </> "Content"
 let testTemplateBuild templateType =
     let dir = if templateType = Normal then path </> "default" else path </> "minimal"
 
+    run dotnet "tool restore" dir
+
     if templateType = Minimal then
         // run build on Shared to avoid race condition between Client and Server
         run dotnet "build" (dir </> "src" </> "Shared")
@@ -157,7 +159,6 @@ let testTemplateBuild templateType =
     if templateType = Normal then
         run dotnet "run" (dir </> "tests" </> "Server")
 
-    run dotnet "tool restore" dir
     let proc =
         if templateType = Normal then
             start dotnet "run" dir
