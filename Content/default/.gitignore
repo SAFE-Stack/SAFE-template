@@ -11,6 +11,7 @@ obj/
 bin/
 output/
 packages/
+.paket/
 paket-files/
 node_modules/
 release.cmd
