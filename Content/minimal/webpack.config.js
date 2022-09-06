@@ -32,9 +32,9 @@ const devServer = {
     host: '0.0.0.0',
     port: 8080,
     proxy: {
-        // Redirect requests that start with /api/ to the server on port 8085
+        // Redirect requests that start with /api/ to the server on port 5000
         '/api/**': {
-            target: 'http://localhost:8085',
+            target: 'http://localhost:5000',
             changeOrigin: true
         }
     },
