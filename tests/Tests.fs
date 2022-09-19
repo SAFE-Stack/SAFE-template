@@ -45,6 +45,7 @@ let run exe arg dir =
     CreateProcess.fromRawCommandLine exe arg
     |> CreateProcess.withWorkingDirectory dir
     |> CreateProcess.ensureExitCode
+    |> CreateProcess.redirectOutputIfNotRedirected
     |> Proc.run
     |> ignore
 
@@ -84,9 +85,8 @@ let waitForStdOut (proc : Process) (stdOutPhrase : string) timeout =
                     |> Async.AwaitTask
                     |> asyncWithTimeout (TimeSpan.FromSeconds 30.)
                 line <- l
-                printfn "--> %s" line
             with :? TimeoutException ->
-                printfn "--> (line timed out)"
+                failwith "Timeout occurred while waiting for line"
     } |> asyncWithTimeout timeout
 
 
@@ -147,7 +147,7 @@ type TemplateType = Normal | Minimal
 
 let path = __SOURCE_DIRECTORY__ </> ".." </> "Content"
 
-let testTemplateBuild templateType =
+let testTemplateBuild templateType = testCase $"{templateType}" <| fun () ->
     let dir = if templateType = Normal then path </> "default" else path </> "minimal"
 
     run dotnet "tool restore" dir
@@ -168,16 +168,34 @@ let testTemplateBuild templateType =
 
     let extraProc =
         if templateType = Normal then None
-        else start dotnet "run" (dir </> "src" </> "Server") |> Some
+        else
+            let proc = start dotnet "run" (dir </> "src" </> "Server")
+            let wait = waitForStdOut proc "Now listening on:" 
+            Some (proc, wait)
 
     let stdOutPhrase = "compiled successfully"
     let htmlSearchPhrase = """<title>SAFE Template</title>"""
+    let clientUrl = "http://localhost:8080"
+    let serverUrl, searchPhrase =
+        match templateType with
+        | Normal -> "http://localhost:5000/api/ITodosApi/getTodos", "Create new SAFE project" // JSON should contain a todo with such description
+        | Minimal -> "http://localhost:5000/api/hello", "Hello from SAFE!"
     try
         let timeout = TimeSpan.FromMinutes 5.
         waitForStdOut proc stdOutPhrase timeout |> Async.RunSynchronously
-        let response = get "http://localhost:8080"
+        logger.info(
+            eventX "Requesting `{url}`"
+            >> setField "url" clientUrl)
+        let response = get clientUrl
         Expect.stringContains response htmlSearchPhrase
             (sprintf "html fragment not found for %A" templateType)
+        extraProc |> Option.iter (fun (_, wait) -> Async.RunSynchronously (wait timeout))
+        logger.info(
+            eventX "Requesting `{url}`"
+            >> setField "url" serverUrl)
+        let response = get serverUrl
+        Expect.stringContains response searchPhrase
+            (sprintf "plaintext fragment not found for %A at %s" templateType serverUrl)
         logger.info(
             eventX "Run target for `{type}` run successfully"
             >> setField "type" templateType)
@@ -188,5 +206,5 @@ let testTemplateBuild templateType =
                 >> setField "type" templateType)
     finally
         killProcessTree proc.Id
-        extraProc |> Option.map (fun p -> p.Id) |> Option.iter killProcessTree
+        extraProc |> Option.map (fun (p,_) -> p.Id) |> Option.iter killProcessTree
 
