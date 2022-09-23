@@ -1,3 +1,9 @@
+#### 4.1.0 - 23.09.2022
+
+* allow Linux Azure App Service - https://github.com/SAFE-Stack/SAFE-template/pull/528
+* Include launchSettings.json in both templates - https://github.com/SAFE-Stack/SAFE-template/pull/524
+* Pin FSharp.Core ~> 6 - https://github.com/SAFE-Stack/SAFE-template/pull/525
+
 #### 4.0.0 - 23.06.2022
 
 * .NET 6.0 - https://github.com/SAFE-Stack/SAFE-template/pull/506
