@@ -1,13 +1,15 @@
 module ExpectoTemplate
 
+open Expecto
 open SAFE.Tests
 
+let tests = testList "All" [
+    testTemplateBuild Normal
+    testTemplateBuild Minimal
+]
+
 [<EntryPoint>]
-let main argv =
-    try
-        for build in [ Normal; Minimal ] do
-            testTemplateBuild build
-        0
-    with e ->
-        printfn "%O" e
-        1
+let main args =
+    let config =
+        { defaultConfig with runInParallel = false }
+    runTests config tests
