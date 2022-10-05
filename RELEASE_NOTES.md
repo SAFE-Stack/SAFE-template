@@ -1,3 +1,7 @@
+#### 4.1.1 - 05.10.2022
+
+* Fix .net sdk selection in global.json -  https://github.com/SAFE-Stack/SAFE-template/pull/534
+
 #### 4.1.0 - 23.09.2022
 
 * allow Linux Azure App Service - https://github.com/SAFE-Stack/SAFE-template/pull/528
