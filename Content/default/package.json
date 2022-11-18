@@ -1,7 +1,7 @@
 {
     "private": true,
     "engines": {
-        "node": "~16",
+        "node": "~16 || ~18",
         "npm": "~8"
     },
     "scripts": {
