@@ -1,3 +1,8 @@
+#### 4.2.0 - 25.11.2022
+
+* Remove deprecated extension recommendation - https://github.com/SAFE-Stack/SAFE-template/pull/536
+* Update package.json files to allow node 18 (as well as 16) - https://github.com/SAFE-Stack/SAFE-template/pull/541
+
 #### 4.1.1 - 05.10.2022
 
 * Fix .net sdk selection in global.json -  https://github.com/SAFE-Stack/SAFE-template/pull/534
