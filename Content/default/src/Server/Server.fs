@@ -17,22 +17,21 @@ module Storage =
             Error "Invalid todo"
 
     do
-        addTodo (Todo.create "Create new SAFE project")
-        |> ignore
+        addTodo (Todo.create "Create new SAFE project") |> ignore
 
         addTodo (Todo.create "Write your app") |> ignore
         addTodo (Todo.create "Ship it !!!") |> ignore
 
-let todosApi =
-    { getTodos = fun () -> async { return Storage.todos |> List.ofSeq }
-      addTodo =
-        fun todo ->
-            async {
-                return
-                    match Storage.addTodo todo with
-                    | Ok () -> todo
-                    | Error e -> failwith e
-            } }
+let todosApi = {
+    getTodos = fun () -> async { return Storage.todos |> List.ofSeq }
+    addTodo =
+        fun todo -> async {
+            return
+                match Storage.addTodo todo with
+                | Ok() -> todo
+                | Error e -> failwith e
+        }
+}
 
 let webApp =
     Remoting.createApi ()
@@ -40,13 +39,12 @@ let webApp =
     |> Remoting.fromValue todosApi
     |> Remoting.buildHttpHandler
 
-let app =
-    application {
-        use_router webApp
-        memory_cache
-        use_static "public"
-        use_gzip
-    }
+let app = application {
+    use_router webApp
+    memory_cache
+    use_static "public"
+    use_gzip
+}
 
 [<EntryPoint>]
 let main _ =

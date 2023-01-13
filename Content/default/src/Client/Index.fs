@@ -34,7 +34,11 @@ let update (msg: Msg) (model: Model) : Model * Cmd<Msg> =
         let cmd = Cmd.OfAsync.perform todosApi.addTodo todo AddedTodo
 
         { model with Input = "" }, cmd
-    | AddedTodo todo -> { model with Todos = model.Todos @ [ todo ] }, Cmd.none
+    | AddedTodo todo ->
+        { model with
+            Todos = model.Todos @ [ todo ]
+        },
+        Cmd.none
 
 open Feliz
 open Feliz.Bulma
@@ -44,12 +48,7 @@ let navBrand =
         Bulma.navbarItem.a [
             prop.href "https://safe-stack.github.io/"
             navbarItem.isActive
-            prop.children [
-                Html.img [
-                    prop.src "/favicon.png"
-                    prop.alt "Logo"
-                ]
-            ]
+            prop.children [ Html.img [ prop.src "/favicon.png"; prop.alt "Logo" ] ]
         ]
     ]
 
@@ -96,21 +95,14 @@ let view (model: Model) (dispatch: Msg -> unit) =
             style.backgroundPosition "no-repeat center center fixed"
         ]
         prop.children [
-            Bulma.heroHead [
-                Bulma.navbar [
-                    Bulma.container [ navBrand ]
-                ]
-            ]
+            Bulma.heroHead [ Bulma.navbar [ Bulma.container [ navBrand ] ] ]
             Bulma.heroBody [
                 Bulma.container [
                     Bulma.column [
                         column.is6
                         column.isOffset3
                         prop.children [
-                            Bulma.title [
-                                text.hasTextCentered
-                                prop.text "SAFE.App"
-                            ]
+                            Bulma.title [ text.hasTextCentered; prop.text "SAFE.App" ]
                             containerBox model dispatch
                         ]
                     ]
