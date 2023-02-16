@@ -11,6 +11,7 @@ module Commands =
     type Command =
         | AddTodo of Todo
         | RemoveTodo of Guid
+        | Add2Todos of Guid*Guid
 
         interface Executable<Todos, Event> with
             member this.Execute (x: Todos) =
@@ -26,11 +27,10 @@ module Commands =
                         | Ok _ -> [Event.TodoRemoved g] |> Ok
                         | Error x -> x |> Error
 
-                // how we can deal with commands returning multiple events
-                // | Add2Todos (t1, t2) ->
-                //     let events = [Event.TodoAdded t1; TodoAdded t2]
-                //     let evolved = fun () -> events |> evolve x
-                //     match
-                //         Cache.memoize (fun _ -> evolved()) (x, [Event.TodoAdded t1; TodoAdded t2] ) with
-                //         | Ok _ -> events |>  Ok
-                //         | Error x -> x |> Error
+                | Add2Todos (t1, t2) ->
+                    let events = [Event.TodoAdded t1; TodoAdded t2]
+                    let evolved = fun () -> events |> evolve x
+                    match
+                        Cache.memoize (fun _ -> evolved()) (x, [Event.TodoAdded t1; TodoAdded t2] ) with
+                        | Ok _ -> events |>  Ok
+                        | Error x -> x |> Error
