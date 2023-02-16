@@ -1,0 +1,5 @@
+Fake.Core.Target
+Fake.IO.FileSystem
+Farmer
+FSharpPlus
+Newtonsoft.Json
