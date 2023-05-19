@@ -3,21 +3,21 @@ framework: net6.0
 storage: none
 
 nuget Fsharp.Core ~> 6
-nuget Fable.Remoting.Giraffe
-nuget Saturn
-nuget Expecto
+nuget Fable.Remoting.Giraffe ~> 5
+nuget Saturn ~> 0
+nuget Expecto ~> 9
 
-nuget Fable.Core
-nuget Fable.Elmish
-nuget Fable.Elmish.React
-nuget Fable.Elmish.Debugger
-nuget Fable.Elmish.HMR
-nuget Fable.Mocha
-nuget Fable.React
-nuget Fable.Remoting.Client
-nuget Feliz
-nuget Feliz.Bulma
+nuget Fable.Core ~> 3
+nuget Fable.Elmish ~> 3
+nuget Fable.Elmish.React ~> 3
+nuget Fable.Elmish.Debugger ~> 3
+nuget Fable.Elmish.HMR ~> 5
+nuget Fable.Mocha ~> 2
+nuget Fable.React ~> 7
+nuget Fable.Remoting.Client ~> 7
+nuget Feliz ~> 1
+nuget Feliz.Bulma ~> 2
 
-nuget Fake.Core.Target
-nuget Fake.IO.FileSystem
-nuget Farmer
+nuget Fake.Core.Target ~> 5
+nuget Fake.IO.FileSystem ~> 5
+nuget Farmer ~> 1
