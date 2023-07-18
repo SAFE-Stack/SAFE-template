@@ -7,16 +7,14 @@ nuget Fable.Remoting.Giraffe ~> 5
 nuget Saturn ~> 0
 nuget Expecto ~> 9
 
-nuget Fable.Core ~> 3
-nuget Fable.Elmish ~> 3
-nuget Fable.Elmish.React ~> 3
-nuget Fable.Elmish.Debugger ~> 3
-nuget Fable.Elmish.HMR ~> 5
+nuget Fable.Core ~> 4
+nuget Fable.Elmish ~> 4
+nuget Fable.Elmish.React ~> 4
+nuget Fable.Elmish.Debugger ~> 4
+nuget Fable.Elmish.HMR ~> 7
 nuget Fable.Mocha ~> 2
-nuget Fable.React ~> 7
 nuget Fable.Remoting.Client ~> 7
-nuget Feliz ~> 1
-nuget Feliz.Bulma ~> 2
+nuget Feliz ~> 2
 
 nuget Fake.Core.Target ~> 5
 nuget Fake.IO.FileSystem ~> 5

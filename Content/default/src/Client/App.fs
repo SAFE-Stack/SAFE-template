@@ -3,6 +3,10 @@ module App
 open Elmish
 open Elmish.React
 
+open Fable.Core.JsInterop
+
+importSideEffects "./index.css"
+
 //-:cnd:noEmit
 #if DEBUG
 open Elmish.Debug
