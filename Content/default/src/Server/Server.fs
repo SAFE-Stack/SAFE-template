@@ -17,8 +17,7 @@ module Storage =
             Error "Invalid todo"
 
     do
-        addTodo (Todo.create "Create new SAFE project")
-        |> ignore
+        addTodo (Todo.create "Create new SAFE project") |> ignore
 
         addTodo (Todo.create "Write your app") |> ignore
         addTodo (Todo.create "Ship it !!!") |> ignore
@@ -30,7 +29,7 @@ let todosApi =
             async {
                 return
                     match Storage.addTodo todo with
-                    | Ok () -> todo
+                    | Ok() -> todo
                     | Error e -> failwith e
             } }
 
