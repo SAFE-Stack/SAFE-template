@@ -23,14 +23,14 @@ Target.create "Clean" (fun _ ->
 Target.create "InstallClient" (fun _ -> run npm [ "install" ] ".")
 
 Target.create "Bundle" (fun _ ->
-    [ "server", dotnet [ "publish"; "-c"; "Release"; "-o"; $"\"{deployPath}\"" ] serverPath
+    [ "server", dotnet [ "publish"; "-c"; "Release"; "-o"; deployPath ] serverPath
       "client", dotnet [ "fable"; "-o"; "output"; "-s"; "--run"; "npm"; "run"; "build" ] clientPath ]
     |> runParallel
 )
 
 Target.create "Azure" (fun _ ->
     let web = webApp {
-        name "SAFE.App"
+        name "SAFE-App"
         operating_system OS.Windows
         runtime_stack Runtime.DotNet60
         zip_deploy "deploy"
@@ -41,7 +41,7 @@ Target.create "Azure" (fun _ ->
     }
 
     deployment
-    |> Deploy.execute "SAFE.App" Deploy.NoParameters
+    |> Deploy.execute "SAFE-App" Deploy.NoParameters
     |> ignore
 )
 
