@@ -23,7 +23,7 @@ Target.create "Clean" (fun _ ->
 Target.create "InstallClient" (fun _ -> run npm [ "install" ] ".")
 
 Target.create "Bundle" (fun _ ->
-    [ "server", dotnet [ "publish"; "-c"; "Release"; "-o"; $"\"{deployPath}\"" ] serverPath
+    [ "server", dotnet [ "publish"; "-c"; "Release"; "-o"; deployPath ] serverPath
       "client", dotnet [ "fable"; "-o"; "output"; "-s"; "--run"; "npm"; "run"; "build" ] clientPath ]
     |> runParallel
 )
