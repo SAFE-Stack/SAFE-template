@@ -170,12 +170,20 @@ let testTemplateBuild templateType = testCase $"{templateType}" <| fun () ->
         if templateType = Normal then None
         else
             let proc = start dotnet "run" (dir </> "src" </> "Server")
-            let wait = waitForStdOut proc "Now listening on:" 
+            let wait = waitForStdOut proc "Now listening on:"
             Some (proc, wait)
 
-    let stdOutPhrase = "compiled successfully"
+    let stdOutPhrase =
+        match templateType with
+        | Normal -> "ready in"
+        | Minimal -> "compiled successfully"
     let htmlSearchPhrase = """<title>SAFE Template</title>"""
-    let clientUrl = "http://localhost:8080"
+    let clientUrl =
+        let baseUrl = "http://localhost:8080"
+        match templateType with
+        //vite will not serve up from root
+        | Normal -> $"{baseUrl}/index.html"
+        | Minimal -> baseUrl
     let serverUrl, searchPhrase =
         match templateType with
         | Normal -> "http://localhost:5000/api/ITodosApi/getTodos", "Create new SAFE project" // JSON should contain a todo with such description
