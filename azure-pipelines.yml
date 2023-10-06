@@ -2,6 +2,9 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
+- task: UseDotNet@2
+  inputs:
+      useGlobalJson: true
 - script: |
     dotnet tool restore
     dotnet run --project tests/tests.fsproj
