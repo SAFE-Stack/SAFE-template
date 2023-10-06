@@ -4,9 +4,8 @@ pool:
 steps:
 - task: UseDotNet@2
   inputs:
-      useGlobalJson: true
-      includePreviewVersions: true
-      
+      version: '8.0.100-rc.1.23463.5'
+
 - script: |
     dotnet tool restore
     dotnet run --project tests/tests.fsproj
