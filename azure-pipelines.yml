@@ -5,6 +5,8 @@ steps:
 - task: UseDotNet@2
   inputs:
       useGlobalJson: true
+      includePreviewVersions: true
+      
 - script: |
     dotnet tool restore
     dotnet run --project tests/tests.fsproj
