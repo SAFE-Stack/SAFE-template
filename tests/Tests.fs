@@ -12,6 +12,7 @@ open Expecto.Logging.Message
 open Fake.Core
 open Fake.IO
 open Fake.IO.FileSystemOperators
+open Polly
 
 let dotnet =
     match Environment.GetEnvironmentVariable "DOTNET_PATH" with
@@ -89,6 +90,13 @@ let waitForStdOut (proc : Process) (stdOutPhrase : string) timeout =
                 failwith "Timeout occurred while waiting for line"
     } |> asyncWithTimeout timeout
 
+let waitAndRetry seconds times (func: unit -> 'result) =
+    Policy
+        .Handle<Exception>()
+        .WaitAndRetry(
+            retryCount = times,
+            sleepDurationProvider = (fun _ _ -> TimeSpan.FromSeconds seconds))
+        .Execute(func)
 
 let get (url: string) =
     use client = new HttpClient ()
@@ -194,7 +202,7 @@ let testTemplateBuild templateType = testCase $"{templateType}" <| fun () ->
         logger.info(
             eventX "Requesting `{url}`"
             >> setField "url" clientUrl)
-        let response = get clientUrl
+        let response = waitAndRetry 3 5 (fun () -> get clientUrl)
         Expect.stringContains response htmlSearchPhrase
             (sprintf "html fragment not found for %A" templateType)
         extraProc |> Option.iter (fun (_, wait) -> Async.RunSynchronously (wait timeout))

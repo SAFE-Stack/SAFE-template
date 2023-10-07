@@ -188,6 +188,9 @@ NUGET
     NuGet.Protocol (6.0)
       NuGet.Packaging (>= 6.0)
     NuGet.Versioning (6.0)
+    Polly (8.0)
+      Polly.Core (>= 8.0)
+    Polly.Core (8.0)
     runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl (4.3.3)
     runtime.debian.9-x64.runtime.native.System.Security.Cryptography.OpenSsl (4.3.3)
     runtime.fedora.23-x64.runtime.native.System.Security.Cryptography.OpenSsl (4.3.3)
@@ -492,4 +495,4 @@ NUGET
       System.Drawing.Common (>= 6.0)
 GITHUB
   remote: fable-compiler/webpack-config-template
-    webpack.config.js (4babca79a63a0be847835e2b9e7eb25e19c3aaef)
+    webpack.config.js (7c7653b8ab09546481a74b48a55192a9803fbaa1)

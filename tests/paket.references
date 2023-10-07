@@ -2,3 +2,4 @@ System.Net.Http
 Expecto.FsCheck
 Expecto.TestResults
 Fake.DotNet.Cli
+Polly
