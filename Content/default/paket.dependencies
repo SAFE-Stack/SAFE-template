@@ -1,5 +1,5 @@
 source https://api.nuget.org/v3/index.json
-framework: net6.0
+framework: net8.0
 storage: none
 
 nuget Fsharp.Core ~> 6
