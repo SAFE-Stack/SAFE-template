@@ -10,7 +10,12 @@
     <div style="text-align: center; padding: 40">
         <img src="favicon.png" />
         <h1>SAFE.App</h1>
-        <h2 id="header"></div>
+        <h2 id="header"></h2>
     </div>
+    <!-- Polyfill for remotedev -->
+    <script type="text/javascript">
+        var global = global || window;
+    </script>
+    <script type="module" src="client.fs.js"></script>
 </body>
 </html>
