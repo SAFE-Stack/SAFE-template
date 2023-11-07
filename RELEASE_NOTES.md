@@ -1,3 +1,12 @@
+#### 4.3.0 - 07.11.2023
+
+* Remove old unused reference to Fulma - https://github.com/SAFE-Stack/SAFE-template/pull/546
+* Fix failing build because of NPM version - https://github.com/SAFE-Stack/SAFE-template/pull/560
+* Use CreateProcess.fromRawCommand - https://github.com/SAFE-Stack/SAFE-template/pull/558
+* Specify major version in paket.dependencies - https://github.com/SAFE-Stack/SAFE-template/pull/559
+* Update Fable to 3.7.22 - https://github.com/SAFE-Stack/SAFE-template/pull/562
+* Fix issues in default template build script for deploy to Azure - https://github.com/SAFE-Stack/SAFE-template/pull/566
+
 #### 4.2.0 - 25.11.2022
 
 * Remove deprecated extension recommendation - https://github.com/SAFE-Stack/SAFE-template/pull/536
