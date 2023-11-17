@@ -7,7 +7,7 @@
   <ItemGroup>
     <None Include="index.html" />
     <Compile Include="Client.fs" />
-    <TypeScriptCompile Include="vite.config.ts" />
+    <TypeScriptCompile Include="vite.config.mts" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Shared\Shared.fsproj" />
