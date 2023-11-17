@@ -52,7 +52,7 @@ Target.create "Install" (fun _ ->
     let args=
       let nupkgFileName = sprintf "SAFE.Template.%s.nupkg" release.NugetVersion
       let fullPathToNupkg = System.IO.Path.Combine(nupkgDir, nupkgFileName)
-      sprintf "-i \"%s\"" fullPathToNupkg
+      sprintf "install \"%s\"" fullPathToNupkg
     let result = DotNet.exec (fun x -> { x with DotNetCliPath = "dotnet" }) "new" args
     if not result.OK then failwithf "`dotnet %s` failed with %O" args result
 )
