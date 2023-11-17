@@ -12,6 +12,6 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Saturn" Version="0.16.1" />
-    <PackageReference Update="FSharp.Core" Version="6.0.3" />
+    <PackageReference Update="FSharp.Core" Version="8.0.100" />
   </ItemGroup>
 </Project>
