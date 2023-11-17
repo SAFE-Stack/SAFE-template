@@ -2,7 +2,7 @@ source https://api.nuget.org/v3/index.json
 framework: net8.0
 storage: none
 
-nuget Fsharp.Core ~> 6
+nuget FSharp.Core ~> 8
 nuget Fable.Remoting.Giraffe ~> 5
 nuget Saturn ~> 0
 nuget Expecto ~> 9

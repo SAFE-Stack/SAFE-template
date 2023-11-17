@@ -5,6 +5,8 @@
         <DefineConstants>FABLE_COMPILER</DefineConstants>
     </PropertyGroup>
     <ItemGroup>
+        <None Include="postcss.config.js" />
+        <None Include="tailwind.config.js" />
         <None Include="index.html" />
         <None Include="paket.references" />
         <Compile Include="Index.fs" />
