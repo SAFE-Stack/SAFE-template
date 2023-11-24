@@ -16,12 +16,7 @@ export default defineConfig({
             "/api/": {
                 target: proxyTarget,
                 changeOrigin: true,
-            },
-            // redirect websocket requests that start with /socket/ to the server on the port 5000
-            "/socket/": {
-                target: proxyTarget,
-                ws: true,
-            },
-        },
-    },
+            }
+        }
+    }
 });
