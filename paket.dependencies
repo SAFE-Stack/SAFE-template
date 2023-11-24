@@ -1,9 +1,10 @@
 github fable-compiler/webpack-config-template webpack.config.js
 
-framework: net6.0
+framework: net8.0
 storage: none
 source https://api.nuget.org/v3/index.json
 
+nuget Polly
 nuget System.Net.Http
 
 nuget Fake.Core.ReleaseNotes

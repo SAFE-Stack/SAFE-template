@@ -34,87 +34,64 @@ let update (msg: Msg) (model: Model) : Model * Cmd<Msg> =
         let cmd = Cmd.OfAsync.perform todosApi.addTodo todo AddedTodo
 
         { model with Input = "" }, cmd
-    | AddedTodo todo -> { model with Todos = model.Todos @ [ todo ] }, Cmd.none
+    | AddedTodo todo ->
+        { model with
+            Todos = model.Todos @ [ todo ] },
+        Cmd.none
 
 open Feliz
-open Feliz.Bulma
 
-let navBrand =
-    Bulma.navbarBrand.div [
-        Bulma.navbarItem.a [
-            prop.href "https://safe-stack.github.io/"
-            navbarItem.isActive
-            prop.children [
-                Html.img [
-                    prop.src "/favicon.png"
-                    prop.alt "Logo"
-                ]
-            ]
-        ]
-    ]
+let private todoAction (model: Model) (dispatch: Dispatch<Msg>) =
+    Html.div
+        [ prop.className "flex flex-col sm:flex-row mt-4 gap-4"
+          prop.children
+              [ Html.input
+                    [ prop.className "shadow appearance-none border rounded w-full py-2 px-3 outline-none focus:ring-2 ring-teal-300 text-grey-darker"
+                      prop.value model.Input
+                      prop.placeholder "What needs to be done?"
+                      prop.autoFocus true
+                      prop.onChange (SetInput >> dispatch)
+                      prop.onKeyPress (fun ev ->
+                          if ev.key = "Enter" then
+                              dispatch AddTodo) ]
+                Html.button
+                    [ prop.className
+                          "flex-no-shrink p-2 px-12 rounded bg-teal-600 outline-none focus:ring-2 ring-teal-300 font-bold text-white hover:bg-teal disabled:opacity-30 disabled:cursor-not-allowed"
+                      prop.disabled (Todo.isValid model.Input |> not)
+                      prop.onClick (fun _ -> dispatch AddTodo)
+                      prop.text "Add" ] ] ]
 
-let containerBox (model: Model) (dispatch: Msg -> unit) =
-    Bulma.box [
-        Bulma.content [
-            Html.ol [
-                for todo in model.Todos do
-                    Html.li [ prop.text todo.Description ]
-            ]
-        ]
-        Bulma.field.div [
-            field.isGrouped
-            prop.children [
-                Bulma.control.p [
-                    control.isExpanded
-                    prop.children [
-                        Bulma.input.text [
-                            prop.value model.Input
-                            prop.placeholder "What needs to be done?"
-                            prop.onChange (fun x -> SetInput x |> dispatch)
-                        ]
-                    ]
-                ]
-                Bulma.control.p [
-                    Bulma.button.a [
-                        color.isPrimary
-                        prop.disabled (Todo.isValid model.Input |> not)
-                        prop.onClick (fun _ -> dispatch AddTodo)
-                        prop.text "Add"
-                    ]
-                ]
-            ]
-        ]
-    ]
+let private todoList (model: Model) (dispatch: Dispatch<Msg>) =
+    Html.div
+        [ prop.className "bg-white/80 rounded-md shadow-md p-4 w-5/6 lg:w-3/4 lg:max-w-2xl"
+          prop.children
+              [ Html.ol
+                    [ prop.className "list-decimal ml-6"
+                      prop.children
+                          [ for todo in model.Todos do
+                                Html.li [ prop.className "my-1"; prop.text todo.Description ] ] ]
 
-let view (model: Model) (dispatch: Msg -> unit) =
-    Bulma.hero [
-        hero.isFullHeight
-        color.isPrimary
-        prop.style [
-            style.backgroundSize "cover"
-            style.backgroundImageUrl "https://unsplash.it/1200/900?random"
-            style.backgroundPosition "no-repeat center center fixed"
-        ]
-        prop.children [
-            Bulma.heroHead [
-                Bulma.navbar [
-                    Bulma.container [ navBrand ]
-                ]
-            ]
-            Bulma.heroBody [
-                Bulma.container [
-                    Bulma.column [
-                        column.is6
-                        column.isOffset3
-                        prop.children [
-                            Bulma.title [
-                                text.hasTextCentered
-                                prop.text "SAFE.App"
-                            ]
-                            containerBox model dispatch
-                        ]
-                    ]
-                ]
-            ]
-        ]
-    ]
+                todoAction model dispatch ] ]
+
+let view (model: Model) (dispatch: Dispatch<Msg>) =
+    Html.section
+        [ prop.className "h-screen w-screen"
+          prop.style
+              [ style.backgroundSize "cover"
+                style.backgroundImageUrl "https://unsplash.it/1200/900?random"
+                style.backgroundPosition "no-repeat center center fixed" ]
+
+          prop.children
+              [ Html.a
+                    [ prop.href "https://safe-stack.github.io/"
+                      prop.className "absolute block ml-12 h-12 w-12 bg-teal-300 hover:cursor-pointer hover:bg-teal-400"
+                      prop.children [ Html.img [ prop.src "/favicon.png"; prop.alt "Logo" ] ] ]
+
+                Html.div
+                    [ prop.className "flex flex-col items-center justify-center h-full"
+                      prop.children
+                          [ Html.h1
+                                [ prop.className
+                                      "text-center text-5xl font-bold text-white mb-3 rounded-md p-4"
+                                  prop.text "SAFE.App" ]
+                            todoList model dispatch ] ] ] ]

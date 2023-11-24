@@ -12,6 +12,7 @@ open Expecto.Logging.Message
 open Fake.Core
 open Fake.IO
 open Fake.IO.FileSystemOperators
+open Polly
 
 let dotnet =
     match Environment.GetEnvironmentVariable "DOTNET_PATH" with
@@ -89,6 +90,13 @@ let waitForStdOut (proc : Process) (stdOutPhrase : string) timeout =
                 failwith "Timeout occurred while waiting for line"
     } |> asyncWithTimeout timeout
 
+let waitAndRetry seconds times (func: unit -> 'result) =
+    Policy
+        .Handle<Exception>()
+        .WaitAndRetry(
+            retryCount = times,
+            sleepDurationProvider = (fun _ _ -> TimeSpan.FromSeconds seconds))
+        .Execute(func)
 
 let get (url: string) =
     use client = new HttpClient ()
@@ -164,18 +172,19 @@ let testTemplateBuild templateType = testCase $"{templateType}" <| fun () ->
             start dotnet "run" dir
         else
             run npm "install" dir
-            start dotnet "fable watch src/Client --run webpack-dev-server" dir
+            start dotnet "fable watch --run vite" (dir </> "src" </> "Client" )
 
     let extraProc =
         if templateType = Normal then None
         else
             let proc = start dotnet "run" (dir </> "src" </> "Server")
-            let wait = waitForStdOut proc "Now listening on:" 
+            let wait = waitForStdOut proc "Now listening on:"
             Some (proc, wait)
 
-    let stdOutPhrase = "compiled successfully"
+    let stdOutPhrase = "ready in"
     let htmlSearchPhrase = """<title>SAFE Template</title>"""
-    let clientUrl = "http://localhost:8080"
+    //vite will not serve up from root
+    let clientUrl = "http://localhost:8080/index.html"
     let serverUrl, searchPhrase =
         match templateType with
         | Normal -> "http://localhost:5000/api/ITodosApi/getTodos", "Create new SAFE project" // JSON should contain a todo with such description
@@ -186,7 +195,7 @@ let testTemplateBuild templateType = testCase $"{templateType}" <| fun () ->
         logger.info(
             eventX "Requesting `{url}`"
             >> setField "url" clientUrl)
-        let response = get clientUrl
+        let response = waitAndRetry 3 5 (fun () -> get clientUrl)
         Expect.stringContains response htmlSearchPhrase
             (sprintf "html fragment not found for %A" templateType)
         extraProc |> Option.iter (fun (_, wait) -> Async.RunSynchronously (wait timeout))

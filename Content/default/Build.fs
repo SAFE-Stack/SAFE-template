@@ -24,15 +24,15 @@ Target.create "InstallClient" (fun _ -> run npm [ "install" ] ".")
 
 Target.create "Bundle" (fun _ ->
     [ "server", dotnet [ "publish"; "-c"; "Release"; "-o"; deployPath ] serverPath
-      "client", dotnet [ "fable"; "-o"; "output"; "-s"; "--run"; "npm"; "run"; "build" ] clientPath ]
+      "client", dotnet [ "fable"; "-o"; "output"; "-s"; "--run"; "npx"; "vite"; "build" ] clientPath ]
     |> runParallel
 )
 
 Target.create "Azure" (fun _ ->
     let web = webApp {
         name "SAFE-App"
-        operating_system OS.Windows
-        runtime_stack Runtime.DotNet60
+        operating_system OS.Linux
+        runtime_stack (DotNet "8.0")
         zip_deploy "deploy"
     }
     let deployment = arm {
@@ -48,14 +48,14 @@ Target.create "Azure" (fun _ ->
 Target.create "Run" (fun _ ->
     run dotnet [ "build" ] sharedPath
     [ "server", dotnet [ "watch"; "run" ] serverPath
-      "client", dotnet [ "fable"; "watch"; "-o"; "output"; "-s"; "--run"; "npm"; "run"; "start" ] clientPath ]
+      "client", dotnet [ "fable"; "watch"; "-o"; "output"; "-s"; "--run"; "npx"; "vite" ] clientPath ]
     |> runParallel
 )
 
 Target.create "RunTests" (fun _ ->
     run dotnet [ "build" ] sharedTestsPath
     [ "server", dotnet [ "watch"; "run" ] serverTestsPath
-      "client", dotnet [ "fable"; "watch"; "-o"; "output"; "-s"; "--run"; "npm"; "run"; "test:live" ] clientTestsPath ]
+      "client", dotnet [ "fable"; "watch"; "-o"; "output"; "-s"; "--run"; "npx"; "vite" ] clientTestsPath ]
     |> runParallel
 )
 
