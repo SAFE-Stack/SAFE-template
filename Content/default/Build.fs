@@ -31,8 +31,8 @@ Target.create "Bundle" (fun _ ->
 Target.create "Azure" (fun _ ->
     let web = webApp {
         name "SAFE-App"
-        operating_system OS.Windows
-        runtime_stack Runtime.DotNet60
+        operating_system OS.Linux
+        runtime_stack (DotNet "8.0")
         zip_deploy "deploy"
     }
     let deployment = arm {

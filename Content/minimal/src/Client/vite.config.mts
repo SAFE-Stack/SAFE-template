@@ -1,6 +1,5 @@
 import { defineConfig } from "vite";
 
-
 const proxyPort = process.env.SERVER_PROXY_PORT || "5000";
 const proxyTarget = "http://localhost:" + proxyPort;
 
