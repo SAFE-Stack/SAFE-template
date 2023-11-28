@@ -24,13 +24,12 @@ module Storage =
 let todosApi = {
     getTodos = fun () -> async { return Storage.todos |> List.ofSeq }
     addTodo =
-        fun todo ->
-            async {
-                return
-                    match Storage.addTodo todo with
-                    | Ok() -> todo
-                    | Error e -> failwith e
-            }
+        fun todo -> async {
+            return
+                match Storage.addTodo todo with
+                | Ok() -> todo
+                | Error e -> failwith e
+        }
 }
 
 let webApp =
@@ -39,13 +38,12 @@ let webApp =
     |> Remoting.fromValue todosApi
     |> Remoting.buildHttpHandler
 
-let app =
-    application {
-        use_router webApp
-        memory_cache
-        use_static "public"
-        use_gzip
-    }
+let app = application {
+    use_router webApp
+    memory_cache
+    use_static "public"
+    use_gzip
+}
 
 [<EntryPoint>]
 let main _ =
