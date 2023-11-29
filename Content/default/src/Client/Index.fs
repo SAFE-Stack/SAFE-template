@@ -17,14 +17,12 @@ let todosApi =
     |> Remoting.withRouteBuilder Route.builder
     |> Remoting.buildProxy<ITodosApi>
 
-let init () : Model * Cmd<Msg> =
+let init () =
     let model = { Todos = []; Input = "" }
-
     let cmd = Cmd.OfAsync.perform todosApi.getTodos () GotTodos
-
     model, cmd
 
-let update (msg: Msg) (model: Model) : Model * Cmd<Msg> =
+let update msg model =
     match msg with
     | GotTodos todos -> { model with Todos = todos }, Cmd.none
     | SetInput value -> { model with Input = value }, Cmd.none
@@ -43,7 +41,7 @@ let update (msg: Msg) (model: Model) : Model * Cmd<Msg> =
 
 open Feliz
 
-let private todoAction (model: Model) (dispatch: Dispatch<Msg>) =
+let private todoAction model dispatch =
     Html.div [
         prop.classes [ "flex"; "flex-col"; "sm:flex-row"; "mt-4"; "gap-4" ]
         prop.children [
@@ -92,7 +90,7 @@ let private todoAction (model: Model) (dispatch: Dispatch<Msg>) =
         ]
     ]
 
-let private todoList (model: Model) (dispatch: Dispatch<Msg>) =
+let private todoList model dispatch =
     Html.div [
         prop.classes [
             "bg-white/80"
@@ -116,7 +114,7 @@ let private todoList (model: Model) (dispatch: Dispatch<Msg>) =
         ]
     ]
 
-let view (model: Model) (dispatch: Dispatch<Msg>) =
+let view model dispatch =
     Html.section [
         prop.classes [ "h-screen"; "w-screen" ]
         prop.style [
