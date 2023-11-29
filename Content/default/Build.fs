@@ -30,19 +30,17 @@ Target.create "Bundle" (fun _ ->
     |> runParallel)
 
 Target.create "Azure" (fun _ ->
-    let web =
-        webApp {
-            name "SAFE-App"
-            operating_system OS.Linux
-            runtime_stack (DotNet "8.0")
-            zip_deploy "deploy"
-        }
+    let web = webApp {
+        name "SAFE-App"
+        operating_system OS.Linux
+        runtime_stack (DotNet "8.0")
+        zip_deploy "deploy"
+    }
 
-    let deployment =
-        arm {
-            location Location.WestEurope
-            add_resource web
-        }
+    let deployment = arm {
+        location Location.WestEurope
+        add_resource web
+    }
 
     deployment |> Deploy.execute "SAFE-App" Deploy.NoParameters |> ignore)
 
@@ -64,7 +62,7 @@ Target.create "RunTests" (fun _ ->
     ]
     |> runParallel)
 
-Target.create "Format" (fun _ -> run dotnet [ "fantomas"; "."; "-r" ] "src")
+Target.create "Format" (fun _ -> run dotnet [ "fantomas"; "." ] ".")
 
 open Fake.Core.TargetOperators
 
