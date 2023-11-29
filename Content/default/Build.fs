@@ -1,80 +1,105 @@
-open Fake.Core
-open Fake.IO
 open Farmer
 open Farmer.Builders
-
-open Helpers
-
-initializeContext ()
-
-let sharedPath = Path.getFullName "src/Shared"
-let serverPath = Path.getFullName "src/Server"
-let clientPath = Path.getFullName "src/Client"
-let deployPath = Path.getFullName "deploy"
-let sharedTestsPath = Path.getFullName "tests/Shared"
-let serverTestsPath = Path.getFullName "tests/Server"
-let clientTestsPath = Path.getFullName "tests/Client"
-
-Target.create "Clean" (fun _ ->
-    Shell.cleanDir deployPath
-    run dotnet [ "fable"; "clean"; "--yes" ] clientPath // Delete *.fs.js files created by Fable
-)
-
-Target.create "InstallClient" (fun _ -> run npm [ "install" ] ".")
-
-Target.create "Bundle" (fun _ ->
-    [
-        "server", dotnet [ "publish"; "-c"; "Release"; "-o"; deployPath ] serverPath
-        "client", dotnet [ "fable"; "-o"; "output"; "-s"; "--run"; "npx"; "vite"; "build" ] clientPath
-    ]
-    |> runParallel)
-
-Target.create "Azure" (fun _ ->
-    let web =
-        webApp {
-            name "SAFE-App"
-            operating_system OS.Linux
-            runtime_stack (DotNet "8.0")
-            zip_deploy "deploy"
-        }
-
-    let deployment =
-        arm {
-            location Location.WestEurope
-            add_resource web
-        }
-
-    deployment |> Deploy.execute "SAFE-App" Deploy.NoParameters |> ignore)
-
-Target.create "Run" (fun _ ->
-    run dotnet [ "build" ] sharedPath
-
-    [
-        "server", dotnet [ "watch"; "run" ] serverPath
-        "client", dotnet [ "fable"; "watch"; "-o"; "output"; "-s"; "--run"; "npx"; "vite" ] clientPath
-    ]
-    |> runParallel)
-
-Target.create "RunTests" (fun _ ->
-    run dotnet [ "build" ] sharedTestsPath
-
-    [
-        "server", dotnet [ "watch"; "run" ] serverTestsPath
-        "client", dotnet [ "fable"; "watch"; "-o"; "output"; "-s"; "--run"; "npx"; "vite" ] clientTestsPath
-    ]
-    |> runParallel)
-
-Target.create "Format" (fun _ -> run dotnet [ "fantomas"; "."; "-r" ] "src")
-
-open Fake.Core.TargetOperators
-
-let dependencies = [
-    "Clean" ==> "InstallClient" ==> "Bundle" ==> "Azure"
-
-    "Clean" ==> "InstallClient" ==> "Run"
-
-    "InstallClient" ==> "RunTests"
-]
+open Fun.Build
+open Fun.Result
+open System.IO
+open type System.IO.Path
 
 [<EntryPoint>]
-let main args = runOrDefault args
+let main _ =
+    let serverPath = GetFullPath "src/Server"
+    let clientPath = GetFullPath "src/Client"
+
+    pipeline "Test" {
+        description "Runs all tests"
+
+        stage "Build Shared Tests Component" { run $"""dotnet build {GetFullPath "tests/Shared"}""" }
+
+        stage "Run Tests" {
+            paralle
+
+            stage "Server Tests" { run $"""dotnet watch run --project {GetFullPath "tests/Server"}""" }
+
+            stage "Client Tests" {
+                run $"""dotnet fable watch -o output -s --cwd {GetFullPath "tests/Client"} --run npx vite"""
+            }
+        }
+
+        runIfOnlySpecified // custom pipeline - dotnet run -- -p Test
+    }
+
+    pipeline "Format" {
+        description "Formats all code using Fantomas"
+        stage "format" { run "dotnet fantomas ." }
+        runIfOnlySpecified // custom pipeline - dotnet run -- -p Format
+    }
+
+    pipeline "Bundle" {
+        description "Builds and packages the app for production"
+
+        stage "Build" {
+            paralle
+
+            stage "Server" {
+                run (fun ctx -> asyncResult {
+                    let deployPath = GetFullPath "deploy"
+
+                    if Directory.Exists deployPath then
+                        Directory.Delete(deployPath, true)
+
+                    do! ctx.RunCommand $"dotnet publish -c Release {serverPath} -o {deployPath}"
+                })
+            }
+
+            stage "Client" {
+                run "npm install"
+                run $"dotnet fable clean --cwd {clientPath} --yes"
+                run $"dotnet fable -o output -s --cwd {clientPath} --run npx vite build"
+            }
+        }
+
+        runIfOnlySpecified // custom pipeline - dotnet run -- -p Bundle
+    }
+
+    pipeline "Azure" {
+        description "Deploy to Azure"
+
+        stage "Farmer deploy" {
+            run (fun _ ->
+                let web = webApp {
+                    name "SAFE-App"
+                    operating_system Linux
+                    runtime_stack (DotNet "8.0")
+                    zip_deploy "deploy"
+                }
+
+                let deployment = arm {
+                    location Location.WestEurope
+                    add_resource web
+                }
+
+                deployment |> Deploy.execute "SAFE-App" Deploy.NoParameters |> ignore)
+        }
+
+        runIfOnlySpecified // custom pipeline - dotnet run -- -p Azure
+    }
+
+    pipeline "Run" {
+        description "Runs the SAFE Stack application in watch mode"
+
+        stage "Run" {
+            paralle
+
+            stage "Server" { run $"dotnet watch run --project {serverPath}" }
+
+            stage "Client" {
+                run "npm install"
+                run $"dotnet fable watch -o output -s --cwd {clientPath} --run npx vite"
+            }
+        }
+
+        runIfOnlySpecified false // default pipeline - dotnet run
+    }
+
+    tryPrintPipelineCommandHelp ()
+    0

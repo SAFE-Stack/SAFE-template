@@ -16,6 +16,5 @@ nuget Fable.Mocha ~> 2
 nuget Fable.Remoting.Client ~> 7
 nuget Feliz ~> 2
 
-nuget Fake.Core.Target ~> 5
-nuget Fake.IO.FileSystem ~> 5
+nuget Fun.Build ~> 1
 nuget Farmer ~> 1
