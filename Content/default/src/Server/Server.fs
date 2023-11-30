@@ -9,7 +9,7 @@ open Shared
 module Storage =
     let todos = ResizeArray()
 
-    let addTodo (todo: Todo) =
+    let addTodo todo =
         if Todo.isValid todo.Description then
             todos.Add todo
             Ok()
