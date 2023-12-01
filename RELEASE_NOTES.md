@@ -1,3 +1,7 @@
+#### 5.0.1 01.12.2023
+
+* Fix client tests - https://github.com/SAFE-Stack/SAFE-template/pull/581
+
 #### 5.0.0 01.12.2023
 
 https://github.com/SAFE-Stack/SAFE-template/pull/564
