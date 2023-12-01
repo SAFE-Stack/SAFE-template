@@ -1,3 +1,12 @@
+#### 5.0.0 01.12.2023
+
+https://github.com/SAFE-Stack/SAFE-template/pull/564
+* Upgrade to .NET 8
+* Upgrade to F# 8
+* Upgrade to Fable 4 and update Fable dependencies
+* Use Vite instead of Webpack for JS bundling
+* Use Tailwind for styling
+
 #### 4.3.0 - 07.11.2023
 
 * Remove old unused reference to Fulma - https://github.com/SAFE-Stack/SAFE-template/pull/546
