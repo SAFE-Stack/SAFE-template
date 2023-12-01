@@ -8,10 +8,25 @@ To test your changes simply navigate to `Content\minimal` or `Content\default` a
 
 ## Testing template bundle
 
-To build whole template invoke `dotnet run -p Build.fsproj` - default target is `Install`, which will build the template and invoke `dotnet new -i <<repo-path>>/nupkg/SAFE.Template.<<version>>.nupkg`
+To build whole template invoke `dotnet run --project Build.fsproj` - default target is `Install`, which will build the template and invoke `dotnet new -i <<repo-path>>/nupkg/SAFE.Template.<<version>>.nupkg`
 
 You can now test the local build of template using `dotnet new SAFE`
 
 ## Known issues
 
 * In case `dotnet new -i` fails for some reason, try uninstalling previously installed version first: `dotnet new -u SAFE.Template`
+
+## Release
+
+The template release process is currently done from a local dev machine.
+
+Pre-requisites:
+
+* A NuGet API key which allows release of the SAFE.Template package
+* Permission to push to the GitHub repo
+
+Steps:
+
+1. Add an entry to `RELEASE_NOTES.md` with the new version, date and release notes
+1. Set the `NUGET_KEY` env var
+1. Run `dotnet run --project Build.fsproj -- release`
