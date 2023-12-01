@@ -52,7 +52,7 @@ Target.create "Pack" (fun _ ->
 Target.create "Install" (fun _ ->
     let unInstallArgs = $"uninstall SAFE.Template"
     DotNet.exec (fun x -> { x with DotNetCliPath = "dotnet" }) "new" unInstallArgs
-    |> fun result -> if not result.OK then failwith $"`dotnet new %s{unInstallArgs}` failed with %O{result}"
+    |> ignore // Allow this to fail as the template might not be installed
 
     let installArgs = $"install \"%s{nupkgPath}\""
     DotNet.exec (fun x -> { x with DotNetCliPath = "dotnet" }) "new" installArgs
