@@ -20,11 +20,11 @@ let client =
 
 let all =
     testList "All" [
-        //-:cnd:noEmit
+//-:cnd:noEmit
 #if FABLE_COMPILER // This preprocessor directive makes editor happy
         Shared.Tests.shared
 #endif
-        //+:cnd:noEmit
+//+:cnd:noEmit
         client
     ]
 
