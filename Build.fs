@@ -8,13 +8,14 @@ open Fake.Tools
 let execContext = Context.FakeExecutionContext.Create false "build.fsx" [ ]
 Context.setExecutionContext (Context.RuntimeContext.Fake execContext)
 
+let skipTests = Environment.hasEnvironVar "yolo"
+let release = ReleaseNotes.load "RELEASE_NOTES.md"
+
 let templatePath = "./Content/.template.config/template.json"
 let templateProj = "SAFE.Template.proj"
 let templateName = "SAFE-Stack Web App"
 let nupkgDir = Path.getFullName "./nupkg"
-
-let skipTests = Environment.hasEnvironVar "yolo"
-let release = ReleaseNotes.load "RELEASE_NOTES.md"
+let nupkgPath = System.IO.Path.Combine(nupkgDir, $"SAFE.Template.%s{release.NugetVersion}.nupkg")
 
 let formattedRN =
     release.Notes
@@ -30,7 +31,7 @@ let msBuildParams msBuildParameter: MSBuild.CliArguments = { msBuildParameter wi
 Target.create "Pack" (fun _ ->
     Shell.regexReplaceInFileWithEncoding
         "  \"name\": .+,"
-       ("  \"name\": \"" + templateName + " v" + release.NugetVersion + "\",")
+        ("  \"name\": \"" + templateName + " v" + release.NugetVersion + "\",")
         Text.Encoding.UTF8
         templatePath
     DotNet.pack
@@ -49,12 +50,13 @@ Target.create "Pack" (fun _ ->
 )
 
 Target.create "Install" (fun _ ->
-    let args=
-      let nupkgFileName = sprintf "SAFE.Template.%s.nupkg" release.NugetVersion
-      let fullPathToNupkg = System.IO.Path.Combine(nupkgDir, nupkgFileName)
-      sprintf "install \"%s\"" fullPathToNupkg
-    let result = DotNet.exec (fun x -> { x with DotNetCliPath = "dotnet" }) "new" args
-    if not result.OK then failwithf "`dotnet %s` failed with %O" args result
+    let unInstallArgs = $"uninstall SAFE.Template"
+    DotNet.exec (fun x -> { x with DotNetCliPath = "dotnet" }) "new" unInstallArgs
+    |> fun result -> if not result.OK then failwith $"`dotnet new %s{unInstallArgs}` failed with %O{result}"
+
+    let installArgs = $"install \"%s{nupkgPath}\""
+    DotNet.exec (fun x -> { x with DotNetCliPath = "dotnet" }) "new" installArgs
+    |> fun result -> if not result.OK then failwith $"`dotnet new %s{installArgs}` failed with %O{result}"
 )
 
 let psi exe arg dir (x: ProcStartInfo) : ProcStartInfo =
@@ -75,12 +77,8 @@ Target.create "Tests" (fun _ ->
 )
 
 Target.create "Push" (fun _ ->
-    Paket.push ( fun args ->
-        { args with
-                PublishUrl = "https://www.nuget.org"
-                WorkingDir = nupkgDir
-        }
-    )
+    let args = $"push %s{nupkgPath} --url https://www.nuget.org"
+    run "dotnet" $"paket push %s{nupkgPath} --url https://www.nuget.org" "."
 
     let remoteGit = "upstream"
     let commitMsg = sprintf "Bumping version to %O" release.NugetVersion
@@ -108,6 +106,7 @@ open Fake.Core.TargetOperators
     =?> ("Tests", not skipTests)
     ==> "Push"
     ==> "Release"
+|> ignore
 
 [<EntryPoint>]
 let main args =
