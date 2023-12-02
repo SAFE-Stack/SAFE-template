@@ -6,8 +6,9 @@ This template can be used to generate a full-stack web application using the [SA
 
 You'll need to install the following pre-requisites in order to build SAFE applications
 
-* [.NET Core SDK](https://www.microsoft.com/net/download) 6.0 or higher
-* [Node 16](https://nodejs.org/en/download/)
+* [.NET Core SDK](https://www.microsoft.com/net/download) 8.0 or higher
+* [Node 18](https://nodejs.org/en/download/) or higher
+* [NPM 9](https://www.npmjs.com/package/npm) or higher
 
 ## Starting the application
 
@@ -15,6 +16,15 @@ Before you run the project **for the first time only** you must install dotnet "
 
 ```bash
 dotnet tool restore
+```
+
+To check for updates, use
+```bash
+# check installed tools version
+dotnet tool list
+
+# update a tool in your list
+dotnet tool update <toolname>
 ```
 
 To concurrently run the server and the client components in watch mode use the following command:

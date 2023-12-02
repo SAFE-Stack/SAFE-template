@@ -6,8 +6,9 @@ This template can be used to generate a full-stack web application using the [SA
 
 You'll need to install the following pre-requisites in order to build SAFE applications
 
-* [.NET Core SDK](https://www.microsoft.com/net/download) 6.0 or higher
-* [Node 16](https://nodejs.org/en/download/)
+* [.NET Core SDK](https://www.microsoft.com/net/download) 8.0 or higher
+* [Node 18](https://nodejs.org/en/download/) or higher
+* [NPM 9](https://www.npmjs.com/package/npm) or higher
 
 ## Starting the application
 
@@ -24,6 +25,15 @@ Start the client:
 npm install
 dotnet tool restore
 dotnet fable watch src/Client --run npm run start
+```
+
+To check for updates, use
+```bash
+# check installed tools version
+dotnet tool list
+
+# update a tool in your list
+dotnet tool update <toolname>
 ```
 
 Open a browser to `http://localhost:8080` to view the site.
