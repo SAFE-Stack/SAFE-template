@@ -18,15 +18,6 @@ Before you run the project **for the first time only** you must install dotnet "
 dotnet tool restore
 ```
 
-To check for updates, use
-```bash
-# check installed tools version
-dotnet tool list
-
-# update a tool in your list
-dotnet tool update <toolname>
-```
-
 To concurrently run the server and the client components in watch mode use the following command:
 
 ```bash

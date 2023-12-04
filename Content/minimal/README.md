@@ -27,15 +27,6 @@ dotnet tool restore
 dotnet fable watch src/Client --run npm run start
 ```
 
-To check for updates, use
-```bash
-# check installed tools version
-dotnet tool list
-
-# update a tool in your list
-dotnet tool update <toolname>
-```
-
 Open a browser to `http://localhost:8080` to view the site.
 
 ## SAFE Stack Documentation
