@@ -71,7 +71,7 @@ let run exe arg dir =
 
 Target.create "Tests" (fun _ ->
     let cmd = "run"
-    let args = "--project tests/tests.fsproj"
+    let args = "--project tests/Tests.fsproj"
     let result = DotNet.exec (fun x -> { x with DotNetCliPath = "dotnet" }) cmd args
     if not result.OK then failwithf "`dotnet %s %s` failed" cmd args
 )
