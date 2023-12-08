@@ -1,3 +1,8 @@
+#### 5.0.2 08.12.2023
+
+* Update README and project/solution file references - https://github.com/SAFE-Stack/SAFE-template/pull/582
+* Bump Vite from 5.0.0 to 5.0.5 - https://github.com/SAFE-Stack/SAFE-template/pull/584 - https://github.com/SAFE-Stack/SAFE-template/pull/585
+
 #### 5.0.1 01.12.2023
 
 * Fix client tests - https://github.com/SAFE-Stack/SAFE-template/pull/581
