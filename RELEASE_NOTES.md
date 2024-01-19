@@ -3,19 +3,24 @@
 * Update Fable to 4.1.4 - https://github.com/SAFE-Stack/SAFE-template/pull/586
 * Resolve security vulnerabilities in .net packages - https://github.com/SAFE-Stack/SAFE-template/pull/587
 
-#### 5.0.2 - 08.12.2023
+#### 5.0.2 08.12.2023
 
-* Updates to readme and solution file - https://github.com/SAFE-Stack/SAFE-template/pull/582
-* Update Vite to 5.0.5 in minimal template - https://github.com/SAFE-Stack/SAFE-template/pull/584
-* Update Vite to 5.0.5 in default template - https://github.com/SAFE-Stack/SAFE-template/pull/585
+* Update README and project/solution file references - https://github.com/SAFE-Stack/SAFE-template/pull/582
+* Bump Vite from 5.0.0 to 5.0.5 - https://github.com/SAFE-Stack/SAFE-template/pull/584 - https://github.com/SAFE-Stack/SAFE-template/pull/585
 
-#### 5.0.1 - 01.12.2023
+#### 5.0.1 01.12.2023
 
-* Fix client tests in default template - https://github.com/SAFE-Stack/SAFE-template/pull/581
+* Fix client tests - https://github.com/SAFE-Stack/SAFE-template/pull/581
 
-#### 5.0.0 - 01.12.2023
+#### 5.0.0 01.12.2023
 
-* Version 5 release - https://www.compositional-it.com/news-blog/announcing-safe-template-v5/
+https://github.com/SAFE-Stack/SAFE-template/pull/564
+https://www.compositional-it.com/news-blog/announcing-safe-template-v5/
+* Upgrade to .NET 8
+* Upgrade to F# 8
+* Upgrade to Fable 4 and update Fable dependencies
+* Use Vite instead of Webpack for JS bundling
+* Use Tailwind for styling
 
 #### 4.3.0 - 07.11.2023
 

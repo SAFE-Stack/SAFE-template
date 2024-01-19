@@ -13,5 +13,6 @@ node_modules/
 release.cmd
 release.sh
 *.orig
+*.fsproj.user
 *.DotSettings.user
 *.fs.js

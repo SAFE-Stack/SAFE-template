@@ -11,6 +11,7 @@
         <None Include="paket.references" />
         <Compile Include="Index.fs" />
         <Compile Include="App.fs" />
+        <None Include="vite.config.mts" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Shared\Shared.fsproj" />

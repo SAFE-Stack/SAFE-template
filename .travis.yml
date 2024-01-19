@@ -1,5 +1,5 @@
 language: csharp
-dotnet: 6.0.101
+dotnet: 8.0.100
 mono: none
 os:
   - linux
@@ -12,4 +12,4 @@ before_install:
 script:
   - dotnet tool restore
   - dotnet paket restore
-  - dotnet run --project tests/tests.fsproj
+  - dotnet run --project tests/Tests.fsproj

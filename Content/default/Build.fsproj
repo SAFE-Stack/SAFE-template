@@ -8,6 +8,8 @@
   <ItemGroup>
     <Compile Include="Helpers.fs" />
     <Compile Include="Build.fs" />
+      <None Include="paket.dependencies" />
+      <None Include="paket.references" />
   </ItemGroup>
   <Import Project=".paket\Paket.Restore.targets" />
 </Project>

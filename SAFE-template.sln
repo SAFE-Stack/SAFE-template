@@ -3,6 +3,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{73097E03-8B35-41B9-BE4A-BC15F49AF8B5}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+		.travis.yml = .travis.yml
+		CONTRIBUTING.md = CONTRIBUTING.md
+		README.md = README.md
+		RELEASE_NOTES.md = RELEASE_NOTES.md
+	EndProjectSection
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Content", "Content", "{EA1006BA-C34E-4CF9-A3AF-64EF33440721}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "minimal", "minimal", "{BD8E7D51-C1E1-4895-9BE6-F079B7F6565C}"
@@ -33,7 +43,7 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Server.Tests", "Content\def
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Client.Tests", "Content\default\tests\Client\Client.Tests.fsproj", "{7AA65D2D-B5C0-427C-B39C-3BC25297E88C}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "tests", "tests\tests.fsproj", "{8B883735-9AA1-4A14-A7F9-69AE826C658D}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Tests", "tests\Tests.fsproj", "{8B883735-9AA1-4A14-A7F9-69AE826C658D}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Build", "Content\default\Build.fsproj", "{8FAEEF41-562F-4DE2-BF56-F6E5B27A6661}"
 EndProject
