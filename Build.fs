@@ -80,7 +80,6 @@ Target.create "Push" (fun _ ->
     let args = $"push %s{nupkgPath} --url https://www.nuget.org"
     run "dotnet" $"paket push %s{nupkgPath} --url https://www.nuget.org" "."
 
-    let remoteGit = "upstream"
     let commitMsg = sprintf "Bumping version to %O" release.NugetVersion
     let tagName = string release.NugetVersion
 
@@ -90,10 +89,10 @@ Target.create "Push" (fun _ ->
 
     Git.Staging.stageAll ""
     Git.Commit.exec "" commitMsg
-    Git.Branches.pushBranch "" remoteGit "master"
+    Git.Branches.pushBranch "" "origin" "master"
 
     Git.Branches.tag "" tagName
-    Git.Branches.pushTag "" remoteGit tagName
+    Git.Branches.pushTag "" "origin" tagName
 )
 
 Target.create "Release" ignore

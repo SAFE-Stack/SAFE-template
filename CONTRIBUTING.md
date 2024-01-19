@@ -27,6 +27,10 @@ Pre-requisites:
 
 Steps:
 
-1. Add an entry to `RELEASE_NOTES.md` with the new version, date and release notes
-1. Set the `NUGET_KEY` env var
+1. Check out the repo at latest `master` commit with the official SAFE-Template repo as the `origin` remote.
+1. Ensure you have no other local changes.
+1. Add an entry (without committing) to `RELEASE_NOTES.md` with the new version, date and release notes.
+1. Set the `NUGET_KEY` env var.
 1. Run `dotnet run --project Build.fsproj -- release`
+
+This will release the nuget package and commit and push the release notes to master.
