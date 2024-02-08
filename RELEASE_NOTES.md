@@ -1,3 +1,8 @@
+#### 5.0.4 - 08.02.2024
+
+* Bump vite from 5.0.5 to 5.0.12 in /Content/default - https://github.com/SAFE-Stack/SAFE-template/pull/590
+* Bump vite from 5.0.5 to 5.0.12 in /Content/minimal - https://github.com/SAFE-Stack/SAFE-template/pull/591
+
 #### 5.0.3 - 19.01.2024
 
 * Update Fable to 4.1.4 - https://github.com/SAFE-Stack/SAFE-template/pull/586
