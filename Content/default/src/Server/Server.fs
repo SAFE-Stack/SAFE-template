@@ -1,9 +1,7 @@
 module Server
 
-open Fable.Remoting.Server
-open Fable.Remoting.Giraffe
+open SAFE
 open Saturn
-
 open Shared
 
 module Storage =
@@ -21,7 +19,7 @@ module Storage =
         addTodo (Todo.create "Write your app") |> ignore
         addTodo (Todo.create "Ship it!!!") |> ignore
 
-let todosApi = {
+let todosApi ctx = {
     getTodos = fun () -> async { return Storage.todos |> List.ofSeq }
     addTodo =
         fun todo -> async {
@@ -32,11 +30,7 @@ let todosApi = {
         }
 }
 
-let webApp =
-    Remoting.createApi ()
-    |> Remoting.withRouteBuilder Route.builder
-    |> Remoting.fromValue todosApi
-    |> Remoting.buildHttpHandler
+let webApp = Api.make todosApi
 
 let app = application {
     use_router webApp
