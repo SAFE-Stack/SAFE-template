@@ -8,7 +8,7 @@
         "Fable",
         "Elmish"
     ],
-    "name": "SAFE-Stack Web App v5.0.4",
+    "name": "SAFE-Stack Web App",
     "tags": {
         "language": "F#",
         "type": "project"
