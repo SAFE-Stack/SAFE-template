@@ -9,7 +9,6 @@ importSideEffects "./index.css"
 
 //-:cnd:noEmit
 #if DEBUG
-open Elmish.Debug
 open Elmish.HMR
 #endif
 
@@ -20,8 +19,6 @@ Program.mkProgram Index.init Index.update Index.view
 |> Program.withConsoleTrace
 #endif
 |> Program.withReactSynchronous "elmish-app"
-#if DEBUG
-|> Program.withDebugger
-#endif
+
 //+:cnd:noEmit
 |> Program.run
