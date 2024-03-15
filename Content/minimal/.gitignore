@@ -1,4 +1,5 @@
 .fable/
+fable_modules/
 .fake/
 .farmer/
 .idea/
