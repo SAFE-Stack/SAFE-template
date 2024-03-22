@@ -14,8 +14,13 @@ let release = ReleaseNotes.load "RELEASE_NOTES.md"
 let templatePath = "./Content/.template.config/template.json"
 let templateProj = "SAFE.Template.proj"
 let templateName = "SAFE-Stack Web App"
+let version = Environment.environVarOrDefault "VERSION" ""
 let nupkgDir = Path.getFullName "./nupkg"
-let nupkgPath = System.IO.Path.Combine(nupkgDir, $"SAFE.Template.%s{release.NugetVersion}.nupkg")
+let nupkgPath = System.IO.Path.Combine(nupkgDir, $"SAFE.Template.%s{version}.nupkg")
+
+let result = DotNet.exec (fun x -> { x with DotNetCliPath = "dotnet" }) "tool" "restore"
+
+if not result.OK then failwithf "`dotnet %s %s` failed" "tool" "restore"
 
 let formattedRN =
     release.Notes
@@ -31,20 +36,23 @@ let msBuildParams msBuildParameter: MSBuild.CliArguments = { msBuildParameter wi
 Target.create "Pack" (fun _ ->
     Shell.regexReplaceInFileWithEncoding
         "  \"name\": .+,"
-        ("  \"name\": \"" + templateName + " v" + release.NugetVersion + "\",")
+        ("  \"name\": \"" + templateName + " v" + version + "\",")
         Text.Encoding.UTF8
         templatePath
+    let releaseNotesUrl = Environment.environVarOrDefault "RELEASE_NOTES_URL" ""
+
     DotNet.pack
         (fun args ->
             { args with
+                    Configuration = DotNet.BuildConfiguration.Release
                     OutputPath = Some nupkgDir
                     MSBuildParams = msBuildParams args.MSBuildParams
                     Common =
                         { args.Common with
                             CustomParams =
                                 Some (sprintf "/p:PackageVersion=%s /p:PackageReleaseNotes=\"%s\""
-                                        release.NugetVersion
-                                        formattedRN) }
+                                        version
+                                        releaseNotesUrl) }
             })
         templateProj
 )
@@ -76,34 +84,18 @@ Target.create "Tests" (fun _ ->
     if not result.OK then failwithf "`dotnet %s %s` failed" cmd args
 )
 
-Target.create "Push" (fun _ ->
-    let args = $"push %s{nupkgPath} --url https://www.nuget.org"
-    run "dotnet" $"paket push %s{nupkgPath} --url https://www.nuget.org" "."
-
-    let commitMsg = sprintf "Bumping version to %O" release.NugetVersion
-    let tagName = string release.NugetVersion
-
-    Git.Branches.checkout "" false "master"
-    Git.CommandHelper.directRunGitCommand "" "fetch origin" |> ignore
-    Git.CommandHelper.directRunGitCommand "" "fetch origin --tags" |> ignore
-
-    Git.Staging.stageAll ""
-    Git.Commit.exec "" commitMsg
-    Git.Branches.pushBranch "" "origin" "master"
-
-    Git.Branches.tag "" tagName
-    Git.Branches.pushTag "" "origin" tagName
-)
-
-Target.create "Release" ignore
+Target.create "Release" (fun _ ->
+    let nugetApiKey = Environment.environVarOrFail "NUGET_API_KEY"
+    let nugetArgs = $"""push "*.nupkg" --api-key {nugetApiKey} --source https://api.nuget.org/v3/index.json"""
+    let result = DotNet.exec (fun x -> { x with DotNetCliPath = "dotnet" }) "new" nugetArgs
+    if not result.OK then failwithf "`dotnet %s` failed" "nuget push")
 
 open Fake.Core.TargetOperators
 
 "Clean"
+    =?> ("Tests", not skipTests)
     ==> "Pack"
     ==> "Install"
-    =?> ("Tests", not skipTests)
-    ==> "Push"
     ==> "Release"
 |> ignore
 
