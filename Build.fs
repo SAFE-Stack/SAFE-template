@@ -18,6 +18,10 @@ let version = Environment.environVarOrDefault "VERSION" ""
 let nupkgDir = Path.getFullName "./nupkg"
 let nupkgPath = System.IO.Path.Combine(nupkgDir, $"SAFE.Template.%s{version}.nupkg")
 
+let result = DotNet.exec (fun x -> { x with DotNetCliPath = "dotnet" }) "tool" "restore"
+
+if not result.OK then failwithf "`dotnet %s %s` failed" "tool" "restore"
+
 let formattedRN =
     release.Notes
     |> List.map (sprintf "* %s")
@@ -80,7 +84,11 @@ Target.create "Tests" (fun _ ->
     if not result.OK then failwithf "`dotnet %s %s` failed" cmd args
 )
 
-Target.create "Package" ignore
+Target.create "Release" (fun _ ->
+    let nugetApiKey = Environment.environVarOrFail "NUGET_API_KEY"
+    let nugetArgs = $"""push "*.nupkg" --api-key {nugetApiKey} --source https://api.nuget.org/v3/index.json"""
+    let result = DotNet.exec (fun x -> { x with DotNetCliPath = "dotnet" }) "new" nugetArgs
+    if not result.OK then failwithf "`dotnet %s` failed" "nuget push")
 
 open Fake.Core.TargetOperators
 
@@ -88,7 +96,7 @@ open Fake.Core.TargetOperators
     =?> ("Tests", not skipTests)
     ==> "Pack"
     ==> "Install"
-    ==> "Package"
+    ==> "Release"
 |> ignore
 
 [<EntryPoint>]
