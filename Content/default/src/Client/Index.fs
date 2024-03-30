@@ -5,14 +5,14 @@ open SAFE
 open Shared
 
 type Model = {
-    Todos: Deferred<Todo list>
+    Todos: RemoteData<Todo list>
     Input: string
 }
 
 type Msg =
     | SetInput of string
-    | GetTodos of AsyncOperation<unit, Todo list>
-    | AddTodo of AsyncOperation<unit, Todo>
+    | GetTodos of ApiCall<unit, Todo list>
+    | AddTodo of ApiCall<unit, Todo>
 
 let todosApi = Api.makeProxy<ITodosApi> ()
 
@@ -27,8 +27,8 @@ let update msg model =
         match msg with
         | Start() ->
             let cmd = Cmd.OfAsync.perform todosApi.getTodos () (Finished >> GetTodos)
-            { model with Todos = InProgress }, cmd
-        | Finished todos -> { model with Todos = Resolved todos }, Cmd.none
+            { model with Todos = Loading }, cmd
+        | Finished todos -> { model with Todos = Loaded todos }, Cmd.none
     | AddTodo msg ->
         match msg with
         | Start() ->
@@ -78,8 +78,8 @@ let private todoList model dispatch =
                 prop.children [
                     match model.Todos with
                     | NotStarted -> Html.text "Not Started."
-                    | InProgress -> Html.text "Loading..."
-                    | Resolved todos ->
+                    | Loading -> Html.text "Loading..."
+                    | Loaded todos ->
                         for todo in todos do
                             Html.li [ prop.className "my-1"; prop.text todo.Description ]
                 ]
