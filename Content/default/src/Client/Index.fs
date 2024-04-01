@@ -12,13 +12,15 @@ type Model = {
 type Msg =
     | SetInput of string
     | LoadTodos of ApiCall<unit, Todo list>
-    | SaveTodo of ApiCall<unit, Todo>
+    | SaveTodo of ApiCall<string, Todo>
 
 let todosApi = Api.makeProxy<ITodosApi> ()
 
 let init () =
-    let model = { Todos = NotStarted; Input = "" }
-    model, Cmd.ofMsg (LoadTodos(Start()))
+    let initialModel = { Todos = NotStarted; Input = "" }
+    let initialCmd = Cmd.ofMsg (LoadTodos(Start()))
+
+    initialModel, initialCmd
 
 let update msg model =
     match msg with
@@ -26,15 +28,17 @@ let update msg model =
     | LoadTodos msg ->
         match msg with
         | Start() ->
-            let cmd = ApiCall.execute (todosApi.getTodos, (), LoadTodos)
-            { model with Todos = Loading }, cmd
+            let loadTodosCmd = todosApi.getTodos () |> Async.toCmdUnsafe LoadTodos
+            { model with Todos = Loading }, loadTodosCmd
         | Finished todos -> { model with Todos = Loaded todos }, Cmd.none
     | SaveTodo msg ->
         match msg with
-        | Start() ->
-            let todo = Todo.create model.Input
-            let cmd = ApiCall.execute (todosApi.addTodo, todo, SaveTodo)
-            { model with Input = "" }, cmd
+        | Start todoText ->
+            let saveTodoCmd =
+                let todo = Todo.create todoText
+                todosApi.addTodo todo |> Async.toCmdUnsafe SaveTodo
+
+            { model with Input = "" }, saveTodoCmd
         | Finished todo ->
             {
                 model with
@@ -58,13 +62,13 @@ module ViewComponents =
                     prop.onChange (SetInput >> dispatch)
                     prop.onKeyPress (fun ev ->
                         if ev.key = "Enter" then
-                            dispatch (SaveTodo(Start())))
+                            dispatch (SaveTodo(Start model.Input)))
                 ]
                 Html.button [
                     prop.className
                         "flex-no-shrink p-2 px-12 rounded bg-teal-600 outline-none focus:ring-2 ring-teal-300 font-bold text-white hover:bg-teal disabled:opacity-30 disabled:cursor-not-allowed"
                     prop.disabled (Todo.isValid model.Input |> not)
-                    prop.onClick (fun _ -> dispatch (SaveTodo(Start())))
+                    prop.onClick (fun _ -> dispatch (SaveTodo(Start model.Input)))
                     prop.text "Add"
                 ]
             ]
