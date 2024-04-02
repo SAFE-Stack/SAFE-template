@@ -18,7 +18,7 @@ let todosApi = Api.makeProxy<ITodosApi> ()
 
 let init () =
     let initialModel = { Todos = NotStarted; Input = "" }
-    let initialCmd = Start() |> LoadTodos |> Cmd.ofMsg
+    let initialCmd = LoadTodos(Start()) |> Cmd.ofMsg
 
     initialModel, initialCmd
 
