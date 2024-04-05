@@ -1,47 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <Description>SAFE Stack Template</Description>
-    <Authors>Tomasz Heimowski</Authors>
-    <PackageProjectUrl>https://github.com/SAFE-Stack/SAFE-template</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/SAFE-Stack/SAFE-template/blob/master/LICENSE</PackageLicenseUrl>
-    <PackageIconUrl>https://raw.githubusercontent.com/SAFE-Stack/SAFE-template/master/safe-logo.png</PackageIconUrl>
-    <RepositoryUrl>https://github.com/SAFE-Stack/SAFE-template.git</RepositoryUrl>
-    <PackageTags>template;fsharp;saturn;azure;fable;elmish</PackageTags>
-    <NeutralLanguage>en-US</NeutralLanguage>
-    <PackageType>Template</PackageType>
-    <NoBuild>true</NoBuild>
-    <IncludeBuildOutput>false</IncludeBuildOutput>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <!-- https://github.com/dotnet/templating/issues/2350#issuecomment-610431461 -->
-    <NoDefaultExcludes>true</NoDefaultExcludes>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ExcludeFromPackage>
-Content/**/.fake/**/*;
-Content/**/.ionide/**/*;
-Content/**/.cache/**/*;
-Content/**/.fable/**/*;
-Content/**/node_modules/**/*;
-Content/**/obj/**/*;
-Content/**/bin/**/*;
-Content/**/.fable/**/*;
-Content/**/*.fs.js;
-Content/**/*.fs.js.map;
-Content/**/deploy/**/*;
-Content/**/tests/**/obj/**/*;
-Content/**/tests/**/bin/**/*;
-Content/**/packages/**/*;
-Content/**/paket-files/**/*;
-Content/**/src/Client/deploy/**/*;
-Content/**/Client/output/**/*;
-Content/**/Client/fable_modules/**/*;
+    <PropertyGroup>
+        <Description>SAFE Stack Template</Description>
+        <Authors>Tomasz Heimowski</Authors>
+        <PackageProjectUrl>https://github.com/SAFE-Stack/SAFE-template</PackageProjectUrl>
+        <PackageLicense>LICENSE</PackageLicense>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageIcon>safe-logo.png</PackageIcon>
+        <RepositoryUrl>https://github.com/SAFE-Stack/SAFE-template.git</RepositoryUrl>
+        <PackageTags>template;fsharp;saturn;azure;fable;elmish</PackageTags>
+        <NeutralLanguage>en-US</NeutralLanguage>
+        <PackageType>Template</PackageType>
+        <NoBuild>true</NoBuild>
+        <IncludeBuildOutput>false</IncludeBuildOutput>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <!-- https://github.com/dotnet/templating/issues/2350#issuecomment-610431461 -->
+        <NoDefaultExcludes>true</NoDefaultExcludes>
+    </PropertyGroup>
+    <PropertyGroup>
+        <ExcludeFromPackage>
+            Content/**/.fake/**/*;
+            Content/**/.ionide/**/*;
+            Content/**/.cache/**/*;
+            Content/**/.fable/**/*;
+            Content/**/node_modules/**/*;
+            Content/**/obj/**/*;
+            Content/**/bin/**/*;
+            Content/**/.fable/**/*;
+            Content/**/*.fs.js;
+            Content/**/*.fs.js.map;
+            Content/**/deploy/**/*;
+            Content/**/tests/**/obj/**/*;
+            Content/**/tests/**/bin/**/*;
+            Content/**/packages/**/*;
+            Content/**/paket-files/**/*;
+            Content/**/src/Client/deploy/**/*;
+            Content/**/Client/output/**/*;
+            Content/**/Client/fable_modules/**/*;
         </ExcludeFromPackage>
-  </PropertyGroup>
-  <ItemGroup>
-    <Content Include="Content/**/*.*" Exclude="$(ExcludeFromPackage)">
-      <PackagePath>Content\</PackagePath>
-    </Content>
-  </ItemGroup>
-  <Import Project=".paket\Paket.Restore.targets" />
+    </PropertyGroup>
+    <ItemGroup>
+        <Content Include="Content/**/*.*" Exclude="$(ExcludeFromPackage)">
+            <PackagePath>Content\</PackagePath>
+        </Content>
+        <None Include="safe-logo.png" Pack="true" PackagePath=""/>
+        <None Include="README.md" Pack="true" PackagePath=""/>
+        <None Include="LICENSE" Pack="true" PackagePath=""/>
+    </ItemGroup>
+    <Import Project=".paket\Paket.Restore.targets" />
 </Project>
