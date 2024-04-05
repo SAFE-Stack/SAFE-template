@@ -12,6 +12,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Tool Restore
+        run: dotnet tool restore
+
       - name: Release
         env:
           VERSION: ${{ github.ref_name }}
