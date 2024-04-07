@@ -28,7 +28,8 @@ let update msg model =
     | LoadTodos msg ->
         match msg with
         | Start() ->
-            let loadTodosCmd = todosApi.getTodos () |> Async.toCmdUnsafe LoadTodos
+            let loadTodosCmd = Cmd.OfAsync.perform todosApi.getTodos () (Finished >> LoadTodos)
+
             { model with Todos = Loading }, loadTodosCmd
         | Finished todos -> { model with Todos = Loaded todos }, Cmd.none
     | SaveTodo msg ->
@@ -36,7 +37,7 @@ let update msg model =
         | Start todoText ->
             let saveTodoCmd =
                 let todo = Todo.create todoText
-                todosApi.addTodo todo |> Async.toCmdUnsafe SaveTodo
+                Cmd.OfAsync.perform todosApi.addTodo todo (Finished >> SaveTodo)
 
             { model with Input = "" }, saveTodoCmd
         | Finished todo ->
