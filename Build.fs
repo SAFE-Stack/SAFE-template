@@ -87,7 +87,7 @@ Target.create "Tests" (fun _ ->
 Target.create "Release" (fun _ ->
     let nugetApiKey = Environment.environVarOrFail "NUGET_API_KEY"
     let nugetArgs = $"""push "*.nupkg" --api-key {nugetApiKey} --source https://api.nuget.org/v3/index.json"""
-    let result = DotNet.exec (fun x -> { x with DotNetCliPath = "dotnet" }) "new" nugetArgs
+    let result = DotNet.exec (fun x -> { x with DotNetCliPath = "dotnet" }) "nuget" nugetArgs
     if not result.OK then failwithf "`dotnet %s` failed" "nuget push")
 
 open Fake.Core.TargetOperators
