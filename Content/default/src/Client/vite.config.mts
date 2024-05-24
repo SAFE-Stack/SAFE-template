@@ -18,6 +18,9 @@ export default defineConfig({
                 target: proxyTarget,
                 changeOrigin: true,
             }
-        }
+        },
+        watch: {
+            ignored: [ "**/*.fs" ]
+        },
     }
 });
