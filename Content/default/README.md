@@ -12,12 +12,6 @@ You'll need to install the following pre-requisites in order to build SAFE appli
 
 ## Starting the application
 
-Before you run the project **for the first time only** you must install dotnet "local tools" with this command:
-
-```bash
-dotnet tool restore
-```
-
 To concurrently run the server and the client components in watch mode use the following command:
 
 ```bash
