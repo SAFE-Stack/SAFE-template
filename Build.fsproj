@@ -12,4 +12,7 @@
   </ItemGroup>
 
   <Import Project=".paket\Paket.Restore.targets" />
+  <Target Name="DotNetToolRestore" BeforeTargets="PaketRestore">
+    <Exec Command="dotnet tool restore" />
+  </Target>
 </Project>
