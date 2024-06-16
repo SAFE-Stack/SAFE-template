@@ -12,7 +12,7 @@ let client =
         <| fun _ ->
             let newTodo = Todo.create "new todo"
             let model, _ = init ()
-
+            let model, _ = update (LoadTodos (Finished [])) model
             let model, _ = update (SaveTodo(Finished newTodo)) model
 
             Expect.equal
