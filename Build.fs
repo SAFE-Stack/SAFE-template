@@ -87,7 +87,7 @@ Target.create "TemplateTests" (fun _ ->
 
 Target.create "DefaultProjectTests" (fun _ ->
     let cmd = "run"
-    let args = "tests --project build.fsproj"
+    let args = "tests --project Build.fsproj"
     let result = DotNet.exec (fun x -> { x with DotNetCliPath = "dotnet"; WorkingDirectory = defaultProjectPath}) cmd args
     if not result.OK then failwithf "`dotnet %s %s` failed" cmd args
 )
