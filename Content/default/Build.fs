@@ -81,7 +81,7 @@ let dependencies = [
 
     "Clean" ==> "RestoreClientDependencies" ==> "Run"
 
-    "restoreClientDependencies" ==> "Tests"
+    "RestoreClientDependencies" ==> "Tests"
     "RestoreClientDependencies" ==> "RunTests"
 ]
 
