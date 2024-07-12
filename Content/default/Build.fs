@@ -53,17 +53,14 @@ Target.create "Run" (fun _ ->
     ]
     |> runParallel)
 
-let buildSharedTests ()  =
-    run dotnet [ "build" ] sharedTestsPath
+let buildSharedTests () = run dotnet [ "build" ] sharedTestsPath
 
-Target.create "Tests" ( fun _ ->
+Target.create "Tests" (fun _ ->
     buildSharedTests ()
 
-    [
-        "server", dotnet [ "run" ] serverTestsPath
-    ]
-    |> runParallel
-
+    run dotnet [ "run" ] serverTestsPath
+    run dotnet [ "fable"; "-o"; "output" ] clientTestsPath
+    run npx [ "mocha"; "output" ] clientTestsPath
 )
 
 Target.create "RunTests" (fun _ ->
