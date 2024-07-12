@@ -55,7 +55,7 @@ Target.create "Run" (fun _ ->
 
 let buildSharedTests () = run dotnet [ "build" ] sharedTestsPath
 
-Target.create "Tests" (fun _ ->
+Target.create "RunTestsHeadless" (fun _ ->
     buildSharedTests ()
 
     run dotnet [ "run" ] serverTestsPath
