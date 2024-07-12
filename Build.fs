@@ -12,7 +12,7 @@ let skipTests = Environment.hasEnvironVar "yolo"
 let release = ReleaseNotes.load "RELEASE_NOTES.md"
 
 let templatePath = "./Content/.template.config/template.json"
-let defaultTemplatePath = "./Content/default"
+let defaultProjectPath = "./Content/default"
 let templateProj = "SAFE.Template.proj"
 let templateName = "SAFE-Stack Web App"
 let version = Environment.environVarOrDefault "VERSION" ""
@@ -88,7 +88,7 @@ Target.create "TemplateTests" (fun _ ->
 Target.create "DefaultProjectTests" (fun _ ->
     let cmd = "run"
     let args = "tests --project build.fsproj"
-    let result = DotNet.exec (fun x -> { x with DotNetCliPath = "dotnet"; WorkingDirectory = defaultTemplatePath}) cmd args
+    let result = DotNet.exec (fun x -> { x with DotNetCliPath = "dotnet"; WorkingDirectory = defaultProjectPath}) cmd args
     if not result.OK then failwithf "`dotnet %s %s` failed" cmd args
 )
 
