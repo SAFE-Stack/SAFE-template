@@ -53,8 +53,21 @@ Target.create "Run" (fun _ ->
     ]
     |> runParallel)
 
-Target.create "RunTests" (fun _ ->
+let buildSharedTests ()  =
     run dotnet [ "build" ] sharedTestsPath
+
+Target.create "Tests" ( fun _ ->
+    buildSharedTests ()
+
+    [
+        "server", dotnet [ "run" ] serverTestsPath
+    ]
+    |> runParallel
+
+)
+
+Target.create "RunTests" (fun _ ->
+    buildSharedTests ()
 
     [
         "server", dotnet [ "watch"; "run" ] serverTestsPath
@@ -71,6 +84,7 @@ let dependencies = [
 
     "Clean" ==> "RestoreClientDependencies" ==> "Run"
 
+    "restoreClientDependencies" ==> "Tests"
     "RestoreClientDependencies" ==> "RunTests"
 ]
 
