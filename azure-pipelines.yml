@@ -7,5 +7,5 @@ steps:
       version: '8.0.100'
   - script: |
       dotnet tool restore
-      dotnet run  DefaultProjectTests --project Build.fsproj
+      dotnet run  DefaultTemplateTests --project Build.fsproj
     displayName: 'SAFE Template tests'
