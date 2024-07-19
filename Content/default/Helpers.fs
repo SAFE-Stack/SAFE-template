@@ -88,11 +88,9 @@ let createProcessFromPath processName args dir =
 
     createProcess path args dir
 
-let npm: seq<string> -> _ -> _ = 
-    createProcessFromPath "npm"
+let npm: seq<string> -> _ = createProcessFromPath "npm"
 
-let npx : seq<string> -> _ -> _ = 
-    createProcessFromPath "npx"
+let npx: seq<string> -> _ = createProcessFromPath "npx"
 
 let run proc arg dir = proc arg dir |> Proc.run |> ignore
 
