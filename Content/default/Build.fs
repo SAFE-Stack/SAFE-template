@@ -63,7 +63,7 @@ Target.create "RunTestsHeadless" (fun _ ->
     run npx [ "mocha"; "output" ] clientTestsPath
 )
 
-Target.create "RunTests" (fun _ ->
+Target.create "WatchRunTests" (fun _ ->
     buildSharedTests ()
 
     [
@@ -82,7 +82,7 @@ let dependencies = [
     "Clean" ==> "RestoreClientDependencies" ==> "Run"
 
     "RestoreClientDependencies" ==> "RunTestsHeadless"
-    "RestoreClientDependencies" ==> "RunTests"
+    "RestoreClientDependencies" ==> "WatchRunTests"
 ]
 
 [<EntryPoint>]
