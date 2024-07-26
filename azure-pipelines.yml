@@ -2,10 +2,10 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-- task: UseDotNet@2
-  inputs:
-    version: '8.0.100'
-- script: |
-    dotnet tool restore
-    dotnet run --project tests/Tests.fsproj
-  displayName: 'SAFE Template tests'
+  - task: UseDotNet@2
+    inputs:
+      version: '8.0.100'
+  - script: |
+      dotnet tool restore
+      dotnet run  DefaultTemplateTests --project Build.fsproj
+    displayName: 'SAFE Template tests'

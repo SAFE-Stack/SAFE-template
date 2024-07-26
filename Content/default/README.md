@@ -25,7 +25,7 @@ The build project in root directory contains a couple of different build targets
 To run concurrently server and client tests in watch mode (you can run this command in parallel to the previous one in new terminal):
 
 ```bash
-dotnet run -- RunTests
+dotnet run -- WatchRunTests
 ```
 
 Client tests are available under `http://localhost:8081` in your browser and server tests are running in watch mode in console.

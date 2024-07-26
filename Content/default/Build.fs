@@ -53,8 +53,18 @@ Target.create "Run" (fun _ ->
     ]
     |> runParallel)
 
-Target.create "RunTests" (fun _ ->
-    run dotnet [ "build" ] sharedTestsPath
+let buildSharedTests () = run dotnet [ "build" ] sharedTestsPath
+
+Target.create "RunTestsHeadless" (fun _ ->
+    buildSharedTests ()
+
+    run dotnet [ "run" ] serverTestsPath
+    run dotnet [ "fable"; "-o"; "output" ] clientTestsPath
+    run npx [ "mocha"; "output" ] clientTestsPath
+)
+
+Target.create "WatchRunTests" (fun _ ->
+    buildSharedTests ()
 
     [
         "server", dotnet [ "watch"; "run" ] serverTestsPath
@@ -71,7 +81,8 @@ let dependencies = [
 
     "Clean" ==> "RestoreClientDependencies" ==> "Run"
 
-    "RestoreClientDependencies" ==> "RunTests"
+    "RestoreClientDependencies" ==> "RunTestsHeadless"
+    "RestoreClientDependencies" ==> "WatchRunTests"
 ]
 
 [<EntryPoint>]

@@ -12,6 +12,7 @@ let skipTests = Environment.hasEnvironVar "yolo"
 let release = ReleaseNotes.load "RELEASE_NOTES.md"
 
 let templatePath = "./Content/.template.config/template.json"
+let defaultTemplatePath = "./Content/default"
 let templateProj = "SAFE.Template.proj"
 let templateName = "SAFE-Stack Web App"
 let version = Environment.environVarOrDefault "VERSION" ""
@@ -77,10 +78,17 @@ let run exe arg dir =
     let result = Process.execWithResult (psi exe arg dir) TimeSpan.MaxValue
     if not result.OK then (failwithf "`%s %s` failed: %A" exe arg result.Errors)
 
-Target.create "Tests" (fun _ ->
+Target.create "TemplateExecutionTests" (fun _ ->
     let cmd = "run"
     let args = "--project tests/Tests.fsproj"
     let result = DotNet.exec (fun x -> { x with DotNetCliPath = "dotnet" }) cmd args
+    if not result.OK then failwithf "`dotnet %s %s` failed" cmd args
+)
+
+Target.create "DefaultTemplateTests" (fun _ ->
+    let cmd = "run"
+    let args = "RunTestsHeadless --project Build.fsproj"
+    let result = DotNet.exec (fun x -> { x with DotNetCliPath = "dotnet"; WorkingDirectory = defaultTemplatePath}) cmd args
     if not result.OK then failwithf "`dotnet %s %s` failed" cmd args
 )
 
@@ -93,7 +101,8 @@ Target.create "Release" (fun _ ->
 open Fake.Core.TargetOperators
 
 "Clean"
-    =?> ("Tests", not skipTests)
+    =?> ("TemplateExecutionTests", not skipTests)
+    =?> ("DefaultTemplateTests", not skipTests)
     ==> "Pack"
     ==> "Install"
     ==> "Release"
