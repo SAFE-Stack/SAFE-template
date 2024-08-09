@@ -12,7 +12,7 @@ type Model = {
 type Msg =
     | SetInput of string
     | LoadTodos of ApiCall<unit, Todo list>
-    | SaveTodo of ApiCall<string, Todo>
+    | SaveTodo of ApiCall<string, Todo list>
 
 let todosApi = Api.makeProxy<ITodosApi> ()
 
@@ -40,10 +40,10 @@ let update msg model =
                 Cmd.OfAsync.perform todosApi.addTodo todo (Finished >> SaveTodo)
 
             { model with Input = "" }, saveTodoCmd
-        | Finished todo ->
+        | Finished todos ->
             {
                 model with
-                    Todos = model.Todos |> RemoteData.map (fun todos -> todos @ [ todo ])
+                    Todos = RemoteData.Loaded todos
             },
             Cmd.none
 
