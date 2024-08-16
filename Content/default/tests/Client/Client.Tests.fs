@@ -12,8 +12,7 @@ let client =
         <| fun _ ->
             let newTodo = Todo.create "new todo"
             let model, _ = init ()
-            let model, _ = update (LoadTodos (Finished [])) model
-            let model, _ = update (SaveTodo(Finished newTodo)) model
+            let model, _ = update (SaveTodo(Finished [ newTodo ])) model
 
             Expect.equal
                 (model.Todos |> RemoteData.map _.Length |> RemoteData.defaultValue 0)
@@ -30,11 +29,11 @@ let client =
 
 let all =
     testList "All" [
-//-:cnd:noEmit
+        //-:cnd:noEmit
 #if FABLE_COMPILER // This preprocessor directive makes editor happy
         Shared.Tests.shared
 #endif
-//+:cnd:noEmit
+        //+:cnd:noEmit
         client
     ]
 

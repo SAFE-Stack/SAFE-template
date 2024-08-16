@@ -25,7 +25,7 @@ let todosApi ctx = {
         fun todo -> async {
             return
                 match Storage.addTodo todo with
-                | Ok() -> todo
+                | Ok() -> Storage.todos |> List.ofSeq
                 | Error e -> failwith e
         }
 }
