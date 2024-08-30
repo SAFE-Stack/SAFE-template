@@ -5,5 +5,26 @@
     "tailwindCSS.experimental.classRegex": [
         "\\.className\\s+\"([^\"]*)\"",
         ["\\.className\\s+\\[([^\\]]*)\\]", "\"([^\"]*)\""]
-    ]
+    ],
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true,
+        "**/.vs": true,
+        "**/.vscode": true,
+        "**/.idea": true,
+        "**/.ionide": true,
+        "**/.paket": true,
+        "**/.fake": true,
+        "**/.farmer": true,
+        "**/paket-files": true,
+        "**/node_modules": true,
+        "**/bin": true,
+        "**/obj": true,
+        "**/output": true,
+        "**/deploy": true,
+    }
 }
