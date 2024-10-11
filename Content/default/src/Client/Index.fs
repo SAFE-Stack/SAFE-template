@@ -30,7 +30,7 @@ let update msg model =
         | Start() ->
             let loadTodosCmd = Cmd.OfAsync.perform todosApi.getTodos () (Finished >> LoadTodos)
 
-            { model with Todos = Loading }, loadTodosCmd
+            { model with Todos = model.Todos.StartLoading() }, loadTodosCmd
         | Finished todos -> { model with Todos = Loaded todos }, Cmd.none
     | SaveTodo msg ->
         match msg with
@@ -84,7 +84,8 @@ module ViewComponents =
                     prop.children [
                         match model.Todos with
                         | NotStarted -> Html.text "Not Started."
-                        | Loading -> Html.text "Loading..."
+                        | Loading None -> Html.text "Loading..."
+                        | Loading (Some todos)
                         | Loaded todos ->
                             for todo in todos do
                                 Html.li [ prop.className "my-1"; prop.text todo.Description ]
