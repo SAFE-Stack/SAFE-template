@@ -45,8 +45,7 @@ Target.create "Azure" (fun _ ->
     deployment |> Deploy.execute "SAFE-App" Deploy.NoParameters |> ignore)
 
 Target.create "Run" (fun _ ->
-    run dotnet [ "restore"; "SAFE.App.sln" ] "."
-    run dotnet [ "build" ] sharedPath
+    run dotnet [ "build"; "Application.sln" ] "."
 
     [
         "server", dotnet [ "watch"; "run"; "--no-restore" ] serverPath
