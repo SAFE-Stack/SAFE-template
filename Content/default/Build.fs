@@ -50,7 +50,7 @@ Target.create "Run" (fun _ ->
 
     [
         "server", dotnet [ "watch"; "run"; "--no-restore" ] serverPath
-        "client", dotnet [ "fable"; "watch"; "--noRestore"; "-o"; "output"; "-s"; "--run"; "npx"; "vite" ] clientPath
+        "client", dotnet [ "fable"; "watch"; "-o"; "output"; "-s"; "--run"; "npx"; "vite" ] clientPath
     ]
     |> runParallel)
 
