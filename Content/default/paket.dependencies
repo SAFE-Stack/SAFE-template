@@ -5,7 +5,6 @@ storage: none
 nuget Expecto ~> 9
 nuget SAFE.Server ~> 5
 nuget SAFE.Client ~> 5
-nuget System.Text.Json
 
 nuget Fake.Core.Target ~> 5
 nuget Fake.IO.FileSystem ~> 5
