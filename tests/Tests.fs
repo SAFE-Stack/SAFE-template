@@ -45,10 +45,10 @@ let run exe arg dir =
 
     CreateProcess.fromRawCommandLine exe arg
     |> CreateProcess.withWorkingDirectory dir
-    |> CreateProcess.ensureExitCode
     |> CreateProcess.redirectOutputIfNotRedirected
     |> Proc.run
-    |> ignore
+    |> (fun x -> Expect.equal x.ExitCode 0 $"Unexpected exit code when running {exe} {arg} in {dir}")
+
 
 open System.Threading.Tasks
 
@@ -155,65 +155,71 @@ type TemplateType = Normal | Minimal
 
 let path = __SOURCE_DIRECTORY__ </> ".." </> "Content"
 
-let testTemplateBuild templateType = testCase $"{templateType}" <| fun () ->
+let testTemplateBuild templateType =
     let dir = if templateType = Normal then path </> "default" else path </> "minimal"
+    testList $"{templateType}" [
 
-    run dotnet "tool restore" dir
+        testCase "run" (fun () ->
 
-    if templateType = Minimal then
-        // run build on Shared to avoid race condition between Client and Server
-        run dotnet "build" (dir </> "src" </> "Shared")
+        run dotnet "tool restore" dir
 
-    if templateType = Normal then
-        run dotnet "run" (dir </> "tests" </> "Server")
+        if templateType = Minimal then
+            // run build on Shared to avoid race condition between Client and Server
+            run dotnet "build" (dir </> "src" </> "Shared")
 
-    let proc =
         if templateType = Normal then
-            start dotnet "run" dir
-        else
-            run npm "install" dir
-            start dotnet "fable watch --run vite" (dir </> "src" </> "Client" )
+            run dotnet "run" (dir </> "tests" </> "Server")
 
-    let extraProc =
-        if templateType = Normal then None
-        else
-            let proc = start dotnet "run" (dir </> "src" </> "Server")
-            let wait = waitForStdOut proc "Now listening on:"
-            Some (proc, wait)
+        let proc =
+            if templateType = Normal then
+                start dotnet "run" dir
+            else
+                run npm "install" dir
+                start dotnet "fable watch --run vite" (dir </> "src" </> "Client" )
 
-    let stdOutPhrase = "ready in"
-    let htmlSearchPhrase = """<title>SAFE Template</title>"""
-    //vite will not serve up from root
-    let clientUrl = "http://localhost:8080/index.html"
-    let serverUrl, searchPhrase =
-        match templateType with
-        | Normal -> "http://localhost:5000/api/ITodosApi/getTodos", "Create new SAFE project" // JSON should contain a todo with such description
-        | Minimal -> "http://localhost:5000/api/hello", "Hello from SAFE!"
-    try
-        let timeout = TimeSpan.FromMinutes 5.
-        waitForStdOut proc stdOutPhrase timeout |> Async.RunSynchronously
-        logger.info(
-            eventX "Requesting `{url}`"
-            >> setField "url" clientUrl)
-        let response = waitAndRetry 3 5 (fun () -> get clientUrl)
-        Expect.stringContains response htmlSearchPhrase
-            (sprintf "html fragment not found for %A" templateType)
-        extraProc |> Option.iter (fun (_, wait) -> Async.RunSynchronously (wait timeout))
-        logger.info(
-            eventX "Requesting `{url}`"
-            >> setField "url" serverUrl)
-        let response = get serverUrl
-        Expect.stringContains response searchPhrase
-            (sprintf "plaintext fragment not found for %A at %s" templateType serverUrl)
-        logger.info(
-            eventX "Run target for `{type}` run successfully"
-            >> setField "type" templateType)
-        if templateType = Normal then
-            run dotnet "run -- bundle" dir
+        let extraProc =
+            if templateType = Normal then None
+            else
+                let proc = start dotnet "run" (dir </> "src" </> "Server")
+                let wait = waitForStdOut proc "Now listening on:"
+                Some (proc, wait)
+
+        let stdOutPhrase = "ready in"
+        let htmlSearchPhrase = """<title>SAFE Template</title>"""
+        //vite will not serve up from root
+        let clientUrl = "http://localhost:8080/index.html"
+        let serverUrl, searchPhrase =
+            match templateType with
+            | Normal -> "http://localhost:5000/api/ITodosApi/getTodos", "Create new SAFE project" // JSON should contain a todo with such description
+            | Minimal -> "http://localhost:5000/api/hello", "Hello from SAFE!"
+        try
+            let timeout = TimeSpan.FromMinutes 5.
+            waitForStdOut proc stdOutPhrase timeout |> Async.RunSynchronously
             logger.info(
-                eventX "Bundle target for `{type}` run successfully"
+                eventX "Requesting `{url}`"
+                >> setField "url" clientUrl)
+            let response = waitAndRetry 3 5 (fun () -> get clientUrl)
+            Expect.stringContains response htmlSearchPhrase
+                (sprintf "html fragment not found for %A" templateType)
+            extraProc |> Option.iter (fun (_, wait) -> Async.RunSynchronously (wait timeout))
+            logger.info(
+                eventX "Requesting `{url}`"
+                >> setField "url" serverUrl)
+            let response = get serverUrl
+            Expect.stringContains response searchPhrase
+                (sprintf "plaintext fragment not found for %A at %s" templateType serverUrl)
+            logger.info(
+                eventX "Run target for `{type}` run successfully"
                 >> setField "type" templateType)
-    finally
-        killProcessTree proc.Id
-        extraProc |> Option.map (fun (p,_) -> p.Id) |> Option.iter killProcessTree
+        finally
+            killProcessTree proc.Id
+            extraProc |> Option.map (fun (p,_) -> p.Id) |> Option.iter killProcessTree
+        )
 
+        if templateType = Normal then
+            testCase "Bundle" (fun () ->
+                    run dotnet "run bundle" dir
+                    logger.info(
+                        eventX "Bundle target for `{type}` run successfully"
+                        >> setField "type" templateType))
+            ]
