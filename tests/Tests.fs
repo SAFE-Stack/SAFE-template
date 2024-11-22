@@ -45,10 +45,10 @@ let run exe arg dir =
 
     CreateProcess.fromRawCommandLine exe arg
     |> CreateProcess.withWorkingDirectory dir
-    |> CreateProcess.ensureExitCode
     |> CreateProcess.redirectOutputIfNotRedirected
     |> Proc.run
-    |> ignore
+    |> (fun x -> Expect.equal x.ExitCode 0 $"Unexpected exit code when running {exe} {arg} in {dir}")
+
 
 open System.Threading.Tasks
 
@@ -209,11 +209,10 @@ let testTemplateBuild templateType = testCase $"{templateType}" <| fun () ->
             eventX "Run target for `{type}` run successfully"
             >> setField "type" templateType)
         if templateType = Normal then
-            run dotnet "run -- bundle" dir
+            run dotnet "run bundle" dir
             logger.info(
                 eventX "Bundle target for `{type}` run successfully"
                 >> setField "type" templateType)
     finally
         killProcessTree proc.Id
         extraProc |> Option.map (fun (p,_) -> p.Id) |> Option.iter killProcessTree
-
