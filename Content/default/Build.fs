@@ -74,16 +74,11 @@ Target.create "Format" (fun _ -> run dotnet [ "fantomas"; "." ] ".")
 open Fake.Core.TargetOperators
 
 let dependencies = [
-    "Build" ==> "RunTestsHeadless"
-    "Build" ==> "WatchRunTests"
-    "Build" ==> "Run"
-
     "Clean" ==> "RestoreClientDependencies" ==> "Bundle" ==> "Azure"
+    "Clean" ==> "RestoreClientDependencies" ==> "Build" ==> "Run"
 
-    "Clean" ==> "RestoreClientDependencies" ==> "Run"
-
-    "RestoreClientDependencies" ==> "RunTestsHeadless"
-    "RestoreClientDependencies" ==> "WatchRunTests"
+    "RestoreClientDependencies" ==> "Build" ==> "RunTestsHeadless"
+    "RestoreClientDependencies" ==> "Build" ==> "WatchRunTests"
 ]
 
 [<EntryPoint>]
