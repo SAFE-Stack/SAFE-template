@@ -44,31 +44,27 @@ Target.create "Azure" (fun _ ->
 
     deployment |> Deploy.execute "SAFE-App" Deploy.NoParameters |> ignore)
 
-Target.create "Run" (fun _ ->
-    run dotnet [ "restore"; "Application.sln" ] "."
-    run dotnet [ "build" ] sharedPath
+Target.create "Build" (fun _ ->
+    run dotnet [ "build"; "Application.sln" ] "."
 
+    )
+
+Target.create "Run" (fun _ ->
     [
         "server", dotnet [ "watch"; "run"; "--no-restore" ] serverPath
         "client", dotnet [ "fable"; "watch"; "-o"; "output"; "-s"; "--run"; "npx"; "vite" ] clientPath
     ]
     |> runParallel)
 
-let buildSharedTests () = run dotnet [ "build" ] sharedTestsPath
-
 Target.create "RunTestsHeadless" (fun _ ->
-    buildSharedTests ()
-
     run dotnet [ "run" ] serverTestsPath
     run dotnet [ "fable"; "-o"; "output" ] clientTestsPath
     run npx [ "mocha"; "output" ] clientTestsPath
 )
 
 Target.create "WatchRunTests" (fun _ ->
-    buildSharedTests ()
-
     [
-        "server", dotnet [ "watch"; "run" ] serverTestsPath
+        "server", dotnet [ "watch"; "run"; "--no-restore" ] serverTestsPath
         "client", dotnet [ "fable"; "watch"; "-o"; "output"; "-s"; "--run"; "npx"; "vite" ] clientTestsPath
     ]
     |> runParallel)
@@ -78,6 +74,10 @@ Target.create "Format" (fun _ -> run dotnet [ "fantomas"; "." ] ".")
 open Fake.Core.TargetOperators
 
 let dependencies = [
+    "Build" ==> "RunTestsHeadless"
+    "Build" ==> "WatchRunTests"
+    "Build" ==> "Run"
+
     "Clean" ==> "RestoreClientDependencies" ==> "Bundle" ==> "Azure"
 
     "Clean" ==> "RestoreClientDependencies" ==> "Run"
