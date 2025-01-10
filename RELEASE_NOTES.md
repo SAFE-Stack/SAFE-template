@@ -1,4 +1,4 @@
-#### 5.0.9 - 22.10.2024
+#### 5.0.9 - 29.10.2024
 
 * Fix error caused by restore on running tests + build solution before run, instead of just restore by @Larocceau in https://github.com/SAFE-Stack/SAFE-template/pull/640
 * Update dependencies by @Larocceau in https://github.com/SAFE-Stack/SAFE-template/pull/639
