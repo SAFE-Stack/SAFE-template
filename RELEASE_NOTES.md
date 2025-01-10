@@ -1,9 +1,9 @@
-#### 5.0.9 - 29.10.2024
+#### 5.0.9 - 29.11.2024
 
 * Fix error caused by restore on running tests + build solution before run, instead of just restore by @Larocceau in https://github.com/SAFE-Stack/SAFE-template/pull/640
 * Update dependencies by @Larocceau in https://github.com/SAFE-Stack/SAFE-template/pull/639
 
-#### 5.0.8 - 22.10.2024
+#### 5.0.8 - 22.11.2024
 
 * Run project tests as part of template testing by @Larocceau in https://github.com/SAFE-Stack/SAFE-template/pull/623
 * Change the api to return full TODO list after adding todo by @Larocceau in https://github.com/SAFE-Stack/SAFE-template/pull/624
