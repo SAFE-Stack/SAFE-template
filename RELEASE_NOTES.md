@@ -1,3 +1,42 @@
+#### 5.0.9 - 29.11.2024
+
+* Fix error caused by restore on running tests + build solution before run, instead of just restore by @Larocceau in https://github.com/SAFE-Stack/SAFE-template/pull/640
+* Update dependencies by @Larocceau in https://github.com/SAFE-Stack/SAFE-template/pull/639
+
+#### 5.0.8 - 22.11.2024
+
+* Run project tests as part of template testing by @Larocceau in https://github.com/SAFE-Stack/SAFE-template/pull/623
+* Change the api to return full TODO list after adding todo by @Larocceau in https://github.com/SAFE-Stack/SAFE-template/pull/624
+* Hide project / output / cache files from VS Code by @jwthomson in https://github.com/SAFE-Stack/SAFE-template/pull/625
+* Bump vite from 5.0.13 to 5.4.6 in /Content/minimal by @dependabot in https://github.com/SAFE-Stack/SAFE-template/pull/627
+* Bump rollup from 4.21.3 to 4.22.4 in /Content/minimal by @dependabot in https://github.com/SAFE-Stack/SAFE-template/pull/628
+* upgrade to Safe.Meta 5.1.0 by @Larocceau in https://github.com/SAFE-Stack/SAFE-template/pull/632
+* Restore as a standalone operation and remove from watch by @jwthomson in https://github.com/SAFE-Stack/SAFE-template/pull/634
+
+#### 5.0.7 - 19.07.2024
+
+* Use npm ci in the build script so package.lock cannot get updated there by @Larocceau in https://github.com/SAFE-Stack/SAFE-template/pull/619
+* Update dependencies by @jwthomson in https://github.com/SAFE-Stack/SAFE-template/pull/622
+
+#### 5.0.6 - 21.06.2024
+
+* Do `dotnet tool restore` automatically in build target by @theprash in https://github.com/SAFE-Stack/SAFE-template/pull/613
+* Bump braces from 3.0.2 to 3.0.3 in /Content/default by @dependabot in https://github.com/SAFE-Stack/SAFE-template/pull/614
+* Fix bug issue #615 in Client.Tests.fs by @giuliohome in https://github.com/SAFE-Stack/SAFE-template/pull/616
+
+#### 5.0.5 - 24.05.2024
+
+* Upgrade to use metapackages by @isaacabraham in https://github.com/SAFE-Stack/SAFE-template/pull/598
+* remove fable modules from source control by @Larocceau in https://github.com/SAFE-Stack/SAFE-template/pull/603
+* Remove Elmish.Debugger  by @Larocceau in https://github.com/SAFE-Stack/SAFE-template/pull/604
+* Use Github actions to automate the release process by @martinbryant in https://github.com/SAFE-Stack/SAFE-template/pull/600
+* Bump vite from 5.0.12 to 5.0.13 in /Content/minimal by @dependabot in https://github.com/SAFE-Stack/SAFE-template/pull/606
+* Bump vite from 5.0.12 to 5.0.13 in /Content/default by @dependabot in https://github.com/SAFE-Stack/SAFE-template/pull/607
+* Upgrade to beta5 by @isaacabraham in https://github.com/SAFE-Stack/SAFE-template/pull/605
+* Fix HMR by @jwthomson in https://github.com/SAFE-Stack/SAFE-template/pull/608
+* non-beta Meta packages by @Larocceau in https://github.com/SAFE-Stack/SAFE-template/pull/609
+* Fix build script failing on publish because of incorrect dotnet command by @Larocceau in https://github.com/SAFE-Stack/SAFE-template/pull/610
+
 #### 5.0.4 - 08.02.2024
 
 * Bump vite from 5.0.5 to 5.0.12 in /Content/default - https://github.com/SAFE-Stack/SAFE-template/pull/590
