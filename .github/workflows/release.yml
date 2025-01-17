@@ -22,3 +22,13 @@ jobs:
           RELEASE_NOTES_BODY: ${{ github.event.release.body }}
           NUGET_API_KEY: ${{secrets.NUGET_API_KEY}}
         run: dotnet run --project Build.fsproj -- Release
+
+      - name: Update Release notes
+        env:
+            VERSION: ${{ github.ref_name }}
+            RELEASE_NOTES_BODY: ${{ github.event.release.body }}
+        run: dotnet run --project Build.fsproj -- UpdateReleaseNotes
+        
+      
+      - name: Commit and push Release Notes
+        uses: actions-js/push@master
