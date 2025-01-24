@@ -98,6 +98,23 @@ Target.create "Release" (fun _ ->
     let result = DotNet.exec (fun x -> { x with DotNetCliPath = "dotnet"; WorkingDirectory = nupkgDir }) "nuget" nugetArgs
     if not result.OK then failwithf "`dotnet %s` failed" "nuget push")
 
+Target.create "UpdateReleaseNotes" (fun _ ->
+    let file = "RELEASE_NOTES.md"
+    let version = Environment.environVarOrFail "VERSION"
+    let body = Environment.environVarOrFail "RELEASE_NOTES_BODY"
+
+    let existingContent = System.IO.File.ReadAllText file
+    let releaseNote =
+        $"""#### {version} - {DateTime.Now.ToString("dd.MM.yy")}
+
+{body}
+
+{existingContent}
+        """
+
+    System.IO.File.WriteAllText("RELEASE_NOTES.md", releaseNote)
+    )
+
 open Fake.Core.TargetOperators
 
 "Clean"
