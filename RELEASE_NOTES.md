@@ -1,3 +1,23 @@
+#### 5.1.0 - 28.02.25
+
+Updates to the UI for the default template
+
+## What's Changed
+* Updates to the UI for the default template https://github.com/SAFE-Stack/SAFE-template/pull/645
+
+
+**Full Changelog**: https://github.com/SAFE-Stack/SAFE-template/compare/5.0.9...5.1.0
+
+## What's Changed
+* [docs]: Updated release notes by @arpxspace in https://github.com/SAFE-Stack/SAFE-template/pull/643
+* Automated relase note file update by @Larocceau in https://github.com/SAFE-Stack/SAFE-template/pull/644
+* [feat]: Improved UI for todo app to enhance user experience and first impressions by @arpxspace in https://github.com/SAFE-Stack/SAFE-template/pull/645
+
+## New Contributors
+* @arpxspace made their first contribution in https://github.com/SAFE-Stack/SAFE-template/pull/643
+
+**Full Changelog**: https://github.com/SAFE-Stack/SAFE-template/compare/5.0.9...5.1.0
+
 #### 5.0.9 - 29.11.2024
 
 * Fix error caused by restore on running tests + build solution before run, instead of just restore by @Larocceau in https://github.com/SAFE-Stack/SAFE-template/pull/640
@@ -699,3 +719,5 @@ https://www.compositional-it.com/news-blog/announcing-safe-template-v5/
 #### 0.0.1 - 22.10.2017
 
 * Initial release
+
+        
