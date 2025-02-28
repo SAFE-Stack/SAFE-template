@@ -1,14 +1,8 @@
 #### 5.1.0 - 28.02.2025
 
-## What's Changed
 * [docs]: Updated release notes by @arpxspace in https://github.com/SAFE-Stack/SAFE-template/pull/643
 * Automated relase note file update by @Larocceau in https://github.com/SAFE-Stack/SAFE-template/pull/644
 * [feat]: Improved UI for todo app to enhance user experience and first impressions by @arpxspace in https://github.com/SAFE-Stack/SAFE-template/pull/645
-
-## New Contributors
-* @arpxspace made their first contribution in https://github.com/SAFE-Stack/SAFE-template/pull/643
-
-**Full Changelog**: https://github.com/SAFE-Stack/SAFE-template/compare/5.0.9...5.1.0
 
 #### 5.0.9 - 29.11.2024
 
