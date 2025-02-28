@@ -1,12 +1,4 @@
-#### 5.1.0 - 28.02.25
-
-Updates to the UI for the default template
-
-## What's Changed
-* Updates to the UI for the default template https://github.com/SAFE-Stack/SAFE-template/pull/645
-
-
-**Full Changelog**: https://github.com/SAFE-Stack/SAFE-template/compare/5.0.9...5.1.0
+#### 5.1.0 - 28.02.2025
 
 ## What's Changed
 * [docs]: Updated release notes by @arpxspace in https://github.com/SAFE-Stack/SAFE-template/pull/643
