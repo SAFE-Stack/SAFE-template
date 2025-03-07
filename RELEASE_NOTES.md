@@ -1,3 +1,8 @@
+#### 5.1.1 - 07.03.25
+
+* update dependencies by @Larocceau in https://github.com/SAFE-Stack/SAFE-template/pull/647
+
+
 #### 5.1.0 - 28.02.2025
 
 * [docs]: Updated release notes by @arpxspace in https://github.com/SAFE-Stack/SAFE-template/pull/643
@@ -705,5 +710,7 @@ https://www.compositional-it.com/news-blog/announcing-safe-template-v5/
 #### 0.0.1 - 22.10.2017
 
 * Initial release
+
+        
 
         
