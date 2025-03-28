@@ -185,5 +185,4 @@ NUGET
       Microsoft.IdentityModel.JsonWebTokens (>= 7.7.1)
       Microsoft.IdentityModel.Tokens (>= 7.7.1)
     System.Reactive (5.0)
-    System.Text.Encodings.Web (8.0)
     System.Text.Json (8.0.5)
