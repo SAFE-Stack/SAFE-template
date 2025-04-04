@@ -1,3 +1,16 @@
+#### 5.1.2 - 04.04.25
+
+__What's Changed__
+* Bumping node version to restriction latest 22 by @halcwb in https://github.com/SAFE-Stack/SAFE-template/pull/642
+* run dotnet paket install to remove redundant dependency by @Larocceau in https://github.com/SAFE-Stack/SAFE-template/pull/648
+* Node 22 support by @jjbrooksnet in https://github.com/SAFE-Stack/SAFE-template/pull/649
+
+__New Contributors__
+* @halcwb made their first contribution in https://github.com/SAFE-Stack/SAFE-template/pull/642
+* @jjbrooksnet made their first contribution in https://github.com/SAFE-Stack/SAFE-template/pull/649
+
+**Full Changelog**: https://github.com/SAFE-Stack/SAFE-template/compare/5.1.1...5.1.2
+
 #### 5.1.1 - 07.03.25
 
 * update dependencies by @Larocceau in https://github.com/SAFE-Stack/SAFE-template/pull/647
@@ -713,4 +726,5 @@ https://www.compositional-it.com/news-blog/announcing-safe-template-v5/
 
         
 
+        
         
