@@ -1,3 +1,11 @@
+#### 5.1.3 - 15.04.25
+
+__What's Changed__
+* update packages by @Larocceau in https://github.com/SAFE-Stack/SAFE-template/pull/652
+
+
+**Full Changelog**: https://github.com/SAFE-Stack/SAFE-template/compare/5.1.2...5.1.3
+
 #### 5.1.2 - 04.04.25
 
 __What's Changed__
@@ -726,5 +734,6 @@ https://www.compositional-it.com/news-blog/announcing-safe-template-v5/
 
         
 
+        
         
         
