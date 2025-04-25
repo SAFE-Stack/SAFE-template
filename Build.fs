@@ -9,7 +9,6 @@ let execContext = Context.FakeExecutionContext.Create false "build.fsx" [ ]
 Context.setExecutionContext (Context.RuntimeContext.Fake execContext)
 
 let skipTests = Environment.hasEnvironVar "yolo"
-let release = ReleaseNotes.load "RELEASE_NOTES.md"
 
 let templatePath = "./Content/.template.config/template.json"
 let defaultTemplatePath = "./Content/default"
@@ -23,10 +22,6 @@ let result = DotNet.exec (fun x -> { x with DotNetCliPath = "dotnet" }) "tool" "
 
 if not result.OK then failwithf "`dotnet %s %s` failed" "tool" "restore"
 
-let formattedRN =
-    release.Notes
-    |> List.map (sprintf "* %s")
-    |> String.concat "\n"
 
 Target.create "Clean" (fun _ ->
     Shell.cleanDirs [ nupkgDir ]
