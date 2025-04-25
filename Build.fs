@@ -107,7 +107,7 @@ Target.create "UpdateReleaseNotes" (fun _ ->
 {existingContent}
         """
 
-    System.IO.File.WriteAllText("RELEASE_NOTES.md", releaseNote)
+    System.IO.File.WriteAllText( file, releaseNote)
     )
 
 open Fake.Core.TargetOperators
