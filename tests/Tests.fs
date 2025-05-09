@@ -157,6 +157,7 @@ let path = __SOURCE_DIRECTORY__ </> ".." </> "Content"
 
 let testTemplateBuild templateType =
     let dir = if templateType = Normal then path </> "default" else path </> "minimal"
+    let clientDir = if templateType = Normal then path </> "default/src/Client" else path </> "minimal/src/Client"
     testList $"{templateType}" [
 
         testCase "run" (fun () ->
@@ -174,7 +175,7 @@ let testTemplateBuild templateType =
             if templateType = Normal then
                 start dotnet "run" dir
             else
-                run npm "install" dir
+                run npm "install" clientDir
                 start dotnet "fable watch --run vite" (dir </> "src" </> "Client" )
 
         let extraProc =
