@@ -58,6 +58,7 @@ Target.create "Run" (fun _ ->
 
 Target.create "RunTestsHeadless" (fun _ ->
     run dotnet [ "run" ] serverTestsPath
+    run npm [ "install" ] clientTestsPath
     run dotnet [ "fable"; "-o"; "output" ] clientTestsPath
     run npx [ "mocha"; "output" ] clientTestsPath
 )
