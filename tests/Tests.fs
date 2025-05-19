@@ -98,9 +98,19 @@ let waitAndRetry seconds times (func: unit -> 'result) =
             sleepDurationProvider = (fun _ _ -> TimeSpan.FromSeconds seconds))
         .Execute(func)
 
-let get (url: string) =
+let get json (url: string) =
     use client = new HttpClient ()
-    client.GetStringAsync url |> Async.AwaitTask |> Async.RunSynchronously
+    if json then
+        client.DefaultRequestHeaders.Accept.Add(Headers.MediaTypeWithQualityHeaderValue "application/json")
+        //Fable.Remoting fails if there is no JSON body, so we add an empty one
+        let content = new StringContent("", Text.Encoding.UTF8, "application/json")
+        let request = new HttpRequestMessage(HttpMethod.Get,url)
+        request.Content <- content
+        let res = client.SendAsync(request).Result
+        res.Content.ReadAsStringAsync().Result
+    
+    else
+        client.GetStringAsync url |> Async.AwaitTask |> Async.RunSynchronously
 
 let childrenPids pid =
     let pgrep =
@@ -189,24 +199,24 @@ let testTemplateBuild templateType =
         let htmlSearchPhrase = """<title>SAFE Template</title>"""
         //vite will not serve up from root
         let clientUrl = "http://localhost:8080/index.html"
-        let serverUrl, searchPhrase =
+        let serverUrl, searchPhrase, requestDataAsJson =
             match templateType with
-            | Normal -> "http://localhost:5000/api/ITodosApi/getTodos", "Create new SAFE project" // JSON should contain a todo with such description
-            | Minimal -> "http://localhost:5000/api/hello", "Hello from SAFE!"
+            | Normal -> "http://localhost:5000/api/ITodosApi/getTodos", "Create new SAFE project", true  // JSON should contain a todo with such description
+            | Minimal -> "http://localhost:5000/api/hello", "Hello from SAFE!", false
         try
             let timeout = TimeSpan.FromMinutes 5.
             waitForStdOut proc stdOutPhrase timeout |> Async.RunSynchronously
             logger.info(
                 eventX "Requesting `{url}`"
                 >> setField "url" clientUrl)
-            let response = waitAndRetry 3 5 (fun () -> get clientUrl)
+            let response = waitAndRetry 3 5 (fun () -> get false clientUrl)
             Expect.stringContains response htmlSearchPhrase
                 (sprintf "html fragment not found for %A" templateType)
             extraProc |> Option.iter (fun (_, wait) -> Async.RunSynchronously (wait timeout))
             logger.info(
                 eventX "Requesting `{url}`"
                 >> setField "url" serverUrl)
-            let response = get serverUrl
+            let response = get requestDataAsJson serverUrl
             Expect.stringContains response searchPhrase
                 (sprintf "plaintext fragment not found for %A at %s" templateType serverUrl)
             logger.info(
