@@ -102,7 +102,7 @@ let get json (url: string) =
     use client = new HttpClient ()
     if json then
         client.DefaultRequestHeaders.Accept.Add(Headers.MediaTypeWithQualityHeaderValue "application/json")
-        //Fable.Remoting fails if there is no JSON body, no we add an empty one
+        //Fable.Remoting fails if there is no JSON body, so we add an empty one
         let content = new StringContent("", Text.Encoding.UTF8, "application/json")
         let request = new HttpRequestMessage(HttpMethod.Get,url)
         request.Content <- content
