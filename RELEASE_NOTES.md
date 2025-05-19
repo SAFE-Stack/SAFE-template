@@ -1,3 +1,15 @@
+#### 5.2.0 - 19.05.25
+
+__What's changed__
+* Bump vite from 5.0.13 to 5.4.8 in /Content/default by @dependabot in https://github.com/SAFE-Stack/SAFE-template/pull/630
+* Fix release notes error by @Larocceau in https://github.com/SAFE-Stack/SAFE-template/pull/655
+* move `package.json` and `package-lock.json` to `/src/Client` by @arpxspace in https://github.com/SAFE-Stack/SAFE-template/pull/658
+* Bump vite from 5.4.18 to 5.4.19 in /Content/default/src/Client by @dependabot in https://github.com/SAFE-Stack/SAFE-template/pull/660
+* Update packages by @Larocceau in https://github.com/SAFE-Stack/SAFE-template/pull/662
+
+
+**Full Changelog**: https://github.com/SAFE-Stack/SAFE-template/compare/5.1.3...5.2.0
+
 #### 5.1.3 - 15.04.25
 
 __What's Changed__
