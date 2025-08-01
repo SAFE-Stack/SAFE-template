@@ -1,3 +1,13 @@
+#### 5.2.1 - 01.08.25
+
+## What's Changed
+* Default configuration for Tailwind updated to NOT scan node_modules for content. by @chezuma in https://github.com/SAFE-Stack/SAFE-template/pull/664
+
+## New Contributors
+* @chezuma made their first contribution in https://github.com/SAFE-Stack/SAFE-template/pull/664
+
+**Full Changelog**: https://github.com/SAFE-Stack/SAFE-template/compare/5.2.0...5.2.1
+
 #### 5.2.0 - 19.05.25
 
 __What's changed__
@@ -748,4 +758,6 @@ https://www.compositional-it.com/news-blog/announcing-safe-template-v5/
 
         
         
+        
+
         
