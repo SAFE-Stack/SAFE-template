@@ -48,15 +48,17 @@ let update msg model =
             Cmd.none
 
 open Feliz
+open Feliz.DaisyUI
 
 module ViewComponents =
+
     let todoAction model dispatch =
         Html.div [
             prop.className "flex flex-col sm:flex-row mt-4 gap-4"
             prop.children [
-                Html.input [
+                Daisy.input [
                     prop.className
-                        "shadow appearance-none border rounded w-full py-2 px-3 outline-none focus:ring-2 ring-teal-300 text-grey-darker text-sm sm:text-base"
+                        "shadow-sm appearance-none border rounded-sm w-full py-2 px-3 outline-hidden focus:ring-2 ring-teal-300 text-grey-darker text-sm sm:text-base"
                     prop.value model.Input
                     prop.placeholder "What needs to be done?"
                     prop.autoFocus true
@@ -65,9 +67,9 @@ module ViewComponents =
                         if ev.key = "Enter" then
                             dispatch (SaveTodo(Start model.Input)))
                 ]
-                Html.button [
+                Daisy.button.button [
                     prop.className
-                        "flex-no-shrink p-2 px-12 rounded bg-teal-600 outline-none focus:ring-2 ring-teal-300 font-bold text-white hover:bg-teal disabled:opacity-30 disabled:cursor-not-allowed text-sm sm:text-base"
+                        "flex-no-shrink p-2 px-12 rounded-sm bg-teal-600 outline-hidden focus:ring-2 ring-teal-300 font-bold text-white hover:bg-teal disabled:opacity-30 disabled:cursor-not-allowed text-sm sm:text-base"
                     prop.disabled (Todo.isValid model.Input |> not)
                     prop.onClick (fun _ -> dispatch (SaveTodo(Start model.Input)))
                     prop.text "Add"
@@ -77,9 +79,9 @@ module ViewComponents =
 
     let todoList model dispatch =
         Html.div [
-            prop.className "rounded-md p-2 sm:p-4 w-full"
+            prop.className "p-2 sm:p-4 w-full"
             prop.children [
-                Html.ol [
+                Daisy.list [
                     prop.className "list-decimal ml-4 sm:ml-6"
                     prop.children [
                         match model.Todos with
@@ -100,7 +102,7 @@ module ViewComponents =
         ]
 
 let view model dispatch =
-    Html.section [
+    Html.div [
         prop.className "h-screen w-screen relative overflow-hidden"
         prop.children [
             // Meta viewport tag for proper mobile scaling
@@ -109,44 +111,34 @@ let view model dispatch =
                 prop.content "width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
             ]
             
-            // Background div with image and glass effect
-            Html.div [
-                prop.className "absolute inset-0 bg-cover bg-center bg-fixed bg-no-repeat
-                bg-white/20 backdrop-blur-sm"
+            // Background image and content card
+            Daisy.hero [
+                prop.className "absolute inset-0 bg-cover bg-center bg-fixed bg-no-repeatbg-white/20 backdrop-blur-xs"
                 prop.style [
                     style.backgroundImageUrl "https://unsplash.it/1200/900?random"
                 ]
-            ]
-
-            // Content container (the rest of your UI)
-            Html.div [
-                prop.className "relative z-10 h-full w-full"
                 prop.children [
-                    // Your existing content here
-                    Html.a [
-                        prop.href "https://safe-stack.github.io/"
-                        prop.className "absolute block ml-4 sm:ml-12 h-10 w-10 sm:h-12 sm:w-12 bg-teal-300 hover:cursor-pointer hover:bg-teal-400"
-                        prop.children [
-                            Html.img [ prop.src "/favicon.png"; prop.alt "Logo" ]
-                        ]
-                    ]
-
-
-                    Html.div [
-                        prop.className "flex flex-col items-center justify-center h-full"
-                        prop.children [
-                            Html.div [
-                                prop.className "bg-white/20 backdrop-blur-lg p-4 sm:p-8 rounded-xl shadow-lg border border-white/30 mx-4 sm:mx-0 max-w-full sm:max-w-2xl"
-                                prop.children [
-                                    Html.h1 [
-                                        prop.className "text-center text-3xl sm:text-5xl font-bold mb-3 p-2 sm:p-4"
-                                        prop.text "SAFE.App"
-                                    ]
-                                    ViewComponents.todoList model dispatch
+                    Daisy.heroContent [
+                        Daisy.card [
+                            prop.className "bg-white/20 backdrop-blur-lg p-4 sm:p-8 rounded-xl shadow-lg border border-white/30 mx-4 sm:mx-0 max-w-full sm:max-w-2xl"
+                            prop.children [
+                                Html.h1 [
+                                    prop.className "text-center text-3xl sm:text-5xl font-bold mb-3 p-2 sm:p-4"
+                                    prop.text "SAFE.App"
                                 ]
+                                ViewComponents.todoList model dispatch
                             ]
                         ]
                     ]
+                ]
+            ]
+
+            // Top-left logo link - positioned absolutely without blocking overlay
+            Html.a [
+                prop.href "https://safe-stack.github.io/"
+                prop.className "absolute top-4 left-4 sm:top-6 sm:left-12 z-20 block h-10 w-10 sm:h-12 sm:w-12 bg-teal-300 hover:cursor-pointer hover:bg-teal-400"
+                prop.children [
+                    Html.img [ prop.src "/favicon.png"; prop.alt "Logo" ]
                 ]
             ]
         ]
